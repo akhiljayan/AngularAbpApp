@@ -1,0 +1,79 @@
+﻿@model CreateOrUpdateVisitLogInput
+
+@using Pulsesync.IngoTPCC.Application.VisitLogs.Dto
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("Signature")</div>
+        </div>
+        <div class="actions dropdown inputs" ng-if="vm.mode!='new'">
+            <a class="icon-wrapper" ng-if="vm.mode=='view' && vm.permissions.edit" ng-click="vm.mode='edit'">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools" ng-if="vm.mode!='new'">
+            <a class="remove" ng-if="vm.mode=='edit'" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @{
+                    var attrs = new Dictionary<string, object>();
+                    attrs.Add("name", "vm.form");
+                    attrs.Add("novalidate", "");
+                    attrs.Add("angular-validator", "");
+                    attrs.Add("angular-validator-submit", "vm.signature = accept(); vm.save($event);");
+                }
+
+                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs)))
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <signature-pad accept="accept" clear="clear" dataurl="vm.dataurl" ng-mouseup="alert('update');" width="600" height="220"></signature-pad>
+
+                        <br />
+
+                        <div class="form-group form-md-line-input" ng-class="{ 'has-error': vm.form.nameOfPerson.$error.required && vm.form.submitted }">
+                            <input type="text" id="nameOfPerson" name="nameOfPerson" class="form-control" ng-model="vm.workingModel.nameOfPerson" ng-required="vm.dataurl != vm.emptyImage && vm.dataurl != null" />
+                            <label for="nameOfPerson" class="control-label">
+                                @L("AcknowledgedBy")
+                                <span class="businessRequired" ng-if="vm.dataurl != vm.emptyImage && vm.dataurl != null"> * </span>
+                            </label>
+                            <p class="help-block" ng-if="vm.form.nameOfPerson.$error.required && vm.form.submitted">You must provide a value for Acknowledged By.</p>
+                        </div>
+
+                        <div class="form-actions pull-right" ng-if="vm.mode!='new'">
+                            <button class="linkButton btn-small" type="submit">
+                                <i class="material-icons font-18-main v-top">save</i> @L("Save")
+                            </button>
+                            <button class="linkButton btn-small" type="button" ng-click="vm.signature = clear()">
+                                <i class="material-icons font-18-main v-top">clear</i> @L("Clear")
+                            </button>
+                            <button class="linkButton btn-small" type="button" ng-click="vm.cancel()">
+                                <i class="material-icons font-18-main v-top">close</i> @L("Cancel")
+                            </button>
+                        </div>
+                    }
+                }
+            </div>
+            <div ng-switch-default>
+                @using (var f = Html.BeginForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <div class="signatureImg" ng-show="vm.model.signatureBody">
+                            <img ng-src="{{ vm.model.signatureBody }}">
+                        </div>
+                        <br />
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.nameOfPerson" /></div>
+                            <label class="control-label">@L("AcknowledgedBy")</label>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

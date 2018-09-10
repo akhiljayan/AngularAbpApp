@@ -1,0 +1,90 @@
+﻿<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">
+                @L("PersonList")
+            </div>
+        </div>
+        <div class="actions dropdown inputs">
+            <div class="input-small-new inline-block">
+                <form action="" class="search-form">
+                    <div class="form-group has-feedback input-inline">
+                        <label for="search" class="sr-only">@L("Search")</label>
+                        <input type="text" ng-model="$ctrl.filterText"
+                               ng-model-options="{ debounce: 500 }"
+                               class="form-control form-control-solid input-circle search-input font-13-main clearable"
+                               placeholder="search keywords...">
+                        <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="$ctrl.clearFilter()"></a>
+                        <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                    </div>
+                </form>
+            </div>
+            <a ng-click="$ctrl.selectAll = true" class="icon-wrapper" title="Select All">
+                <i class="material-icons custom-icon padding-top-0"><i class="fa fa-check-square"></i></i>
+            </a>
+            <a ng-click="$ctrl.selectAll = false" class="icon-wrapper" title="Deselect All">
+                <i class="material-icons custom-icon padding-top-0"><i class="fa fa-check-square-o"></i></i>
+            </a>
+            <div class="dropdown" uib-dropdown auto-close="outsideClick" style="display: inline-block;">
+                <a class="icon-wrapper" title="Filter" uib-dropdown-toggle>
+                    <i class="material-icons custom-icon">more_vert</i>
+                </a>
+                <ul class="dropdown-menu pull-right checkbox" uib-dropdown-menu role="menu">
+                    <li class="dropdown-header">@L("Centre")</li>
+                    <li ng-repeat="item in $ctrl.centres" role="menuitem">
+                        <a href="#" data-value="{{ $index }}" ng-click="$ctrl.selectCentre(item)" class="padding-left-40">
+                            <input type="checkbox" ng-checked="item.isChecked" />
+                            {{ item.description }}
+                        </a>
+                    </li>
+
+                    <li role="separator" class="divider"></li>
+                    <li class="dropdown-header">@L("PersonGroup")</li>
+                    <li ng-repeat="item in $ctrl.personGroups" role="menuitem">
+                        <a href="#" data-value="{{ $index }}" ng-click="$ctrl.selectPersonGroup(item)" class="padding-left-40">
+                            <input type="checkbox" ng-checked="item.isChecked" />
+                            {{ item.description }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="mt-element-list">
+            <div class="mt-list-container list-card activitiesattendance-ext">
+                <ul>
+                    <li class="mt-list-item activitiesattendance-item"
+                        ng-repeat="personList in $ctrl.personModel">
+                        <h4><strong>{{ personList.centreName }}</strong></h4>
+
+                        <person-list-grid person-model="personList.participants"
+                                          selected-person-list="$ctrl.selectedPersonList"
+                                          selected-person-obj="$ctrl.selectedPersonObj"
+                                          select-all="$ctrl.selectAll"
+                                          on-reset-select-all="$ctrl.selectAll = undefined"
+                                          on-find-same-person="$ctrl.findSamePerson(personId, isSelected)"
+                                          filter-text="$ctrl.filterText"></person-list-grid>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">
+                @L("SelectedPersons")
+            </div>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <person-list-grid person-model="$ctrl.selectedPersonObj"
+                          selected-person-list="$ctrl.selectedPersonList"
+                          selected-person-obj="$ctrl.selectedPersonObj"
+                          show-selected-person-list="true"
+                          on-find-same-person="$ctrl.findSamePerson(personId, isSelected)"></person-list-grid>
+    </div>
+</div>

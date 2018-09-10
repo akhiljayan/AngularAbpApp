@@ -1,0 +1,70 @@
+﻿@model MembershipDto
+
+@using Pulsesync.IngoTPCC.Application.Membership.Dto
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("AssistanceServices")</div>
+        </div>
+        </div>
+
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @using (var f = Html.BeginSubForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        @s.FieldFor(m => m.FinancialAssistanceId).AsDropDown().Attrs(new
+                        {
+                            ng_model = "vm.workingModel.financialAssistanceId",
+                            repeat = "vm.financialAssistanceType",
+                            name = "financialAssistanceType"
+                        }).Label(@L("FinancialAssistance"))
+
+                        <div class="form-group form-md-line-input margin-bottom-10">
+                            <label class="control-label">@L("AssistanceServices")</label>
+                        </div>
+                        <div class="md-checkbox margin-left-20 padding-bottom-10" ng-repeat="li in vm.assistanceservicerequired">
+                            <input id="{{li.id}}" class="md-check" type="checkbox" value="{{li.description}}" ng-model="li.selected" ng-change="vm.assistanceservicesonchange(li)">
+                            <label for="{{li.id}}">
+                                <span class="inc"></span>
+                                <span class="check"></span>
+                                <span class="box"></span>
+                                {{li.description}}
+                            </label>
+                        </div>
+                        <p></p>
+                        @s.FieldFor(m => m.AssistanceServiceRemarks).Attrs(new { ng_model = "vm.workingModel.assistanceServiceRemarks" })
+                    }
+                }
+            </div>
+
+            <div ng-switch-default>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.workingModel.financialAssistance.description ? vm.workingModel.financialAssistance.description: '-'}}</div>
+                    <label class="control-label">@L("FinancialAssistance")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-10">
+                    <label class="control-label">@L("AssistanceServices")</label>
+                </div>
+                <div class="md-checkbox margin-left-20 padding-bottom-10" ng-repeat="li in vm.assistanceservicerequired">
+                    <input id="{{li.id}}" class="md-check" type="checkbox" value="{{li.description}}" ng-model="li.selected" ng-disabled=true>
+                    <label for="{{li.id}}">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span>
+                        {{li.description}}
+                    </label>
+                </div>
+                <p></p>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.assistanceServiceRemarks ? vm.model.assistanceServiceRemarks: '-'}}</div>
+                    <label class="control-label">@L("AssistanceServiceRemarks")</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

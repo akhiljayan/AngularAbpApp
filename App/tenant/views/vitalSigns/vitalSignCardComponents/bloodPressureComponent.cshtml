@@ -1,0 +1,127 @@
+﻿<div class="col-md-12 col-sm-12" style="padding-bottom:10px">
+    <div class="row">
+        <div class="col-md-12 col-sm-12"><span class="bold">Blood Pressure</span></div>
+    </div>
+    <div class="row" style="padding-bottom:5px">
+        <div class="col-md-12 col-sm-12" style="margin-left: 20px">
+            <div class="col-md-12 col-sm-12" style="padding:0px">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px"><span class="bold">Lying</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px" ng-if="$ctrl.forPerson">
+                        <small class="bold" ng-if="$ctrl.vitalsign.bpLyingSystolic.values[0].value">
+                            <span ng-class="{'abnormal' : $ctrl.vitalsign.bpLyingSystolic.category != '0' }">
+                                {{$ctrl.vitalsign.bpLyingSystolic.values[0].value}}
+                            </span>/
+                            <span ng-class="{'abnormal' : $ctrl.vitalsign.bpLyingDiastolic.category != '0' }">
+                                {{$ctrl.vitalsign.bpLyingDiastolic.values[0].value}} mmHg
+                            </span>
+                        </small>
+                        <small ng-if="!$ctrl.vitalsign.bpLyingSystolic.values[0].value">-</small>
+                        <small ng-if="$ctrl.vitalsign.bpLyingSystolic.delta == '1' && !$ctrl.vitalsign.bpLyingSystolic.normalChange"><i class="fa fa-arrow-up" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.bpLyingSystolic.abruptChange }"></i></small>
+                        <small ng-if="$ctrl.vitalsign.bpLyingSystolic.delta == '-1' && !$ctrl.vitalsign.bpLyingSystolic.normalChange"><i class="fa fa-arrow-down" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.bpLyingSystolic.abruptChange }"></i></small>
+                        <small ng-if="$ctrl.vitalsign.bpLyingSystolic.delta == '0' && $ctrl.vitalsign.bpLyingSystolic.normalChange">-</small>
+                        <span ng-if="$ctrl.vitalsign.bpLyingSystolic.values[0].value && $ctrl.vitalsign.bpLyingDiastolic.delta != 0">/</span>
+                        <small ng-if="$ctrl.vitalsign.bpLyingDiastolic.delta == '1' && !$ctrl.vitalsign.bpLyingDiastolic.normalChange"><i class="fa fa-arrow-up" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.bpLyingDiastolic.abruptChange }"></i></small>
+                        <small ng-if="$ctrl.vitalsign.bpLyingDiastolic.delta == '-1' && !$ctrl.vitalsign.bpLyingDiastolic.normalChange"><i class="fa fa-arrow-down" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.bpLyingDiastolic.abruptChange }"></i></small>
+                        <small ng-if="$ctrl.vitalsign.bpLyingDiastolic.delta == '0' && $ctrl.vitalsign.bpLyingDiastolic.normalChange">-</small>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12" style="padding:0px" ng-if="!$ctrl.forPerson">
+                        <small class="bold" ng-if="$ctrl.vitalsign.bpLyingSystolic.values[0].value">
+                            <span ng-class="{'abnormal' : $ctrl.vitalsign.bpLyingSystolic.category != '0' }">
+                                {{$ctrl.vitalsign.bpLyingSystolic.values[0].value}}
+                            </span>/
+                            <span ng-class="{'abnormal' : $ctrl.vitalsign.bpLyingDiastolic.category != '0' }">
+                                {{$ctrl.vitalsign.bpLyingDiastolic.values[0].value}} mmHg
+                            </span>
+                        </small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px"><small>{{$ctrl.vitalsign.bpLyingSystolic.values[0].takenOn | dateTimeFormat}}</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding-bottom:5px">
+        <div class="col-md-12 col-sm-12" style="margin-left: 20px">
+            <div class="col-md-12 col-sm-12" style="padding:0px">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px"><span class="bold">Sitting</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px" ng-if="$ctrl.forPerson">
+                        <small class="bold" ng-if="$ctrl.vitalsign.bpSittingSystolic.values[0].value">
+                            <span ng-class="{'abnormal' : $ctrl.vitalsign.bpSittingSystolic.category != '0' }">{{$ctrl.vitalsign.bpSittingSystolic.values[0].value}}</span>/
+                            <span ng-class="{'abnormal' : $ctrl.vitalsign.bpSittingDiastolic.category != '0' }">{{$ctrl.vitalsign.bpSittingDiastolic.values[0].value}} mmHg</span>
+                        </small>
+                        <small class="bold" ng-if="!$ctrl.vitalsign.bpSittingSystolic.values[0].value">-</small>
+                        <small ng-if="$ctrl.vitalsign.bpSittingSystolic.delta == '1' && !$ctrl.vitalsign.bpSittingSystolic.normalChange"><i class="fa fa-arrow-up" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.bpSittingSystolic.abruptChange }"></i></small>
+                        <small ng-if="$ctrl.vitalsign.bpSittingSystolic.delta == '-1' && !$ctrl.vitalsign.bpSittingSystolic.normalChange"><i class="fa fa-arrow-down" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.bpSittingSystolic.abruptChange }"></i></small>
+                        <small ng-if="$ctrl.vitalsign.bpSittingSystolic.delta == '0' || $ctrl.vitalsign.bpSittingSystolic.normalChange">-</small>
+                        <span ng-if="$ctrl.vitalsign.bpSittingSystolic.values[0].value && $ctrl.vitalsign.bpSittingDiastolic.delta !=0">/</span>
+                        <small ng-if="$ctrl.vitalsign.bpSittingDiastolic.delta == '1' && !$ctrl.vitalsign.bpSittingDiastolic.normalChange"><i class="fa fa-arrow-up" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.bpSittingDiastolic.abruptChange }"></i></small>
+                        <small ng-if="$ctrl.vitalsign.bpSittingDiastolic.delta == '-1' && !$ctrl.vitalsign.bpSittingDiastolic.normalChange"><i class="fa fa-arrow-down" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.bpSittingDiastolic.abruptChange }"></i></small>
+                        <small ng-if="$ctrl.vitalsign.bpSittingDiastolic.delta == '0' || $ctrl.vitalsign.bpSittingDiastolic.normalChange">-</small>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12" style="padding:0px" ng-if="!$ctrl.forPerson">
+                        <small class="bold" ng-if="$ctrl.vitalsign.bpSittingSystolic.values[0].value">
+                            <span ng-class="{'abnormal' : $ctrl.vitalsign.bpSittingSystolic.category != '0' }">{{$ctrl.vitalsign.bpSittingSystolic.values[0].value}}</span>/
+                            <span ng-class="{'abnormal' : $ctrl.vitalsign.bpSittingDiastolic.category != '0' }">{{$ctrl.vitalsign.bpSittingDiastolic.values[0].value}} mmHg</span>
+                        </small>
+                        <small class="bold" ng-if="!$ctrl.vitalsign.bpSittingSystolic.values[0].value">-</small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px"><small>{{$ctrl.vitalsign.bpSittingSystolic.values[0].takenOn | dateTimeFormat}}</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12" style="margin-left: 20px">
+            <div class="col-md-12 col-sm-12" style="padding:0px">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px"><span class="bold">Standing</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px" ng-if="$ctrl.forPerson">
+                        <small class="bold" ng-if="$ctrl.vitalsign.bpStandingSystolic.values[0].value">
+                            <span ng-class="{'abnormal' : $ctrl.vitalsign.bpStandingSystolic.category != '0' }">
+                                {{$ctrl.vitalsign.bpStandingSystolic.values[0].value}}
+                            </span>/
+                            <span ng-class="{'abnormal' : $ctrl.vitalsign.bpStandingDiastolic.category != '0' }">
+                                {{$ctrl.vitalsign.bpStandingDiastolic.values[0].value}} mmHg
+                            </span>
+                        </small>
+                        <small class="bold" ng-if="!$ctrl.vitalsign.bpStandingSystolic.values[0].value">-</small>
+                        <small ng-if="$ctrl.vitalsign.bpStandingSystolic.delta == '1' && !$ctrl.vitalsign.bpStandingSystolic.normalChange"><i class="fa fa-arrow-up" aria-hidden="true" ng-class="{'abnormal' : $ctrl.vitalsign.bpStandingSystolic.category != '0' }"></i></small>
+                        <small ng-if="$ctrl.vitalsign.bpStandingSystolic.delta == '-1' && !$ctrl.vitalsign.bpStandingSystolic.normalChange"><i class="fa fa-arrow-down" aria-hidden="true" ng-class="{'abnormal' : $ctrl.vitalsign.bpStandingSystolic.category != '0' }"></i></small>
+                        <small ng-if="$ctrl.vitalsign.bpStandingSystolic.delta == '0' && $ctrl.vitalsign.bpStandingSystolic.normalChange">-</small>
+                        <span ng-if="$ctrl.vitalsign.bpStandingSystolic.values[0].value && $ctrl.vitalsign.bpStandingDiastolic.delta != 0">/</span>
+                        <small ng-if="$ctrl.vitalsign.bpStandingDiastolic.delta == '1' && !$ctrl.vitalsign.bpStandingDiastolic.normalChange"><i class="fa fa-arrow-up" aria-hidden="true" ng-class="{'abnormal' : $ctrl.vitalsign.bpStandingDiastolic.category != '0' }"></i></small>
+                        <small ng-if="$ctrl.vitalsign.bpStandingDiastolic.delta == '-1' && !$ctrl.vitalsign.bpStandingDiastolic.normalChange"><i class="fa fa-arrow-down" aria-hidden="true" ng-class="{'abnormal' : $ctrl.vitalsign.bpStandingDiastolic.category != '0' }"></i></small>
+                        <small ng-if="$ctrl.vitalsign.bpStandingDiastolic.delta == '0' && $ctrl.vitalsign.bpStandingDiastolic.normalChange">-</small>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12" style="padding:0px" ng-if="!$ctrl.forPerson">
+                        <small class="bold" ng-if="$ctrl.vitalsign.bpStandingSystolic.values[0].value">
+                            <span ng-class="{'abnormal' : $ctrl.vitalsign.bpStandingSystolic.category != '0' }">
+                                {{$ctrl.vitalsign.bpStandingSystolic.values[0].value}}
+                            </span>/
+                            <span ng-class="{'abnormal' : $ctrl.vitalsign.bpStandingDiastolic.category != '0' }">
+                                {{$ctrl.vitalsign.bpStandingDiastolic.values[0].value}} mmHg
+                            </span>
+                        </small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px"><small>{{$ctrl.vitalsign.bpStandingSystolic.values[0].takenOn | dateTimeFormat}}</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

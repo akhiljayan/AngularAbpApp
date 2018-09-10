@@ -1,0 +1,102 @@
+﻿<div busy-if="$ctrl.loading" ng-if="$ctrl.isPatient || $ctrl.isReferral">
+    <div id="medicalalerts" class="portlet light">
+        <div class="portlet-title">
+            <div class="caption" data-toggle="collapse" href="#MedicalAlertBody">
+                <span class="caption-subject">@L("MedicalAlert"){{$ctrl.headingAppend}}</span>
+            </div>
+            <div class="actions dropdown inputs" ng-if="$ctrl.template == 'person'">
+                <a class="icon-wrapper" ng-if="$ctrl.permissions.create && !$ctrl.lockCard" ng-click="$ctrl.create()">
+                    <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                </a>
+                <a ng-click="$ctrl.medicalAlertDetailsOpen = !$ctrl.medicalAlertDetailsOpen" title="Show Medical Alert Detail View" class="icon-wrapper">
+                    <i ng-show="!$ctrl.medicalAlertDetailsOpen" class="material-icons custom-icon">menu</i>
+                    <i ng-show="$ctrl.medicalAlertDetailsOpen" class="material-icons custom-icon">view_headline</i>
+                </a>
+                <a class="icon-wrapper" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                    <i class="material-icons custom-icon">more_vert</i>
+                </a>
+                <ul class="dropdown-menu pull-right">
+                    <li>
+                        <a href="javascript:;" class="bold" ng-click="$ctrl.getAllActive()">@L("Active")</a>
+                    </li>
+                    <li class="divider"> </li>
+                    <li>
+                        <a href="javascript:;" class="bold" ng-click="$ctrl.getAllInactive()">@L("Inactive")</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="actions dropdown inputs" ng-if="$ctrl.template == 'referral'">
+                <a ng-click="$ctrl.create()" ng-if="$ctrl.permissions.create" class="icon-wrapper">
+                    <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                </a>
+            </div>
+        </div>
+
+        @*Person Medical Alert Session*@
+        <div id="MedicalAlertBody" class="portlet-body collapse in" ng-if="$ctrl.template == 'person'">
+            <div class="row">
+                @*Summary View*@
+                <div class="col-md-12 col-sm-12" ng-show="!$ctrl.medicalAlertDetailsOpen">
+                    <span class="font-14-main" ng-repeat="summary in $ctrl.medicalAlertSummary" style="">
+                        <a class="font-14-main font-black-main" ng-click="$ctrl.editMedicalAlert(summary)">
+                            <span style="text-decoration:underline;" ng-if="summary.medicalAlertItem.description=='Others'">{{summary.medicalAlertItem.description}}-{{summary.others}}</span>
+                            <span style="text-decoration:underline;" ng-if="summary.medicalAlertItem.description=='Infectious Disease'">{{summary.medicalAlertItem.description}}-{{summary.infectiousDisease}}</span>
+                            <span style="text-decoration:underline;" ng-if="summary.medicalAlertItem.description!='Others' && summary.medicalAlertItem.description!='Infectious Disease'">
+                                {{summary.medicalAlertItem.description}}
+                            </span>
+                        </a>{{$last ? '' : ', '}}
+                    </span>
+                </div>
+                @*Detail View*@
+                <div class="medical-allert col-md-12 col-sm-12" ng-repeat="medicalAlertGroup in $ctrl.medicalalerts" ng-show="$ctrl.medicalAlertDetailsOpen">                    
+                    <div ng-repeat="ma in medicalAlertGroup.medicalAlert | orderBy:'-lastModificationTime'" ng-click="$ctrl.editMedicalAlert(ma)">
+                        <div class="medical-allert-details row">
+                            <div class="col-md-12 col-sm-12 nopadding no-padding">
+                                <div class="col-md-10 col-sm-10">
+                                    <span class="bold" title="Description">
+                                        <span ng-if="ma.medicalAlertItem.description=='Others'">{{ma.medicalAlertItem.description}}-{{ma.others}}</span>
+                                        <span ng-if="ma.medicalAlertItem.description=='Infectious Disease'">{{ma.medicalAlertItem.description}}-{{ma.infectiousDisease}}</span>
+                                        <span ng-if="ma.medicalAlertItem.description!='Others' && ma.medicalAlertItem.description!='Infectious Disease'">
+                                            {{ma.medicalAlertItem.description}}
+                                        </span>
+                                    </span>
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                    <div class="actions list-unstyled list-inline">
+                                        <a class="actions list-unstyled list-inline" ng-if="$ctrl.permissions.delete && !$ctrl.lockCard" href="#" ng-click="$ctrl.deleteMedicalAlert(ma.id);$event.stopPropagation()">@L("Delete")</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12" ng-if="ma.date">
+                                Date: <span class="bold">{{ma.date | date:'dd-MMM-yyyy'}}</span>
+                            </div>
+                            <div class="col-md-12 col-sm-12">
+                                <span ng-if="ma.remarks">Remarks: {{ma.remarks}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                </div>
+            </div>
+            <simple-paginator data="$ctrl.data" small-page-size="true" on-page-changed="$ctrl.load(requestParams)"></simple-paginator>
+        </div>
+        @*Referral Medical Alert Session*@
+        <div class="portlet-body nopadding" ng-if="$ctrl.template == 'referral'">
+            <div class="mt-comments">
+                <div class="mt-comment-date" ng-if="$ctrl.medicalalerts.length==0">@L("NoRecordsFound")</div>
+                <div class="row">
+                    <div ng-click="$ctrl.create()" class="col-md-12 col-sm-12">
+                        <label style="font-size:14px !important; text-decoration:underline; cursor:pointer; margin-right:0.5em;word-wrap:break-word;" ng-repeat="ma in $ctrl.medicalalerts">
+                            {{ma.medicalAlertItem.description}}
+                            <span ng-if="ma.medicalAlertItem.description=='Others'">-{{ma.others}}</span>
+                            <span ng-if="ma.medicalAlertItem.description=='Infectious Disease'">-{{ma.infectiousDisease}}</span>
+                            {{$last ? '' : ', '}}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+

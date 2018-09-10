@@ -1,0 +1,49 @@
+﻿@model GenericDrugDto
+@using Pulsesync.IngoTPCC.GenericDrug.Dto;
+<div class="portlet light" data-drag="true" id="masterDataTypeItemModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("GenericDrug")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        @{
+            var attributes = new Dictionary<string, object>();
+            attributes.Add("role", "form");
+            attributes.Add("id", "genericDrugForm");
+            attributes.Add("name", "genericDrugForm");
+            attributes.Add("novalidate", "");
+            attributes.Add("action", "#");
+            attributes.Add("angular-validator-submit", "vm.save()");
+            attributes.Add("angular-validator", "");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body")))
+        {
+            using (var s = f.BeginSection())
+            {
+                <div class="portlet-body" style="display: block;">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.Name).Attrs(new { ng_model = "vm.genericDrug.name" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="portlet-body" style="display: block;">
+                <div class="form-body">
+                    @L("CreatedBy") <label class="control-label bold" ng-bind="vm.genericDrug.createdUserName"></label> on <label class="control-label bold">{{vm.genericDrug.creationTime | dateTimeFormat}}</label><br />
+                    @L("ModifiedBy") <label class="control-label bold" ng-bind="vm.genericDrug.modifiedUserName"></label> on <label class="control-label bold">{{vm.genericDrug.lastModificationTime | dateTimeFormat}}</label><br />
+                </div>
+            </div>
+            <div class="form-actions noborder right">
+                <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.disableSave"><i class="material-icons ps-btn-material">check</i>Ok</button>
+                <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,13 @@
+﻿@*<ol class="breadcrumb">
+        <li ng-repeat="crumb in breadcrumbs" ng-class="{ active: $last }">
+            <a ui-sref="{{ crumb.route }}" ng-if="!$last">{{ crumb.displayName }}&nbsp;</a><span ng-show="$last">{{ crumb.displayName }}</span>
+        </li>
+    </ol>*@
+
+<ol class="breadcrumb">
+    <li ng-repeat="crumb in breadcrumbs" ng-class="{ active: $last }">
+        <a ui-sref="{{ crumb.route }}" ng-if="!$last">{{ crumb.displayName }}</a>
+        <span ng-show="$last">{{ crumb.displayName }}</span>
+        <span class="divider bold" ng-show="!$last" style="padding-right: 5px;padding-left: 5px;"><i class="fa fa-circle"></i></span>
+    </li>
+</ol>

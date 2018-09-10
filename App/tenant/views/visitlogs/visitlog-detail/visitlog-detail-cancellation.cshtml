@@ -1,0 +1,57 @@
+﻿@model CancelVisitLogInput
+
+@using Pulsesync.IngoTPCC.Application.VisitLogs.Dto;
+
+<style>
+    .padding-top-0 {
+        padding-top: 0px !important;
+    }
+
+    .bs-callout {
+        margin-left: 10px !important;
+        margin-right: 10px !important;
+    }
+</style>
+
+<div class="portlet light" id="cancelVisitLogModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject"> @L("Cancel") @L("VisitLog")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vmx.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="form-body">
+            <div class="row">
+                <div class="bs-callout bs-callout-danger ">
+                    <h4 style="font-weight: 600;"><i class="icon fa fa-warning"></i>&nbsp; Alert!</h4>
+                    Please fill in the following required field to proceed Cancellation for @L("VisitLog")
+                </div>
+                <div class="col-md-12">
+                    @{
+                        var attrs = new Dictionary<string, object> {
+                            { "name", "vmx.cancelVisitLogForm" },
+                            { "novalidate", "" },
+                            { "angular-validator", ""},
+                            { "angular-validator-submit", "vmx.save()"}
+                        };
+                    }
+                    @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs).AddClass("scrollable-form-body")))
+                    {
+                        using (var s = f.BeginSection())
+                        {
+                            @s.FieldFor(m => m.CancellationReason).Attrs(new { ng_model = "vmx.visitLog.cancellationReason" })
+                        }
+
+                        <div class="form-actions noborder right">
+                            <button type="submit" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-if="vmx.permissions.cancel" ng-disabled="cancelVisitLogForm.$invalid"><i class="material-icons ps-btn-material">check</i>@L("Ok")</button>
+                            <button type="button" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vmx.cancel()"><i class="material-icons ps-btn-material">clear</i>@L("Cancel")</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

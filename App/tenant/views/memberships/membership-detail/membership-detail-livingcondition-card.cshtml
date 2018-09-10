@@ -1,0 +1,68 @@
+﻿@model MembershipDto
+
+@using Pulsesync.IngoTPCC.Application.Membership.Dto
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("LivingCondition")</div>
+        </div>
+    </div>
+       
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @using (var f = Html.BeginSubForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        @s.FieldFor(m => m.Clean).Attrs(new { ng_model = "vm.workingModel.clean" })
+                        @s.FieldFor(m => m.Cluttered).Attrs(new { ng_model = "vm.workingModel.cluttered" })
+                        @s.FieldFor(m => m.FoulSmellingMustySmelling).Attrs(new { ng_model = "vm.workingModel.foulSmellingMustySmelling" })
+                        @s.FieldFor(m => m.LivingConditionOthers).Attrs(new { ng_model = "vm.workingModel.livingConditionOthers", ng_change = "vm.initialiseLivingConditionOthersDescription()" })
+                        <div class="form-group form-md-line-input" ng-if="vm.workingModel.livingConditionOthers">
+                            <input type="text" ng-model="vm.workingModel.livingConditionOthersDescription" class="form-control" id="othersLivingConditionDescription" name="othersLivingConditionDescription" placeholder="Provide Other Living Condition" ng-required="true" required-message="'@L("OthersPleaseSpecifyErrorMessage")'">
+                            <label class="control-label" for="othersLivingConditionDescription">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                        </div>
+                        @s.FieldFor(m => m.LivingConditionRemarks).Attrs(new { ng_model = "vm.workingModel.livingConditionRemarks" })
+                    }
+                }
+            </div>
+
+            <div ng-switch-default>               
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"  ng-bind="vm.returnBoolValue(vm.model.clean)"></div>
+                        <label class="control-label">@L("Clean")</label>
+                    </div>
+
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"  ng-bind="vm.returnBoolValue(vm.model.cluttered)"></div>
+                        <label class="control-label">@L("Cluttered")</label>
+                    </div>
+
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"  ng-bind="vm.returnBoolValue(vm.model.foulSmellingMustySmelling)"></div>
+                        <label class="control-label">@L("FoulSmellingMustySmelling")</label>
+                    </div>
+
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"  ng-bind="vm.returnBoolValue(vm.model.livingConditionOthers)"></div>
+                        <label class="control-label">@L("LivingConditionOthers")</label>
+                    </div>
+
+                    <div ng-if="vm.model.livingConditionOthersDescription" class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.livingConditionOthersDescription ? vm.model.livingConditionOthersDescription: '-'}}</div>
+                        <label class="control-label">@L("LivingConditionOthersDescription")</label>
+                    </div>
+
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.livingConditionRemarks ? vm.model.livingConditionRemarks: '-'}}</div>
+                        <label class="control-label">@L("LivingConditionRemarks")</label>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+</div>
+

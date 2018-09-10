@@ -1,0 +1,160 @@
+﻿<style>
+    .person-list-grid ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .person-list-grid ul li {
+            display: block;
+            position: relative;
+        }
+
+    .person-list-grid-item ul li {
+        width: 12%;
+        text-align: center;
+        padding: 10px;
+        margin: 10px 0 0;
+        display: inline-block;
+        min-height: 150px;
+        vertical-align: top;
+        cursor: pointer;
+    }
+
+    @@media (max-width: 976px) {
+        .person-list-grid-item ul li {
+            width: 24%;
+        }
+    }
+
+    .person-list-grid-item ul li .check-icon {
+        display: none;
+    }
+
+    .person-list-grid-item ul li .selected,
+    .person-list-grid-item ul li .attended {
+        border: 4px solid #00bfb5;
+        border-radius: 50%;
+    }
+
+        .person-list-grid-item ul li .selected .check-icon,
+        .person-list-grid-item ul li .lock-icon,
+        .person-list-grid-item ul li .cross-icon {
+            display: block;
+        }
+
+            .person-list-grid-item ul li .selected .check-icon i.check:before {
+                background-color: #00bfb5;
+                border-radius: 50%;
+                padding: 6px;
+                color: #fff;
+            }
+
+    .person-list-grid-item ul li i.lock:before {
+        background-color: #00bfb5;
+        border-radius: 50%;
+        padding: 6px 10px;
+        color: #fff;
+    }
+
+    .person-list-grid-item ul li i.cross:before {
+        background-color: #ff0000;
+        border-radius: 50%;
+        padding: 6px 8px;
+        color: #fff;
+    }
+
+    .person-list-grid-item .person-list-grid-image {
+        display: block;
+        margin: 0 auto;
+        max-width: 160px;
+        max-height: 160px;
+        position: relative;
+    }
+
+        .person-list-grid-item .person-list-grid-image img {
+            display: inline-block;
+            max-width: 100%;
+            border: none;
+            width: 160px;
+        }
+
+        .person-list-grid-item .person-list-grid-image .action-icon {
+            display: inline-block;
+            position: absolute;
+            bottom: 5%;
+            right: 10%;
+        }
+
+    .person-list-grid-image:hover .remove-selected {
+        opacity: 1;
+        background-color: rgba(255,255,255,.5);
+    }
+
+    .person-list-grid-image .remove-selected {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        opacity: 0;
+    }
+
+        .person-list-grid-image .remove-selected i {
+            line-height: 0px;
+            margin: 50% 0px;
+        }
+
+    .person-list-grid-item .person-list-grid-details {
+        max-width: 300px;
+        min-height: 70px;
+        margin: 0 auto;
+        padding-top: 10px;
+    }
+
+    .person-list-grid-item .person-list-grid-title {
+        font-weight: bold;
+        font-size: 12px;
+    }
+</style>
+
+<div class="person-list-grid person-list-grid-item">
+    <ul>
+        <li ng-repeat="person in vm.personModel | filter: vm.filterText" ng-click="vm.selectedPerson(person)">
+            <a class="person-list-grid-image" ng-class="{'selected': (person.selected && !vm.showSelectedPersonList), 'attended': person.isAttended, 'image-opacity': vm.showSelectedPersonList }" href="#">
+                <img alt="{{ person.fullName }}" title="{{ person.fullName }}"
+                     class="img-circle"
+                     ng-src="{{ vm.appPath }}Person/GetPersonPictureById?personPictureName={{ person.pictureId }}&t=Clock.Now.Ticks.ToString()" />
+
+                <div class="action-icon" ng-if="!vm.showSelectedPersonList">
+                    <div class="check-icon" ng-if="person.selected">
+                        <i class="check fa fa-check"></i>
+                    </div>
+                    <div class="lock-icon" ng-if="!person.selected && !person.isCancelled && person.isConfirmed">
+                        <i class="lock fa fa-lock"></i>
+                    </div>
+                    <div class="cross-icon" ng-if="!person.selected && person.isCancelled">
+                        <i class="cross fa fa-ban"></i>
+                    </div>
+                </div>
+
+                <span class="remove-selected" ng-if="vm.showSelectedPersonList">
+                    <i class="fa fa-times-circle-o fa-3x"></i>
+                </span>
+            </a>
+
+            <div class="person-list-grid-details">
+                <span class="person-list-grid-title">
+                    {{ person.fullName }}
+                    <br />
+                    <span ng-if="person.registrationDocumentNumber">
+                        ({{ person.registrationDocumentNumber }})
+                        <br />
+                    </span>
+                </span>
+            </div>
+        </li>
+    </ul>
+</div>

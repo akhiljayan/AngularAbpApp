@@ -1,0 +1,212 @@
+﻿@using Abp.Timing
+<style>
+    #staffList {
+        background-color: white;
+    }
+
+        #staffList > .slider-sidebar .row {
+            padding-bottom: 15px;
+        }
+
+    .scrollable-section::-webkit-scrollbar {
+        width: 0.5em;
+    }
+
+    .scrollable-section::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    }
+
+    .scrollable-section::-webkit-scrollbar-thumb {
+        background-color: darkgrey;
+        outline: 1px solid slategrey;
+    }
+
+    .scrollable-section {
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    #SearchBtn.input-small-new-stafflist.stafflist-addwidth {
+        width: 100% !important;
+        max-width: none !important;
+    }
+
+    .staff-status {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+        width: 180px;
+    }
+</style>
+
+<div id="staffList" class="slider-container" pageslide ps-open="$ctrl.checked" ps-side="left" ps-key-listener="true" ng-style="{'z-index': $ctrl.zindex}">
+    <div id="slider-navigation-box-stafflist" class="slider-navigation-handler">
+        <ul>
+            <li class="slider-navigation-handler-icon" title="Staff List">
+                <a class="font-16-important bold txt-align-cntr" href="#favourite-list" target="_self" ng-click="$ctrl.toggleSlider()"><i class="fa fa-user-md" aria-hidden="true"></i></a>
+            </li>
+        </ul>
+    </div>
+    <div id="staffListSlider" class="slider-sidebar scrollable-section">
+        <div class="row">
+            <div class="col-md-10 col-sm-10">
+                <span class="bold font-16-main">Today and Upcoming Birthdays</span>
+            </div>
+        </div>
+        <div id="UBStaff">
+            <div class="row" ng-if="$ctrl.ubStaffCount <= 0 && $ctrl.ubStaff">
+                <div class="col-md-12">
+                    <span> No upcoming birthdays in this week. </span>
+                </div>
+            </div>
+            <div ng-if="$ctrl.ubStaffCount > 0" class="row" ng-repeat="staff in $ctrl.ubStaff">
+                <div class="col-md-3 col-sm-3">
+                    <div id="ProfileImage">
+                        <img id="ProfilePicture" alt="" style="width:100%" class="img-circle" ng-src="{{ $ctrl.appPath }}Profile/GetProfilePictureById/{{staff.profilePictureId}}" />
+                    </div>
+                </div>
+                <div class="col-md-9 col-sm-9" uib-popover-html="staff.popoverContent" popover-trigger="'mouseenter'" popover-placement="bottom">
+                    <span class="bold">{{staff.name}} <i class="fa fa-birthday-cake fontStealGreen" style="margin-left: 15px" ng-if="staff.isTodayBirthday"></i></span><br />
+                    <span ng-if="staff.isTodayBirthday">{{staff.birthday | date:'dd MMM'}} (Today)</span>
+                    <span ng-if="!staff.isTodayBirthday">{{staff.birthday | date:'dd MMM'}} ({{staff.birthday | date:'EEEE'}})</span>
+                </div>
+            </div>
+            <div class="row" ng-if="$ctrl.ubStaffCount > $ctrl.pageNumberUBStaff && $ctrl.ubStaff.length < $ctrl.ubStaffCount">
+                <div class="col-md-12">
+                    <div class="seeMore clearfix text-center">
+                        <a ng-click="$ctrl.loadMoreUBStaff()">@L("SeeMore")</a>
+                    </div>
+                </div>
+            </div>
+
+            @*<div class="row" ng-if="$ctrl.ubStaffCount > $ctrl.pageNumberUBStaff && $ctrl.ubStaff.length == $ctrl.ubStaffCount">
+                    <div class="col-md-12">
+                        <div class="seeMore clearfix text-center">
+                            <a ng-click="$ctrl.showLessUBStaff()">Show less</a>
+                        </div>
+                    </div>
+                </div>*@
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-10 col-sm-10">
+                <span class="bold font-16-main">Recent Birthdays</span>
+            </div>
+        </div>
+        <div id="RBStaff">
+            <div class="row" ng-if="$ctrl.rbStaffCount <= 0 && $ctrl.rbStaff">
+                <div class="col-md-12">
+                    <span> No recent birthdays in past 3 days. </span>
+                </div>
+            </div>
+            <div ng-if="$ctrl.rbStaffCount > 0" class="row" ng-repeat="rbStaff in $ctrl.rbStaff">
+                <div class="col-md-3 col-sm-3">
+                    <div id="ProfileImage">
+                        <img id="ProfilePicture" alt="" style="width:100%" class="img-circle" ng-src="{{ $ctrl.appPath }}Profile/GetProfilePictureById/{{rbStaff.profilePictureId}}" />
+                    </div>
+                </div>
+                <div class="col-md-9 col-sm-9" uib-popover-html="rbStaff.popoverContent" popover-trigger="'mouseenter'" popover-placement="bottom">
+                    <span class="bold">{{rbStaff.name}}</span><br />
+                    <span>{{rbStaff.birthday | date:'dd MMM'}} ({{rbStaff.birthday | date:'EEEE'}})</span>
+                </div>
+            </div>
+            <div class="row" ng-if="$ctrl.rbStaffCount > $ctrl.pageNumberRBStaff && $ctrl.rbStaff.length < $ctrl.rbStaffCount">
+                <div class="col-md-12">
+                    <div class="seeMore clearfix text-center">
+                        <a ng-click="$ctrl.loadMoreRBStaff()">@L("SeeMore")</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slider-divider"></div>
+        <br />
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="inline-block vertical-top"><span class="bold font-16-main">My Co-Workers</span></div>
+                <div id="SearchBtn" class="input-small-new-stafflist inline-block" style="float:right">
+                    <form action="" class="search-form search-style-class" title="search from {{$ctrl.heading}}">
+                        <div id="SearchBtninput" class="form-group has-feedback input-inline search-form-group" title="search from {{$ctrl.heading}}">
+                            <label for="search" class="sr-only">@L("Search")</label>
+                            <input type="text" ng-model="$ctrl.filter" title="search from {{$ctrl.heading}}" enter-key="$ctrl.filterCoWorker()" class="form-control form-control-solid search-input input-circle font-13-main clearable testing" placeholder="search from {{$ctrl.heading}}...">
+                            <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="$ctrl.clearFilter()" title="search from {{$ctrl.heading}}"></a>
+                            <i class="material-icons form-control-feedback searchIcon" title="search from {{$ctrl.heading}}">@L("search")</i>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="MyCoWorkers">
+
+            <div ng-class="row" ng-if="$ctrl.coWorkersCount <= 0 && $ctrl.coWorkers">
+                <div class="col-md-12">
+                    <span> No Co Worker result. </span>
+                </div>
+            </div>
+            <div ng-if="$ctrl.coWorkersCount > 0" class="row" ng-repeat="coWorker in $ctrl.coWorkers">
+                <div class="col-md-3 col-sm-3">
+                    <div id="ProfileImage">
+                        <img id="ProfilePicture" alt="" style="width:100%" class="img-circle" ng-src="{{ $ctrl.appPath }}Profile/GetProfilePictureById/{{coWorker.profilePictureId}}" />
+                    </div>
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    <span class="bold">{{coWorker.name}}</span><br />
+                    <div ng-if="coWorker.designation"><span>{{coWorker.designation}}</span><br /></div>
+                    <div ng-if="coWorker.phoneNumber"><span>{{coWorker.phoneNumber}}</span><br /></div>
+                    <span ng-if="coWorker.status" class="staff-status" title="{{coWorker.status}}" onclick="expandStatus(this)">{{coWorker.status}}</span>
+                </div>
+            </div>
+            <div class="row" ng-if="$ctrl.coWorkersCount > $ctrl.pageSizeCW && $ctrl.coWorkers.length < $ctrl.coWorkersCount">
+                <div class="col-md-12">
+                    <div class="seeMore clearfix text-center">
+                        <a ng-click="$ctrl.loadMoreCoWorker()">@L("SeeMore")</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var sliderHeight = $('.slider-navigation-handler-icon').height();
+        var heightInit = $(window).innerHeight() - 75;
+        var height = ((heightInit - 120) / 2) + sliderHeight;
+        $("#slider-navigation-box-stafflist").attr("style", "top: " + height + "px");
+        $("#staffListSlider").attr("style", "max-height: " + heightInit + "px");
+        $("#staffListSlider").attr("style", "height: " + heightInit + "px");
+
+        $(window).resize(function () {
+            var sliderHeight = $('.slider-navigation-handler-icon').height();
+            var heightInit = $(window).innerHeight() - 75;
+            var height = ((heightInit - 120) / 2) + sliderHeight;
+            var test = $("#MyCoWorkers .row ").height();
+            $("#slider-navigation-box-stafflist").attr("style", "top: " + height + "px");
+            $("#staffListSlider").attr("style", "max-height: " + heightInit + "px");
+            $("#staffListSlider").attr("style", "height: " + heightInit + "px");
+        });
+    });
+
+    $("#SearchBtn .search-input").hover(function () {
+        $('#SearchBtn').addClass("stafflist-addwidth");
+    });
+
+    $("#SearchBtn .search-input").on('touchstart', function (e) {
+        $('#SearchBtn').addClass("stafflist-addwidth");
+    });
+
+    $("#SearchBtn .search-input").blur(function () {
+        $('#SearchBtn').removeClass("stafflist-addwidth");
+    });
+
+    function expandStatus(input) {
+        var classExist = $(input).hasClass("staff-status");
+        if (classExist) {
+            $(input).toggleClass("staff-status");
+        } else {
+            $(input).addClass("staff-status");
+        }
+    }
+
+</script>

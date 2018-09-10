@@ -1,0 +1,127 @@
+﻿@using Abp.Timing
+@using Pulsesync.IngoTPCC.Authorization
+<div class="portlet light">
+    <div class="portlet-title customizedSearchHeader removeBorder">
+        <div class="caption">
+            <span class="caption-subject">Post Finder</span>
+        </div>
+        <div class="actions inputs">
+            <div class="portlet-input input-inline">
+                <div class="input-icon right">
+                    <i class="icon-magnifier"></i>
+                    <input type="text" ng-model="vm.momentPostCard.filterText" ng-keyup="$event.keyCode == 13 && vm.momentPostCard.search(vm.momentPostCard.filterText)" class="form-control form-control-solid input-circle" placeholder="search #, name etc..">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div ng-if="vm.permissions.create" class="portlet light">
+    <div class="portlet-title removeBorder">
+        <div class="caption">
+            <span class="caption-subject font-green-steel bold">@L("ShareAPost")</span>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <form role="form" id="momentsForm" name="momentsForm" novalidate action="#" angular-validator angular-validator-submit="vm.momentPostCard.createPost()" class="form-validation horizontal-form">
+            <div class="form-body" style="padding:0px">
+                <div class="row">
+                    <div class="col-xs-2 col-sm-2">
+                        <img id="HeaderProfilePicture" class="img-responsive img-circle" alt="" src="@Url.Action("GetProfilePicture", "Profile")?t=@Clock.Now.Ticks.ToString()" />
+                    </div>
+                    <div class="col-md-10 form-group form-md-line-input postBoxContainer">
+                        @*<textarea type="text" class="form-control" name="PostMessage" id="postHelpText" ng-model="vm.momentPostCard.postDescription" ng-maxlength="500" placeholder="Share Something..."></textarea>*@
+                        <textarea class="form-control animate msd-elastic: \n;  ng-valid ng-not-empty ng-dirty ng-valid-parse" cols="20" data-val="true" required required-message="'You must provide a value for Post Message'" data-val-length="The field Remarks must be a string with a maximum length of 500." data-val-length-max="500" placeholder="Share Something..." name="PostMessage" id="postHelpText" ng-model="vm.momentPostCard.postDescription" rows="4" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 75px;"></textarea>
+                    </div>
+                </div>
+                <div class="row postBoxContainer">
+                    <div class="col-md-2">
+
+                    </div>
+                    <div class="col-md-10">
+                        <img id="hash" class="postIconImg" ng-src="{{vm.appPath}}Common/Images/hastag/Hastag@2x.png" />
+                        <img id="personTag" class="postIconImg" ng-src="{{vm.appPath}}Common/Images/tag/Tag.png" />
+                        <i class="material-icons cameraIcon">camera_alt</i>
+                    </div>
+                </div>
+                <div class="row" id="addPhotoContainer" style="display:none">
+                    <div class="col-md-12 form-group form-md-line-input">
+                        <i class="material-icons">camera_alt</i>
+                        <label class="control-label" for="photo">@L("AddPhoto")</label>
+                        <input type="file" class="form-control" id="photo" ng-maxlength="500" nv-file-select uploader="vm.uploader">
+                    </div>
+                </div>
+                <div class="row" id="addPersonContainer" style="display:none">
+                    <div class="col-md-12 form-group form-md-line-input">
+                        <img class="postIconImgForm" ng-src="{{vm.appPath}}Common/Images/tag/Tag.png" />
+                        <label class="control-label" for="person">@L("WithPerson")</label>
+                        <input type="text" class="form-control typeahead" id="person" ng-maxlength="500" data-role="tagsinput" placeholder="Type to add Person">
+                    </div>
+                </div>
+                <div class="row" id="hashTagContainer" style="display:none">
+                    <div class="col-md-12 form-group form-md-line-input">
+                        <img class="postIconImgForm" style="font-size:24px" ng-src="{{vm.appPath}}Common/Images/hastag/Hastag@2x.png" />
+                        <label class="control-label" for="hashTag">@L("HashTag")</label>
+                        <input type="text" class="form-control" id="hashTag" ng-maxlength="500" data-role="tagsinput" placeholder="Type to add new tag">
+                    </div>
+                </div>
+                <div class="form-actions right" style="padding: 0px 0px; display: none" id="momentPostActions">
+                    <button id="momentPost" type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small">@L("Post")</button>
+                    <button id="momentPostCancel" type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.momentPostCard.cancel()">@L("Cancel")</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div name="posts">
+    <div class="portlet light" ng-repeat="post in vm.momentPostCard.Posts">
+        <div class="portlet-body row postcard mt-post">
+            <div class="col-xs-2 col-sm-2">
+                <img class="img-responsive img-circle" ng-if="post.userProfilePictureId" ng-src="{{vm.appPath}}Profile/GetProfilePictureById?id={{post.userProfilePictureId}}" />
+                <img class="img-responsive img-circle" ng-if="!post.userProfilePictureId" ng-src="{{vm.appPath}}Common/Images/default-profile-picture.png" />
+            </div>
+            <div class="col-sm-6">
+                <post-title></post-title>
+                <div>
+                    <a href="#" ng-repeat="hashTag in post.hashtags" ng-click="vm.momentPostCard.search(hashTag.name)">
+                        #{{hashTag.name}}
+                    </a>
+                </div>
+            </div>
+            <div class="col-xs-4 col-sm-4 text-right">
+                <div class="col-xs-12 col-sm-12 text-right">
+                    <span class="caption-helper">{{post.lastModificationTime|amTimeAgo:true}}</span>
+                </div>
+                <div class="mt-post-actions col-xs-12 col-sm-12">
+                    <ul class="list-unstyled list-inline text-right">
+                        <li style="padding-right:0px">
+                            <a href="#" ng-click="vm.momentPostCard.deletePost(post.id)">@L("Delete")</a>
+                        </li>
+                        <li style="padding-right:0px">
+                            <a ng-if="vm.permissions.edit" href="#" ng-click="vm.momentPostCard.editPost(post.id)">@L("Edit")</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-12 margin-top-12 margin-bottom-12">
+                <span class="caption-helper padding-10">{{post.description}}</span>
+            </div>
+            <div class="col-sm-12">
+                <img class="img-responsive" ng-src="{{vm.appPath}}Post/GetPhoto?p={{post.attachments[0].fileName}}" />
+            </div>
+            <div class="col-sm-12 text-right to-bottom margin-top-12 margin-bottom-12">
+                <div ng-click="vm.momentPostCard.like(post)" class="cursor-pointer">
+                    <i ng-if="post.hasLikedThisPost" class="material-icons font-green-steel" style="font-size:24px;">thumb_up</i>
+                    <i ng-if="!post.hasLikedThisPost" class="material-icons" style="font-size:24px;">thumb_up</i>
+                    <span class="bottom-align-text">{{post.likeCount > 0 ? post.likeCount : ''}}</span>
+                    <span class="bottom-align-text" ng-if="post.likeCount > 1">@L("likes")</span>
+                    <span class="bottom-align-text" ng-if="post.likeCount == 1">@L("like")</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div ng-if="vm.momentPostCard.Posts.length!=0" class="col-md-12 btn-arrow-link text-center seeMore">
+            <a href="javascript:;" ng-click="vm.momentPostCard.loadMore()">@L("SeeMore")</a>
+        </div>
+    </div>
+</div>

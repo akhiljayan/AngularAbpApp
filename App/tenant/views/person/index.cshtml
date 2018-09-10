@@ -1,0 +1,105 @@
+﻿<div id="personIndex" class="view-content" ng-controller="tenant.views.person.index as vm">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="portlet light" busy-if="vm.loading">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("Person")<span ng-if="vm.filterStatusTitle"> - {{ vm.filterStatusTitle }}</span></span>
+                    </div>
+                    <div class="actions dropdown inputs">
+                        <div class="input-small-new inline-block">
+                            <form action="" class="search-form">
+                                <div class="form-group has-feedback input-inline">
+                                    <label for="search" class="sr-only">@L("Search")</label>
+                                    <input type="text" ng-model="vm.filter" enter-key="vm.load()" class="form-control form-control-solid input-circle search-input font-13-main clearable" placeholder="search keywords...">
+                                    <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="vm.clearFilter()"></a>
+                                    <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                                </div>
+                            </form>
+                        </div>
+                        <a ng-click="vm.personDetailOpen = !vm.personDetailOpen" title="Show associated Service types and Status" class="icon-wrapper">
+                            <i ng-show="!vm.personDetailOpen" class="material-icons custom-icon">menu</i>
+                            <i ng-show="vm.personDetailOpen" class="material-icons custom-icon">view_headline</i>
+                        </a>
+                        <a ng-click="vm.create()" ng-if="vm.permissions.create" title="Add a new Person" class="icon-wrapper">
+                            <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                        </a>
+                        <a class="icon-wrapper" href="javascript:;" title="Filter" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <i class="material-icons custom-icon">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a href="javascript:;" class="bold" ng-click="vm.changeView(0)">@L("All")</a>
+                            </li>
+                            <li class="divider"> </li>
+                            <li>
+                                <a href="javascript:;" class="bold" ng-click="vm.changeView(2)">@L("Inactive")</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" class="bold" ng-click="vm.changeView(1)">@L("Active")</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="portlet-body air-card p-0-top-bottom">
+                    @*<div class="scroller" style="width: auto; height: 350px; overflow-x: scroll; overflow-y: scroll">*@
+                        <section class="air-card-hover person-section" ng-repeat="person in vm.data.items">
+                            <div class="person-section-click-area" ng-click="vm.view(person.id)"></div>
+                            <div class="row margin-bottom-10">
+                                <div class="col-md-10 flex-center">
+                                    <span ng-if="person.gender.toLowerCase()=='male'" class="ps-icon-male male-icon-blue padding-right-10"></span>
+                                    <span ng-if="person.gender.toLowerCase()=='female'" class="ps-icon-female female-icon-pink padding-right-10"></span>
+                                    <span class="caption margin-right-5 empty-gender">{{person.fullName}} </span>
+                                    <span ng-if="person.registrationDocumentNumber" class="otherText uppercase">
+                                        ({{person.registrationDocumentNumber}})
+                                    </span>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="person-option">
+                                        <i class="fa fa-star" style="top: -3px;"  title="{{person.fullName}} is in your care list" ng-if="person.isInCareList"></i>
+                                        <i class="fa fa-eye" style="top: -3px;" title="{{person.fullName}} is in your watch list" ng-if="person.isWatched"></i>
+ 
+                                        <span ng-if="person.isPatient && !person.isAdmitted" class="ps-icon-care"></span>
+                                        <span ng-if="person.isPatient && person.isAdmitted" style="color: #00bfb5" class="ps-icon-care"></span>
+
+                                        <div class="person-bookmark">
+                                            <a class="person-bookmark-icon" ng-click="vm.showContextMenu(person.id, $event)" ng-if="person.isPatient" data-toggle="dropdown" aria-expanded="true">
+                                                <i class="fa fa-bookmark"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li ng-if="person.isNotWatched"><a ng-click="vm.watch(person)"><i class="fa fa-eye"></i> Add to watch list</a></li>
+                                                <li ng-if="person.isWatched"><a ng-click="vm.unwatch(person)"><i class="fa fa-eye-slash"></i> Remove from watch list</a></li>
+                                                <li ng-if="!person.isInCareList && vm.permissions.mycarelist"><a ng-click="vm.addToCareList(person)"><i class="fa fa-star"></i> Add to care list</a></li>
+                                                <li ng-if="person.isInCareList && vm.permissions.mycarelist"><a ng-click="vm.removeFromCareList(person)"><i class="fa fa-star-o"></i> Remove from care list</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row margin-bottom-10">
+                                <div class="col-lg-6 col-md-12 icon flex-center">
+                                    <i class="material-icons" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<div class='otherText'>Home Phone</div>" ng-popover>phone</i>
+                                    <span class="otherText" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<div class='otherText'>Home Phone</div>" ng-popover>{{person.homePhone ? person.homePhone : "-"}}</span>
+                                </div>
+                                <div class="col-lg-6 col-md-12 icon flex-center">
+                                    <i class="material-icons" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<div class='otherText'>Mobile Phone</div>" ng-popover>phone_iphone</i>
+                                    <span class="otherText" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<div class='otherText'>Mobile Phone</div>" ng-popover>{{person.mobilePhone ? person.mobilePhone : "-"}}</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="well well-sm margin-12 referral-service-well font-13-main" ng-show="person.userServiceTypeList.length > 0 && vm.personDetailOpen" style="display: flex;flex-wrap: wrap;">
+                                    <div class="otherText services service bold circle" ng-class="{'fontStealGreen': service.status == vm.serviceTypeStatus.Admitted}" ng-repeat="service in person.userServiceTypeList" style="margin:5px 2px;border: 1px solid #9eacb4;">
+                                        {{service.serviceTypeName}}
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    @*</div>*@
+
+                    <simple-paginator data="vm.data" key="vm.key" on-page-changed="vm.load(requestParams)"></simple-paginator>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

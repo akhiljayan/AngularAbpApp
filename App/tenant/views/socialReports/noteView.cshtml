@@ -1,0 +1,67 @@
+﻿@model CreateOrUpdateSocialReportInput
+
+@using Pulsesync.IngoTPCC.Application.SocialReports.Dto;
+
+<div id="Note" class="portlet light" ng-controller="tenant.views.socialReports.noteView as noteCtrl">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Note")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a class="icon-wrapper" ng-if="noteCtrl.mode.toLowerCase()=='view' && !vm.isNew && vm.permissions.edit" ng-click="noteCtrl.edit()">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools">
+            <a class="remove" ng-if="noteCtrl.mode.toLowerCase()=='edit' && !vm.isNew" ng-click="noteCtrl.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="noteCtrl.mode">
+                @*edit mode*@
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+                        @{
+                            var attributes = new Dictionary<string, object>();
+                            attributes.Add("role", "form");
+                            attributes.Add("id", "noteCtrl.noteCtrlForm");
+                            attributes.Add("name", "noteCtrl.noteCtrlForm");
+                        }
+                        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes)))
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                @s.FieldFor(m => m.Note).Attrs(new { ng_model = "noteCtrl.socialReport.note" }).AddClass("animate msd-elastic: \\n;").Rows(4)
+                                <span ng-show="vm.permissions.ManageConfidentialNotes">@s.FieldFor(m => m.ConfidentialNote).Attrs(new { ng_model = "noteCtrl.socialReport.confidentialNote" }).AddClass("animate msd-elastic: \\n;").Rows(4)</span>
+
+                                <div class="form-actions pull-right" ng-if="!vm.isNew">
+                                    <a class="linkButton btn-small" ng-click="noteCtrl.save()">
+                                        <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                                    </a>
+                                    <a class="linkButton btn-small" ng-click="noteCtrl.close()">
+                                        <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                                    </a>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+
+                @*view mode*@
+                <div ng-switch-default>
+                    <div class="col-md-12">
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.note" /></div>
+                            <label class="control-label">@L("Description")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20" ng-show="vm.permissions.ManageConfidentialNotes">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.confidentialNote" /></div>
+                            <label class="control-label">@L("ConfidentialNote")</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

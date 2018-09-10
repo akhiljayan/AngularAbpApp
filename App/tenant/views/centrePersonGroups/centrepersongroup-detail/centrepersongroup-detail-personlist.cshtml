@@ -1,0 +1,72 @@
+﻿<style>
+    .portlet.light .portlet-body.content-overflow-y {
+        height: 500px;
+        overflow-y: auto;
+    }
+
+    .person-group-actions {
+        background-color: #E5E5E5;
+        padding: 10px;
+    }
+
+        .person-group-actions a,
+        .person-group-actions a:hover .splitter {
+            font-weight: bold;
+            color: rgba(0, 0, 0, 0.54);
+            text-decoration: none;
+        }
+
+            .person-group-actions a:hover span {
+                text-decoration: underline;
+            }
+
+            .person-group-actions a.disable-links {
+                opacity: 0.5;
+            }
+</style>
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">
+                <span>@L("PersonList")</span>
+                <span class="badge">{{ vm.model.personModel.length }}</span>
+            </div>
+        </div>
+        <div class="actions dropdown inputs">
+            <a ng-click="vm.addPersonToPersonGroup()" class="icon-wrapper">
+                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+            </a>
+        </div>
+    </div>
+    <div class="portlet-body content-overflow-y">
+        <div>
+            @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes()))
+            {
+                using (var s = f.BeginSection())
+                {
+                    <div class="person-group-actions">
+                        <a ng-click="vm.selectAll = true">
+                            <span>@L("SelectAll")</span>
+                        </a>
+
+                        <a ng-click="vm.selectAll = false">
+                            | <span>@L("DeselectAll")</span>
+                        </a>
+                        <a ng-click="vm.remove();"
+                           ng-class="vm.model.persons.length > 0 ? '' : 'disable-links'">
+                            <span class="splitter">| </span>
+                            <span>@L("Remove")</span>
+                        </a>
+                    </div>
+
+                    @*<pre>{{ vm.model.persons | json }} </pre>*@
+                    <person-list-grid person-model="vm.model.personModel"
+                                      selected-person-list="vm.model.persons"
+                                      select-all="vm.selectAll">
+                    </person-list-grid>
+                }
+            }
+        </div>
+    </div>
+</div>

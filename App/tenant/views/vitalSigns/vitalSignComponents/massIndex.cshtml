@@ -1,0 +1,36 @@
+﻿@model VitalSignDto
+@using Pulsesync.IngoTPCC.Application.VitalSign.Dto;
+@{
+    var attributes = new Dictionary<string, object>();
+    attributes.Add("role", "form");
+    attributes.Add("id", "bmiVitalSignsForm");
+    attributes.Add("name", "bmiVitalSignsForm");
+    attributes.Add("novalidate", "");
+    attributes.Add("action", "#");
+    attributes.Add("angular-validator-submit", "$ctrl.parentScope.save($ctrl.vitalSign)");
+    attributes.Add("angular-validator", "");
+    attributes.Add("error-focus", "");
+}
+@using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body")))
+{
+    using (var s = f.BeginSection())
+    {
+        <div id="Vitalsigns" class="portlet light" style="padding-bottom:0px;padding-top:0px">
+            <div class="portlet-body" style="padding-top:2px">
+                <div class="row">
+                    <h5 class="fontStealGreen bold col-md-12">BMI</h5>
+                    <div class="col-md-4">
+                        @s.FieldFor(m => m.BMI.Weight).Attrs(new { ng_model = "$ctrl.vitalSign.bmi.weight", type = "number", ng_pattern = @"/^[0-9]+(\.[0-9]{1,2})?$/", ng_change= "$ctrl.CalculateBMI($ctrl.vitalSign.bmi.weight,$ctrl.vitalSign.bmi.height)", ng_keydown = "$ctrl.parentScope.preventUnwantedChars($event)" })
+                    </div>
+                    <div class="col-md-4">
+                        @s.FieldFor(m => m.BMI.Height).Attrs(new { ng_model = "$ctrl.vitalSign.bmi.height", type = "number", ng_pattern = @"/^[0-9]+(\.[0-9]{1,2})?$/", ng_change = "$ctrl.CalculateBMI($ctrl.vitalSign.bmi.weight,$ctrl.vitalSign.bmi.height)", ng_keydown = "$ctrl.parentScope.preventUnwantedChars($event)" })
+                    </div>
+                    <div class="col-md-4">
+                        @s.FieldFor(m => m.BMI.Value).Attrs(new { ng_model = "$ctrl.vitalSign.bmi.value", type = "number", ng_disabled="true" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+

@@ -1,0 +1,58 @@
+﻿@model CreateOrUpdatePersonNoteInput
+
+@using PulseSync.IngoTPCC.Application.Care.PersonNotes.Dto;
+
+<div class="portlet light" busy-if="$ctrl.loading" ng-class="{ 'div-disabled': $ctrl.mode=='new' }">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("SharedNotes")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a class="icon-wrapper" ng-if="$ctrl.mode=='view'" ng-click="$ctrl.edit()">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools">
+            <a class="remove" ng-if="$ctrl.mode=='edit'" ng-click="$ctrl.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="$ctrl.mode">
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+                        @{
+                            var attributes = new Dictionary<string, object>();
+                            attributes.Add("role", "form");
+                            attributes.Add("name", "sharedNoteForm");
+                            attributes.Add("angular-validator", "");
+                        }
+                        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes)))
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                @s.FieldFor(m => m.Description).Attrs(new { ng_model = "$ctrl.workingModel.description" }).AddClass("animate msd-elastic: \\n;").Rows(4)
+
+                                <div class="form-actions pull-right">
+                                    <a class="linkButton btn-small" ng-click="$ctrl.save(sharedNoteForm)">
+                                        <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                                    </a>
+                                    <a class="linkButton btn-small" ng-click="$ctrl.cancel()">
+                                        <i class="material-icons font-18-main v-top">close</i> @L("Cancel")
+                                    </a>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+                <div ng-switch-default>
+                    <div class="col-md-12">
+                        <div class="form-group form-md-line-input padding-top-0-imp margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{ $ctrl.model.description }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

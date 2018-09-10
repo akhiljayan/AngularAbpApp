@@ -1,0 +1,172 @@
+﻿<div class="row-class" ng-controller="tenant.views.irms.referralView as vm">
+
+
+    <div class="row" id="referral-view">
+
+        @* --- Referral Header --- *@
+        <div id="main-header-with-tab header-sticky-index" hide-on-scroll class="row main-header-with-tab" sticky offset="75" pinned="{{vm.personHeaderisPinned}}" style="z-index:1000 !important;">
+            <div class="row bg-white header-sticky-index" style="height: 86px; padding: 6px 0px; border-bottom:0.2px solid #d8d8d8;box-shadow: 0 0 0 rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.18)">
+
+                @* --- Referral Detail & Options --- *@
+                <div class="col-md-9 col-sm-9 col-xs-9 text-left">
+                    <div style="min-height: 75px;">
+                        <div class="form-md-line-input">@L("AICReferralRegNo"): <label class="control-label view-label bold" for="referralRegNo">{{ vm.referral.referralRegNo }}</label></div>
+                        <div class="form-md-line-input">@L("Name"): <label class="control-label view-label bold" for="patientName">{{ vm.referralName }}</label></div>
+                        <div class="form-md-line-input">@L("NRIC"): <label class="control-label view-label bold" for="patientNRIC">{{ vm.referralIdentity }}</label></div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-3 text-right">
+                    <div style="min-height: 75px;">
+                        <div>
+                            <a ng-click="vm.refreshReferral()" title="Refresh Referral" class="icon-wrapper icon-spacing" ng-disabled="!vm.permissions.view">
+                                <i class="material-icons custom-icon">refresh</i>
+                            </a>
+                            <a ng-click="vm.requestReferralReport()" title="Referral Report" class="icon-wrapper icon-spacing" ng-disabled="!vm.permissions.view">
+                                <i class="material-icons custom-icon">print</i>
+                            </a>
+                            <a ng-click="vm.convertReferral()" title="Convert Referral" class="icon-wrapper" ng-disabled="!vm.permissions.convertReferral">
+                                <i class="ps-icon-savenclose grey custom-icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            @* --- Navigation Tabs --- *@
+            <div class="row" id="irms-referral-tabs" style="top:0px;background-color:#f9f9f9;margin-bottom: 10px; box-shadow: 0 0 0 rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.18)">
+                <div class="col-md-12 col-sm-12">
+                    <div class="col-md-1 col-sm-1 col-xs-1 tabbable-line" style="text-align: left; max-width: 40px;">
+                        <div class="dropdown">
+                            <span class="dropdown-toggle" id="navigation-menu" type="button" data-toggle="dropdown" style="cursor:pointer;margin-top: 15px; display: inline-block;">
+                                @*<i class="fa fa-th-list" aria-hidden="true" style="padding-top:18px; font-size:20px;color:#acacac;"></i>*@
+                                <i class="ps-icon-section-menu" style="font-size:20px;color:#acacac;"></i>
+                            </span>
+                            <div class="dropdown-menu" aria-labelledby="navigation-menu" role="menu" style="width: auto; background-color:#f9f9f9">
+                                <li role="presentation" ng-repeat="navigate in vm.navigationalMenu" ng-if="navigate.permission">
+                                    <a role="menuitem" tabindex="-1" class="bold" href="#" ng-click="vm.gotoAnchor(navigate.key)">{{navigate.displayName}}</a>
+                                </li>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-11 col-sm-11 col-xs-11 tabbable-line" style="text-align: left;">
+                        <ul class="nav nav-tabs irmsReferralTabs" responsive-tabs scroll-to-top tab-navigation-hash role="tablist">
+                            <li ng-class="{ 'active': referralViewEnabled }">
+                                <a data-toggle="tab" class="font-16-important bold txt-align-cntr" ng-click="vm.setBioDataNavigation()" href="#referral" target="_self">@L("Referral")</a>
+                            </li>
+                            <li ng-class="{ 'active': serviceApplicationViewEnabled }">
+                                <a data-toggle="tab" class="font-16-important bold txt-align-cntr" ng-click="vm.setServiceApplicationNavigation()" href="#serviceapplication" target="_self">@L("ServiceApplication")</a>
+                            </li>
+                            <li ng-class="{ 'active': aicHomeReferralViewEnabled }">
+                                <a data-toggle="tab" class="font-16-important bold txt-align-cntr" ng-click="vm.setHomeReferralNavigation()" href="#aic" target="_self">@L("AICHomeReferral")</a>
+                            </li>
+                            <li ng-class="{ 'active': rafViewEnabled }">
+                                <a data-toggle="tab" class="font-16-important bold txt-align-cntr" ng-click="vm.setRAFNavigation()" href="#raf" target="_self">@L("RAF")</a>
+                            </li>
+                            <li ng-class="{ 'active': socialViewEnabled }">
+                                <a data-toggle="tab" class="font-16-important bold txt-align-cntr" ng-click="vm.setSocialNavigation()" href="#social" target="_self">@L("SocialReport")</a>
+                            </li>
+                            <li ng-class="{ 'active': medicalViewEnabled }">
+                                <a data-toggle="tab" class="font-16-important bold txt-align-cntr" ng-click="vm.setMedicalNavigation()" href="#medical" target="_self">@L("MedicalReport")</a>
+                            </li>
+                            <li ng-class="{ 'active': nursingFunctionalViewEnabled }">
+                                <a data-toggle="tab" class="font-16-important bold txt-align-cntr" ng-click="vm.setNursingFunctionalNavigation()" href="#nursingfunctional" target="_self">@L("NursingFunctional")</a>
+                            </li>
+                            <li ng-class="{ 'active': therapyViewEnabled }">
+                                <a data-toggle="tab" class="font-16-important bold txt-align-cntr" ng-click="vm.setTherapyNavigation()" href="#therapy" target="_self">@L("OT/PT/ST")</a>
+                            </li>
+                            <li ng-class="{ 'active': dementiaViewEnabled }">
+                                <a data-toggle="tab" class="font-16-important bold txt-align-cntr" ng-click="vm.setDementiaNavigation()" href="#dementia" target="_self">@L("Dementia")</a>
+                            </li>
+                            <li ng-class="{ 'active': healthViewEnabled }">
+                                <a data-toggle="tab" class="font-16-important bold txt-align-cntr" ng-click="vm.setHealthNavigation()" href="#health" target="_self">@L("HealthInformation")</a>
+                            </li>
+                            <li ng-class="{ 'active': homeHelpOthersViewEnabled }">
+                                <a data-toggle="tab" class="font-16-important bold txt-align-cntr" ng-click="vm.setHomeHelpOthersNavigation()" href="#homehelp" target="_self">@L("HomeHelpOthers")</a>
+                            </li>
+                            <li ng-class="{ 'active': attachmentViewEnabled }">
+                                <a data-toggle="tab" class="font-16-important bold txt-align-cntr" ng-click="vm.setAttachmentNavigation()" href="#attachment" target="_self">@L("Attachment")</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* --- Tab Contents --- *@
+        <div class="tab-content" style="display: block; margin: auto;">
+            <div id="referral" class="tab-pane fade" ng-class="{ 'in active': referralViewEnabled }">
+                <div class="col-md-12 col-sm-12 col-xs-12 no-padding main-tab-contents">
+                    @Html.Partial("~/App/tenant/views/irms/referral/bioDataView.cshtml")
+                </div>
+            </div>
+
+            <div id="serviceapplication" class="tab-pane fade" ng-class="{ 'in active': serviceApplicationViewEnabled }">
+                <div class="col-md-12 col-sm-12 col-xs-12 no-padding main-tab-contents">
+                    @Html.Partial("~/App/tenant/views/irms/referral/serviceApplicationView.cshtml")
+                </div>
+            </div>
+
+            <div id="aic" class="tab-pane fade" ng-class="{ 'in active': aicHomeReferralViewEnabled }">
+                <div class="col-md-12 col-sm-12 col-xs-12 no-padding main-tab-contents">
+                    @Html.Partial("~/App/tenant/views/irms/referral/aicHomeReferralView.cshtml")
+                </div>
+            </div>
+
+            <div id="raf" class="tab-pane fade" ng-class="{ 'in active': rafViewEnabled }">
+                <div class="col-md-12 col-sm-12 col-xs-12 no-padding main-tab-contents">
+                    @Html.Partial("~/App/tenant/views/irms/referral/rafView.cshtml")
+                </div>
+            </div>
+
+            <div id="social" class="tab-pane fade" ng-class="{ 'in active': socialViewEnabled }">
+                <div class="col-md-12 col-sm-12 col-xs-12 no-padding main-tab-contents">
+                    @Html.Partial("~/App/tenant/views/irms/referral/socialView.cshtml")
+                </div>
+            </div>
+
+            <div id="medical" class="tab-pane fade" ng-class="{ 'in active': medicalViewEnabled }">
+                <div class="col-md-12 col-sm-12 col-xs-12 no-padding main-tab-contents">
+                    @Html.Partial("~/App/tenant/views/irms/referral/medicalView.cshtml")
+                </div>
+            </div>
+
+            <div id="nursingfunctional" class="tab-pane fade" ng-class="{ 'in active': nursingFunctionalViewEnabled }">
+                <div class="col-md-12 col-sm-12 col-xs-12 no-padding main-tab-contents">
+                    @Html.Partial("~/App/tenant/views/irms/referral/nursingFunctionalView.cshtml")
+                </div>
+            </div>
+
+            <div id="therapy" class="tab-pane fade" ng-class="{ 'in active': therapyViewEnabled }">
+                <div class="col-md-12 col-sm-12 col-xs-12 no-padding main-tab-contents">
+                    @Html.Partial("~/App/tenant/views/irms/referral/therapyView.cshtml")
+                </div>
+            </div>
+
+            <div id="dementia" class="tab-pane fade" ng-class="{ 'in active': dementiaViewEnabled }">
+                <div class="col-md-12 col-sm-12 col-xs-12 no-padding main-tab-contents">
+                    @Html.Partial("~/App/tenant/views/irms/referral/dementiaView.cshtml")
+                </div>
+            </div>
+
+            <div id="health" class="tab-pane fade" ng-class="{ 'in active': healthViewEnabled }">
+                <div class="col-md-12 col-sm-12 col-xs-12 no-padding main-tab-contents">
+                    @Html.Partial("~/App/tenant/views/irms/referral/healthView.cshtml")
+                </div>
+            </div>
+
+            <div id="homehelp" class="tab-pane fade" ng-class="{ 'in active': homeHelpOthersViewEnabled }">
+                <div class="col-md-12 col-sm-12 col-xs-12 no-padding main-tab-contents">
+                    @Html.Partial("~/App/tenant/views/irms/referral/homeHelpOthersView.cshtml")
+                </div>
+            </div>
+
+            <div id="attachment" class="tab-pane fade" ng-class="{ 'in active': attachmentViewEnabled }">
+                <div class="col-md-12 col-sm-12 col-xs-12 no-padding main-tab-contents">
+                    @Html.Partial("~/App/tenant/views/irms/referral/attachmentView.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

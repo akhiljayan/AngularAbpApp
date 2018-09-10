@@ -1,0 +1,132 @@
+﻿@model CreateOrUpdateFinancialAssistanceInput
+
+@using Pulsesync.IngoTPCC.Application.FinancialAssistances.Dto
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("FinancialAssistance")</span>
+        </div>
+        <div class="actions dropdown inputs" ng-if="vm.mode!='new'">
+            <a class="icon-wrapper" ng-if="vm.mode=='view'" ng-click="vm.mode='edit'">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools" ng-if="vm.mode!='new'">
+            <a class="remove" ng-if="vm.mode=='edit'" ng-click="vm.mode='view'"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-7">
+                <div ng-switch="vm.mode">
+                    <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                        @{
+                            var attrs = new Dictionary<string, object>();
+                            attrs.Add("name", "vm.form");
+                            attrs.Add("novalidate", "");
+                            attrs.Add("angular-validator", "");
+                            attrs.Add("angular-validator-submit", "vm.save($event)");
+                        }
+                        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs)))
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                @s.FieldFor(fa => fa.FinancialAssistanceTypeId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.financialAssistanceTypeId", repeat = "vm.financialAssistanceType", name = "financialAssistanceType", ui_select_required = "ui-select-required", ng_change = "vm.getInstruction()" })
+
+                                <div class="form-group form-md-line-input margin-bottom-20">
+                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.instructions" /></div>
+                                    <label class="control-label">@L("Instructions")</label>
+                                </div>
+
+                                @s.FieldFor(fa => fa.ApplicationDate).Attrs(new { ng_model = "vm.workingModel.applicationDate", Validate = "false", Restrict = "reject" })
+                                @s.FieldFor(fa => fa.ReferenceNo).Attrs(new { ng_model = "vm.workingModel.referenceNo" })
+                                @s.FieldFor(fa => fa.Beneficiary).Attrs(new { ng_model = "vm.workingModel.beneficiary" })
+                                @s.FieldFor(fa => fa.EffectiveDate).Attrs(new { ng_model = "vm.workingModel.effectiveDate", Restrict = "reject" })
+                                @s.FieldFor(fa => fa.ExpiryDate).Attrs(new { ng_model = "vm.workingModel.expiryDate", Validate = "false", Restrict = "reject", beforeoron = "vm.workingModel.effectiveDate", beforeoron_message = "'Expiry Date must be on or after Effective Date.'" })
+                                @s.FieldFor(fa => fa.Amount).Attrs(new { ng_model = "vm.workingModel.amount" })
+                                @s.FieldFor(fa => fa.Percentage).Attrs(new { ng_model = "vm.workingModel.percentage" })
+                                @s.FieldFor(fa => fa.Status).Attrs(new { ng_model = "vm.workingModel.status" })
+                                @s.FieldFor(fa => fa.IssueDate).Attrs(new { ng_model = "vm.workingModel.issueDate", Validate = "false", Restrict = "reject" })
+                                @s.FieldFor(fa => fa.ReturnDate).Attrs(new { ng_model = "vm.workingModel.returnDate", Validate = "false", Restrict = "reject" })
+                                @s.FieldFor(fa => fa.Remarks).Attrs(new { ng_model = "vm.workingModel.remarks" }).AddClass("animate msd-elastic: \\n;")
+
+                                <div class="form-actions pull-right" ng-if="vm.mode!='new'">
+                                    <button class="linkButton btn-small" type="submit">
+                                        <i class="material-icons font-18-main v-top">save</i> @L("Save")
+                                    </button>
+                                    <button class="linkButton btn-small" type="button" ng-click="vm.cancel()">
+                                        <i class="material-icons font-18-main v-top">close</i> @L("Cancel")
+                                    </button>
+                                </div>
+                            }
+                            @*using (var s = f.BeginNavigation())
+                                {
+                                    <div class="pull-right" ng-if="vm.mode!='new'">
+                                        @s.Button(L("Save"))
+                                        @s.Button(L("Cancel")).Attrs(new { ng_click = "vm.cancel()" })
+                                    </div>
+                                }*@
+                        }
+                    </div>
+                    <div ng-switch-default>
+                        @using (var f = Html.BeginForm())
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                <div class="form-group form-md-line-input margin-bottom-20">
+                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.financialAssistanceType.description" /></div>
+                                    <label class="control-label">@L("FinancialAssistanceType")</label>
+                                </div>
+                                <div class="form-group form-md-line-input margin-bottom-20">
+                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.applicationDate | dateFormat" /></div>
+                                    <label class="control-label">@L("ApplicationDate")</label>
+                                </div>
+                                <div class="form-group form-md-line-input margin-bottom-20">
+                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.referenceNo" /></div>
+                                    <label class="control-label">@L("ReferenceNo")</label>
+                                </div>
+                                <div class="form-group form-md-line-input margin-bottom-20">
+                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.beneficiary | enumText: 'financialAssistanceBeneficiary'" /></div>
+                                    <label class="control-label">@L("Beneficiary")</label>
+                                </div>
+                                <div class="form-group form-md-line-input margin-bottom-20">
+                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.effectiveDate | dateFormat" /></div>
+                                    <label class="control-label">@L("EffectiveDate")</label>
+                                </div>
+                                <div class="form-group form-md-line-input margin-bottom-20">
+                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.expiryDate | dateFormat" /></div>
+                                    <label class="control-label">@L("ExpiryDate")</label>
+                                </div>
+                                <div class="form-group form-md-line-input margin-bottom-20">
+                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.amount" /></div>
+                                    <label class="control-label">@L("Amount")</label>
+                                </div>
+                                <div class="form-group form-md-line-input margin-bottom-20">
+                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.percentage" /></div>
+                                    <label class="control-label">@L("Percentage")</label>
+                                </div>
+                                <div class="form-group form-md-line-input margin-bottom-20">
+                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.status | enumText: 'financialAssistanceStatus'" /></div>
+                                    <label class="control-label">@L("Status")</label>
+                                </div>
+                                <div class="form-group form-md-line-input margin-bottom-20">
+                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.issueDate | dateFormat" /></div>
+                                    <label class="control-label">@L("IssueDate")</label>
+                                </div>
+                                <div class="form-group form-md-line-input margin-bottom-20">
+                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.returnDate | dateFormat" /></div>
+                                    <label class="control-label">@L("ReturnDate")</label>
+                                </div>
+                                <div class="form-group form-md-line-input margin-bottom-20">
+                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.remarks" /></div>
+                                    <label class="control-label">@L("Remarks")</label>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

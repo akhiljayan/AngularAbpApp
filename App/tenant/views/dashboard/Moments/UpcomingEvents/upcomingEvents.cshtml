@@ -1,0 +1,155 @@
+﻿<style type="text/css">
+    .portlet.light.person-care-list {
+        padding: 12px 0px 15px 0px !important;
+    }
+
+    .portlet-title.main-title {
+        padding: 0px 20px 0px 20px !important;
+        margin-bottom: 0px !important;
+    }
+
+    .person-care-portlet-body {
+        padding: 0px 20px 0px 20px !important;
+    }
+
+    .portlet-title.sub-title {
+        padding: 0px 20px 0px 20px !important;
+        background-color: #f0f0f0 !important;
+        margin: 0px;
+    }
+
+    .caption-gray {
+        color: #a4a4a4 !important;
+        font-size: 16px !important;
+    }
+
+    .caption-green-sub {
+        color: #00bfb5 !important;
+        font-size: 16px !important;
+    }
+
+    .person-care-aircrd {
+        margin: -2px -20px 0px -20px !important;
+    }
+
+        .person-care-aircrd.selected-person {
+            background-color: #ccf2f0;
+            border-left: 2px solid #17c5bc;
+        }
+
+    .person-care-content {
+        padding: 15px 20px 15px 20px;
+    }
+
+    .ps-hr-full {
+        margin: 0;
+        margin-left: -8px;
+        margin-right: 0px;
+        width: 103%;
+    }
+
+    .sub-caption {
+        color: #00bfb5;
+        font-size: 14px;
+    }
+
+    select.pagination-page-sizes {
+        padding: 0px;
+        height: 22px !important;
+    }
+
+    .dot {
+        display: inline-block;
+        padding-right:2px;
+        padding-left:2px;
+    }
+</style>
+
+
+<div id="UpComingEvents" class="portlet light tasks-widget person-care-list" busy-if="vm.loading">
+    <div class="portlet-title margin-bottom-0  main-title">
+        <div class="caption">
+            <span class="caption-subject">@L("UpcomingEvents") - Person</span><br />
+        </div>
+        <div class="actions dropdown inputs">
+            <div class="input-small-new inline-block">
+                <form action="" class="search-form search-style-class med-apoinment">
+                    <div class="form-group has-feedback input-inline search-form-group">
+                        <label for="search" class="sr-only">@L("Search")</label>
+                        <input type="text" ng-model="vm.filter" enter-key="vm.loadResults()" class="form-control form-control-solid search-input input-circle font-13-main clearable med-apoinment" placeholder="search keywords...">
+                        <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="vm.clearFilter()"></a>
+                        <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                    </div>
+                </form>
+            </div>
+            @*<ul class="dropdown-menu pull-right">
+                <li>
+                    <a href="javascript:;" class="bold" ng-click="vm.getAll()">All</a>
+                </li>
+                <li class="divider"> </li>
+                <li ng-repeat="cntr in vm.centrelist">
+                    <a href="javascript:;" class="font-13-main bold" ng-click="vm.getPersonByGroup(grp.id, grp.centreGroup)">{{grp.centreGroup}}</a>
+                </li>
+            </ul>*@
+        </div>
+    </div>
+    <div class="portlet-body person-care-portlet-body">
+        <div class="mt-comments" ng-if="vm.events.length">
+            <div class="mt-comment person-care-aircrd" ng-repeat="event in vm.events" ng-click="vm.viewEvent(event.id)" style="cursor:pointer">
+                <div class="row person-care-content">
+                    <div class="col-xs-2 col-sm-2 nopadding-left">
+                        <img class="img-responsive" ng-src="{{ vm.appPath }}File/GetPictureById?pictureName={{ event.pictureId }}&t=Clock.Now.Ticks.ToString()" style="border: 1px solid #e9e9e9"/>
+                    </div>
+                    <div class="col-xs-10 col-sm-10" style="padding-left: 0px">
+                        <div class="col-md-12 nopadding">
+                            <span class="bold">{{event.activityEvent.description}}</span>
+                        </div>
+                        <div class="col-md-12" style="padding:10px 0px 0px 0px">
+                            <div class="col-md-12 nopadding">
+                                <span>{{event.eventTime | date :"dd-MMM-yyyy"}}<span class="dot">•</span>{{event.eventTime | date :"EEE hh:mm a"}}</span>
+                            </div>
+                            <div class="col-md-12 nopadding">
+                                <span>{{event.eventVenue}}</span>
+                            </div>
+                            <div class="col-md-12 nopadding">
+                                <span>Centre : {{event.centre.name}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="ps-hr-full" />
+            </div>
+        </div>
+
+        <simple-paginator data="vm.data" key="vm.key" on-page-changed="vm.loadResults(requestParams)" page-size="vm.pageSize"></simple-paginator>
+
+
+        @*<div class="seeMore clearfix text-center  margin-top-20">
+            <div class="row" style="padding-top: 5px;">
+                <div class="col-md-12">
+                    <div class="col-md-4 pull-left nopadding-left">
+                        <div class="records pull-left" style="text-align: left;width: 130%;">
+                            <span>Records: </span><select class="pagination-page-sizes" ng-model="vm.pageSize" ng-options="pageSizes as pageSizes for pageSizes in vm.pageSizes" ng-change="vm.reset()"></select> <br />
+                            <span class="pull-left" style="padding-top: 10px;text-align:left; width:130%"> Showing {{ vm.recordFrom }} to {{ vm.recordTo }} of {{ vm.totalDataCount }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-8 nopadding-right">
+                        <div class="pull-right no-padding nopadding">
+                            <ul uib-pagination
+                                class="pagination-sm"
+                                style="margin-top: 0px;"
+                                total-items="vm.personTotal"
+                                items-per-page="vm.pageSize"
+                                previous-text="&lsaquo;"
+                                next-text="&rsaquo;"
+                                boundary-link-numbers="true"
+                                max-size="3"
+                                ng-model="vm.currentPage"
+                                ng-change="vm.pageChanged()"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+    </div>
+</div>

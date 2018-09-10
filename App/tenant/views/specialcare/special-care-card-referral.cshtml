@@ -1,0 +1,28 @@
+﻿<div busy-if="$ctrl.loading" ng-if="$ctrl.isPatient || $ctrl.isReferral">
+    <div id="specialcares" class="portlet light">
+        <div class="portlet-title">
+            <div class="caption" data-toggle="collapse" href="#SpecialCaresBody">
+                <span class="caption-subject">@L("SpecialCare")</span>
+            </div>
+            <div class="actions dropdown inputs" ng-if="$ctrl.template == 'referral'">
+                <a class="icon-wrapper" ng-if="$ctrl.permissions.create" ng-click="$ctrl.create()">
+                    <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                </a>
+            </div>
+        </div>
+        <div id="SpecialCaresBody" class="portlet-body nopadding">
+            <div class="mt-comments">                
+                <div class="mt-comment-date" ng-if="$ctrl.specialcares.length==0">@L("NoRecordsFound")</div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <label style="font-size:14px !important; text-decoration:underline; cursor:pointer; margin-right:0.5em;word-wrap:break-word;" ng-repeat="sc in $ctrl.specialcares | orderBy:'-startDate'" ng-click="$ctrl.editSpecialCare(sc)">
+                            <span style="text-decoration:underline;">{{sc.specialCareItem.description}}</span>
+                            <span style="text-decoration:underline;" ng-if="sc.specialCareItem.description == 'Others'">: {{sc.otherSpecialCare}}</span>
+                            {{$last ? '' : ', '}}
+                        </label>
+                    </div>
+                </div>
+            </div>  
+        </div>
+    </div>
+</div>

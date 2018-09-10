@@ -1,0 +1,255 @@
+﻿<style>
+    .person-list-grid {
+        min-height: initial !important;
+    }
+
+    .activitiesattendance-ext .activitiesattendance-item-header {
+        background-color: #f5f5f5;
+        padding: 10px;
+    }
+
+    .activitiesattendance-ext .activitiesattendance-item-body .attendance-actions {
+        background-color: #E5E5E5;
+        padding: 10px;
+    }
+
+        .activitiesattendance-ext .activitiesattendance-item-body .attendance-actions .attendance-actions-left {
+            display: inline-block;
+        }
+
+        .activitiesattendance-ext .activitiesattendance-item-body .attendance-actions .attendance-actions-right {
+            float: right;
+        }
+
+            .activitiesattendance-ext .activitiesattendance-item-body .attendance-actions .attendance-actions-right a:first-child .splitter {
+                display: none;
+            }
+
+        .activitiesattendance-ext .activitiesattendance-item-body .attendance-actions a,
+        .activitiesattendance-ext .activitiesattendance-item-body .attendance-actions a:hover .splitter {
+            font-weight: bold;
+            color: rgba(0, 0, 0, 0.54);
+            text-decoration: none;
+        }
+
+            .activitiesattendance-ext .activitiesattendance-item-body .attendance-actions a:hover span {
+                text-decoration: underline;
+            }
+
+            .activitiesattendance-ext .activitiesattendance-item-body .attendance-actions a.disable-links {
+                opacity: 0.5;
+            }
+
+    .collapse.in {
+        height: auto !important;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-2">
+        <span class="caption">@L("RefineSearch")</span>
+
+        <div class="form-group form-md-line-input">
+            <div class="input-group date date-picker">
+                <input id="ActivityDate" name="ActivityDate" type="text" class="form-control"
+                       data-date-picker="" ng-model="$ctrl.selectedDate" ng-change="$ctrl.attendanceDateChanged()" />
+                <div class="input-group-addon">
+                    <i class="material-icons" style="line-height: 14px">date_range</i>
+                </div>
+                <label for="ActivityDate" class="control-label">@L("AttendanceDate")</label>
+            </div>
+        </div>
+
+        <div class="form-group form-md-line-input">
+            <label class="control-label" for="centre">@L("Centre")</label>
+            <select id="Centre"
+                    ng-model="$ctrl.selectedCentre"
+                    ng-change="$ctrl.loadActivityOptions()"
+                    label="@L("Centre")"
+                    multiple="multiple"
+                    multi-select
+                    ng-options="x as x.description for x in $ctrl.centreList"
+                    optionchange="$ctrl.centreList"></select>
+        </div>
+
+        <div class="form-group form-md-line-input">
+            <label class="control-label" for="Activity">@L("Activity")</label>
+            <select id="Activity"
+                    label="@L("Activity")"
+                    ng-model="$ctrl.selectedActivity"
+                    multiple="multiple"
+                    multi-select
+                    ng-options="x.id as (x.activityEvent.description + ' - ' + x.activityMaster) for x in $ctrl.activityEventList"
+                    optionchange="$ctrl.activityEventList"></select>
+        </div>
+
+        @*<div class="form-group form-md-line-input">
+            <label class="control-label" for="status">@L("Status")</label>
+            <ui-select id="Status" ng-model="$ctrl.selectedStatus" theme="selectize" title="Choose a Status">
+                <ui-select-match placeholder="Select Status">
+                    {{$select.selected.name}}
+                    <a class="fa fa-times" ng-click="$select.clear($event);"></a>
+                </ui-select-match>
+                <ui-select-choices repeat="m.value as m in $ctrl.activitiesAttendanceStatus | filter: { name: $select.search } | orderBy:'value'">
+                    <span ng-bind-html="m.name | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>*@
+
+        <div class="form-actions noborder pull-right">
+            <button ng-click="$ctrl.load()" class="btn btn-circle btn-small light-grey-pcc btn-outline">@L("Filter")</button>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="clearfix padding-bottom-10"></div>
+
+        @*<div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <div class="caption-subject">
+                        @L("ActivitiesAttendance")
+                    </div>
+                </div>
+            </div>
+
+            <div class="portlet-body">
+                <div class="row form-body">
+                    <div class="col-md-3">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="bold">Please scan the barcode or enter NRIC</label>
+                            <div class="input-icon right">
+                                <i class="fa fa-times" ng-click="$ctrl.clearNRICFilter()"></i>
+                                <input type="text" class="form-control input-circle" ng-model="$ctrl.nricFilter" enter-key="$ctrl.load()">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <div class="caption-subject">
+                        @*@L("ActivitiesAttendance")*@
+                    </div>
+                </div>
+                <div class="actions dropdown inputs">
+                    <div class="input-small-new inline-block">
+                        <form action="" class="search-form">
+                            <div class="form-group has-feedback input-inline">
+                                <label for="search" class="sr-only">@L("Search")</label>
+                                <input type="text" ng-model="$ctrl.filter" enter-key="$ctrl.load()" class="form-control form-control-solid input-circle search-input font-13-main clearable" placeholder="search keywords...">
+                                <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="$ctrl.clearFilter()"></a>
+                                <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                            </div>
+                        </form>
+                    </div>
+                    <a ng-click="$ctrl.isDetailView = !$ctrl.isDetailView" title="Show associated Service types and Status" class="icon-wrapper">
+                        <i ng-show="!$ctrl.isDetailView" class="material-icons custom-icon">menu</i>
+                        <i ng-show="$ctrl.isDetailView" class="material-icons custom-icon">view_headline</i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="portlet-body">
+                <div class="mt-element-list">
+                    <div class="mt-list-container list-card activitiesattendance-ext">
+                        <ul>
+                            <li class="mt-list-item activitiesattendance-item"
+                                ng-repeat="activity in $ctrl.activities"
+                                ng-init="activity.participants.selectedParticipants = []">
+                                <div class="activitiesattendance-item-header" data-target="#{{ activity.id }}" data-toggle="collapse"
+                                     ng-class="$ctrl.isDetailView? '' : 'collapsed'">
+                                    <div>
+                                        <strong>
+                                            {{ activity.activityEvent.description }}
+                                            <span>- {{ activity.activityMaster }}</span>
+                                            <span ng-if="activity.activityEvent.descriptionInChinese">
+                                                ({{ activity.activityEvent.descriptionInChinese }})
+                                            </span>
+                                        </strong>
+                                    </div>
+                                    <div ng-if="activity.location">
+                                        {{ activity.location }}
+                                        <span ng-if="activity.locationInMandarin">
+                                            ({{ activity.locationInMandarin }})
+                                        </span>
+                                    </div>
+                                    <div>
+                                        {{ $ctrl.countPresentParticipant(activity.participants) }} present {{ activity.participants.length || 0 }} participants
+                                    </div>
+                                </div>
+
+                                <div id="{{ activity.id }}" class="activitiesattendance-item-body collapse" ng-class="$ctrl.isDetailView? 'in' : ''">
+                                    <div class="attendance-actions">
+                                        <div class="attendance-actions-left">
+                                            <a ng-click="activity.participants.selectAll = true">
+                                                <span>@L("SelectAll")</span>
+                                            </a>
+
+                                            <a ng-click="activity.participants.selectAll = false">
+                                                | <span>@L("DeselectAll")</span>
+                                            </a>
+                                        </div>
+
+                                        <div class="attendance-actions-right">
+                                            <a ng-click="$ctrl.add(activity);"
+                                               ng-if="$ctrl.permissions.create">
+                                                <span class="splitter">| </span>
+                                                <span>@L("Add")</span>
+                                            </a>
+                                            <a ng-click="$ctrl.delete(activity);"
+                                               ng-if="$ctrl.permissions.delete"
+                                               ng-class="activity.participants.selectedParticipants.length >
+                                                0 ? '' : 'disable-links'">
+                                                <span class="splitter">| </span>
+                                                <span>@L("Delete")</span>
+                                            </a>
+
+                                            <a ng-click="$ctrl.confirm(activity);"
+                                               ng-if="$ctrl.permissions.confirm"
+                                               ng-class="activity.participants.selectedParticipants.length >
+                                                0 ? '' : 'disable-links'">
+                                                <span class="splitter">| </span>
+                                                <span>@L("Confirm")</span>
+                                            </a>
+
+                                            <a ng-click="$ctrl.cancel(activity);"
+                                               ng-if="$ctrl.permissions.cancel"
+                                               ng-class="activity.participants.selectedParticipants.length >
+                                                0 ? '' : 'disable-links'">
+                                                <span class="splitter">| </span>
+                                                <span>@L("Cancel")</span>
+                                            </a>
+
+                                            <a ng-click="$ctrl.saveAttendance(activity);"
+                                               ng-if="$ctrl.permissions.create"
+                                               ng-class="activity.participants.selectedParticipants.length >
+                                                0 ? '' : 'disable-links'">
+                                                <span class="splitter">| </span>
+                                                <span>@L("SaveAttendance")</span>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <person-list-grid person-model="activity.participants"
+                                                      selected-person-list="activity.participants.selectedParticipants"
+                                                      select-all="activity.participants.selectAll"
+                                                      on-reset-select-all="activity.participants.selectAll = undefined"></person-list-grid>
+                                </div>
+
+                                <div style="clear: both;"></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+﻿@using Abp.Timing
+@using Pulsesync.IngoTPCC.Authorization
+<div id="Profile" ng-controller="tenant.views.person.tabs.careTab as careTab">
+    <div class="col-md-12 col-sm-12 col-xs-12 no-padding">
+        <care-tab-content mode="vm.isNew ? 'new' : 'view'" person-id="vm.person.id"></care-tab-content>
+    </div>
+</div>

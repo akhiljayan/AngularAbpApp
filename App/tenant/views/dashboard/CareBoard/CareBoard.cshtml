@@ -1,0 +1,97 @@
+﻿@using Pulsesync.IngoTPCC.Authorization
+<style>
+    .mt-comment-info .mt-comment-author .badge, .caption-subject .badge {
+        background-color: #29b4b6 !important;
+        margin-left: 12px;
+        text-transform: none;
+        padding: 3px 6px 3px 6px;
+    }
+
+    .mt-comment .mt-comment-img img {
+        width: 55px;
+        height: 55px;
+        margin-right: 30px;
+    }
+
+    .mt-comment .mt-comment-img {
+        margin-right: 20px;
+    }
+
+    .mt-comments .mt-comment .mt-comment-body .mt-comment-info .mt-comment-author.semi {
+        font-weight: 400;
+    }
+
+    .mt-comment-date {
+        color: rgba(0, 0, 0, 0.65) !important;
+    }
+
+    .mt-comments .mt-comment .mt-comment-body .mt-comment-details .mt-comment-actions > li > a:hover {
+        color: #00bfb5;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .mt-comments .mt-comment .mt-comment-body .mt-comment-details .mt-comment-actions > li > a {
+        color: #36c6d3;
+        text-transform: none;
+        font-weight: bold;
+    }
+
+    .mt-post-actions > li > a {
+        font-weight: bold;
+    }
+
+    .mt-post-actions {
+        display: none;
+    }
+
+    .mt-comment:hover .mt-post-actions {
+        background: #f9f9f9;
+        display: inline-block;
+    }
+</style>
+<div ng-controller="tenant.views.dashboard.carebord  as vm">
+    <div class="row">
+        <div class="col-md-12 no-padding nopadding">
+            <div class="col-md-6 col-sm-12">
+                @if (IsGranted(AppPermissions.Pages_Tenant_Person))
+                {
+                    @*<div data-ng-include="'~/App/tenant/views/dashboard/CareBoard/myCareList/personCareList.cshtml'" data-ng-controller="tenant.views.dashboard.personCareList as vm" class="care-board-person-care-list"></div>*@
+                    <person-care-list class="care-board-person-care-list" is-person-selected="vm.isPersonSelected" patient-id-time-line="vm.patientIdTimeLine" person-fullname="vm.personFullname" is-patient="vm.isPatient" timeline-loading="vm.timelineLoading"></person-care-list>
+                }
+                @*else
+                    {
+                        <div class="note note-success note-bordered">
+                            <h3>No Permission !</h3>
+                            <p>
+                                No permission to view Person details
+                            </p>
+                        </div>
+                    }*@
+            </div>
+            <div class="col-md-6 col-sm-12 medical-appoinment">
+
+                @if (IsGranted(AppPermissions.Pages_Tenant_Person))
+                {
+                    <upcomingbirthday-card ng-if="!vm.isPersonSelected && vm.patientIdTimeLine == ''"></upcomingbirthday-card>
+                }
+                
+                @if (IsGranted(AppPermissions.Pages_Tenant_MedicalAppointment))
+                {
+                    <div ng-if="!vm.isPersonSelected && vm.patientIdTimeLine == ''" data-ng-include="'~/App/tenant/views/dashboard/CareBoard/MedicalAppoinment/medicalAppoinment.cshtml'" data-ng-controller="tenant.views.dashboard.medicalAppoinment as vm" class="care-board-medical-appoinment"></div>
+
+                    <time-line-index ng-if="vm.isPersonSelected && vm.patientIdTimeLine != ''" template="'careboard'" patient-selected="vm.isPersonSelected" patient-timeline="vm.patientIdTimeLine" patient-fullname="vm.personFullname" is-patient="vm.isPatient" patient-id="vm.patientIdTimeLine" filter="" module="" @*loading="vm.timelineLoading"*@></time-line-index>
+                }
+                @*else
+                    {
+                        <div class="note note-success note-bordered">
+                            <h3>No Permission !</h3>
+                            <p>
+                                No permission to view Medical Appoinment
+                            </p>
+                        </div>
+                    }*@
+            </div>
+        </div>
+    </div>
+</div>

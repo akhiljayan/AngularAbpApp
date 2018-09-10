@@ -1,0 +1,53 @@
+@using Pulsesync.IngoTPCC.Localization
+<div class="view-content" ng-controller="tenant.views.centreServiceType.centre as vm">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("Centre"){{vm.headingAppend}}</span>
+                    </div>
+                    <div class="actions dropdown inputs">
+                        <a class="icon-wrapper" ng-click="vm.activate()" title="Activate" ng-disabled="!vm.permissions.activate || vm.filterActive">
+                            <span class="ps-icon-1x ps-icon-activate ps-icon-standard custom-icon"></span>
+                        </a>
+                        <a class="icon-wrapper" ng-click="vm.deactivate()" title="Deactivate" ng-disabled="!vm.permissions.deactivate || !vm.filterActive">
+                            <span class="ps-icon-1x ps-icon-deactivate ps-icon-standard custom-icon"></span>
+                        </a>
+
+                        <a class="icon-wrapper" ng-click="vm.create()" title="Add a Centre" ng-disabled="!vm.permissions.create">
+                            <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                        </a>
+                        <a class="icon-wrapper" ng-click="vm.delete()" title="Delete" ng-disabled="!vm.permissions.delete">
+                            <i class="material-icons custom-icon">delete</i>
+                        </a>
+                        <a class="icon-wrapper" href="javascript:;" title="Filter" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <i class="material-icons custom-icon">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a href="javascript:;" class="bold" ng-click="vm.setActiveDataInGrid()">@L("Active")</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" class="bold" ng-click="vm.setDeActiveDataInGrid()">@L("Inactive")</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div busy-if="vm.loading">
+                                <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-resize-columns dir=@(CultureHelper.IsRtl ? "rtl" : "")></div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <simple-paginator data="vm.data" on-page-changed="vm.loadData(requestParams)"></simple-paginator>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

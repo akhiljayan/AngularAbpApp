@@ -1,0 +1,56 @@
+﻿<div class="col-md-12 col-sm-12" style="padding-bottom:10px">
+    <div class="row">
+        <div class="col-md-12 col-sm-12"><span class="bold">Blood Glucose</span></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12" style="margin-left: 20px">
+            <div class="col-md-12 col-sm-12" style="padding:0px">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px">
+                        <small class="bold" style="font-size:9px">2HPP:</small>
+                        <small class="bold"  ng-class="{'abnormal' : $ctrl.vitalsign.twoHPP.category != '0' }"> {{$ctrl.vitalsign.twoHPP.values[0].value ? $ctrl.vitalsign.twoHPP.values[0].value :'-'}} <span ng-if="$ctrl.vitalsign.twoHPP.values[0].value">mmol/L</span></small>&nbsp;
+                        <small ng-if="$ctrl.vitalsign.twoHPP.delta == '1' && $ctrl.forPerson && !$ctrl.vitalsign.twoHPP.normalChange"><i class="fa fa-arrow-up" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.twoHPP.abruptChange }"></i></small>
+                        <small ng-if="$ctrl.vitalsign.twoHPP.delta == '-1' && $ctrl.forPerson && !$ctrl.vitalsign.twoHPP.normalChange"><i class="fa fa-arrow-down" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.twoHPP.abruptChange }"></i></small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px"><small>{{$ctrl.vitalsign.twoHPP.values[0].takenOn | dateTimeFormat}}</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12" style="margin-left: 20px">
+            <div class="col-md-12 col-sm-12" style="padding:0px">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px">
+                        <small class="bold" style="font-size:9px">Fast:</small>
+                        <small class="bold" ng-class="{'abnormal' : $ctrl.vitalsign.fasting.category != '0' }"> {{$ctrl.vitalsign.fasting.values[0].value ? $ctrl.vitalsign.fasting.values[0].value : '-'}} <span ng-if="$ctrl.vitalsign.fasting.values[0].value">mmol/L</span></small>&nbsp;
+                        <small ng-if="$ctrl.vitalsign.fasting.delta == '1' && $ctrl.forPerson && !$ctrl.vitalsign.fasting.normalChange"><i class="fa fa-arrow-up" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.fasting.abruptChange }"></i></small>
+                        <small ng-if="$ctrl.vitalsign.fasting.delta == '-1' && $ctrl.forPerson && !$ctrl.vitalsign.fasting.normalChange"><i class="fa fa-arrow-down" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.fasting.abruptChange }"></i></small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px"><small>{{$ctrl.vitalsign.fasting.values[0].takenOn | dateTimeFormat}}</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12" style="margin-left: 20px">
+            <div class="col-md-12 col-sm-12" style="padding:0px">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px">
+                        <small class="bold" style="font-size:9px">Rand:</small>
+                        <small class="bold" ng-class="{'abnormal' : $ctrl.vitalsign.random.category != '0' }"> {{$ctrl.vitalsign.random.values[0].value ? $ctrl.vitalsign.random.values[0].value : '-'}} <span ng-if="$ctrl.vitalsign.random.values[0].value">mmol/L</span></small>&nbsp;
+                        <small ng-if="$ctrl.vitalsign.random.delta == '1' && $ctrl.forPerson && !$ctrl.vitalsign.random.normalChange"><i class="fa fa-arrow-up" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.random.abruptChange }"></i></small>
+                        <small ng-if="$ctrl.vitalsign.random.delta == '-1' && $ctrl.forPerson && !$ctrl.vitalsign.random.normalChange"><i class="fa fa-arrow-down" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.random.abruptChange }"></i></small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px"><small>{{$ctrl.vitalsign.fasting.values[0].takenOn | dateTimeFormat}}</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

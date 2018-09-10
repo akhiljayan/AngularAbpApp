@@ -1,0 +1,127 @@
+﻿@using Pulsesync.IngoTPCC.Hospitalization
+@model HospitalizationDto
+<style type="text/css">
+</style>
+<div id="HospitalizationInfo" class="general portlet light" ng-controller="tenant.views.hospitalization.hospitalizationInfo as hvm">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("HospitalizationInfo")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a class="icon-wrapper" ng-if="hvm.mode.toLowerCase()=='view' && !vm.isNew && vm.permissions.edit && !vm.hospitalization.isConfirmed && !vm.hospitalization.isCancelled" ng-click="hvm.edit()">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools">
+            <a class="remove" ng-if="hvm.mode.toLowerCase()=='edit' && !vm.isNew" ng-click="hvm.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="hvm.mode">
+                <!--edit mode-->
+                <div ng-switch-when="edit">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        @{
+                            var attributes = new Dictionary<string, object>();
+                            attributes.Add("role", "form");
+                            attributes.Add("id", "hospitalisationInfoForm");
+                            attributes.Add("name", "hvm.hospitalizationInformationForm");
+                            attributes.Add("novalidate", "");
+                            attributes.Add("action", "#");
+                            attributes.Add("angular-validator-submit", "hvm.save(vm.hospitalization)");
+                            attributes.Add("angular-validator", "");
+                            attributes.Add("ng-validate", "hvm.validationOptions");
+                        }
+                        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("form-validation horizontal-form")))
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                @s.FieldFor(m => m.From).DatePickerOptions(new { data_date_end_date = "0d" }).Attrs(new { ng_model = "vm.hospitalization.from", validator = "hvm.validateFromToDate()", invalid_message = "'From Date must be earlier than To Date.'", name = "hospitalization.from", data_date_format = "DD-MMM-YYYY hh:mm A", isnew = "{{vm.isNew}}", ng_required ="true", required_message = "You must provide a value for From Date", ng_change = "hvm.fromdateChange(vm.hospitalization.from)", datetimevalidate="" })
+                                // @s.FieldFor(m => m.DischargedOn).DatePickerOptions(new { data_date_end_date = "0d" }).Attrs(new { ng_model = "dis.discharge.dischargedOn", Validate = "false", Restrict = "reject", name = "DischargedOn", mindate = "{{dis.admission.admittedOn}}", isnew = "{{dis.isNew}}", data_date_format = "DD-MMM-YYYY hh:mm A", ng_change = "dis.dischargedOnChange(dis.dischargedDate)", required = "", required_message = "You must provide a value for Discharge Date" })
+                                @s.FieldFor(m => m.Hospital).AsDropDown().Attrs(new { ng_model = "vm.hospitalization.hospital.id", name = "HospitalId" })
+                                @s.FieldFor(m => m.ReasonForHospitalization).AsDropDown().Attrs(new { ng_model = "vm.hospitalization.reasonForHospitalization.id", name = "ReasonForHospitalization", ng_change = "hvm.checkForOtherHospitalizedReason($select.selected.description)" })
+                                <div class="form-group form-md-line-input" ng-if="hvm.otherHospitalizationReason">
+                                    <input type="text" ng-model="vm.hospitalization.otherReasonForHospitalization" class="form-control" id="OtherReasonForHospitalization" name="OtherReasonForHospitalization" placeholder="Provide Other Reason For Hospitalization" ng-required="true" required-message="'You must provide a value for Other Reason For Hospitalization'">
+                                    <label class="control-label" for="otherCurrentLivingArrangement">@L("OtherReasonForHospitalization")<span class="required">*</span></label>
+                                </div>
+                                @s.FieldFor(m => m.WardAndBedInformation).Attrs(new { ng_model = "vm.hospitalization.wardAndBedInformation" })
+                                @s.FieldFor(m => m.To).DatePickerOptions(new { data_date_end_date = "0d" }).Attrs(new { ng_model = "vm.hospitalization.to", validator = "hvm.validateFromToDate()", invalid_message = "'To Date must be later than From Date.'", name = "hospitalizationTo", data_date_format = "DD-MMM-YYYY hh:mm A"  })
+
+                                <div class="form-group form-md-line-input">
+                                    <!-- There is no such field for vm.isDeceased. How to access to the variable property declared from Javascript backend? -->
+                                    @s.FieldFor(m => m.IsPlanned).Label(@L("DeceasedAtHospital")).Attrs(new { ng_model = "vm.isDeceased" })
+                                </div>
+
+                                //@s.FieldFor(m => m.DeceasedDate).DatePickerOptions(new { data_date_end_date = "0d" }).Attrs(new { ng_model = "vm.hospitalization.deceasedDate", Validate = "false", Restrict = "reject", name = "hospitalization.DeceasedDate", data_date_format = "DD-MMM-YYYY hh:mm A" })
+                                @s.FieldFor(m => m.ChangeInCondition).Attrs(new { ng_model = "vm.hospitalization.changeInCondition", name = "changeInCondition", ng_disabled = "vm.isReadOnlyMode", ng_maxlength = "4000" }).AddClass("form-control animate msd-elastic: \\n; ng-not-empty ng-valid-parse")
+                                @s.FieldFor(m => m.DichargeDiagnosis).Attrs(new { ng_model = "vm.hospitalization.dichargeDiagnosis", name = "DichargeDiagnosis", ng_disabled = "vm.isReadOnlyMode", ng_maxlength = "4000" }).AddClass("form-control animate msd-elastic: \\n; ng-not-empty ng-valid-parse")
+                                @s.FieldFor(m => m.Remarks).Attrs(new { ng_model = "vm.hospitalization.remarks", name = "Remarks", ng_disabled = "vm.isReadOnlyMode", ng_maxlength = "4000" }).AddClass("form-control animate msd-elastic: \\n;")
+                            }
+                         
+                            <div class="form-actions pull-right" ng-if="!vm.isNew">
+                                <button type="submit" card-button-busy="vm.isSaving" class="linkButton btn-small">
+                                    <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                                </button>
+                                <a class="linkButton btn-small" card-button-busy="vm.isSaving" ng-click="hvm.close()">
+                                    <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!--view mode-->
+                <div ng-switch-default>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.hospitalization.from | date :  "dd-MMM-y hh:mm a"}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("DatetimeFrom")<span class="required">*</span></label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.hospitalization.hospital.name}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("Hospital")<span class="required">*</span></label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.hospitalization.reasonForHospitalization ? vm.hospitalization.reasonForHospitalization.name : "-"}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("ReasonForHospitalization")</label>
+                        </div>
+                        <div class="form-group form-md-line-input" ng-if="vm.hospitalization.otherReasonForHospitalization">
+                            <div class="form-control remove-border auto-height view-text">{{vm.hospitalization.otherReasonForHospitalization}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("OtherReasonForHospitalization")<span class="required">*</span></label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.hospitalization.wardAndBedInformation ? vm.hospitalization.wardAndBedInformation : "-"}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("WardAndBedInformation")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.hospitalization.to | date :  "dd-MMM-y hh:mm a"}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("DatetimeTo")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.hospitalization.deceasedDate | date :  "dd-MMM-y hh:mm a"}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("DeceasedDate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.hospitalization.changeInCondition ? vm.hospitalization.changeInCondition : "-"}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("ChangeInCondition")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.hospitalization.dichargeDiagnosis ? vm.hospitalization.dichargeDiagnosis : "-"}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("DichargeDiagnosis")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.hospitalization.remarks ? vm.hospitalization.remarks : "-"}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("Remarks")</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+</script>

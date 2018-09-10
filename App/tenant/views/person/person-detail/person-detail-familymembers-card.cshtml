@@ -1,0 +1,130 @@
+﻿<style>
+    .family-member-card {
+    }
+
+        .family-member-card .family-member-list {
+            margin: 0;
+        }
+
+            .family-member-card .family-member-list .family-member-list-item {
+                border: 1px solid #eeeeee;
+                min-height: 100px;
+                padding: 10px;
+                margin: 5px;
+                display: flex;
+            }
+
+    .family-member-list-item {
+        cursor: pointer;
+    }
+
+        .family-member-list-item .profile-picture img {
+            width: 73px;
+            height: 73px;
+            float: left;
+        }
+
+        .family-member-list-item .profile-details {
+            margin-left: 10px;
+            float: left;
+            width: 100%;
+        }
+
+        .family-member-list-item .information-line {
+            padding-top: 5px;
+            font-size: 0;
+        }
+
+            .family-member-list-item .information-line p {
+                margin: 0px;
+            }
+
+    .dot-separated-item {
+        font-size: 13px;
+    }
+
+        .dot-separated-item::after {
+            content: "•";
+            margin: 0 2px;
+        }
+
+        .dot-separated-item:last-of-type::after {
+            content: "";
+            margin: 0 2px;
+        }
+</style>
+<div id="FamilyMembersCaregiver" class="portlet light" ng-class="{ 'div-disabled': $ctrl.isNew }" busy-if="$ctrl.loadData">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("FamilyMembersCaregivers")</span>
+        </div>
+        <div class="actions dropdown inputs" ng-if="!$ctrl.isNew">
+            <a ng-click="$ctrl.addFamilyMembers()" class="icon-wrapper" ng-if="$ctrl.permissions.create && !$ctrl.lockCard">
+                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+            </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="family-member-card">
+                    <div ng-if="$ctrl.isNew">Family Members/ Caregivers can be added once the person record is saved.</div>
+                    <div ng-if="!$ctrl.isNew">
+                        <div ng-if="$ctrl.resultCount <= 0">
+                            <div class="row col-md-12">
+                                <span>Add Family Members/ Caregivers</span>
+                            </div>
+                        </div>
+                        <div ng-if="$ctrl.resultCount > 0">
+                            <div class="family-member-list row">
+                                <div ng-repeat="familyMember in $ctrl.familyMembers" class="col-md-12 col-sm-12 col-xs-12" style="padding: 0;" ng-click="$ctrl.editFamily(familyMember.id)">
+                                    <div class="family-member-list-item">
+                                        <div class="profile-picture">
+                                            <img id="ProfilePicture" class="img-circle" ng-src="{{ $ctrl.appPath }}Person/GetPersonPictureById?personPictureName={{ familyMember.familyMemberPerson.pictureId }}&t=Clock.No" />
+                                        </div>
+                                        <div class="profile-details">
+                                            <span class="bold">{{ familyMember.familyMemberPerson.fullName }}</span>
+                                            <div class="information-line">
+                                                <p>
+                                                    <span class="dot-separated-item" ng-if="familyMember.relationship">{{ familyMember.relationship.description }}</span>
+                                                    <span class="dot-separated-item" ng-if="familyMember.familyMemberPerson.age != '-'">{{ familyMember.familyMemberPerson.age }}</span>
+                                                    <span class="dot-separated-item" ng-if="familyMember.typeOfEmergencyContactPerson">{{ familyMember.typeOfEmergencyContactPerson.code }}</span>
+                                                </p>
+                                                <div class="row" width="100%">
+                                                    <div class="col-lg-4 col-sm-12 col-xs-12 icon">
+                                                        <i class="material-icons">phone</i>
+                                                        <span class="dot-separated-item">{{ familyMember.familyMemberPerson.homePhone || '-' }}</span>
+                                                    </div>
+                                                    <div class="col-lg-4 col-sm-12 col-xs-12 icon">
+                                                        <i class="material-icons">phone_iphone</i>
+                                                        <span class="dot-separated-item">{{ familyMember.familyMemberPerson.mobilePhone || '-' }}</span>
+                                                    </div>
+                                                    <div class="col-lg-4 col-sm-12 col-xs-12 icon">
+                                                        <span class="ps-icon-office"></span>
+                                                        <span class="dot-separated-item">{{ familyMember.familyMemberPerson.officePhone || '-' }}</span>
+                                                    </div>
+                                                </div>                                              
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" ng-if="$ctrl.resultCount > $ctrl.pageSize && $ctrl.familyMembers.length < $ctrl.resultCount">
+            <div class="col-md-12">
+                <hr />
+            </div>
+        </div>
+        <div class="row" ng-if="$ctrl.resultCount > $ctrl.pageSize && $ctrl.familyMembers.length < $ctrl.resultCount">
+            <div class="col-md-12">
+                <div class="seeMore clearfix text-center">
+                    <a ng-click="$ctrl.loadMore()">@L("SeeMore")</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

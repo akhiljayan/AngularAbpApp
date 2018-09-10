@@ -1,0 +1,149 @@
+﻿<style>
+    .filter-list-item-remove-border-padding {
+        border-bottom: 0px !important;
+        padding: 0px !important;
+    }
+</style>
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">{{ vm.action }}</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div id="PrescriptionDetails" class="row">
+            <div class="col-md-12 col-sm-12">
+                <drug-entry-widget id="DrugEntryWidget" mode="vm.mode" model="vm.model.prescriptionItem" on-add-drug="vm.addDrug(event)" on-update-drug="vm.updateDrug(event)" on-clear-form="vm.isDeleted" unit-of-measurement-master="vm.unitOfMeasurementMaster" ng-if="vm.currentStep=='first' && vm.action=='Add/Copy'"></drug-entry-widget>
+
+                <div class="portlet light">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <div class="caption-subject">Drugs List</div>
+                        </div>
+
+                        <div class="actions dropdown inputs">
+                            <a ng-click="vm.showDetails = !vm.showDetails" title="Show associated Details" class="icon-wrapper">
+                                <i ng-show="!vm.showDetails" class="material-icons custom-icon">menu</i>
+                                <i ng-show="vm.showDetails" class="material-icons custom-icon">view_headline</i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body p-0-top-bottom">
+                        <div class="filter-results-card">
+                            <ul class="filter-list">
+                                <li class="filter-list-item" ng-repeat="model in vm.model.prescriptionList">
+                                    <div class="filter-list-item-content filter-list-item-remove-border-padding">
+                                        <a ng-click="vm.showDetailsInForm(model, $index)">
+                                            <drug-list-widget id="DrugListWidget" @*mode="vm.mode"*@ model="model" index="$index" step="vm.currentStep" show-details="vm.showDetails" on-delete-drug="vm.deleteDrug(event)" unit-of-measurement-master="vm.unitOfMeasurementMaster" current-action="vm.action"></drug-list-widget>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                @{
+                    var attrs = new Dictionary<string, object>();
+                    attrs.Add("name", "vm.form");
+                    attrs.Add("novalidate", "");
+                    attrs.Add("angular-validator", "");
+                }
+
+                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs)))
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <div ng-if="vm.currentStep=='next'">
+                            <div ng-if="vm.currentStep=='next'">
+                                <div ng-if="vm.action=='Void'||vm.action=='Stop'">
+                                    <div class="portlet light">
+                                        <div class="portlet-title">
+                                            <div class="caption">
+                                                <div class="caption-subject">Additional Information</div>
+                                            </div>
+                                        </div>
+                                        <div class="portlet-body">
+
+
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12">
+                                                    <div class="form-group form-md-line-input">
+                                                        <textarea id="inactiveReason" name="inactiveReason" class="form-control" ng-model="vm.inactiveReason" required required-message="'You must provide a value for Reason.'"></textarea>
+                                                        <label class="control-label" for="inactiveReason">Reason<span class="businessRequired"> * </span></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @*<div class="row">
+                                                <div class="col-md-12 col-sm-12">
+                                                    <div class="form-group form-md-line-input">
+                                                        <div class="input-group date date-picker">
+                                                            <input class="form-control dateinput" date-picker id="inactiveDate" name="inactiveDate" ng-model="vm.inactiveDate" required required-message="'You must provide a value for Date.'" type="text"
+                                                                   validate-on="dirty" validator="vm.inactiveDateValidator(vm.inactiveDate)===true" invalid-message="vm.inactiveDateValidator(vm.inactiveDate);">
+                                                            <div class="input-group-addon">
+                                                                <i class="material-icons" style="line-height: 14px;">date_range</i>
+                                                            </div>
+                                                            <label class="control-label" for="inactiveDate">Date<span class="businessRequired"> * </span></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>*@
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="portlet light">
+                                    <div class="portlet-body">
+
+                                        <div class="row">
+                                            <div class="col-md-3 col-sm-3" style="padding-top: 5px">
+                                                <label class="control-label" for="OrderStatus">Order Status</label>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input name="OrderStatus" class="form-control" id="OrderStatus" type="text" value="{{ vm.workingModel.orderStatus | enumText: 'prescriptionOrderStatus' }}" validate-on="dirty" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3 col-sm-3" style="padding-top: 5px">
+                                                <div class="control-label" for="OrderBy">Order By</div>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input name="OrderBy" class="form-control" id="OrderBy" type="text" ng-model="vm.workingModel.orderBy" validate-on="dirty" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3 col-sm-3" style="padding-top: 5px">
+                                                <div class="control-label" for="Designation">Designation</div>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input name="Designation" class="form-control" id="Designation" type="text" ng-model="vm.workingModel.designation" validate-on="dirty" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions pull-right">
+                            <button class="linkButton btn-small" busy-if="vm.isSavingDisabled" type="button" ng-click="vm.setStep('first')" ng-if="vm.currentStep=='next' && vm.action == 'Add/Copy'">
+                                <i class="material-icons font-18-main v-top">keyboard_arrow_left</i> @L("Back")
+                            </button>
+                            <button class="linkButton btn-small" type="submit" button-busy="vm.checking" ng-click="vm.proceed()" ng-if="vm.currentStep=='first' && vm.model.prescriptionList.length > 0" ng-disabled="vm.checking">
+                                @*<i class="material-icons font-18-main v-top">next</i>*@ Proceed
+                            </button>
+                            <button class="linkButton btn-small" busy-if="vm.isSavingDisabled" type="submit" ng-click="vm.confirm()" ng-if="vm.currentStep=='next' && vm.model.prescriptionList.length > 0">
+                                @*<i class="material-icons font-18-main v-top">next</i>*@ Checked &amp; Confirm
+                            </button>
+                            <button class="linkButton btn-small" busy-if="vm.isSavingDisabled" type="button" ng-click="vm.cancel()" @*ng-if="vm.currentStep=='first' || vm.action != 'Add/Copy'"*@>
+                                <i class="material-icons font-18-main v-top">close</i> @L("Cancel")
+                            </button>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

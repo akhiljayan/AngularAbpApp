@@ -1,0 +1,106 @@
+﻿<style>
+    .social-report-list li {
+        border-bottom: 1px solid #eee;
+    }
+
+        .social-report-list li:first-of-type {
+            padding: 0 0 10px 0;
+        }
+
+        .social-report-list li:last-of-type {
+            border-bottom: 0;
+            padding: 10px 0 0 0;
+        }
+
+        .social-report-list li:only-of-type {
+            padding: 0;
+        }
+</style>
+
+<div id="socialReports" class="view-content" ng-controller="tenant.views.socialReports.index as vm">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="portlet light" busy-if="vm.loading">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("SocialReport")</span>
+                    </div>
+                    <div class="actions dropdown inputs">
+                        <div class="input-small-new inline-block">
+                            <form action="" class="search-form">
+                                <div class="form-group has-feedback input-inline">
+                                    <label for="search" class="sr-only">@L("Search")</label>
+                                    <input type="text" ng-model="vm.filter" enter-key="vm.load()"
+                                           class="form-control form-control-solid input-circle search-input font-13-main clearable"
+                                           placeholder="search keywords...">
+                                    <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="vm.clearFilter()"></a>
+                                    <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                                </div>
+                            </form>
+                        </div>
+                        <a ui-sref="tenant.socialReportNew" ng-if="vm.permissions.create" class="icon-wrapper">
+                            <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="portlet-body p-0-top-bottom">
+                    <div class="filter-results">
+                        <ul class="filter-list">
+                            <li class="filter-list-item" ng-repeat="model in vm.data.items">
+                                <div class="filter-list-item-content">
+
+                                    <a ui-sref="tenant.personDetailFromSocialRpt({ id: model.personId })">
+                                        <div class="row margin-bottom-10">
+                                            <div class="col-md-10">
+                                                <span class="caption cursor-pointer">{{ model.fullName }}</span>
+                                                <span ng-if="model.registrationDocumentNumber" class="otherText uppercase">
+                                                    ({{ model.registrationDocumentNumber }})
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <div class="well well-sm font-13-main">
+                                        <ul class="social-report-list">
+                                            <li ng-repeat="socialReport in model.socialReports">
+                                                <a ui-sref="tenant.socialReport({ socialId: socialReport.id })">
+                                                    <div class="row">
+                                                        <div class="col-md-9 col-sm-7 margin-bottom-10 bold">
+                                                            <span data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true"
+                                                                  data-content="<div class='otherText'>Subject</div>" ng-popover>
+                                                                {{ socialReport.subject }}
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-md-3 col-sm-5 text-right margin-bottom-10 bold">
+                                                            <span data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true"
+                                                                  data-content="<div class='otherText'>Report Type</div>" ng-popover>
+                                                                {{ socialReport.reportType.description }}
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-md-9 col-sm-7">
+                                                            Reported by <b>{{ socialReport.reportedBy.fullName }}</b> on <b>{{ socialReport.reportedDate | date:'dd-MMM-yyyy' }}</b>
+                                                        </div>
+                                                        <div class="col-md-3 col-sm-5 text-right">
+                                                            <span data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true"
+                                                                  data-content="<div class='otherText'>By Referral</div>" ng-popover>
+                                                                {{ socialReport.byReferral.referralCode }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <simple-paginator data="vm.data" key="vm.key" on-page-changed="vm.load(requestParams)"></simple-paginator>
+
+            </div>
+        </div>
+    </div>
+</div>

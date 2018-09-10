@@ -1,0 +1,120 @@
+﻿<style type="text/css">
+    .timelineTab.active {
+        border-bottom: none !important;
+    }
+
+    .timelineTab:hover {
+        border-bottom: none !important;
+    }
+
+    .portlet.light.person-time-line {
+        padding: 12px 0px 15px 0px !important;
+    }
+
+    .nav.nav-tabs.timelineTab {
+        background-color: #f0f0f0;
+        margin-bottom: 10px;
+    }
+
+    .padding-left-right-15 {
+        padding-right: 15px !important;
+        padding-left: 15px !important;
+    }
+</style>
+
+
+
+<div id="timeline" class="portlet light tasks-widget person-time-line" ng-if="vm.isPatient">
+    <div class="portlet-title margin-bottom-0  main-title" ng-class="{'padding-left-right-15' :vm.template == 'person' }">
+        <div class="caption">
+            <span class="caption-subject">
+                Timeline <span ng-if="vm.template != 'person'">- {{vm.patientFullname}}</span>
+            </span>
+        </div>
+        <div class="actions dropdown inputs" ng-if="vm.isPatient">
+            <div class="input-small-new inline-block">
+                <form action="" class="search-form">
+                    <div class="form-group has-feedback input-inline">
+                        <label for="search" class="sr-only">@L("Search")</label>
+                        <input type="text" class="form-control form-control-solid input-circle search-input font-13-main clearable" placeholder="search keywords..." enter-key="vm.loadTimeLine()" ng-model="vm.filter">
+                        <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="vm.clearFilter()"></a>
+                        <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                    </div>
+                </form>
+            </div>
+            <div class="input-small-new inline-block">
+                <a class="icon-wrapper" title="Filter" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                    <i class="material-icons custom-icon">more_vert</i>
+                </a>
+                <ul class="dropdown-menu pull-right" style="min-width: 250px;">
+                    <li>
+                        <a href="javascript:;" class="bold" ng-click="vm.searchModules = []; vm.showAllModules(); vm.loadTimeLine();">Show all</a>
+                    </li>
+                    <hr style="margin:5px 0" />
+                    <li ng-repeat="module in vm.timeLineModules">
+                        <div class="col-md-12">
+                            <span style="display:inline-block;padding: 8px 8px;">
+                                <input type="checkbox" ng-model="vm.moduleCheckBox[$index]" style="padding: 8px 16px; vertical-align:middle; margin:0px;" ng-click="vm.addSearchModule(module.value, $event);">
+                            </span>
+                            <span class="bold" style="display:inline-block;padding: 8px 8px;">{{module.description}}</span>
+                        </div>
+                        <hr style="margin:2px 0" />
+                    </li>
+                </ul>
+            </div>
+            @*<div class="form-group form-md-line-input">
+            <select id="centre" ng-model="vm.searchModule" label="Modules" multiple="multiple" multi-select ng-options="x.id as x.description for x in vm.timeLineModules" optionchange="vm.centreList"></select>
+        </div>*@
+            <a ng-click="vm.createLifeEvent()" ng-if="vm.permissions.createLifeEvent && vm.addLifeEvents" title="Add new life event" class="icon-wrapper">
+                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+            </a>
+            <a ng-click="vm.cancel()" ng-if="vm.template != 'person'" title="Close" class="icon-wrapper" style="cursor:pointer">
+                <i class="material-icons custom-icon">close</i>
+            </a>
+            @*<a ng-click="vm.timeLineDBMigration()" title="Close" class="icon-wrapper" style="cursor:pointer">
+                <i class="material-icons custom-icon bold">M</i>
+            </a>*@
+        </div>
+    </div>
+    <div class="portlet-body" style="padding-top:0px">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 tabbable-line timeline-tab" style="text-align:left">
+                <ul class="nav nav-tabs timelineTab" scroll-to-top tab-navigation-hash>
+                    <li class="timelineTab active pull-left">
+                        <a data-toggle="tab" href="#All" target="_self" ng-click="vm.addLifeEvents = true; vm.preventScroll($event);" class="font-16-important bold txt-align-cntr">@L("All")</a>
+                    </li>
+                    <li class="timelineTab pull-left">
+                        <a data-toggle="tab" href="#social" target="_self" ng-click="vm.addLifeEvents = true; vm.preventScroll($event);" class="font-16-important bold txt-align-cntr">@L("Social")</a>
+                    </li>
+                    <li class="timelineTab pull-left">
+                        <a data-toggle="tab" href="#Medical" target="_self" ng-click="vm.addLifeEvents = true; vm.preventScroll($event);" class="font-16-important bold txt-align-cntr">@L("Medical")</a>
+                    </li>
+                    <li class="timelineTab pull-left">
+                        <a data-toggle="tab" href="#Service" target="_self" ng-click="vm.addLifeEvents = true; vm.preventScroll($event);" class="font-16-important bold txt-align-cntr">@L("Service")</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12" ng-if="vm.isPatient">
+                <div class="tab-content clearfix">
+                    <div id="All" class="tab-pane fade in active">
+                        @Html.Partial("~/App/tenant/views/timeLine/tabTemplates/allTimeLines.cshtml")
+                    </div>
+                    <div id="social" class="tab-pane fade">
+                        @Html.Partial("~/App/tenant/views/timeLine/tabTemplates/socialTimeLines.cshtml")
+                    </div>
+                    <div id="Medical" class="tab-pane fade">
+                        @Html.Partial("~/App/tenant/views/timeLine/tabTemplates/medicalTimeLines.cshtml")
+                    </div>
+                    <div id="Service" class="tab-pane fade">
+                        @Html.Partial("~/App/tenant/views/timeLine/tabTemplates/serviceTimeLines.cshtml")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

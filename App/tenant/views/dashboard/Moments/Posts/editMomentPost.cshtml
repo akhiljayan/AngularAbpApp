@@ -1,0 +1,94 @@
+﻿@using Abp.Timing
+<div class="portlet light">
+    <div class="portlet-title removeBorder">
+        <div class="caption">
+            <span class="caption-subject">@L("EditPost")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <form role="form" id="momentsForm" name="momentsForm" novalidate action="#" angular-validator angular-validator-submit="vm.save()" class="form-validation horizontal-form">
+            <div class="form-body" style="padding:0px">
+                <div class="row">
+                    <div class="col-sm-2 postFormImg">
+                        <img class="img-responsive img-circle" id="HeaderProfilePicture" alt="" src="@Url.Action("GetProfilePicture", "Profile")?t=@Clock.Now.Ticks.ToString()" />
+                    </div>
+                    <div class="col-md-10 form-group form-md-line-input postBoxContainer">
+                        <textarea type="text" class="form-control  animate msd-elastic" name="PostMessage" id="postHelpText" ng-model="vm.post.description" required required-message="'You must provide a value for Post Message'" ng-maxlength="500" placeholder="Share Something..."></textarea>
+                    </div>
+                </div>
+                <div class="row" id="addPhotoContainer">
+                    <div class="col-md-12 form-group form-md-line-input">
+                        <i class="material-icons">camera_alt</i>
+                        <label class="control-label" for="photo">@L("AddPhoto")</label>
+                        <input type="file" class="form-control" id="photo" ng-maxlength="500" nv-file-select uploader="vm.uploader">
+                    </div>
+                </div>
+                <div class="row" id="addPersonContainer">
+                    <div class="col-md-12 form-group form-md-line-input">
+                        <img class="postIconImgForm" ng-src="{{vm.appPath}}Common/Images/tag/Tag.png" />
+                        <label class="control-label" for="personTags">@L("WithPerson")</label>
+                        <input type="text" class="form-control typeahead" id="personTags" ng-maxlength="500" data-role="tagsinput" placeholder="Type to add Person">
+                    </div>
+                </div>
+                <div class="row" id="hashTagContainer">
+                    <div class="col-md-12 form-group form-md-line-input">
+                        <img class="postIconImgForm" style="font-size:24px" ng-src="{{vm.appPath}}Common/Images/hastag/Hastag@2x.png" />
+                        <label class="control-label" for="postHashTag">@L("HashTag")</label>
+                        <input type="text" class="form-control" id="postHashTag" ng-maxlength="500" data-role="tagsinput" placeholder="Type to add new tag">
+                    </div>
+                </div>
+                <div class="form-actions right" style="padding: 0px 0px;" id="momentPostActions">
+                    <button id="momentPost" type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small"><i class="material-icons ps-btn-material">check</i>Ok</button>
+                    <button id="momentPostCancel" type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>@L("Cancel")</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#postHashTag").tagsinput('items');
+        $('#momentsForm').ValidateControls({
+            rules: {
+                PostMessage: {
+                    required: true
+                }
+            }
+        });
+    });
+
+    var users = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.whitespace,
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        remote: {
+            url: abp.appPath + 'api/services/app/commonLookup/LookUpUsersExceptCurrentLoggedIn',
+            filter: function (response) {
+                return response.result.items;
+            },
+            prepare: function (query, settings) {
+                settings.type = "POST";
+                settings.contentType = "application/json; charset=UTF-8";
+                settings.data = JSON.stringify({ Filter: query });
+
+                return settings;
+            }
+        }
+    });
+
+    users.initialize();
+
+    $("#personTags").tagsinput({
+        itemText: "name",
+        itemValue: "value",
+        typeaheadjs: {
+            name: 'users',
+            displayKey: 'name',
+            source: users.ttAdapter()
+        }
+    });
+
+</script>

@@ -1,0 +1,140 @@
+﻿<style tupe="text/css">
+    .new-badge {
+        background-color: #00bfb5 !important;
+        font-size: 10px !important;
+        display: inline-block;
+        margin-top: -5px;
+        padding-top: 3px;
+    }
+
+    .show-full-message {
+        display: block;
+        width: auto;
+        word-wrap: break-word;
+    }
+
+    .show-shot-message {
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+
+   .animate-show {
+        max-height:9999px !important;
+        opacity: 1;
+        overflow:hidden;
+    }
+    .animate-show.ng-hide-add.ng-hide-add-active,
+    .animate-show.ng-hide-remove.ng-hide-remove-active {
+        transition:all ease 1.00s;
+    }
+    .animate-show.ng-hide {
+        max-height:0  !important;
+        opacity:0;
+    }
+</style>
+<div ng-controller="tenant.views.dashboard.workspace.bulletin as vm">
+    <div class="portlet light tasks-widget ">
+        <div class="portlet-title margin-bottom-0">
+            <div class="caption">
+                <span class="caption-subject">@L("Bulletin")<span class="badge">{{vm.UnreadBulletinCount}}</span></span>
+            </div>
+            <div class="actions dropdown inputs">
+                <div class="input-small-new inline-block">
+                    <form action="" class="search-form">
+                        <div class="form-group has-feedback input-inline">
+                            <label for="search" class="sr-only">@L("Search")</label>
+                            <input type="text" ng-model="vm.bulletinCard.filterText" enter-key="vm.refreshGrid()" class="form-control form-control-solid input-circle search-input font-13-main clearable" placeholder="search keywords...">
+                            <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="vm.bulletinCard.filterText='';vm.refreshGrid()"></a>
+                            <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                        </div>
+                    </form>
+                </div>
+                <a class="icon-wrapper" ng-if="vm.permissions.create" ng-click="vm.createBulletin()">
+                    <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                </a>
+                <a class="icon-wrapper" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                    <i class="material-icons custom-icon">more_vert</i>
+                </a>
+                <ul class="dropdown-menu pull-right">
+                    <li>
+                        <a href="javascript:;" class="bold" ng-click="vm.refreshGrid()">@L("AllCategories")</a>
+                    </li>
+                    <li class="divider"> </li>
+                    <li ng-repeat="category in vm.Categories">
+                        <a href="javascript:;" ng-click="vm.filterByCategory(this.category)">{{category.description}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="portlet-body nopadding">
+            <div class="mt-comments">
+                <div class="mt-comment-date" ng-if="vm.Bulletins.length==0">@L("NoRecordsFound")</div>
+                <div class="mt-comment bulletin-comment" ng-repeat="bulletin in vm.Bulletins" @*ng-click="vm.expandMessageForMob(bulletin.id, $event)"*@ ng-mouseover="vm.expandMessageForMob(bulletin.id, $event)" style="cursor:pointer">
+                    <div class="row bulletin-content" ng-class="{'click-expand' : vm.openBulletain.indexOf(bulletin.id) == -1 }" style="padding-bottom:0px">
+                        <div class="col-sm-12 text-right" style="min-height: 45px">
+                            &nbsp
+                            <ul class="mt-post-actions list-unstyled list-inline-block">
+                                <li class="btn-right button-3-second">
+                                    <a class="linkButton btn-small" ng-if="vm.permissions.edit" ng-click="vm.editBulletin(bulletin.id, 'Edit')">
+                                        <i class="material-icons  font-18-main v-top">mode_edit</i> @L("Edit")
+                                    </a>
+                                </li>
+                                @*<li class="btn-right button-3-second">
+                                        <a class="linkButton btn-small" ng-if="vm.permissions.view" ng-click="vm.editBulletin(bulletin.id, 'View')">
+                                            <i class="material-icons  font-18-main v-top">mode_edit</i> @L("View")
+                                        </a>
+                                    </li>*@
+                                <li class="btn-right button-3-third">
+                                    <a class="linkButton btn-small" ng-if="vm.permissions.delete" href="#" ng-click="vm.deleteBulletin(bulletin.id)">
+                                        <i class="material-icons  font-18-main v-top">delete</i> @L("Delete")
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-xs-2 col-sm-2">
+                            <img class="img-responsive img-circle" ng-if="bulletin.createdUserProfilePictureId" ng-src="{{vm.appPath}}Profile/GetProfilePictureById?id={{bulletin.createdUserProfilePictureId}}" />
+                            <img class="img-responsive img-circle" ng-if="!bulletin.createdUserProfilePictureId" ng-src="{{vm.appPath}}Common/Images/default-profile-picture.png" />
+                        </div>
+                        <div class="col-xs-10 col-sm-10" style="padding-left: 0px">
+                            <div class="col-xs-6 col-sm-6">
+                                <span class="semi">{{bulletin.createdUserName}} &nbsp;<span ng-if="!bulletin.isRead" class="badge new-badge">@L("New")</span></span>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 text-right">
+                                <span class="mt-comment-date otherText">{{bulletin.creationTime | dateFormat}}</span>
+                            </div>
+                            <div class="col-xs-10 col-sm-10">
+                                <span class="caption">{{bulletin.subject}}</span>
+                            </div>
+                            <div class="col-xs-2 col-sm-2 text-right">
+                                <span ng-if="!bulletin.isPinned" class="mt-comment-date otherText" ng-click="vm.pinBulletin(bulletin.id)">
+                                    <i class="icon-pin font-default"></i>
+                                </span>
+                                <span ng-if="bulletin.isPinned" class="mt-comment-date otherText" ng-click="vm.unPinBulletin(bulletin.id)">
+                                    <i class="icon-pin fontStealGreen"></i>
+                                </span>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-offset-2 col-sm-10 sidebar-box" @*ng-class="{'show-shot-message' : vm.openBulletain.indexOf(bulletin.id) == -1}"*@>
+                            @*<span ng-class="{'show-full-message' : vm.openBulletain.indexOf(bulletin.id) != -1 }" ng-bind-html="bulletin.message"></span>*@
+                            @*<div ng-bind-html="bulletin.message"  ellipsis></div>*@
+                            @*<div read-more="{{bulletin.message}}" id="kalipanman" read-more-options="options"></div>*@
+                            @*<div trunk8="{ fill: '&hellip;', parseHTML:true }" ng-bind-html="bulletin.message"></div>*@
+                            <div ng-bind-html="bulletin.message" class="animate-show" ng-show="vm.openBulletain.indexOf(bulletin.id) != -1"></div>
+                            <a href="#" class="pull-right" ng-click="vm.expandbinMessage(bulletin.id,$event)" ng-if="vm.openBulletain.indexOf(bulletin.id) == -1">...Read message</a>
+                            <a href="#" class="pull-right" ng-click="vm.expandbinMessage(bulletin.id,$event)" ng-if="vm.openBulletain.indexOf(bulletin.id) != -1">...Hide message</a>
+                        </div>
+                    </div>
+                    <hr class="ps-hr" style="margin-top: 10px;" />
+                </div>
+            </div>
+            <div ng-if="vm.Bulletins.length!=0" class="seeMore clearfix text-center  margin-top-20">
+                <a href="javascript:;" ng-click="vm.loadMore()">@L("SeeMore")</a>
+            </div>
+        </div>
+    </div>
+
+</div>

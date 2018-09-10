@@ -1,0 +1,43 @@
+﻿@using Pulsesync.IngoTPCC.Localization
+
+<div class="portlet light" busy-if="$ctrl.loading" ng-class="{ 'div-disabled': $ctrl.isDisabled }">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Attachment")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <div class="input-small-new inline-block">
+                <form action="" class="search-form search-style-class">
+                    <div class="form-group has-feedback input-inline search-form-group" ng-if="!$ctrl.isDisabled">
+                        <label for="search" class="sr-only">@L("Search")</label>
+                        <input type="text" ng-model="$ctrl.filterText" enter-key="$ctrl.refreshGrid()" class="form-control form-control-solid search-input input-circle font-13-main clearable" placeholder="search keywords...">
+                        <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="$ctrl.clearFilter()"></a>
+                        <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                    </div>
+                </form>
+            </div>
+            <a class="icon-wrapper" ng-click="$ctrl.uploadFile()" ng-show="$ctrl.permissions.attach && $ctrl.upload && !$ctrl.isDisabled">
+                <i class="material-icons custom-icon"><span class="fa fa-upload"></span></i>
+            </a>
+            <a class="icon-wrapper" ng-click="$ctrl.deleteFile()" title="Delete" ng-show="$ctrl.permissions.delete && $ctrl.delete && !$ctrl.isDisabled">
+                <i class="material-icons custom-icon">delete</i>
+            </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row" ng-if="!$ctrl.isDisabled">
+            <div class="col-md-12">
+                <div class="grid" ui-grid="$ctrl.gridOptions" ui-grid-selection dir=@(CultureHelper.IsRtl ? "rtl" : "")></div>
+            </div>
+            <div class="col-md-12">
+                <simple-paginator data="$ctrl.data" small-page-size="true" on-page-changed="$ctrl.load(requestParams)"></simple-paginator>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12" ng-if="!$ctrl.data.length">
+                <span ng-if="$ctrl.isDisabled">Attachment can be added once this record is saved.</span>
+            </div>
+        </div>
+    </div>
+</div>

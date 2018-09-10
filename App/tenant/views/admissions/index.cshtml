@@ -1,0 +1,122 @@
+﻿<style type="text/css">
+
+</style>
+
+<div id="AdmissionIndex" ng-controller="tenant.views.admissions.index as vm">
+    <div class="row">
+        <div class="col-md-2 col-sm-12 margin-bottom-12">
+            <span class="caption">@L("FilterBy")</span>
+            <div class="form-group form-md-line-input">
+                <label class="control-label" for="centre">@L("Centre")</label>
+                <select id="centre" ng-model="vm.selectedCentre" label="@L("Centre")" multiple="multiple" multi-select ng-options="x.id as x.name for x in vm.centreList" optionchange="vm.centreList"></select>
+            </div>
+            <div class="form-group form-md-line-input">
+                <label class="control-label" for="serviceType">@L("ServiceType")</label>
+                <select id="serviceType" label="@L("ServiceType")" ng-model="vm.selectedServiceTypes" ng-options="x.id as x.description for x in vm.serviceTypeList" multiple="multiple" multi-select optionchange="vm.serviceTypeList"></select>
+            </div>
+            <div class="form-group form-md-line-input">
+                <label class="control-label" for="admissionStatus">@L("Admission") @L("Status")</label>
+                <ui-select id="admissionStatus" ng-model="vm.selectedStatus" theme="selectize" title="Choose an Admission Status">
+                    <ui-select-match placeholder="Select Admission Status">
+                        {{$select.selected.name}}
+                        <a class="fa fa-times" ng-hide="vm.isReadOnlyMode" ng-click="$select.clear($event);"></a>
+                    </ui-select-match>
+                    <ui-select-choices repeat="m.value as m in vm.admissionFilterStatus | filter: { name: $select.search } | orderBy:'value'">
+                        <span ng-bind-html="m.name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+
+            <div class="form-actions noborder pull-right">
+                <button ng-click="vm.changeFilterOptions()" class="btn btn-circle btn-small light-grey-pcc btn-outline">@L("Filter")</button>
+            </div>
+        </div>
+
+        <div class="col-md-8 col-sm-12">
+            <div class="portlet light" busy-if="vm.loading">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("Admissions") - {{ vm.heading }}</span>
+                    </div>
+                    <div class="actions dropdown inputs">
+                        <div class="portlet-input input-inline input-small-new">
+                            <form action="" class="search-form search-style-class">
+                                <div class="form-group has-feedback input-inline search-form-group">
+                                    <label for="search" class="sr-only">@L("Search")</label>
+                                    <input type="text" ng-model="vm.filter" enter-key="vm.searchValue()" class="form-control form-control-solid search-input input-circle font-13-main clearable" placeholder="search keywords...">
+                                    <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="vm.clearFilter()"></a>
+                                    <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="portlet-input input-inline input-small-new search-form ">
+                            <select class="action-form sort-form" ng-change="vm.searchValue()" ng-model="vm.selectedSort" ng-options="x.value as x.name for x in vm.sortingList"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body air-card p-0-top-bottom">
+                    <section class="air-card-hover" ng-repeat="data in vm.dataList" ng-click="vm.view(data)">
+                        <div class="row margin-bottom-10">
+                            <div class="col-md-12 col-sm-12">
+                                <div class="row">
+                                    <div class="col-md-8 col-sm-8">
+                                        <span class="caption">{{data.name}}</span>
+                                        <span class="otherText uppercase">
+                                            ({{data.nric}})
+                                        </span>
+                                        <span class="badge bootstrap-switch-steelGreenBackGRound" ng-if="data.isNew">New</span>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4">
+                                        <div class="pull-right">
+                                            <span class="ps-icon-referencecode" uib-tooltip="@L("AdmissionNumber")"></span>
+                                            <span class="caption vertical-top">{{data.admissionNumber}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row margin-top-10">
+                                    <div class="col-md-6 col-sm-6 font-13-main">
+                                        Admitted on <span class="bold">{{data.admittedOn | dateTimeFormat}}</span>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 font-13-main">
+                                        <div>
+                                            <span class="bold">{{data.serviceType}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 font-13-main">
+                                        <div class="pull-right text-right">
+                                            <span class="bold">{{data.admittedCentre}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row margin-top-10" ng-if="data.listingFor == 'Admission'">
+                                    <div class="col-md-12 col-sm-12 font-13-main margin-top-10">
+                                        <span class="bold">{{ data.residentialAddress }}</span>
+                                    </div>
+                                </div>
+                                <div class="row margin-top-10" ng-if="data.listingFor == 'Discharge'">
+                                    <div class="col-md-12 col-sm-12 font-13-main margin-top-10" ng-if="data.deceasedOn == null">
+                                        Discharged <span ng-if="data.dischargeDestination != null"> to <span class="bold">{{ data.dischargeDestination }}</span></span> on
+                                        <span class="bold">{{data.dischargedOn | dateTimeFormat}}</span>
+                                    </div>
+                                    <div class="col-md-12 col-sm-12 font-13-main margin-top-10" ng-if="data.deceasedOn != null">
+                                        Deceased at <span class="bold">{{ data.deceasedHospital }}</span> on <span class="bold">{{data.deceasedOn | dateTimeFormat}}</span>
+                                    </div>
+                                    <div class="col-md-12 col-sm-12 font-13-main margin-top-12" ng-if="data.deceasedOn == null">
+                                        Discharge Reason
+                                        <span class="font-13-main bold" ng-if="data.dischargeReasonOthers == ''">{{data.dischargeReason}}</span>
+                                        <span class="font-13-main bold" ng-if="data.dischargeReasonOthers != null">{{data.dischargeReasonOthers}}</span>
+                                    </div>
+                                    <div class="col-md-12 col-sm-12 font-13-main margin-top-12" ng-if="data.deceasedOn != null">
+                                        Cause of Death
+                                        <span class="font-13-main bold">{{data.deceasedReason}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <simple-paginator data="vm.data" key="vm.key" on-page-changed="vm.loadResults(requestParams)"></simple-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

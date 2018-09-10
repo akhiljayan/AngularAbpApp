@@ -1,0 +1,42 @@
+﻿<div class="portlet light" busy-if="vm.loading">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Genogram")</span>
+        </div>
+        <div class="tools pull-right">
+            <minimize-modal></minimize-modal>
+            <a class="remove" ng-click="vm.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="form modal-body">
+            <div class="row">
+                <div class="col-md-8 col-sm-8">
+                    <div class="form-group">
+                        {{ vm.data.originalFileName }}
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-4 text-right">
+                    <div class="form-group">
+                        <a ng-if="$ctrl.permissions.view" href="#" class="greenlinkbutton" ng-click="vm.download()">Download</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div id="genogram-detail"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <div class="row" style="padding: 15px 15px 5px 15px;">
+                <div class="form-actions pull-right">
+                    <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.close()"><i class="material-icons ps-btn-material">check</i>@L("Ok")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

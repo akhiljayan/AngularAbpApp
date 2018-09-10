@@ -1,0 +1,185 @@
+﻿@model ReferralDto
+@using IRMS.Entities.Dto;
+<div ng-controller="tenant.views.irms.healthView as health">
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div busy-if="vm.loading">
+            <!-- Health Information Section -->
+            <div id="HealthInformation" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("HealthInformation")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.healthInformationList.hypertension }}</div>
+                                <label class="control-label view-label" for="hypertension">@L("Hypertension")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.healthInformationList.hyperlipidemia }}</div>
+                                <label class="control-label view-label" for="hyperlipidemia">@L("Hyperlipidemia")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.healthInformationList.diabeteMellitus }}</div>
+                                <label class="control-label view-label" for="diabeteMellitus">@L("DiabetesMellitus")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.healthInformationList.stroke }}</div>
+                                <label class="control-label view-label" for="stroke">@L("Stroke")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.healthInformationList.dementia }}</div>
+                                <label class="control-label view-label" for="dementia">@L("Dementia")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.healthInformationList.dementiaSpecify }}</div>
+                                <label class="control-label view-label" for="dementiaSpecify">@L("SpecifiedDementia")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.healthInformationList.psychiatricCondition }}</div>
+                                <label class="control-label view-label" for="psychiatricCondition">@L("PsychiatricCondition")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.healthInformationList.psychiatricConditionSpecify }}</div>
+                                <label class="control-label view-label" for="psychiatricConditionSpecify">@L("SpecifiedPsychiatricCondition")</label>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.healthInformationList.heartDisease }}</div>
+                                <label class="control-label view-label" for="heartDisease">@L("HeartDisease")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.healthInformationList.renalDisease }}</div>
+                                <label class="control-label view-label" for="renalDisease">@L("RenalDisease")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.healthInformationList.reasonforAdmission }}</div>
+                                <label class="control-label view-label" for="reasonforAdmission">@L("ReasonForAdmission")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.healthInformationList.infectiousDisease }}</div>
+                                <label class="control-label view-label" for="infectiousDisease">@L("InfectiousDisease")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.healthInformationList.copd }}</div>
+                                <label class="control-label view-label" for="cOPD">@L("COPD")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.healthInformationList.others }}</div>
+                                <label class="control-label view-label" for="others">@L("Others")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infectious Disease Section -->
+            <div id="HealthInfectiousDisease" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("InfectiousDisease")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.hitInfectiousDisease1List.infectious_Hepatitis }}</div>
+                                <label class="control-label view-label" for="infectious_Hepatitis">@L("InfectiousDiseaseHepatitis")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other Infectious Disease Section -->
+            <div id="HealthOtherInfectiousDisease" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("OtherInfectiousDisease")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.hitInfectiousDisease2List.infectiousDiseasesOther }}</div>
+                                <label class="control-label view-label" for="infectiousDiseasesOther">@L("OtherInfectiousDisease")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.hitInfectiousDisease2List.infectiousDiseasesOtherSpecify }}</div>
+                                <label class="control-label view-label" for="infectiousDiseasesOtherSpecify">@L("OtherInfectiousDiseaseSpecified")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.hitInfectiousDisease2List.mrsa }}</div>
+                                <label class="control-label view-label" for="mrsa">@L("MRSA")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.hitInfectiousDisease2List.vre }}</div>
+                                <label class="control-label view-label" for="vre">@L("VRE")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.hitInfectiousDisease2List.ptb }}</div>
+                                <label class="control-label view-label" for="ptb">@L("PTB")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Precaution Required Section -->
+            <div id="HealthPrecautionRequired" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("PrecautionRequired")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.hitPrecautionRequiredList.precautionRequired }}</div>
+                                <label class="control-label view-label" for="precautionRequired">@L("PrecautionRequired")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ health.hitPrecautionRequiredList.precautionRequiredOthersSpecify }}</div>
+                                <label class="control-label view-label" for="precautionRequiredOthersSpecify">@L("OtherPrecautionRequired")</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

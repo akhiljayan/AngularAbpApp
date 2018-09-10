@@ -1,0 +1,81 @@
+﻿@model CreateProblemGoalInput
+
+@using Pulsesync.IngoTPCC.MasterLookup.ProblemGoals.Dto;
+
+<div class="portlet light" data-drag="true">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("ProblemGoals")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancelProblemGoals()"></a>
+        </div>
+    </div>
+
+    <div class="portlet-body form">
+        @{
+            var attributes = new Dictionary<string, object>();
+            attributes.Add("name", "problemGoalFrom");
+            attributes.Add("novalidate", "");
+            attributes.Add("angular-validator-submit", "vm.save()");
+            attributes.Add("angular-validator", "");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body")))
+        {
+            using (var s = f.BeginSection())
+            {
+                <div class="portlet-body" style="display: block;">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.ProblemId).AsDropDown().Attrs(new { ng_model = "vm.problemGoal.id", repeat = "vm.problemMaster", ng_disabled= "!vm.isCreateMode" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            &nbsp;
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">@L("MultiselectLeftGoalListBox")</div>
+                            <div class="col-md-2">&nbsp;</div>
+                            <div class="col-md-5">@L("MultiselectRightGoalListBox")</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <select id="goalList" jquery-multiselect class="form-control" size="8" multiple="multiple"
+                                        ms-keep-rendering-sort="true"
+                                        ms-right="selectedGoalList"
+                                        ms-right-selected="rightSelected"
+                                        ms-left-selected="leftSelected"
+                                        ms-search-left="true"
+                                        ms-search-right="true">
+                                    <option ng-repeat="item in vm.goalList" value="{{ item.id }}">{{ item.description }}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-2" style="display: table; height: 170px;">
+                                <div style="display: table-cell; vertical-align: middle;">
+                                    <div class="clearfix"></div>
+                                    <button type="button" id="rightSelected" class="btn btn-block green btn-outline" ng-click="vm.validate()"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                                    <div class="clearfix height-5"></div>
+                                    <button type="button" id="leftSelected" class="btn btn-block green btn-outline" ng-click="vm.moveToLeft()"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="col-md-5">
+                                <select id="selectedGoalList" class="form-control" size="8" multiple="multiple"></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            &nbsp;
+                        </div>
+                    </div>
+                </div>
+            }
+            
+            <div class="form-actions noborder right">
+                <button type="submit" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="!vm.permissions.edit"><i class="material-icons ps-btn-material">check</i>Ok</button>
+                <button type="button" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancelProblemGoals()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+            </div>
+        }
+    </div>
+</div>

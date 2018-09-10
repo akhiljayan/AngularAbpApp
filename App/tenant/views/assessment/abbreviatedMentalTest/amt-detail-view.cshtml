@@ -1,0 +1,182 @@
+﻿@using Pulsesync.IngoTPCC.Authorization
+@using Pulsesync.IngoTPCC.Application.Assessment
+@model ActualAssessmentDto
+<div id="AbbreviatedMentalTest" class="row-class">
+
+    <!-- Person Header & Action buttons -->
+    <ps-uib-tabset tab-template="false" is-pinned="vm.personHeaderisPinned" style="margin-top: -10px;">
+        <ps-uib-tab-person-header>
+            <person-header person-id="vm.model.actualAssessment.personId"></person-header>
+        </ps-uib-tab-person-header>
+
+        <ps-uib-tab-button>
+            <div class="col-md-12 col-sm-12" style="padding: 10px 0px 0px 0px;">
+                <div class="form-actions pull-right txt-align-cntr">
+
+                    <a class="linkButton btn-small no-right-left-padding" ng-click="vm.save()" ng-if="vm.permissions.edit && !vm.model.isConfirmed && !vm.model.isCancelled" ng-class="{'disabled-link': vm.isSavingDisabled }">
+                        <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                    </a>
+                    <a class="linkButton btn-small no-right-left-padding" ng-click="vm.save(true)" ng-if="vm.permissions.edit && !vm.model.isConfirmed && !vm.model.isCancelled">
+                        <i class="ps-icon-1x ps-icon-savenclose grey"></i> @L("SaveAndClose")
+                    </a>
+                    <a class="linkButton btn-small no-right-left-padding" ng-click="vm.clone()" ng-if="vm.permissions.copyExisting && !vm.isNew && !vm.model.isCancelled">
+                        <i class="material-icons  font-18-main v-top">content_copy</i> @L("Copy")
+                    </a>
+                    <a class="linkButton btn-small no-right-left-padding" ng-click="vm.confirm()" ng-if="vm.permissions.confirm && !vm.isNew && !vm.model.isConfirmed && !vm.model.isCancelled">
+                        <i class="material-icons  font-18-main v-top">lock</i> @L("Confirm")
+                    </a>
+                    <a class="linkButton btn-small no-right-left-padding" ng-click="vm.cancel()" ng-if="vm.permissions.cancel && !vm.isNew && !vm.model.isCancelled">
+                        <i class="material-icons  font-18-main v-top">block</i> @L("Cancel")
+                    </a>
+                    <a class="linkButton btn-small no-right-left-padding" ng-click="vm.delete()" ng-if="!vm.isNew && vm.permissions.delete && !vm.model.isConfirmed && !vm.model.isCancelled">
+                        <i class="material-icons  font-18-main v-top">delete_forever</i> @L("Delete")
+                    </a>
+                    <a class="linkButton btn-small no-right-left-padding" ng-click="vm.close()" ng-if="!vm.loading">
+                        <i class="material-icons  font-18-main v-top">close</i> @L("Close")
+                    </a>
+                </div>
+            </div>
+        </ps-uib-tab-button>
+    </ps-uib-tabset>
+
+    <div class="tab-content">
+        <div id="AssessmentDetails" class="tab-pane fade in active">
+            <div class="col-md-12 col-sm-12">
+                <div class="row">
+                    <fieldset>
+                        <div class="portlet-body" style="display:block">
+                            <div class="form-body">
+                                @{
+                                    var attributes = new Dictionary<string, object>();
+                                    attributes.Add("role", "form");
+                                    attributes.Add("id", "vm.form");
+                                    attributes.Add("name", "vm.form");
+                                    attributes.Add("novalidate", "");
+                                    attributes.Add("action", "#");
+                                    attributes.Add("angular-validator-submit", "vm.save()");
+                                    attributes.Add("angular-validator", "");
+                                }
+                                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("form-validation horizontal-form")))
+                                {
+                                    using (var s = f.BeginSection())
+                                    {
+                                        <!-- General Section -->
+                                        <div class="row">
+                                            <div class="col-md-10 col-sm-12 col-md-offset-1">
+                                                <div class="portlet light">
+                                                    <div class="portlet-title">
+                                                        <div class="caption">
+                                                            <span class="caption-subject">General</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="portlet-body">
+                                                        <div class="row  padding-bottom-10">
+                                                            <div class="col-md-5">
+                                                                <person-ui-select person-id="vm.model.actualAssessment.personId" uiselect-disabled="vm.personDisabled" on-select="vm.generateChart(personId)"></person-ui-select>
+                                                                <div ng-if="!vm.model.disabled">
+                                                                    @s.FieldFor(m => m.AssessmentDate).DatePickerOptions(new { data_date_end_date = "0d" }).Attrs(new { ng_model = "vm.model.actualAssessment.assessmentDate", ng_disabled = "vm.model.disabled", ng_change = "vm.calculateNextReviewDate()", maxdate = "0d" })
+
+                                                                    <div ng-if="vm.model.isNextReviewMonthRequired && !vm.model.confirmationCheck">
+                                                                        @s.FieldFor(m => m.NextReviewDate).DatePickerOptions(new { data_date_end_date = "0d" }).Attrs(new { ng_model = "vm.model.actualAssessment.nextReviewDate", beforeoron = "vm.model.actualAssessment.assessmentDate", beforeoron_message = "'Next Review Date must be after Assessment Date.'", Validate = "vm.model.confirmationCheck" })
+                                                                    </div>
+
+                                                                    <div class="form-group form-md-line-input" ng-if="vm.model.isNextReviewMonthRequired && vm.model.confirmationCheck" ng-class="{ 'has-error': vm.isNextReviewDateEmpty}">
+                                                                        <div class="input-group date date-picker">
+                                                                            <input class="form-control dateinput" data-date-picker id="NextReviewDate" name="NextReviewDate" ng-model="vm.model.actualAssessment.nextReviewDate" type="text" required required-message="'You must provide a value for Next Review Date.'" validate-on="dirty" beforeoron="vm.model.actualAssessment.assessmentDate" , beforeoron-message="'Next Review Date must be later than Assessment Date.'" Validate="false" Restrict="reject">
+                                                                            <span class="help-block validationMessage" ng-if="vm.isNextReviewDateEmpty">You must provide a value for Next Review Date.</span>
+                                                                            <div class="input-group-addon">
+                                                                                <i class="material-icons" style="line-height: 14px">date_range</i>
+                                                                            </div>
+                                                                            <label for="NextReviewDate" class="control-label">@L("NextReviewDate")<span class="businessRequired"> * </span></label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.model.disabled">
+                                                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.actualAssessment.assessmentDate | dateFormat}}</div>
+                                                                    <label class="control-label">@L("AssessmentDate")</label>
+                                                                </div>
+                                                                <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.model.isNextReviewMonthRequired && vm.model.disabled">
+                                                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.actualAssessment.nextReviewDate | dateFormat}}</div>
+                                                                    <label class="control-label">@L("NextReviewDate")</label>
+                                                                </div>
+                                                                <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.model.disabled && vm.model.actualAssessment.isCancelled">
+                                                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.actualAssessment.cancellationReason}}</div>
+                                                                    <label class="control-label">@L("CancellationReasonLbl")</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2 center-allign">
+                                                                <ui-knob value="vm.model.totalScore" options="vm.option"></ui-knob>
+                                                                <div class="form-group" ng-if="vm.model.isCategoryRequired">
+                                                                    {{vm.model.category}}
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-5" ng-if="vm.assessmentChartData.length != 0">
+                                                                <ps-line-graph config="vm.assessmentConfig" type="singleLine"></ps-line-graph>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Question Section -->
+                                        <div class="row" busy-if="vm.loading" ng-repeat="section in vm.assessment.assessmentSections | orderBy:'displayOrder'">
+                                                        <div class="col-md-10 col-sm-12 col-md-offset-1">
+                                                            <div class="portlet light">
+                                                                <div class="portlet-title">
+                                                                    <div class="caption">
+                                                                        <span class="caption-subject">{{::section.title}}</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="portlet-body">
+                                                                    <div class="row  padding-bottom-10">
+                                                                        <div class="col-md-6 padding-10" ng-if="$index < 5" ng-repeat="question in section.questions | orderBy:'displayOrder'">
+                                                                            <!-- Rendering Questions And Mandatory Field Checking-->
+                                                                            <p class="margin-bottom-10">
+                                                                                <span>{{::question.title}}</span>
+                                                                                <span class="businessRequired" ng-if="question.isRequired && vm.model.checkValue[question.id] && question.questionType != 2"> * Please select an option.</span>
+                                                                            </p>
+                                                                            <!--This is Radio/Toogle Question Type-->
+                                                                            <div ng-if="question.questionType == vm.assessmentQuestionType.YesNoToogle && question.options.length == 2" ng-disabled="vm.model.disabled">
+                                                                                <input bs-switch type="checkbox" ng-model="vm.model.selectedValue[question.id]" ng-change="vm.onChangeToogle(question)" switch-on-color="steelGreenBackGRound" switch-on-text="Yes" switch-off-text="No">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6 padding-10" ng-if="$index > 4 && $index < 10" ng-repeat="question in section.questions | orderBy:'displayOrder'">
+                                                                            <!-- Rendering Questions And Mandatory Field Checking-->
+                                                                            <p class="margin-bottom-10">
+                                                                                <span>{{::question.title}}</span>
+                                                                                <span class="businessRequired" ng-if="question.isRequired && vm.model.checkValue[question.id] && question.questionType != 2"> * Please select an option.</span>
+                                                                            </p>
+                                                                            <!--This is Radio/Toogle Question Type-->
+                                                                            <div ng-if="question.questionType == vm.assessmentQuestionType.YesNoToogle && question.options.length == 2" ng-disabled="vm.model.disabled">
+                                                                                <input bs-switch type="checkbox" ng-model="vm.model.selectedValue[question.id]" ng-change="vm.onChangeToogle(question)" switch-on-color="steelGreenBackGRound" switch-on-text="Yes" switch-off-text="No">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row padding-bottom-10">
+                                                                        <div class="col-md-12" ng-if="question.questionType == vm.assessmentQuestionType.TextBox" ng-repeat="question in section.questions | orderBy:'displayOrder'">
+                                                                            <!-- Rendering Questions And Mandatory Field Checking-->
+                                                                            <p class="margin-bottom-10">
+                                                                                <span class="question-title">{{::question.title}}</span>
+                                                                                <span class="businessRequired" ng-if="question.isRequired && vm.model.checkValue[question.id] && question.questionType == 2"> * Please provide a value.</span>
+                                                                            </p>
+                                                                            <!--This is Textbox Question Type -->
+                                                                            <div style="padding-top:0px;" class="form-group form-md-line-input" ng-if="question.questionType == vm.assessmentQuestionType.TextBox">
+                                                                                <textarea class="form-control ng-pristine ng-valid ng-empty ng-touched" type="text" style="width:80%;" ng-disabled="vm.model.disabled" ng-model="vm.model.selectedTextValue[question.id]" value="{{::vm.bindToJson(null, null, question.id, null, null, question.questionType) }}" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>

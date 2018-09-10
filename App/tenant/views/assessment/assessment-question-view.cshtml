@@ -1,0 +1,103 @@
+﻿<div class="row" busy-if="vm.loading" ng-repeat="section in vm.assessment.assessmentSections | orderBy:'displayOrder'">
+    <div class="col-md-10 col-sm-12 col-md-offset-1">
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject">{{::section.title}}</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="row  padding-bottom-10" ng-repeat="question in section.questions | orderBy:'displayOrder'">
+                    <div class="col-md-12">
+                        <!-- Rendering Questions And Mandatory Field Checking-->
+                        <p class="margin-bottom-10" ng-if="question.mutuallyExclusiveQuestionId == null">
+                            <span class="question-title" ng-if="question.questionType == vm.assessmentQuestionType.SingleSelectListing || question.questionType == vm.assessmentQuestionType.MultiSelectListing">{{::question.title}}</span>
+                            <span ng-if="question.questionType != vm.assessmentQuestionType.SingleSelectListing && question.questionType != vm.assessmentQuestionType.MultiSelectListing">{{::question.title}}</span>
+                            <span class="businessRequired" ng-if="question.isRequired && vm.model.checkValue[question.id] && question.questionType != 2"> * Please select an option.</span>
+                            <span class="businessRequired" ng-if="question.isRequired && vm.model.checkValue[question.id] && question.questionType == 2"> * Please provide a value.</span>
+                        </p>
+                        <p class="margin-bottom-10" ng-if="question.mutuallyExclusiveQuestionId != null">
+                            <span class="question-title" ng-if="question.questionType == vm.assessmentQuestionType.SingleSelectListing || question.questionType == vm.assessmentQuestionType.MultiSelectListing">{{::question.title}}</span>
+                            <span ng-if="question.questionType != vm.assessmentQuestionType.SingleSelectListing && question.questionType != vm.assessmentQuestionType.MultiSelectListing">{{::question.title}}</span>
+                            <span class="businessRequired" ng-if="question.isRequired && vm.model.checkValue[question.mutuallyExclusiveQuestionId]"> * Please select an option.</span>
+                        </p>
+
+
+                        <!--This is SingleSelect Question Type.-->
+                        <span ng-repeat="option in question.options | orderBy:'displayOrder'" ng-if="question.questionType == vm.assessmentQuestionType.SingleSelectListing">
+                            <input class="option-radio" ng-click="vm.selectOption(option.id,question.id, option.description, question.questionType)" ng-if="question.mutuallyExclusiveQuestionId == null" ng-disabled="vm.model.disabled" ng-model="vm.model.selectedValue[question.id]" type="radio" id="{{::option.id}}" name="{{::question.title}}" value="{{::vm.bindToJson(option.id,option.score, option.questionId, option.description, null,question.questionType) }}" />
+                            <input class="option-radio" ng-click="vm.selectOption(option.id,question.mutuallyExclusiveQuestionId, option.description, question.questionType)" ng-if="question.mutuallyExclusiveQuestionId != null" ng-disabled="vm.model.disabled" ng-model="vm.model.selectedValue[question.mutuallyExclusiveQuestionId]" type="radio" id="{{::option.id}}" name="{{::question.mutuallyExclusiveQuestionId}}" value="{{::vm.bindToJson(option.id,option.score, option.questionId, option.description, question.mutuallyExclusiveQuestionId, question.questionType) }}" />
+                            <label class="option-label" ng-class="{'option-label-action' : !vm.model.disabled}" for="{{::option.id}}">{{::option.description}}</label>
+                        </span>
+                        <!--This is Open Option Type-->
+                        <div ng-if="question.openOption && question.questionType == vm.assessmentQuestionType.SingleSelectListing && vm.model.selectedOtherPleaseSpecifyValue[question.id]" ng-disabled="vm.model.disabled">
+                            <div><span>Others, Please Specify</span></div>
+                            <textarea style="width:80%" rows="2" ng-disabled="vm.model.disabled" ng-model="vm.model.selectedTextValue[question.id]" />
+                        </div>
+
+
+                        <!--This is Textbox Question Type -->
+                        <div style="padding-top:0px;" class="form-group form-md-line-input" ng-if="question.questionType == vm.assessmentQuestionType.TextBox">
+                            <textarea class="form-control ng-pristine ng-valid ng-empty ng-touched" type="text" style="width:80%;" ng-disabled="vm.model.disabled" ng-model="vm.model.selectedTextValue[question.id]" value="{{::vm.bindToJson(null, null, question.id, null, null, question.questionType) }}" />
+                        </div>
+
+                        <!--This is MultiSelect Checkbox Question Type-->
+                        <div class="md-checkbox margin-left-20 padding-bottom-10" ng-repeat="option in question.options | orderBy:'displayOrder'" ng-if="question.questionType == vm.assessmentQuestionType.MultiSelectListing">
+                            <input id="{{::option.id}}" class="md-check" type="checkbox" ng-disabled="vm.model.disabled" ng-model="vm.model.selectedValue[option.id]" name="{{::option.description}}" ng-change="vm.onCheckOption(option, question.questionType)" value="{{::vm.bindToJson(option.id,option.score, option.questionId, option.description, null,question.questionType) }}">
+                            <label for="{{::option.id}}">
+                                <span class="inc"></span>
+                                <span class="check"></span>
+                                <span class="box"></span>
+                                {{::option.description}}
+                            </label>
+                        </div>
+
+                        <!--This is Radio/Toogle Question Type-->
+                        <div ng-if="question.questionType == vm.assessmentQuestionType.YesNoToogle && question.options.length == 2" ng-disabled="vm.model.disabled">
+                            <input bs-switch type="checkbox" ng-model="vm.model.selectedValue[question.id]" ng-change="vm.onChangeToogle(question)" switch-on-color="steelGreenBackGRound" switch-on-text="Yes" switch-off-text="No">
+                        </div>
+
+                        <!--This is DateTime Question Type-->
+                        <div ng-if="question.questionType == vm.assessmentQuestionType.DateTime" style="width:80%;">
+                            <div class="form-group form-md-line-input">
+                                <div class="input-group date datetimepicker">
+                                    <input class="form-control datetimeinput from  from-hospitalization" ng-disabled="vm.model.disabled" data-date-format="DD-MMM-YYYY hh:mm A" data-date-time-picker="" id="{{::question.title}}" name="{{::question.title}}" ng-model="vm.model.selectedDateTimeValue[question.id]">
+                                    <div class="input-group-addon">
+                                        <i class="material-icons" style="line-height: 14px;">date_range</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- This is SingleSelectDropDown Question Type -->
+                        <div style="width:80%;" ng-if="question.questionType == vm.assessmentQuestionType.SingleSelectDropDown">
+                            <div class="form-group form-md-line-input">
+                                <ui-select id="by" ng-model="vm.model.selectedValue[question.id]" theme="select2" title="Choose an option" ng-change="vm.onChangeDropDownSingleSelect($select.selected, question)" ng-disabled="vm.model.disabled">
+                                    <ui-select-match placeholder="Select option">
+                                        {{$select.selected.description}}
+                                        <a class="fa fa-times" ng-click="$select.clear($event);"></a>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="option.id as option in question.options | orderBy:'displayOrder'">
+                                        <span ng-bind-html="option.description"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+
+                        @*This is MultiSelectDropDown Question Type
+                        <div ng-if="question.questionType == vm.assessmentQuestionType.MultiSelectDropDown" ng-disabled="vm.model.disabled">
+                            <select id="dropdownMultiSelect" ng-model="vm.model.selectedValue[question.id]" label="@L("Option")" multiple="multiple" multi-select ng-options="vm.bindToJson(option.id,option.score, option.questionId, option.description, null,question.questionType) as option.description for option in question.options" optionchange="{{question.options}}" ng-change="vm.OnChangeMultiSelectDropDown()"></select>
+                        </div>*@
+
+                        <div ng-if="question.hasAttachment">                         
+                            <div>
+                                <img class="img-responsive pull-left"
+                                     ng-src="{{vm.appPath}}Assessment/GetAssessmentImage?questionId={{question.id}}" style="width:30%; height:30%;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,135 @@
+﻿@model CreateOrUpdateCarePlanInput
+
+@using PulseSync.IngoTPCC.Application.Care.CarePlans.Dto
+
+<div class="row">
+    <div class="col-md-12">
+        @{
+            var attrs = new Dictionary<string, object>();
+            attrs.Add("name", "vm.form");
+            attrs.Add("novalidate", "");
+            attrs.Add("angular-validator", "");
+            //attrs.Add("angular-validator-submit", "vm.save()");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs).AddClass("scrollable-form-body")))
+        {
+            using (var s = f.BeginSection())
+            {
+                <div ng-if="vm.mode=='new'">
+                    <div class="form-group form-md-line-input">
+                        @*<select name="Problem" class="form-control" id="Problem_1" ng-model="vm.workingModel.personProblemId" ng-change="vm.problemOnChange()" required required-message="'You must provide a value for Problem.'" validate-on="dirty">
+                                <option ng-repeat="x in vm.problemMaster" value="{{ x.id }}">{{ x.name }}</option>
+                            </select>
+                            <label class="control-label" for="Problem">@L("SelectProblem")<span class="businessRequired"> * </span></label>*@
+
+                        @s.FieldFor(c => c.ProblemId).AsDropDown().Attrs(new { ng_disabled = "!!vm.workingModel.problemCustom", group_by = "'type'", ng_model = "vm.workingModel.problemId", ng_change = "vm.problemOnChange()", repeat = "vm.problemMaster" })
+                    </div>
+
+                    @s.FieldFor(c => c.ProblemCustom).Attrs(new { ng_model = "vm.workingModel.problemCustom", ng_disabled = "!!vm.workingModel.problemId" })
+
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6">
+                            @*<div class="form-group form-md-line-input">
+                                    <select name="Priority" class="form-control" id="Priority_1" ng-model="vm.workingModel.priorityType">
+                                        <option ng-repeat="x in vm.priorityMaster" value="{{ x.id }}">{{ x.description }}</option>
+                                    </select>
+                                    <label class="control-label" for="Priority">@L("Priority")</label>
+                                </div>*@
+                            @s.FieldFor(c => c.Priority).Attrs(new { ng_model = "vm.workingModel.priority" })
+                        </div>
+
+                        <div class="col-md-6 col-sm-6">
+                            @*<div class="form-group form-md-line-input">
+                                    <div class="input-group date date-picker">
+                                        <input class="form-control dateinput" data-date-picker="" id="OnsetDate_1" maxdate="0d" name="OnsetDate" ng-model="vm.workingModel.onsetDate" />
+                                        <div class="input-group-addon">
+                                            <i class="material-icons" style="line-height: 14px;">date_range</i>
+                                        </div>
+                                        <label class="control-label" for="OnsetDate">@L("DateToOnset")</label>
+                                    </div>
+                                </div>*@
+                            @s.FieldFor(c => c.OnsetDate).Attrs(new { ng_model = "vm.workingModel.onsetDate", maxdate = "0d" })
+                        </div>
+
+                    </div>
+
+                    <div class="form-group form-md-line-input">
+                        <span class="control-label red" style="font-size: smaller; font-style: italic">@L("ProblemDescriptionInfo")</span>
+                        <input class="form-control" ng-model="vm.workingModel.problemDescription" id="ProblemDescription" name="ProblemDes">
+                        <label class="control-label">Problem Description</label>
+                    </div>
+
+                    @*@s.FieldFor(c => c.ProblemDescription).Attrs(new { ng_model = "vm.workingModel.problemDescription" })*@
+
+                    <div class="form-group form-md-line-input">
+                        <label class="control-label">Add Tags</label>
+                        <ps-tagsinput ng-model="vm.workingModel.tags"></ps-tagsinput>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6">
+                            @*<div class="form-group form-md-line-input">
+                                    <select name="CarePlanType" class="form-control" id="CarePlanType_1" ng-model="vm.workingModel.careplanTypeId" required required-message="'You must provide a value for care plan type.'" validate-on="dirty">
+                                        <option ng-repeat="x in vm.careplanMaster" value="{{ x.id }}">{{ x.description }}</option>
+                                    </select>
+                                    <label class="control-label" for="Priority">@L("SelectCarePlanType")<span class="businessRequired"> * </span></label>
+                                </div>*@
+                            @s.FieldFor(c => c.CarePlanTypeId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.careplanTypeId", repeat = "vm.careplanMaster", ui_select_required = "ui-select-required" })
+                        </div>
+
+                        <div class="col-md-6 col-sm-6">
+                            @*<div class="form-group form-md-line-input">
+                                    <div class="input-group date date-picker">
+                                        <input class="form-control dateinput" data-date-picker="" id="NextReviewDate_1" mindate="0d" name="NextReviewDate" ng-model="vm.workingModel.nextReviewDate" required required-message="'You must provide a value for Next Review Date.'" type="text" validate-on="dirty" />
+                                        <div class="input-group-addon">
+                                            <i class="material-icons" style="line-height: 14px;">date_range</i>
+                                        </div>
+                                        <label class="control-label" for="NextReviewDate">@L("CarePlanNextReviewDate")<span class="businessRequired"> * </span></label>
+                                    </div>
+                                </div>*@
+                            @s.FieldFor(c => c.NextReviewDate).Attrs(new { ng_model = "vm.workingModel.nextReviewDate", mindate = "0d", Validate = "false", Restrict = "reject" })
+                        </div>
+                    </div>
+
+                </div>
+
+                <div ng-if="vm.mode=='edit'">
+                    @*<div class="form-group form-md-line-input">
+                            <select name="Problem" class="form-control" id="Problem_1" ng-model="vm.workingModel.problem" disabled>
+                                <option ng-repeat="x in vm.problemMaster" value="{{ x.id }}">{{ x.name }}</option>
+                            </select>
+                            <label class="control-label" for="Problem">@L("SelectProblem")</label>
+                        </div>*@
+                    @s.FieldFor(c => c.ProblemId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.problemId", repeat = "vm.problemMaster", ng_disabled = "true" })
+
+                    <div class="form-group form-md-line-input">
+                        <span class="control-label red" style="font-size: smaller; font-style: italic">@L("ProblemDescriptionInfo")</span>
+                        <input class="form-control" ng-model="vm.workingModel.problemDescription" id="ProblemDescription" name="ProblemDes">
+                        <label class="control-label">Problem Description</label>
+                    </div>
+                    @*@s.FieldFor(c => c.ProblemDescription).Attrs(new { ng_model = "vm.workingModel.problemDescription" })*@
+
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6">
+                            <div class="form-group form-md-line-input">
+                                @*<div class="input-group date date-picker">
+                                        <input class="form-control dateinput" data-date-picker="" id="NextReviewDate_1" maxdate="0d" name="NextReviewDate" ng-model="vm.workingModel.nextReviewDate" required required-message="'You must provide a value for Next Review Date.'" type="text" validate-on="dirty" />
+                                        <div class="input-group-addon">
+                                            <i class="material-icons" style="line-height: 14px;">date_range</i>
+                                        </div>
+                                        <label class="control-label" for="NextReviewDate">@L("CarePlanNextReviewDate")<span class="businessRequired"> * </span></label>
+                                    </div>*@
+                                @s.FieldFor(c => c.NextReviewDate).Attrs(new { ng_model = "vm.workingModel.nextReviewDate", mindate = "0d", Validate = "false", Restrict = "reject" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-md-line-input">
+                        <label class="control-label">Add Tags</label>
+                        <ps-tagsinput ng-model="vm.workingModel.tags"></ps-tagsinput>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

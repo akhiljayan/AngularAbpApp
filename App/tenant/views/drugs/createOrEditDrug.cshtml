@@ -1,0 +1,59 @@
+﻿@model CreateOrUpdateDrugInput
+
+@using Pulsesync.IngoTPCC.MasterLookup.Drugs.Dto;
+
+<div class="portlet light" data-drag="true" id="masterDataTypeItemModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Drug")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancelDrug()"></a>
+        </div>
+    </div>
+
+    <div class="portlet-body form">
+        @{
+            var attributes = new Dictionary<string, object>();
+            attributes.Add("name", "drugFrom");
+            attributes.Add("novalidate", "");
+            attributes.Add("angular-validator-submit", "vm.save()");
+            attributes.Add("angular-validator", "");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body")))
+        {
+            using (var s = f.BeginSection())
+            {
+                <div class="portlet-body" style="display: block;">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.Code).Attrs(new { ng_model = "vm.drug.code" })
+                                @s.FieldFor(m => m.Description).Attrs(new { ng_model = "vm.drug.description" })
+
+                                @s.FieldFor(m => m.DrugType).AsDropDown().Attrs(new { ng_model = "vm.drug.drugType", name = "drugType", repeat = "vm.drugType" })
+                                @s.FieldFor(m => m.DrugCategory).AsDropDown().Attrs(new { ng_model = "vm.drug.drugCategory", name = "drugCategory", repeat = "vm.drugCategories" })
+                                @s.FieldFor(m => m.DrugSourceId).AsDropDown().Attrs(new { ng_model = "vm.drug.drugSourceId", name = "drugSourceId", repeat = "vm.drugSources"})
+
+                                @s.FieldFor(m => m.SDDCode).Attrs(new { ng_model = "vm.drug.sddCode" })
+                                @s.FieldFor(m => m.SDDDescription).Attrs(new { ng_model = "vm.drug.sddDescription" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <p class="bodyContext" ng-if="!vm.isCreateMode">
+                @Html.Raw(L("CreationInfo", "vm.drug.creatorUser.fullName", "vm.drug.creationTime | dateTimeFormat"))
+            </p>
+            <p class="bodyContext" ng-if="!vm.isCreateMode">
+                @Html.Raw(L("ModificationInfo", "vm.drug.lastModifierUser.fullName", "vm.drug.lastModificationTime | dateTimeFormat"))
+            </p>
+
+            <div class="form-actions noborder right">
+                <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="!vm.permissions.edit"><i class="material-icons ps-btn-material">check</i>Ok</button>
+                <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancelDrug()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+            </div>
+        }
+    </div>
+</div>

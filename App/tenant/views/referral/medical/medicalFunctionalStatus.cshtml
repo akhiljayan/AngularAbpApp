@@ -1,0 +1,98 @@
+﻿@model FunctionalStatusDto
+
+@using Pulsesync.IngoTPCC.Application.Referral.Dto;
+
+<div id="FunctionalStatus" class="functionalStatus portlet light" ng-controller="tenant.views.referral.medicalFunctionalStatus as mfs">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("FunctionalStatus")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a class="icon-wrapper" ng-if="mfs.mode.toLowerCase()=='view' && !vm.isNew && vm.permissions.edit" ng-click="mfs.edit()">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools">
+            <a class="remove" ng-if="mfs.mode.toLowerCase()=='edit' && !vm.isNew" ng-click="mfs.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="mfs.mode">
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+                        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(name => "mfs.functionalStatusForm", ng_validate => "mfs.validationOptions")))
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                @s.FieldFor(m => m.PreviousFeedingStatusId).AsDropDown().Attrs(new { ng_model = "vm.referral.functionalStatus.previousFeedingStatusId", repeat = "vm.previousFeedingStatusMaster", name = "PreviousFeedingStatus" })
+                                @s.FieldFor(m => m.CurrentFeedingId).AsDropDown().Attrs(new { ng_model = "vm.referral.functionalStatus.currentFeedingId", repeat = "vm.currentFeedingMaster", name = "CurrentFeeding" })
+                                @s.FieldFor(m => m.PreviousToiletingId).AsDropDown().Attrs(new { ng_model = "vm.referral.functionalStatus.previousToiletingId", repeat = "vm.previousToiletingMaster", name = "PreviousToileting" })
+                                @s.FieldFor(m => m.CurrentToiletingId).AsDropDown().Attrs(new { ng_model = "vm.referral.functionalStatus.currentToiletingId", repeat = "vm.currentToiletingMaster", name = "CurrentToileting" })
+                                @s.FieldFor(m => m.PreviousMobilityId).AsDropDown().Attrs(new { ng_model = "vm.referral.functionalStatus.previousMobilityId", repeat = "vm.previousMobilityMaster", name = "PreviousMobility" })
+                                @s.FieldFor(m => m.CurrentMobilityId).AsDropDown().Attrs(new { ng_model = "vm.referral.functionalStatus.currentMobilityId", repeat = "vm.currentMobilityMaster", name = "CurrentMobility" })
+
+                                <h5 class="fontStealGreen bold">@L("ModifiedBarthelIndex")</h5>
+                                <div class="form-group form-md-line-input margin-bottom-20">
+                                    <input type="text" ng-disabled="vm.referral.disabled" ng-model="vm.referral.modifiedBarthelIndex.admissionScore" class="form-control" id="designation" ng-maxlength="300">
+                                    <label class="control-label" for="designation">@L("AdmissionScore")</label>
+                                </div>
+                                <div class="form-group form-md-line-input margin-bottom-20">
+                                    <input type="text" ng-disabled="vm.referral.disabled" ng-model="vm.referral.modifiedBarthelIndex.dischargeScore" class="form-control" id="designation" ng-maxlength="300">
+                                    <label class="control-label" for="designation">@L("DischargeScore")</label>
+                                </div>
+
+                                <div class="form-actions pull-right" ng-if="!vm.isNew">
+                                    <a class="linkButton btn-small" card-button-busy="mfs.isSaving" ng-click="mfs.save(vm.referral)">
+                                        <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                                    </a>
+                                    <a class="linkButton btn-small" card-button-busy="mfs.isSaving" ng-click="mfs.close()">
+                                        <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                                    </a>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+                @*view mode*@
+                <div ng-switch-default>
+                    <div class="col-md-12">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.referral.functionalStatus.previousFeedingStatusId ? vm.getMasterDataDescription(vm.referral.functionalStatus.previousFeedingStatusId,vm.previousFeedingStatusMaster) : "-"}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("PreviousFeedingStatus")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.referral.functionalStatus.currentFeedingId ? vm.getMasterDataDescription(vm.referral.functionalStatus.currentFeedingId,vm.currentFeedingMaster) : "-"}}</div>
+                            <label class="control-label view-label" for="processedBy">@L("CurrentFeeding")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.referral.functionalStatus.previousToiletingId ? vm.getMasterDataDescription(vm.referral.functionalStatus.previousToiletingId,vm.previousToiletingMaster) : "-"}}</div>
+                            <label class="control-label view-label" for="careCoordinator">@L("PreviousToileting")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.referral.functionalStatus.currentToiletingId ? vm.getMasterDataDescription(vm.referral.functionalStatus.currentToiletingId,vm.currentToiletingMaster) : "-"}}</div>
+                            <label class="control-label view-label" for="careCoordinator">@L("CurrentToileting")</label>
+                        </div>
+
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.referral.functionalStatus.previousMobilityId ? vm.getMasterDataDescription(vm.referral.functionalStatus.previousMobilityId,vm.previousMobilityMaster) : "-"}}</div>
+                            <label class="control-label view-label" for="careCoordinator">@L("PreviousMobility")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.referral.functionalStatus.currentMobilityId ? vm.getMasterDataDescription(vm.referral.functionalStatus.currentMobilityId,vm.currentMobilityMaster) : "-"}}</div>
+                            <label class="control-label view-label" for="careCoordinator">@L("CurrentMobility")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.referral.modifiedBarthelIndex.admissionScore ? vm.referral.modifiedBarthelIndex.admissionScore : "-"}}</div>
+                            <label class="control-label view-label" for="careCoordinator">@L("AdmissionScore")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.referral.modifiedBarthelIndex.dischargeScore ? vm.referral.modifiedBarthelIndex.dischargeScore : "-"}}</div>
+                            <label class="control-label view-label" for="careCoordinator">@L("DischargeScore")</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

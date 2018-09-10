@@ -1,0 +1,96 @@
+﻿@using Abp.Timing
+@using Pulsesync.IngoTPCC.Authorization
+<style>
+    .customizedSearchHeader {
+        margin-bottom: 0px !important;
+        padding: 0px !important;
+    }
+
+    .removeBorder {
+        border: 0px !important;
+    }
+
+    .postBoxContainer {
+        position: relative;
+    }
+
+    .postIconImg {
+        width: 34px;
+        height: 34px;
+        font-size: 15px;
+    }
+
+    .postIconImgForm {
+        width: 24px;
+        height: 24px;
+    }
+
+    .postBoxContainer input {
+        text-indent: 30px;
+    }
+
+    .postBoxContainer div > i, .postBoxContainer div > img {
+        padding: 10px 0px 0px 10px;
+    }
+
+    div i {
+        vertical-align: middle;
+    }
+
+    .postcard p {
+        word-wrap: break-word;
+        margin: 4px;
+    }
+
+
+    .mt-post:hover {
+        background: #f9f9f9;
+    }
+
+        .mt-post:hover .mt-post-actions {
+            background: #f9f9f9;
+            display: inline-block;
+        }
+
+
+    .mt-post .mt-post-actions a {
+        color: #00bfb5;
+        font-weight: bold;
+    }
+
+    .mt-post .mt-post-actions {
+        display: none;
+    }
+
+    .caption-helper {
+        font-size: 13px;
+    }
+
+    .bottom-align-text {
+        vertical-align: bottom;
+    }
+</style>
+
+@if (IsGranted(AppPermissions.Pages_Tenant_Moments))
+{
+
+    <div class="row" ng-controller="tenant.views.dashboard.moments as vm">
+        <div class="col-md-6 col-sm-12">
+            @Html.Partial("~/App/tenant/views/dashboard/Moments/Posts/MomentPost.cshtml")
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <upcoming-events></upcoming-events>
+        </div>
+    </div>
+
+}
+@*else
+    {
+        <div class="note note-success note-bordered">
+            <h3>No Permission !</h3>
+            <p>
+                No permission to view Moments
+            </p>
+        </div>
+
+    }*@

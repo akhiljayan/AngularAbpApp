@@ -1,0 +1,548 @@
+﻿<style>
+    .font-orange {
+        color: orange;
+    }
+
+    .number-circle-green-dark {
+        border-color: #4DB3A2 !important;
+        color: #4DB3A2 !important;
+    }
+
+    .number-circle-blue {
+        border-color: #3598dc !important;
+        color: #3598dc !important;
+    }
+
+    .number-circle-yellow {
+        border-color: #c49f47 !important;
+        color: #c49f47 !important;
+    }
+
+    .number-circle-orange {
+        border-color: #ffa500 !important;
+        color: #ffa500 !important;
+    }
+
+    .number-circle-red {
+        border-color: #e7505a !important;
+        color: #e7505a !important;
+    }
+
+    .number-circle {
+        display: inline-block;
+        height: 100px;
+        width: 100px;
+        line-height: 85px;
+        border-radius: 50%;
+        border: 6px solid #333;
+        color: #333;
+        font-weight: bold;
+        font-size: 45px;
+        text-align: center;
+    }
+
+    .large-temperature .main {
+        font-size: 42px;
+        font-weight: bold;
+    }
+
+    .large-temperature .high {
+        font-size: 36px;
+        font-weight: bold;
+    }
+
+    .large-temperature .low {
+        font-size: 24px;
+        font-weight: lighter;
+    }
+
+    .temperature-label {
+        font-size: 16px;
+    }
+
+        .temperature-label a:hover {
+            text-decoration: none;
+        }
+
+    .psi-circle-section {
+        padding-top: 60px !important;
+        text-align: center !important;
+    }
+
+    .psi-stat-section.expanded {
+        padding-top: 65px !important;
+        padding-bottom: 15px !important;
+    }
+
+    .psi-stat-section.collapsed {
+        padding-top: 10px !important;
+        padding-bottom: 15px !important;
+    }
+
+    .psi-table-section {
+        font-size: 13px !important;
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+
+        .psi-table-section .table th, td {
+            font-size: 12px !important;
+        }
+
+    .weather-icon {
+        font-size: 36px;
+        color: dimgray;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+        .weather-icon .main {
+            font-size: 44px;
+        }
+
+    .padding-bottom-15 {
+        padding-bottom: 15px !important;
+    }
+
+    .padding-left-10 {
+        padding-left: 10px !important;
+    }
+
+    .padding-left-20 {
+        padding-left: 20px !important;
+    }
+
+    .weather-item {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+        .weather-item .weather-item-icon {
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+        }
+
+        .weather-item .weather-item-temp {
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+        }
+
+    .weather-item-selected {
+        background: #f5f5f5 !important;
+        box-shadow: none !important;
+        border-radius: 2px !important;
+        border: 0 !important;
+    }
+
+    .weather-header {
+        padding-bottom: 10px !important;
+    }
+
+    .weather-main {
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+    }
+
+    .weather-list {
+        padding-bottom: 30px !important;
+    }
+
+    .map {
+        position: relative;
+        margin-bottom: 10px;
+        margin-left: 15px !important;
+        margin-right: 15px !important;
+    }
+
+        .map img {
+            display: block;
+            height: 350px;
+            width: 600px;
+            max-width: 100%;
+        }
+
+        .map .copyright {
+            font-size: 0.75em;
+            position: absolute;
+            bottom: 0px;
+            padding: 5px;
+        }
+
+    .button-map {
+        z-index: 9999;
+    }
+
+    .info-group {
+        position: absolute;
+        right: 0;
+        left: 0;
+        top: 50%;
+        transform: translateY(-60%);
+        text-align: center;
+    }
+
+        .info-group .info {
+            background-color: #fff;
+            text-align: center;
+            display: inline-block;
+            line-height: 1.2;
+            font-size: 0.75em;
+            padding: 5px;
+            position: relative;
+            margin: 0 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+            width: 65px;
+        }
+
+            .info-group .info.good {
+                border-width: 3px;
+                border-style: solid;
+                border: 3px solid #4DB3A2;
+            }
+
+                .info-group .info.good:before {
+                    bottom: -14px;
+                    border-color: #4DB3A2 transparent transparent transparent;
+                    border-width: 14px;
+                }
+
+                .info-group .info.good.is-active,
+                .info-group .info.good:hover {
+                    background: #4DB3A2;
+                    color: #fff;
+                    transition: all .2s ease-in;
+                }
+
+                    .info-group .info.good.is-active:after,
+                    .info-group .info.good:hover:after {
+                        border-top: 10px solid #4DB3A2;
+                        transition: all .2s ease-in;
+                    }
+
+            .info-group .info.moderate {
+                border-width: 3px;
+                border-style: solid;
+                border: 3px solid #006fa1;
+            }
+
+                .info-group .info.moderate:before {
+                    bottom: -14px;
+                    border-color: #006FA1 transparent transparent transparent;
+                    border-width: 14px;
+                }
+
+                .info-group .info.moderate.is-active,
+                .info-group .info.moderate:hover {
+                    background: #006FA1;
+                    color: #fff;
+                    transition: all .2s ease-in;
+                }
+
+                    .info-group .info.moderate.is-active:after,
+                    .info-group .info.moderate:hover:after {
+                        border-top: 10px solid #006FA1;
+                        transition: all .2s ease-in;
+                    }
+
+            .info-group .info.unhealthy {
+                border-width: 3px;
+                border-style: solid;
+                border: 3px solid #c49f47;
+            }
+
+                .info-group .info.unhealthy:before {
+                    bottom: -14px;
+                    border-color: #c49f47 transparent transparent transparent;
+                    border-width: 14px;
+                }
+
+                .info-group .info.unhealthy.is-active,
+                .info-group .info.unhealthy:hover {
+                    background: #c49f47;
+                    color: #000000;
+                    transition: all .2s ease-in;
+                }
+
+                    .info-group .info.unhealthy.is-active:after,
+                    .info-group .info.unhealthy:hover:after {
+                        border-top: 10px solid #c49f47;
+                        transition: all .2s ease-in;
+                    }
+
+            .info-group .info.very-unhealthy {
+                border-width: 3px;
+                border-style: solid;
+                border: 3px solid #ffa500;
+            }
+
+                .info-group .info.very-unhealthy:before {
+                    bottom: -14px;
+                    border-color: #ffa500 transparent transparent transparent;
+                    border-width: 14px;
+                }
+
+                .info-group .info.very-unhealthy.is-active,
+                .info-group .info.very-unhealthy:hover {
+                    background: #ffa500;
+                    color: #fff;
+                    transition: all .2s ease-in;
+                }
+
+                    .info-group .info.very-unhealthy.is-active:after,
+                    .info-group .info.very-unhealthy:hover:after {
+                        border-top: 10px solid #ffa500;
+                        transition: all .2s ease-in;
+                    }
+
+            .info-group .info.hazardous {
+                border-width: 3px;
+                border-style: solid;
+                border: 3px solid #e7505a;
+            }
+
+                .info-group .info.hazardous:before {
+                    bottom: -14px;
+                    border-color: #e7505a transparent transparent transparent;
+                    border-width: 14px;
+                }
+
+                .info-group .info.hazardous.is-active,
+                .info-group .info.hazardous:hover {
+                    background: #e7505a;
+                    color: #fff;
+                    transition: all .2s ease-in;
+                }
+
+                    .info-group .info.hazardous.is-active:after,
+                    .info-group .info.hazardous:hover:after {
+                        border-top: 10px solid #e7505a;
+                        transition: all .2s ease-in;
+                    }
+
+            .info-group .info:after, .info:before {
+                content: '';
+                width: 0;
+                height: 0;
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                border-top: 10px solid #fff;
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                bottom: -9px;
+            }
+
+        .info-group .top {
+            font-size: 1.25em;
+        }
+
+        .info-group .info .bot {
+            margin-top: 2px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            font-size: 0.875em;
+        }
+</style>
+
+<div class="portlet light" busy-if="$ctrl.loading">
+    <div class="portlet-title">
+        <span class="caption">
+            <span class="caption-subject">@L("Weather")</span>
+        </span>
+    </div>
+    <div class="portlet-body" ng-if="$ctrl.success">
+        <div class="row weather-header">
+            <div class="col-md-12 col-sm-12">
+                <div class="font-16-main">
+                    <div class="font-20-main bold font-blue">{{ $ctrl.currentLocation }}</div>
+                    <div class="bold">{{ $ctrl.selectedWeatherForecast['date'] | date : 'fullDate' }}</div>
+                    <div>{{ $ctrl.selectedWeatherForecast['forecast']['description'] }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="row weather-main">
+            <div class="col-md-2 col-sm-2 padding-bottom-15 weather-icon" style="padding-top: 10px !important">
+                <i class="wi {{ $ctrl.selectedWeatherForecast['forecast']['icon'] }} main"></i>
+            </div>
+            <div class="col-md-5 col-sm-5">
+                <span class="large-temperature">
+                    <span class="main" ng-if="$ctrl.isNumber($ctrl.selectedWeatherForecast['temperature']['current'])">{{ $ctrl.selectedWeatherForecast['temperature']['current'] }}</span>
+                    <span class="main" ng-if="!$ctrl.isNumber($ctrl.selectedWeatherForecast['temperature']['current']) && $ctrl.isNumber($ctrl.selectedWeatherForecast['temperature']['high'])">{{ $ctrl.selectedWeatherForecast['temperature']['high'] }}</span>
+                </span>
+                <span class="temperature-label">
+                    <a class="vertical-top" ng-class="{ 'font-black-main' : $ctrl.selectedWeatherForecast['temperature']['unit'] == 'C', 'disable-links': $ctrl.selectedWeatherForecast['temperature']['unit'] == 'C', 'bold': $ctrl.selectedWeatherForecast['temperature']['unit'] == 'C' }"
+                       ng-click="$ctrl.celsiusFahrenheitConversion()">°C</a>
+                    <span class="vertical-top">|</span>
+                    <a class="vertical-top" ng-class="{ 'font-black-main' : $ctrl.selectedWeatherForecast['temperature']['unit'] == 'F', 'disable-links': $ctrl.selectedWeatherForecast['temperature']['unit'] == 'F', 'bold': $ctrl.selectedWeatherForecast['temperature']['unit'] == 'F' }"
+                       ng-click="$ctrl.celsiusFahrenheitConversion()">°F</a>
+                </span>
+            </div>
+            <div class="col-md-5 col-sm-5" ng-if="!$ctrl.isCollapsed">
+                <div>@L("Precipitation"): {{ $ctrl.isNumber($ctrl.selectedWeatherForecast['rainfall']) ? $ctrl.selectedWeatherForecast['rainfall'] + "%" : '-' }}</div>
+                <div>
+                    @L("Humidity"):
+                    <span ng-if="$ctrl.isNumber($ctrl.selectedWeatherForecast['relative_humidity']['current'])">{{ $ctrl.isNumber($ctrl.selectedWeatherForecast['relative_humidity']['current']) ? $ctrl.selectedWeatherForecast['relative_humidity']['current'] + '%' : '-' }}</span>
+                    <span ng-if="!$ctrl.isNumber($ctrl.selectedWeatherForecast['relative_humidity']['current'])">
+                        <span ng-if="$ctrl.isNumber($ctrl.selectedWeatherForecast['relative_humidity']['high'])">{{ $ctrl.selectedWeatherForecast['relative_humidity']['high'] }}%</span>
+                        @*<span ng-if="$ctrl.isNumber($ctrl.selectedWeatherForecast['relative_humidity']['high']) && $ctrl.isNumber($ctrl.selectedWeatherForecast['relative_humidity']['low'])"> - </span>*@
+                        @*<span ng-if="$ctrl.isNumber($ctrl.selectedWeatherForecast['relative_humidity']['low'])">{{ $ctrl.selectedWeatherForecast['relative_humidity']['low'] }}</span>*@
+                        @*<span>%</span>*@
+                    </span>
+                </div>
+                <div>
+                    @L("Wind"):
+                    <span ng-if="$ctrl.isNumber($ctrl.selectedWeatherForecast['wind_speed']['current'])">{{ $ctrl.isNumber($ctrl.selectedWeatherForecast['wind_speed']['current']) ? $ctrl.selectedWeatherForecast['wind_speed']['current'] : '-' }}</span>
+                    <span ng-if="!$ctrl.isNumber($ctrl.selectedWeatherForecast['wind_speed']['current'])">
+                        <span ng-if="$ctrl.isNumber($ctrl.selectedWeatherForecast['wind_speed']['high'])">{{ $ctrl.selectedWeatherForecast['wind_speed']['high'] }}</span>
+                        @*<span ng-if="$ctrl.isNumber($ctrl.selectedWeatherForecast['wind_speed']['high']) && $ctrl.isNumber($ctrl.selectedWeatherForecast['wind_speed']['low'])"> - </span>*@
+                        @*<span ng-if="$ctrl.isNumber($ctrl.selectedWeatherForecast['wind_speed']['low'])">{{ $ctrl.selectedWeatherForecast['wind_speed']['low'] }}</span>*@
+                    </span>
+                    <span> @L("kmPerHour")</span>
+                </div>
+                @*<div>
+                        L("Direction"):
+                        <span ng-if="$ctrl.selectedWeatherForecast['wind_direction']">
+                            <i class="wi wi-wind wi-towards-{{ $ctrl.toLowerCase($ctrl.selectedWeatherForecast['wind_direction']) }}" style="font-size: 24px"></i>
+                        </span>
+                        <span>{{ $ctrl.selectedWeatherForecast['wind_direction'] ? $ctrl.selectedWeatherForecast['wind_direction'] : '-' }}</span>
+                    </div>*@
+            </div>
+        </div>
+        <div class="row weather-list" ng-if="!$ctrl.isCollapsed">
+            <div class="col-md-12 col-sm-12">
+                <div class="col-md-2 col-sm-2 weather-item" ng-repeat="day in $ctrl.fiveDaysWeatherForecast track by $index"
+                     ng-click="$ctrl.selectDate($index)" ng-class="{ 'weather-item-selected': $ctrl.selectedIndex == $index }">
+                    <div class="center-allign">{{ day.date | date : 'EEE' }}</div>
+                    <div class="center-allign weather-item-icon">
+                        <i class="wi {{ day['forecast']['icon'] }} weather-icon"></i>
+                    </div>
+                    <div class="col-md-6 col-sm-6 center-allign weather-item-temp">{{ day.temperature.high }}°</div>
+                    <div class="col-md-6 col-sm-6 center-allign weather-item-temp">{{ day.temperature.low }}°</div>
+                </div>
+            </div>
+        </div>
+        <div class="row text-right font-12-main">
+            <div class="col-md-12 col-sm-12">
+                @L("Source"): Data.gov.sg
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-title" ng-if="$ctrl.success">
+        <span class="caption">
+            <span class="caption-subject">@L("AirQuality")</span>
+        </span>
+    </div>
+    <div class="portlet-body" ng-if="$ctrl.success">
+        <div class="row" ng-if="$ctrl.isCollapsed">
+            <div class="col-md-3 col-sm-3 vertical-allign " @*psi-circle-section*@>
+                <div class="number-circle number-circle-{{ $ctrl.rangeForPSI[$ctrl.categorizePSI($ctrl.psi['national'])].color }}">{{ $ctrl.isNumber($ctrl.psi["national"]) ? $ctrl.psi["national"] : '-' }}</div>
+            </div>
+            <div class="col-md-9 col-sm-9 vertical-allign psi-stat-section collapsed">
+                <div class="font-20-main bold font-{{ $ctrl.rangeForPSI[$ctrl.categorizePSI($ctrl.psi['national'])].color }}" ng-if="$ctrl.isNumber($ctrl.psi['national'])">{{ $ctrl.rangeForPSI[$ctrl.categorizePSI($ctrl.psi["national"])].status }}</div>
+                <div class="font-20-main bold" ng-if="!$ctrl.isNumber($ctrl.psi['national'])">@L("Unknown")</div>
+                <div>@L("HighestPSIValue")</div>
+                <div>
+                    At
+                    <span ng-if="$ctrl.psiTimestamp">{{ $ctrl.psiTimestamp | date : 'hh a' }}</span>
+                    <span ng-if="!$ctrl.psiTimestamp">-</span>
+                    on
+                    <span ng-if="$ctrl.psiTimestamp">{{ $ctrl.psiTimestamp | date : 'dd MMM yyyy' }}</span>
+                    <span ng-if="!$ctrl.psiTimestamp">-</span>
+                </div>
+            </div>
+        </div>
+        <div class="row" ng-if="!$ctrl.isCollapsed">
+            <div class="col-md-3 col-sm-3 vertical-allign psi-circle-section">
+                <div class="number-circle number-circle-{{ $ctrl.rangeForPSI[$ctrl.currentPSICategory].color }}">{{ $ctrl.isNumber($ctrl.selectedPSI) ? $ctrl.selectedPSI : '-' }}</div>
+            </div>
+            <div class="col-md-4 col-sm-4 vertical-allign psi-stat-section expanded">
+                <div class=" font-20-main bold font-{{ $ctrl.rangeForPSI[$ctrl.currentPSICategory].color }}" ng-if="$ctrl.isNumber($ctrl.currentPSICategory)">{{ $ctrl.rangeForPSI[$ctrl.currentPSICategory].status }}</div>
+                <div class=" font-20-main bold" ng-if="!$ctrl.isNumber($ctrl.currentPSICategory)">@L("Unknown")</div>
+                <div>@L("PSIValue")</div>
+                <div>
+                    At
+                    <span ng-if="$ctrl.psiTimestamp">{{ $ctrl.psiTimestamp | date : 'hh a' }}</span>
+                    <span ng-if="!$ctrl.psiTimestamp">-</span>
+                    on
+                    <span ng-if="$ctrl.psiTimestamp">{{ $ctrl.psiTimestamp | date : 'dd MMM yyyy' }}</span>
+                    <span ng-if="!$ctrl.psiTimestamp">-</span>
+                </div>
+            </div>
+            <div class="col-md-5 col-sm-5 psi-table-section">
+                <table class="table bold font-12-main">
+                    <thead>
+                        <tr>
+                            <td width="40%">@L("PSIValue")</td>
+                            <td>@L("AirQualityDescriptor")</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="psi in $ctrl.rangeForPSI" class="font-{{ psi.color }}">
+                            <td width="40%">{{ psi.label }}</td>
+                            <td>{{ psi.status }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-12 col-sm-12">
+                <div class="map">
+                    <img src="~/App/tenant/views/dashboard/WorkSpace/weather/map.png" alt="Singapore map" />
+                    <div class="info-group">
+                        <div class="row padding-bottom-10">
+                            <div class="info mapNorth button-map {{ $ctrl.psi['north'] ? $ctrl.rangeForPSI[$ctrl.categorizePSI($ctrl.psi['north'])].class : '' }}" ng-click="$ctrl.selectRegionForPSI('north')"
+                                 ng-class="{ 'is-active': $ctrl.selectedPSIRegion == 'north' }">
+                                <div class="top"><span>{{ $ctrl.psi["north"] }}</span></div>
+                                <div class="bot">@L("North")</div>
+                            </div>
+                        </div>
+                        <div class="row padding-bottom-10">
+                            <div class="info mapWest button-map {{ $ctrl.psi['west'] ? $ctrl.rangeForPSI[$ctrl.categorizePSI($ctrl.psi['west'])].class : '' }}" ng-click="$ctrl.selectRegionForPSI('west')"
+                                 ng-class="{'is-active': $ctrl.selectedPSIRegion == 'west' }">
+                                <div class="top"><span>{{ $ctrl.psi["west"] }}</span></div>
+                                <div class="bot">@L("West")</div>
+                            </div>
+
+                            <div class="info mapCentral button-map {{ $ctrl.psi['central'] ? $ctrl.rangeForPSI[$ctrl.categorizePSI($ctrl.psi['central'])].class : '' }}" ng-click="$ctrl.selectRegionForPSI('central')"
+                                 ng-class="{'is-active': $ctrl.selectedPSIRegion == 'central' }">
+                                <div class="top"><span>{{ $ctrl.psi["central"] }}</span></div>
+                                <div class="bot">@L("Central")</div>
+                            </div>
+
+                            <div class="info mapEast button-map {{ $ctrl.psi['east'] ? $ctrl.rangeForPSI[$ctrl.categorizePSI($ctrl.psi['east'])].class : '' }}" ng-click="$ctrl.selectRegionForPSI('east')"
+                                 ng-class="{'is-active': $ctrl.selectedPSIRegion == 'east' }">
+                                <div class="top"><span>{{ $ctrl.psi["east"] }}</span></div>
+                                <div class="bot">@L("East")</div>
+                            </div>
+                        </div>
+                        <div class="row padding-bottom-10">
+                            <div class="info mapSouth button-map {{ $ctrl.psi['south'] ? $ctrl.rangeForPSI[$ctrl.categorizePSI($ctrl.psi['south'])].class : '' }}" ng-click="$ctrl.selectRegionForPSI('south')"
+                                 ng-class="{'is-active': $ctrl.selectedPSIRegion == 'south' }">
+                                <div class="top"><span>{{ $ctrl.psi["south"] }}</span></div>
+                                <div class="bot">@L("South")</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="copyright">
+                        <span class="strong">Map Data</span>
+                        <span>©2016 Google</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row text-right font-12-main">
+            <div class="col-md-12 col-sm-12">
+                @L("Source"): National Environment Agency
+            </div>
+        </div>
+        <div class="row center-allign">
+            <i class="glyphicon" ng-class="{ 'glyphicon-chevron-down' : $ctrl.isCollapsed, 'glyphicon-chevron-up' : !$ctrl.isCollapsed }" ng-click="$ctrl.collapse()"></i>
+        </div>
+    </div>
+
+    <div class="portlet-body center-allign" ng-if="!$ctrl.loading && !$ctrl.success" ng-click="$ctrl.load()">
+        <div class="padding-bottom-20">{{ $ctrl.errorMessage }}</div>
+        <i class="glyphicon glyphicon-refresh padding-top-10" style="font-size: 48px;"></i>
+    </div>
+</div>

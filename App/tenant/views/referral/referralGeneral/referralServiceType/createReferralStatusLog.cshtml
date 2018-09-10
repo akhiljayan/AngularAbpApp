@@ -1,0 +1,114 @@
+﻿@using Pulsesync.IngoTPCC.Application.Referral.Dto.ReferralServiceType;
+@model  ReferralLogStatusDto
+<style type="text/css">
+    .ui-select-container[theme="select2"].direction-up .ui-select-dropdown, .ui-select-container.select2.direction-up .ui-select-dropdown {
+        z-index: 99999 !important;
+    }
+</style>
+
+
+<div class="portlet light" data-drag="true" id="referralStatusLogModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">{{vm.action  | enumText : "referralServiceTypeHeading" }} @L("ReferralServiceType")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        @{
+            var attributes = new Dictionary<string, object>();
+            attributes.Add("role", "form");
+            attributes.Add("id", "statusLogForm");
+            attributes.Add("name", "vm.statusLogForm");
+            attributes.Add("novalidate", "");
+            attributes.Add("action", "#");
+            attributes.Add("angular-validator-submit", "vm.save()");
+            attributes.Add("angular-validator", "");
+            attributes.Add("ng-validate", "vm.validationOptions");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body")))
+        {
+            using (var s = f.BeginSection())
+            {
+
+                <div class="portlet-body" style="display: block;">
+                    <div class="form-body" style="padding-top:0px">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-12">
+                                    <div class="form-group form-md-line-input" style="padding-top:0px;">
+                                        <span class="caption-subject bold" style="color:rgba(0, 0, 0, 0.54)">{{vm.referralST.referral.person.fullName}}</span>&nbsp;&nbsp;
+                                        <span class="caption-subject" style="color:rgba(0, 0, 0, 0.54)" ng-if="vm.referralST.referral.person.registrationDocumentNumber">({{vm.referralST.referral.person.registrationDocumentNumber}})</span>
+                                    </div>
+                                    <div class="form-group form-md-line-input" style="padding-top:0px">
+                                        @*<input type="text" ng-disabled="true" disabled ng-model="vm.serviceTypeString" class="form-control" id="name" ng-maxlength="300" readonly>*@
+                                        <label class="control-label" for="name">@L("ReferralServiceType")<span class="required">*</span></label><br />
+                                        <span class="bold font-14-main" style="word-wrap: break-word;">{{vm.serviceTypeString}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+
+                                <div class="col-md-12">
+                                    <div class="form-group form-md-line-input">
+                                        <div class="input-group date datetimepicker" data-provide="datetimepicker">
+                                            <input class="form-control datetimeinput" data-date-format="DD-MMM-YYYY hh:mm A" data-date-time-picker="" dataval="" datetimepicker-required="" id="StatusDate" mindate="{{vm.mindate}}" name="StatusDate" ng-model="vm.statusLog.statusDate" ng-required="true" required="required" required-message="'You must provide a value for {{vm.actionLabel}} Date'" type="text" validate-on="dirty" value="" aria-required="true">
+                                            <div class="input-group-addon"><i class="material-icons" style="line-height: 14px;">date_range</i></div>
+                                            <div class="input-group-addon">
+                                                <i class="material-icons cursor-pointer" style="font-size:18px;" uib-popover='{{vm.action | enumText : "referralServiceTypeValidationMessage"}}' popover-trigger="'mouseenter'" popover-placement="bottom">info_outline</i>
+                                            </div>
+                                            <label for="referralDate">{{vm.action | enumText : "referralServiceTypeLabel"}} @L("Date")<span class="required">*</span></label>
+                                        </div>
+                                    </div>
+                                    @*@s.FieldFor(m => m.StatusDate).Label("{{vm.action | enumText : 'referralServiceTypeLabel'}} Date").Attrs(new { ng_model = "vm.statusLog.statusDate", mindate = "{{vm.mindate}}", name = "StatusDate", data_date_format = "DD-MMM-YYYY hh:mm A", ng_required = "true", required_message = "'You must provide a value for {{vm.action}} Date'" })*@
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="approved-reason-not-required reason-tab" ng-if="vm.action == 'Approve'">
+                                        @s.FieldFor(m => m.ReasonId).AsDropDown().Attrs(new { ng_model = "vm.statusLog.reasonId", ng_change = "vm.reasonChange($select.selected.description)", name = "reasonId", repeat = "vm.reasons", required_message = "" })
+                                    </div>
+                                    <div class="others-reason-required attach-lable-required reason-tab" ng-if="vm.action != 'Approve'">
+                                        @s.FieldFor(m => m.ReasonId).AsDropDown().Attrs(new { ng_model = "vm.statusLog.reasonId", ng_change = "vm.reasonChange($select.selected.description)", name = "reasonId", repeat = "vm.reasons", ui_select_required = "ui-select-required", required_message = "'You must provide a value for {{vm.actionLabel}} Reason'" })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group form-md-line-input" ng-if="vm.otherReason">
+                                        <textarea ng-model="vm.statusLog.otherReasonText" class="form-control animate msd-elastic: \n;  ng-valid ng-not-empty ng-dirty ng-valid-parse" cols="20" data-val="true" data-val-length="The field Remarks must be a string with a maximum length of 2000." required required-message="'You must provide a value for Others, Please Specify'" data-val-length-max="2000" id="ReasonForReferral" name="ReasonForReferralOthers" rows="4" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 50px;" ng-required="true"></textarea>
+                                        <label class="control-label" for="remarks">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group form-md-line-input" style="z-index:0">
+                                        <input type="text" ng-disabled="true" disabled ng-model="vm.referralST.referral.referralCode" class="form-control" id="code" readonly>
+                                        <label class="control-label" for="code">@L("ReferralId")</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group form-md-line-input fnt-forteen">
+                                        @*Created by&nbsp;<span class="bold">ReferalCreatedBy</span>&nbsp;on&nbsp;<span class="bold">ReferalCreatedDate</span>*@
+                                        <p class="bodyContext">
+                                            Service type @Html.Raw(L("CreationInfo", "vm.creatoruser", "vm.referralST.creationTime | date:'d-MMM-yyyy h:mm a'"))
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="form-actions noborder right">
+                <button type="submit" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.saving"><i class="material-icons  font-18-main v-top">save</i>Save</button>
+                @*<button type="button" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.save()" ng-disabled="vm.saving"><i class="material-icons ps-btn-material">check</i>Ok</button>*@
+                <button type="button" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()" ng-disabled="vm.saving"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+            </div>
+        }
+        @*<form role="form" id="statusLogForm" name="vm.statusLogForm" ng-validate="vm.validationOptions" action="#" class="form-validation horizontal-form ng-pristine ng-valid ng-isolate-scope scrollable-form-body" novalidate="novalidate"></form>*@
+    </div>
+</div>
+<script type="text/javascript">
+
+</script>

@@ -1,0 +1,68 @@
+﻿<div id="CentrePersonGroups" class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="portlet light" busy-if="$ctrl.loading">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject">@L("EventBookingAttendance")</span>
+                </div>
+                <div class="actions dropdown inputs">
+                    <div class="input-small-new inline-block">
+                        <form action="" class="search-form">
+                            <div class="form-group has-feedback input-inline">
+                                <label for="search" class="sr-only">@L("Search")</label>
+                                <input type="text"
+                                       class="form-control form-control-solid input-circle search-input font-13-main clearable"
+                                       placeholder="search keywords..."
+                                       enter-key="$ctrl.load()"
+                                       ng-model="$ctrl.filter">
+                                <a class="form-control-feedback search-close searchIcon-close fa fa-times"
+                                   ng-click="$ctrl.clearFilter()"></a>
+                                <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                            </div>
+                        </form>
+                    </div>
+                    <a class="icon-wrapper" ui-sref="tenant.newCentreEvent" ng-if="$ctrl.permissions.create">
+                        <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                    </a>
+                    <div class="dropdown" uib-dropdown auto-close="outsideClick" style="display: inline-block;">
+                        <a class="icon-wrapper" title="Filter" uib-dropdown-toggle>
+                            <i class="material-icons custom-icon">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu pull-right checkbox" uib-dropdown-menu role="menu">
+                            <li class="dropdown-header">@L("Centre")</li>
+                            <li>
+                                <a href="#" data-value="SelectAll" ng-click="$ctrl.selectAllOption()" class="padding-left-40" ng-init="checked=true">
+                                    <input type="checkbox" ng-checked="$ctrl.selectAll" />
+                                    Select All
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li ng-repeat="item in $ctrl.centres" role="menuitem">
+                                <a href="#" data-value="{{ $index }}" ng-click="$ctrl.selectCentre(item)" class="padding-left-40">
+                                    <input type="checkbox" ng-checked="item.isChecked" />
+                                    {{ item.description }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+            <div class="portlet-body p-0-top-bottom">
+                <div class="filter-results">
+                    <ul class="filter-list">
+                        <li class="filter-list-item" ng-repeat="model in $ctrl.data.items">
+                            <div class="filter-list-item-content">
+                                <a ui-sref="tenant.editCentreEvent({ id: model.id })">
+                                    <centre-event-list model="model" show-details="$ctrl.showDetails"></centre-event-list>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <simple-paginator data="$ctrl.data" key="$ctrl.key" on-page-changed="$ctrl.load(requestParams)"></simple-paginator>
+            </div>
+        </div>
+    </div>
+</div>

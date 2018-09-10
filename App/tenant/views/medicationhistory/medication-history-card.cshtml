@@ -1,0 +1,58 @@
+﻿<div busy-if="$ctrl.loading" ng-if="$ctrl.isPatient || $ctrl.isReferral">
+    <div id="medicationhistories" class="portlet light">
+        <div class="portlet-title">
+            <div class="caption" data-toggle="collapse" href="#MedicationHistoriesBody">
+                <span class="caption-subject">@L("MedicationHistory"){{$ctrl.headingAppend}}</span>
+            </div>
+            <div class="actions dropdown inputs">
+                <div class="input-small-new inline-block">
+                    <form action="" class="search-form search-style-class">
+                        <div class="form-group has-feedback input-inline search-form-group">
+                            <label for="search" class="sr-only">@L("Search")</label>
+                            <input type="text" ng-model="$ctrl.medicationhistoryCard.filterText" enter-key="$ctrl.refreshGrid()" class="form-control form-control-solid search-input input-circle font-13-main clearable" placeholder="search keywords...">
+                            <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="$ctrl.clearFilter()"></a>
+                            <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                        </div>
+                    </form>
+                </div>
+                <a class="icon-wrapper" ng-if="$ctrl.permissions.create" ng-click="$ctrl.create()">
+                    <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                </a>
+                <a class="icon-wrapper" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                    <i class="material-icons custom-icon">more_vert</i>
+                </a>
+                <ul class="dropdown-menu pull-right">
+                    <li>
+                        <a href="javascript:;" class="bold" ng-click="$ctrl.getAllActive()">@L("Active")</a>
+                    </li>
+                    <li class="divider"> </li>
+                    <li>
+                        <a href="javascript:;" class="bold" ng-click="$ctrl.getAllInactive()">@L("Inactive")</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="MedicationHistoriesBody" class="portlet-body collapse in">
+            <div class="special-care" ng-repeat="medicationHistoryGroup in $ctrl.medicationhistories | orderBy:'-lastModificationTime'">
+                <div class="special-care-description">
+                    <span class="bold" ng-if="medicationHistoryGroup.lastModificationTime">Modified on&nbsp;{{medicationHistoryGroup.lastModificationTime|date:'dd-MMM-yyyy'}} </span>
+                </div>
+                <div class="special-care-description" ng-repeat="mh in medicationHistoryGroup.medicationHistories" ng-click="$ctrl.editMedicationhistory(mh)">
+                    @*Drug Name (Code) dose, route*@
+                    <span>{{mh.name}}</span>
+                    <span ng-if="mh.code"> ({{mh.code}}) </span>
+                    <span ng-if="mh.dosage"> {{mh.dosage}}</span>
+                    <span ng-if="mh.route"> ,{{mh.route}}</span>
+                    <ul class="actions list-unstyled list-inline">
+                        <li>
+                            <a ng-if="$ctrl.permissions.delete" href="#" ng-click="$ctrl.deleteMedicationHistory(mh.id);$event.stopPropagation()">@L("Delete")</a>
+                        </li>
+                    </ul>
+                    <div style="height:10px;"></div>
+                </div>
+            </div>     
+            <simple-paginator data="$ctrl.data" small-page-size="true" on-page-changed="$ctrl.load(requestParams)"></simple-paginator>
+        </div>
+    </div>
+</div>

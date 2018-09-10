@@ -1,0 +1,190 @@
+﻿@model CreateOrUpdateFamilyMemberInput
+
+@using Pulsesync.IngoTPCC.Application.FamilyMember.Dto;
+
+<div id="DetailsInformation" class="bioData portlet light" ng-controller="tenant.views.familyMembers.detailsInformation as detailsInfo">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("DetailsInformation")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a class="icon-wrapper" ng-if="detailsInfo.mode.toLowerCase()=='view' && !vm.isNew && vm.permissions.edit" ng-click="detailsInfo.edit()">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools">
+            <a class="remove" ng-if="detailsInfo.mode.toLowerCase()=='edit' && !vm.isNew" ng-click="detailsInfo.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="detailsInfo.mode">
+                @*edit mode*@
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+                        @{
+                            var attributes = new Dictionary<string, object>();
+                            attributes.Add("role", "form");
+                            attributes.Add("id", "detailsInfoForm");
+                            attributes.Add("name", "detailsInfo.detailsInfoForm");
+                        }
+                        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes)))
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                @s.FieldFor(m => m.TypeOfEmergencyContactPersonId).AsDropDown().Attrs(new { ng_model = "detailsInfo.familyMember.typeOfEmergencyContactPersonId" })
+                                @s.FieldFor(m => m.TypeOfFinancialContactPersonId).AsDropDown().Attrs(new { ng_model = "detailsInfo.familyMember.typeOfFinancialContactPersonId" })
+                                @s.FieldFor(m => m.IsStayWithPerson).Label(@L("StayWithPerson")).Attrs(new { ng_model = "detailsInfo.familyMember.isStayWithPerson" })
+                                @s.FieldFor(m => m.IsDecisionMaker).Label(@L("DecisionMaker")).Attrs(new { ng_model = "detailsInfo.familyMember.isDecisionMaker" })
+                                @s.FieldFor(m => m.IsSubstituteDecisionMaker).Label(@L("SubstituteDecisionMaker")).Attrs(new { ng_model = "detailsInfo.familyMember.isSubstituteDecisionMaker" })
+                                @s.FieldFor(m => m.IsDeputy).Label(@L("Deputy")).Attrs(new { ng_model = "detailsInfo.familyMember.isDeputy" })
+                                @s.FieldFor(m => m.IsContactForHospitalisation).Label(@L("ContactForHospitalisation")).Attrs(new { ng_model = "detailsInfo.familyMember.isContactForHospitalisation" })
+                                @s.FieldFor(m => m.IsContactForFuneralArrangement).Label(@L("ContactForFuneral Arrangement")).Attrs(new { ng_model = "detailsInfo.familyMember.isContactForFuneralArrangement" })
+                                @s.FieldFor(m => m.IsContactForDeath).Label(@L("ContactForDeath")).Attrs(new { ng_model = "detailsInfo.familyMember.isContactForDeath" })
+                                @s.FieldFor(m => m.IsAuthorisedToPickupPerson).Label(@L("AuthorisedToPickupPerson")).Attrs(new { ng_model = "detailsInfo.familyMember.isAuthorisedToPickupPerson" })
+                                <label for="deputySupportingLegalDocumentNote" class="control-label">@L("DeputySupportingLegalDocumentNote")</label>
+
+                                <h4 class="fontStealGreen bold padding" style="padding-top: 25px">@L("CaregiverInformation")</h4>
+                                @s.FieldFor(m => m.IsCaregiver).Label(@L("Caregiver")).Attrs(new { ng_model = "detailsInfo.familyMember.isCaregiver" })
+                                @s.FieldFor(m => m.IsCaregiverTrained).Label(@L("IsCaregiverTrained")).Attrs(new { ng_model = "detailsInfo.familyMember.isCaregiverTrained", ng_change = "detailsInfo.familyMember.caregiverTrainedOn = detailsInfo.familyMember.isCaregiverTrained ? detailsInfo.familyMember.caregiverTrainedOn : '' " })
+                                @s.FieldFor(m => m.IsCaregiverTrainingRequired).Label(@L("RequireCaregiverTraining")).Attrs(new { ng_model = "detailsInfo.familyMember.isCaregiverTrainingRequired" })
+                                @s.FieldFor(m => m.IsCaregiverCompetent).Label(@L("IsCaregiverCompetent")).Attrs(new { ng_model = "detailsInfo.familyMember.isCaregiverCompetent" })
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="input-group date date-picker" ng-click="detailsInfo.preventEvent(!detailsInfo.familyMember.isCaregiverTrained, $event)">
+                                        <input id="caregiverTrainedOn" data-date-picker="" type="text" ng-disabled="!detailsInfo.familyMember.isCaregiverTrained" class="form-control" name="CaregiverTrainedOn"
+                                               ng-model="detailsInfo.familyMember.caregiverTrainedOn" Validate="false" Restrict="reject" />
+                                        <div class="input-group-addon" ng-class="{ 'date-picker-disabled': !detailsInfo.familyMember.isCaregiverTrained }">
+                                            <i class="material-icons" style="line-height: 14px;">date_range</i>
+                                        </div>
+                                        <label for="caregiverTrainedOn" class="control-label">@L("CaregiverTrainedOn")</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <ui-select id="by" ng-model="detailsInfo.familyMember.caregiverTrainedById" theme="select2" title="Choose a By Person">
+                                        <ui-select-match placeholder="Select By">
+                                            {{$select.selected.description}}
+                                            <a class="fa fa-times" ng-click="$select.clear($event);"></a>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="m.id as m in vm.caregiverTrainedByMaster | filter: { description: $select.search }">
+                                            <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <label for="caregiverTrainedBy" class="control-label">@L("CaregiverTrainedBy")</label>
+                                </div>
+                                @*<user-ui-select user-id="detailsInfo.familyMember.caregiverTrainedById" uiselect-disabled="false" label="'Trained By'"></user-ui-select>*@
+
+                                @s.FieldFor(m => m.CaregiverTrainingProviderId).AsDropDown().Attrs(new { ng_model = "detailsInfo.familyMember.caregiverTrainingProviderId" })
+                                @s.FieldFor(m => m.OtherCaregiverTrainingProvider).Attrs(new { ng_model = "detailsInfo.familyMember.otherCaregiverTrainingProvider" })
+                                @s.FieldFor(m => m.CaregiverFromDate).Attrs(new { ng_model = "detailsInfo.familyMember.caregiverFromDate", Validate = "false", Restrict = "reject" })
+                                @s.FieldFor(m => m.CaregiverToDate).Attrs(new { ng_model = "detailsInfo.familyMember.caregiverToDate", Validate = "false", Restrict = "reject" })
+                            }
+
+                            <div class="form-actions pull-right" ng-if="!vm.isNew">
+                                <a class="linkButton btn-small" ng-click="detailsInfo.save()">
+                                    <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                                </a>
+                                <a class="linkButton btn-small" ng-click="detailsInfo.close()">
+                                    <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                                </a>
+
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @*view mode*@
+                <div ng-switch-when="view">
+                    <div class="col-md-12">
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{ displayEmergencyContactFormat(vm.familyMember.typeOfEmergencyContactPerson) }}</div>
+                            <label class="control-label">@L("TypeOfEmergencyContactPerson")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.familyMember.typeOfFinancialContactPerson.description" /></div>
+                            <label class="control-label">@L("TypeOfFinancialContactPerson")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.familyMember.isStayWithPerson)"></div>
+                            <label class="control-label">@L("StayWithPerson")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.familyMember.isDecisionMaker)"></div>
+                            <label class="control-label">@L("DecisionMaker")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.familyMember.isSubstituteDecisionMaker)"></div>
+                            <label class="control-label">@L("SubstituteDecisionMaker")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.familyMember.isDeputy)"></div>
+                            <label class="control-label">@L("Deputy")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.familyMember.isContactForHospitalisation)"></div>
+                            <label class="control-label">@L("ContactForHospitalisation")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.familyMember.isContactForFuneralArrangement)"></div>
+                            <label class="control-label">@L("ContactForFuneral Arrangement")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.familyMember.isContactForDeath)"></div>
+                            <label class="control-label">@L("ContactForDeath")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.familyMember.isAuthorisedToPickupPerson)"></div>
+                            <label class="control-label">@L("AuthorisedToPickupPerson")</label>
+                        </div>
+                        <h4 class="fontStealGreen bold padding" style="padding-top: 25px">@L("CaregiverInformation")</h4>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.familyMember.isCaregiver)"></div>
+                            <label class="control-label">@L("Caregiver")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.familyMember.isCaregiverTrained)"></div>
+                            <label class="control-label">@L("IsCaregiverTrained")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.familyMember.isCaregiverTrainingRequired)"></div>
+                            <label class="control-label">@L("RequireCaregiverTraining")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.familyMember.isCaregiverCompetent)"></div>
+                            <label class="control-label">@L("IsCaregiverCompetent")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.familyMember.caregiverTrainedOn | dateFormat" /></div>
+                            <label class="control-label">@L("CaregiverTrainedOn")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.familyMember.isCaregiverTrainingRequired)"></div>
+                            <label class="control-label">@L("RequireCaregiverTraining")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.familyMember.caregiverTrainedBy.fullName" /></div>
+                            <label class="control-label">@L("CaregiverTrainedBy")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.familyMember.caregiverTrainingProvider.description" /></div>
+                            <label class="control-label">@L("CaregiverTrainingProvider")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.familyMember.otherCaregiverTrainingProvider" /></div>
+                            <label class="control-label">@L("OtherCaregiverTrainingProvider")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.familyMember.caregiverFromDate | dateFormat" /></div>
+                            <label class="control-label">@L("CaregiverFromDate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.familyMember.caregiverToDate | dateFormat" /></div>
+                            <label class="control-label">@L("CaregiverToDate")</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

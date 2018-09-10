@@ -1,0 +1,253 @@
+﻿@using Pulsesync.IngoTPCC.Authorization
+@using Pulsesync.IngoTPCC.Application.Membership.Dto
+@model MembershipDto
+
+<style type="text/css">
+    .dropbtn {
+        background-color: #00bfb5;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+    }
+
+    .dropbtn-cancel {
+        background-color: #00bfb5;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+    }
+
+    .dropdown-content-action a:hover {
+        background-color: #f1f1f1;
+    }
+
+    .dropdown-content-action a {
+        color: black;
+        padding: 12px 10px 16px 10px !important;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+        word-wrap: break-word;
+    }
+
+
+    .dropdown-cancel {
+        display: inline-block;
+    }
+
+    .dropdown-content-action {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        padding: 10px 0px 10px 0px;
+    }
+
+    .dropdown-content {
+        width: auto;
+        display: block;
+    }
+
+    .dropdown:hover .dropdown-content-action {
+        display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+        background-color: #00aba2;
+    }
+
+    .dropdown-cancel:hover .dropbtn-cancel {
+        background-color: #00aba2;
+    }
+
+    .fix-to-top-down {
+        position: fixed;
+        top: 160px;
+    }
+
+    .fix-to-top-up {
+        position: fixed;
+        top: 75px;
+    }
+
+    .dropdown-menu {
+        max-height: 400px;
+        /*overflow-x: hidden;*/
+        overflow-y: auto;
+    }
+
+    .dropdown-content {
+        word-wrap: break-word;
+    }
+
+    #dropdown-menu1 > li:hover > a, #dropdown-menu1 > li.active > a, #dropdown-menu1 > li.active:hover > a {
+        background-color: #00bfb5 !important;
+    }
+
+    .linkButton.dropdown-linkbutton {
+        color: unset;
+        font-weight: unset;
+    }
+
+        .linkButton.dropdown-linkbutton:hover {
+            color: white !important;
+            background-color: #00bfb5;
+        }
+
+    button.linkButton.dropdown-linkbutton:hover > i.material-icons, button.linkButton.dropdown-linkbutton:hover > i[class*="ps-icon-"] {
+        color: white !important;
+    }
+</style>
+
+@{
+    var attrs = new Dictionary<string, object>();
+    attrs.Add("name", "vm.form");
+    attrs.Add("novalidate", "");
+    attrs.Add("angular-validator", "");
+    attrs.Add("role", "form");
+    attrs.Add("id", "membership");
+    attrs.Add("action", "#");
+    attrs.Add("angular-validator-submit", "vm.save(false)");
+    attrs.Add("error-focus", "");
+}
+@using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs)))
+{
+    <ps-uib-tabset active="vm.activeTab" tab-template="false" is-pinned="vm.isPinned" style="margin-top: -10px;">
+        <ps-uib-tab-person-header>
+            <person-header person-id="vm.model.person.id"></person-header>
+        </ps-uib-tab-person-header>
+        <ps-uib-tab-navigation class="tabnavigation" navigation-menu="vm.navigationalMenu" goto-anchor="vm.gotoAnchor(key)"></ps-uib-tab-navigation>
+        <ps-uib-tab-button>
+            <div class="col-md-12 col-sm-12" style="padding: 10px 0px 0px 0px;">
+                <div class="form-actions pull-right txt-align-cntr">
+                    <a ng-click="vm.cancel()" title="Close" class="icon-wrapper" style="cursor:pointer">
+                        <i class="material-icons custom-icon">close</i>
+                    </a>
+                </div>
+                <div class="btn-group pull-right">
+                    <a class="btn green-haze btn-outline btn-circle btn-sm icon-wrapper pull-right" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true" style="margin-top:0px !important">
+                        Actions
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu pull-right" id="dropdown-menu1">
+                        <li>
+                            <a class="linkButton btn-small inline-flex-center" style="width: 100%;" ng-if="vm.mode!='new' && vm.mode!='edit' &&  (vm.model.membershipStatus == 0 || (vm.model.membershipStatus == 1 && vm.model.applicationStatus == 0))" ng-click="vm.mode='edit';vm.activeTab='personDetails';">
+                                <i class="material-icons font-18-main v-top">edit</i> @L("Edit")
+                            </a>
+                        </li>
+                        <li>
+                            <div ng-if="vm.mode=='new' || (vm.mode=='edit' && (vm.model.membershipStatus == 0 || vm.model.membershipStatus == 1));">
+                                <button type="submit" button-busy="vm.saving" class="linkButton dropdown-linkbutton inline-flex-center" style="width:100%" ng-disabled="vm.saving">
+                                    <i class="material-icons dropdown-button-icon font-18-main v-top">save</i>Save
+                                </button>
+                            </div>
+                        </li>
+                        <li>
+                            <a class="linkButton btn-small inline-flex-center"
+                               style="width:100%"
+                               ng-if="vm.mode=='new' || (vm.mode=='edit' && (vm.model.membershipStatus == 0 || vm.model.membershipStatus == 1));"
+                               ng-click="vm.save(true)">
+                                <i class="ps-icon-1x material-icons font-18-main dropdown-button-icon ps-icon-savenclose grey"></i>@L("SaveAndClose")
+                            </a>
+                        </li>
+                        <li>
+                            <a class="linkButton btn-small inline-flex-center"
+                               style="width:100%"
+                               ng-if="vm.model.membershipApplicationNo != null"
+                               ng-click="vm.copyMembership()">
+                                <i class="material-icons font-18-main v-top">content_copy</i> @L("Copy")
+                            </a>
+                        </li>
+                        <li>
+                            <a class="linkButton btn-small inline-flex-center"
+                               style="width:100%"
+                               ng-if="vm.mode!='new' && vm.model.isActiveMember"
+                               ng-click="vm.terminateMembership()">
+                                <i class="material-icons font-18-main v-top">block</i> @L("Terminate")
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </ps-uib-tab-button>
+    </ps-uib-tabset>
+    <div class="tab-content" style="display: block; margin: auto;" ng-class="{ 'div-disabled': vm.model.membershipStatus == 1 }">
+        <div id="PersonDetails" class="col-md-12 col-sm-12 col-xs-12 no-padding tab-pane fade in active">
+            <!-- Left side -->
+            <div class="col-md-6 col-sm-12 col-xs-12" person-id="vm.model.person.id">
+                @Html.Partial("~/App/tenant/views/memberships/membership-detail/membership-detail-biodata1-card.cshtml")
+                @Html.Partial("~/App/tenant/views/memberships/membership-detail/membership-detail-contactinfo-card.cshtml")
+                @Html.Partial("~/App/tenant/views/memberships/membership-detail/membership-detail-otherinfo-card.cshtml")
+                <div busy-if="vm.loading" ng-if="vm.model.person.id">
+                    @*@Html.Partial("~/App/tenant/views/languageDialects/languageDialectView.cshtml")*@
+                    <language-dialects  id="Language" maintitle="'@L("SpokenLanguageDialect")'" template="'person'" lock-card="vm.model.membershipStatus == 2" person-id="vm.model.person.id" is-patient="vm.model.person.isPatient"></language-dialects>
+                </div>
+                <div busy-if="vm.loading">
+                    @if (IsGranted(AppPermissions.Pages_Tenant_FamilyMembers))
+                    {
+                        <person-detail-familymembers-card id="FamilyMembers" is-new="vm.mode=='new'" lock-card="vm.model.membershipStatus == 2" person-id="vm.model.personId" membership-id="vm.model.id"></person-detail-familymembers-card>
+                    }
+                </div>
+                <div busy-if="vm.loading">
+                    <membership-detail-supportnetwork-card id="SupportNetwork" mode="vm.mode" model="vm.model"></membership-detail-supportnetwork-card>
+                </div>
+                <div busy-if="vm.loading">
+                    <membership-detail-livingcondition-card id="LivingCondition" mode="vm.mode" model="vm.model"></membership-detail-livingcondition-card>
+                </div>
+                <div busy-if="vm.loading" ng-if="vm.model">
+                    <membership-detail-declaration-card id="Declaration" mode="vm.mode" model="vm.model"></membership-detail-declaration-card>
+                </div>
+                <div busy-if="vm.loading" ng-if="vm.model">
+                    <membership-detail-agreementindemnity-card id="AgreementIndemnity" mode="vm.mode" model="vm.model" savesignatureapi="vm.signaturePageComponentApi"></membership-detail-agreementindemnity-card>
+                </div>
+                <div busy-if="vm.loading">
+                    <membership-detail-administrativeinfo-card id="AdministrativeInformation" mode="vm.mode" model="vm.model"></membership-detail-administrativeinfo-card>
+                </div>
+            </div>
+            <!--Right side-->
+            <div class="col-md-6 col-sm-12 col-xs-12 pull-right">
+                <div busy-if="vm.loading" ng-if="vm.model">
+                    <membership-detail-general-card id="General" mode="vm.mode" model="vm.model"></membership-detail-general-card>
+                </div>
+                <div busy-if="vm.loading">
+                    <membership-detail-interesthobbies-card id="InterestHobbies" mode="vm.mode" model="vm.model"></membership-detail-interesthobbies-card>
+                </div>
+                <div ng-hide="!vm.model.person.id">
+                    @if (IsGranted(AppPermissions.Pages_Tenant_Allergies_View))
+                    {
+                        <allergies-card id="Allergies" maintitle="'@L("Allergies")'" template="'person'" lock-card="vm.model.membershipStatus == 2" person-id="vm.model.person.id" is-referral="false" referral-id="null" is-patient="vm.model.person.isPatient"></allergies-card>
+                    }
+                </div>
+                <div busy-if="vm.loading" ng-if="vm.model">
+                    <membership-detail-levelofcare id="LevelOfCare" mode="vm.mode" model="vm.model"></membership-detail-levelofcare>
+                </div>
+                <div busy-if="vm.loading">
+                    <membership-detail-health-card id="Health" mode="vm.mode" model="vm.model"></membership-detail-health-card>
+                </div>
+                <div busy-if="vm.loading">
+                    <membership-detail-medicalinformation-card id="MedicalInformation" mode="vm.mode" model="vm.model"></membership-detail-medicalinformation-card>
+                </div>
+                @if (IsGranted(AppPermissions.Pages_Tenant_MedicalAlert_View))
+                {
+                    <medical-alert-card id="MedicalAlert" maintitle="'@L("MedicalAlert")'" mode="vm.mode"  lock-card="vm.model.membershipStatus == 2"  template="'person'" person-id="vm.model.person.id" is-patient="vm.model.person.isPatient"></medical-alert-card>
+                }
+                <div busy-if="vm.loading">
+                    <membership-detail-financialstatus-card id="FinancialStatus" mode="vm.mode" model="vm.model"></membership-detail-financialstatus-card>
+                </div>
+                <div busy-if="vm.loading">
+                    <membership-detail-assistanceservices-card id="AssistancesServices" mode="vm.mode" model="vm.model"></membership-detail-assistanceservices-card>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+}

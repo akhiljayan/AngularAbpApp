@@ -1,0 +1,169 @@
+﻿@model CreateOrUpdateTransportRequisitionInput
+
+@using Pulsesync.IngoTPCC.Application.TransportRequisitions.Dto
+
+@{
+    var autosizeClass = "animate msd-elastic: \\n;";
+}
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("TransportRequisitionAndBooking")</div>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @*@{
+                    var attrs = new Dictionary<string, object>();
+                    attrs.Add("name", "vm.form");
+                    attrs.Add("novalidate", "");
+                    attrs.Add("angular-validator", "");
+                }*@
+
+                @using (var f = Html.BeginSubForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        @(@s.FieldFor(m => m.Department)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.department"
+                            }))
+
+                        @(@s.FieldFor(m => m.TransportTypeId)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.transportTypeId",
+                                repeat = "vm.transportTypeMaster",
+                                ng_change = "vm.loadTransportTypeDetails(vm.model.transportTypeId)",
+                                ui_select_required = "ui-select-required"
+                            })
+                            .AsDropDown())
+
+                        <div class="form-group form-md-line-input" ng-class="{ 'has-error': vm.form.OthersTransportType.$error.required && vm.form.submitted }">
+                            <input type="text" id="OthersTransportType" name="OthersStaffType" class="form-control" ng-model="vm.model.othersTransportType" ng-disabled="vm.model.transportType.description != 'Others'" ng-required="vm.model.transportType.description == 'Others'" />
+                            <label for="OthersTransportType" class="control-label">@L("OthersPleaseSpecify")<span class="businessRequired" ng-if="vm.model.transportType.description == 'Others'"> * </span></label>
+                            <p class="help-block has-error" ng-if="vm.form.OthersTransportType.$error.required && vm.form.submitted">You must provide a value for Others Transport Type.</p>
+                        </div>
+
+                        @(@s.FieldFor(m => m.TripType)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.tripType"
+                            }))
+
+                        @(@s.FieldFor(m => m.AppointmentDateTime)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.appointmentDateTime",
+                                allowfuturedate = "'allowfuturedate'"
+                            }))
+                        @(@s.FieldFor(m => m.PlannedPickupDateTime)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.plannedPickupDateTime",
+                                //validator = "vm.plannedPickupDateTimeValidator(vm.model.appointmentDateTime, vm.model.plannedPickupDateTime)",
+                                //invalid_message = "'Pickup Date Time must be earlier than Appointment Date Time.'",
+                                allowfuturedate = "'allowfuturedate'",
+                                maxdate = "{{vm.model.appointmentDateTime |dateTimeFormat}}"
+                            }))
+
+                        @(@s.FieldFor(m => m.Purpose)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.purpose"
+                            }))
+
+                        @(@s.FieldFor(m => m.PickupAddress)
+                            .AddClass(autosizeClass)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.pickupAddress"
+                            })
+                            .Rows(4))
+
+                        @(@s.FieldFor(m => m.Destination)
+                            .AddClass(autosizeClass)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.destination"
+                            })
+                            .Rows(4))
+
+                        @(@s.FieldFor(m => m.RequestByUserId)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.requestByUserId",
+                                repeat = "vm.users"
+                            })
+                            .AsDropDown())
+
+                        @(@s.FieldFor(m => m.ContactNumber)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.contactNumber"
+                            }))
+
+                        @(@s.FieldFor(m => m.SpecialInstruction)
+                            .AddClass(autosizeClass)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.specialInstruction"
+                            })
+                            .Rows(4))
+
+                        @(@s.FieldFor(m => m.Remarks)
+                            .AddClass(autosizeClass)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.remarks"
+                            })
+                            .Rows(4))
+                    }
+                }
+            </div>
+            <div class='view' ng-switch-default>
+                <strong>@L("Department")</strong>
+                <p>{{ vm.model.department || '-' }}</p>
+
+                <strong>@L("TypeOfTransport")</strong>
+                <p>{{ vm.model.transportType.description }}</p>
+
+                <strong>@L("IfOthersPleaseSpecify")</strong>
+                <p>{{ vm.model.othersTransportType || '-' }}</p>
+
+                <strong>@L("TypeOfTrip")</strong>
+                <p>{{ vm.model.tripType == 'OneWay' ? '@L("OneWay")' : '@L("TwoWays")' }}</p>
+
+                <strong>@L("AppointmentDateTime")</strong>
+                <p>{{ vm.model.appointmentDateTime | dateTimeFormat }}</p>
+
+                <strong>@L("PickupDateTime")</strong>
+                <p>{{ vm.model.plannedPickupDateTime | dateTimeFormat }}</p>
+
+                <strong>@L("Purpose")</strong>
+                <p>{{ vm.model.purpose || '-' }}</p>
+
+                <strong>@L("PickupAddress")</strong>
+                <p>{{ vm.model.pickupAddress || '-' }}</p>
+
+                <strong>@L("Destination")</strong>
+                <p>{{ vm.model.destination || '-' }}</p>
+
+                <strong>@L("RequestByUser")</strong>
+                <p>{{ vm.model.requestByUser.fullName || '-' }}</p>
+
+                <strong>@L("ContactNo")</strong>
+                <p>{{ vm.model.contactNumber || '-' }}</p>
+
+                <strong>@L("SpecialInstruction")</strong>
+                <p>{{ vm.model.specialInstruction || '-' }}</p>
+
+                <strong>@L("Remarks")</strong>
+                <p>{{ vm.model.remarks || '-' }}</p>
+            </div>
+        </div>
+    </div>
+</div>

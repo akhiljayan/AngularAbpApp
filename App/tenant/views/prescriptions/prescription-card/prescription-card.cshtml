@@ -1,0 +1,80 @@
+﻿<style>
+    .filter-list-item-remove-border-padding {
+        border-bottom: 0px !important;
+        padding: 0px !important;
+    }
+
+    a.filter-list-item-remove-style {
+        text-decoration: none !important;
+        cursor: default !important;
+    }
+
+    .dropdown-menu > .disabled > a {
+        opacity: 0.5;
+    }
+
+        .dropdown-menu > .disabled > a:focus,
+        .dropdown-menu > .disabled > a:hover {
+            background-color: #00bfb5;
+        }
+</style>
+<div id="Prescription" class="portlet light" busy-if="$ctrl.loading" ng-class="{ 'div-disabled': $ctrl.mode=='new' }">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="fontStealGreen">{{ $ctrl.title }}</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <div class="input-small-new inline-block">
+                <form action="" class="search-form">
+                    <div class="form-group has-feedback input-inline">
+                        <label for="search" class="sr-only">@L("Search")</label>
+                        <input type="text" ng-model="$ctrl.filter" enter-key="$ctrl.load()" class="form-control form-control-solid input-circle search-input font-13-main clearable" placeholder="search keywords...">
+                        <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="$ctrl.filter=''; $ctrl.load();"></a>
+                        <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                    </div>
+                </form>
+            </div>
+            <a ng-click="$ctrl.showDetails = !$ctrl.showDetails" title="Show associated Details" class="icon-wrapper">
+                <i ng-show="!$ctrl.showDetails" class="material-icons custom-icon">menu</i>
+                <i ng-show="$ctrl.showDetails" class="material-icons custom-icon">view_headline</i>
+            </a>
+            <div class="inline-block" style="vertical-align: top; margin: 4px 0px; line-height: 26px;">
+                <a class="btn green-haze btn-outline btn-circle btn-sm icon-wrapper" ng-class="$ctrl.enabledActionBtn ? '' : 'disable-links disabled'" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
+                    Actions
+                    <i class="fa fa-angle-down"></i>
+                </a>
+                <ul class="dropdown-menu pull-right">
+                    <li ng-repeat="model in $ctrl.action" ng-class="model.showBtn == true ? '' : 'disabled'">
+                        <a ng-click="$ctrl.handleAction(model.action)" ng-class="model.showBtn == true ? '' : 'disable-links'">{{ $ctrl.L(model.action) }}</a>
+                    </li>
+                </ul>
+            </div>
+            <a class="icon-wrapper" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                <i class="material-icons custom-icon">more_vert</i>
+            </a>
+            <ul class="dropdown-menu pull-right">
+                <li ng-repeat="view in $ctrl.views">
+                    <a href="javascript:;" class="bold" ng-click="$ctrl.changeView(view.value)">{{ $ctrl.L(view.localizedName) }}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="portlet-body p-0-top-bottom">
+        <span class="font-16-main bold">{{ $ctrl.view | enumText: 'prescriptionViews' }} Drugs</span>
+        <div style="padding-bottom: 20px;">
+            <prescription-drug-orderstatus-count order-status-counts="$ctrl.orderStatusCounts"></prescription-drug-orderstatus-count>
+        </div>
+        <div class="filter-results-card">
+            <ul class="filter-list">
+                <li class="filter-list-item" ng-repeat="model in $ctrl.data.items">
+                    <div class="filter-list-item-content filter-list-item-remove-border-padding">
+                        <a class="filter-list-item-remove-style">
+                            <prescription-drug-item model="model" show-details="$ctrl.showDetails" on-select="$ctrl.onSelect(event)" unit-of-measurement-master="$ctrl.unitOfMeasurementMaster"></prescription-drug-item>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <simple-paginator data="$ctrl.data" key="vm.key" small-page-size="true" on-page-changed="$ctrl.onPageChanged(requestParams)"></simple-paginator>
+    </div>
+</div>

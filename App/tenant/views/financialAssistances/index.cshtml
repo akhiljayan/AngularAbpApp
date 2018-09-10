@@ -1,0 +1,132 @@
+﻿<style>
+    #financialAssistance .well .row hr {
+        margin: 13px 0;
+    }
+
+    #financialAssistance .well > .row:last-child > div:last-child > hr {
+        display: none;
+    }
+
+    /*#financialAssistance .well {
+        margin-left: 50px;
+        background-color: #fff;
+        margin-bottom: 0px;
+    }
+
+    #financialAssistance .air-card section.air-card-hover:hover .well {
+        background-color: #f2f2f2;
+    }*/
+</style>
+<div busy-if="vm.loading">
+    <div id="financialAssistance" ng-controller="tenant.views.financialAssistances.index as vm">
+        <div class="row">
+            <div class="col-md-2">
+                <span class="caption">@L("RefineSearch")</span>
+                <div class="form-group form-md-line-input">
+                    <label class="control-label" for="financialAssistanceType">@L("FinancialAssistanceType")</label>
+                    <select id="financialAssistanceType" label="@L("FinancialAssistanceType")" ng-model="vm.selectedFinancialAssistanceType" multiple="multiple" multi-select ng-options="x.id as x.description for x in vm.financialAssistanceTypeList" optionchange="vm.financialAssistanceTypeList"></select>
+                </div>
+
+                <div class="form-group form-md-line-input">
+                    <label class="control-label" for="status">@L("Status")</label>
+                    <ui-select id="status" ng-model="vm.selectedStatus" theme="selectize" title="Choose a Status">
+                        <ui-select-match placeholder="Select Status">
+                            {{$select.selected.name}}
+                            <a class="fa fa-times" ng-hide="vm.isReadOnlyMode" ng-click="$select.clear($event);"></a>
+                        </ui-select-match>
+                        <ui-select-choices repeat="m.value as m in vm.statusFilter | filter: { name: $select.search } | orderBy:'value'">
+                            <span ng-bind-html="m.name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+
+                <div class="form-actions noborder pull-right">
+                    <button ng-click="vm.getFinancialAssistances()" class="btn btn-circle btn-small light-grey-pcc btn-outline">@L("Filter")</button>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="clearfix padding-bottom-10"></div>
+                <div class="portlet light" busy-if="vm.loading">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject">@L("FinancialAssistance")</span>
+                        </div>
+                        <div class="actions dropdown inputs">
+                            <div class="input-small-new inline-block">
+                                <form action="" class="search-form">
+                                    <div class="form-group has-feedback input-inline">
+                                        <label for="search" class="sr-only">@L("Search")</label>
+                                        <input type="text" ng-model="vm.filter" enter-key="vm.load()" class="form-control form-control-solid input-circle search-input font-13-main clearable" placeholder="search keywords...">
+                                        <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="vm.clearFilter()"></a>
+                                        <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="input-small-new inline-block">
+                                <select class="action-form sort-form" ng-change="vm.load()" ng-model="vm.selectedSort" ng-options="x.value as x.name for x in vm.sortingList"></select>
+                            </div>
+                            <a ng-click="vm.detailsOpen = !vm.detailsOpen" title="Show associated Details" class="icon-wrapper">
+                                <i ng-show="!vm.detailsOpen" class="material-icons custom-icon">menu</i>
+                                <i ng-show="vm.detailsOpen" class="material-icons custom-icon">view_headline</i>
+                            </a>
+                            <a ng-click="vm.create()" ng-if="vm.permissions.create" class="icon-wrapper">
+                                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body air-card p-0-top-bottom">
+                        <section class="air-card-hover" ng-repeat="financialAssistances in vm.data.items">
+                            <div class="row margin-bottom-10" ng-click="vm.viewPerson(financialAssistances.personId)">
+                                <div class="col-md-12 flex-center">
+                                    <span class="caption margin-right-5 cursor-pointer">{{ financialAssistances.fullName }}</span>
+                                    <span ng-if="financialAssistances.registrationDocumentNumber" class="otherText uppercase">
+                                        ({{ financialAssistances.registrationDocumentNumber }})
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="well well-sm font-13-main">
+                                <div class="row cursor-pointer" ng-repeat="financialAssistance in financialAssistances.financialAssistances" ng-click="vm.viewFinancialAssistance(financialAssistance.id)">
+                                    <div class="col-md-9 col-sm-7 margin-bottom-10">
+                                        <div class="bold">{{ financialAssistance.financialAssistanceTypeDescription }}</div>
+                                        <div class="inline-flex">
+                                            <span class="badge custom-badge margin-right-10">{{ financialAssistance.amountPercentage }}</span>
+                                            <span>
+                                                <span>{{financialAssistance.amountPercentage ? 'from' : 'From'}}</span> {{ financialAssistance.effectiveDate | dateFormat }}
+                                                <span ng-if="financialAssistance.expiryDate"> to {{ financialAssistance.expiryDate | dateFormat }}</span>
+                                                <span ng-if="financialAssistance.status || financialAssistance.status == '0'"> ({{ financialAssistance.status | enumText : 'financialAssistanceStatus' }})</span>
+                                            </span>
+                                        </div>
+                                        <div ng-show="vm.detailsOpen">
+                                            <span>
+                                                <span ng-if="financialAssistance.issueDate">Issued card on {{ financialAssistance.issueDate | dateFormat }}</span>
+                                                <span ng-if="financialAssistance.returnDate">{{financialAssistance.issueDate ? 'and returned' : 'Returned'}} on {{ financialAssistance.returnDate | dateFormat }}</span>
+                                                <span ng-if="financialAssistance.issueDate || financialAssistance.returnDate"><br /></span>
+                                            </span>
+                                            <span ng-if="financialAssistance.applicationDate">Applied on {{ financialAssistance.applicationDate | dateFormat }}<br /></span>
+                                            <span ng-if="financialAssistance.beneficiary || financialAssistance.beneficiary == '0'">Beneficiary: {{ financialAssistance.beneficiary | enumText: 'financialAssistanceBeneficiary' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-5 text-right margin-bottom-10 bold">
+                                        <div>{{ financialAssistance.lastRecordAction | enumText: 'lastRecordAction'}}</div>
+                                        <div class="margin-top-5">
+                                            <i class="fa fa-unlock" style="font-size: 20px;" ng-if="financialAssistance.lastRecordAction == 0"></i>
+                                            <i class="fa fa-lock" style="font-size: 20px;" ng-if="financialAssistance.lastRecordAction == 1"></i>
+                                            <i class="fa fa-ban" style="font-size: 20px;" ng-if="financialAssistance.lastRecordAction == 2"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-sm-12 clearfix">
+                                        <hr />
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <simple-paginator data="vm.data" key="vm.key" on-page-changed="vm.load(requestParams)"></simple-paginator>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

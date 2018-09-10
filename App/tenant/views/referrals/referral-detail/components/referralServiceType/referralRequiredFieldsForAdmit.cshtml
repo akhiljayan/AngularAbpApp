@@ -1,0 +1,158 @@
+﻿@using Pulsesync.IngoTPCC.Application.Referral.Dto
+@model ReferralValidationForAdmitDto
+
+<style type="text/css">
+    .select2-container .select2-choice {
+        padding: 0px !important;
+    }
+
+    .form-group .help-block {
+        display: none;
+    }
+
+    .form-group.has-error .help-block {
+        display: block;
+    }
+
+    .fontStealGreen {
+        padding-left: 15px;
+    }
+</style>
+
+<div class="portlet light" data-drag="true" id="referralValidationForAdmission">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("ReferralRequiredFieldsForAdmission")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        @{
+            var attributes = new Dictionary<string, object>();
+            attributes.Add("role", "form");
+            attributes.Add("id", "referralValidationForAdmitForm");
+            attributes.Add("name", "referralValidationForAdmitForm");
+            attributes.Add("novalidate", "");
+            attributes.Add("action", "#");
+            attributes.Add("angular-validator-submit", "vm.save()");
+            attributes.Add("angular-validator", "");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body")))
+            {
+                using (var s = f.BeginSection())
+                {
+                <div class="portlet-body" style="display: block;">
+                    <div class="form-body padding-top-0-imp" style="min-height:100px">
+                        <div class="bs-callout bs-callout-danger">
+                            <h4 style="font-weight: 600;"><i class="icon fa fa-warning"></i>&nbsp; Alert!</h4>
+                            Please fill in the following required fields to proceed Admission
+                        </div>
+                        <div class="row">
+
+
+                            <div class="col-md-12 padding-bottom-10">
+                                <div class="col-md-12">
+                                    <div class="person-name" style="padding-top:0px;">
+                                        <span class="caption-subject bold" style="color:rgba(0, 0, 0, 0.54)">{{vm.referral.referralServiceType.referral.person.fullName}}</span>&nbsp;&nbsp;
+                                        <span class="caption-subject" style="color:rgba(0, 0, 0, 0.54)" ng-if="vm.referral.referralServiceType.referral.person.registrationDocumentNumber">({{vm.referral.referralServiceType.referral.person.registrationDocumentNumber}})</span><br />
+                                        <span class="caption-subject" style="color:rgba(0, 0, 0, 0.54)">{{vm.referral.referralServiceType.serviceType.description}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+
+                                <h5 class="fontStealGreen bold" ng-if="vm.biodata">@L("BioData")</h5>
+                                <div class="col-md-12" ng-if="vm.requiredFields.indexOf('dateOfBirth') != '-1'">
+                                    @s.FieldFor(m => m.DateOfBirth).Attrs(new { ng_model = "vm.referral.dateOfBirth", ng_model_options = "{ debounce: 1000 }", Validate = "false", Restrict = "reject", maxdate = "0d" })
+                                </div>
+                                <div class="col-md-12 ui-select-required" ng-if="vm.requiredFields.indexOf('genderId') != '-1'">
+                                    @s.FieldFor(m => m.GenderId).AsDropDown().Attrs(new { ng_model = "vm.referral.genderId", name = "Gender" }).AddClass("lookup-required")
+                                </div>
+                                <div class="col-md-12 ui-select-required" ng-if="vm.requiredFields.indexOf('nationalityId') != '-1'">
+                                    @s.FieldFor(m => m.NationalityId).AsDropDown().Attrs(new { ng_model = "vm.referral.nationalityId", name = "nationalityId" }).AddClass("lookup-required")
+                                </div>
+                                <div class="col-md-12 ui-select-required" ng-if="vm.requiredFields.indexOf('raceId') != '-1'">
+                                    @s.FieldFor(m => m.RaceId).AsDropDown().Attrs(new { ng_model = "vm.referral.raceId", name = "RaceId" }).AddClass("lookup-required")
+                                </div>
+                                <div class="col-md-12" ng-if="vm.requiredFields.indexOf('religionId') != '-1'">
+                                    @s.FieldFor(m => m.ReligionId).AsDropDown().Attrs(new { ng_model = "vm.referral.religionId", name = "RelegionId" }).AddClass("lookup-required")
+                                </div>
+
+                                <h5 class="fontStealGreen bold" ng-if="vm.contact">@L("ContactDetails") &amp; @L("OtherInformation")</h5>
+                                <div class="col-md-12" ng-if="vm.requiredFields.indexOf('postalCode') != '-1'">
+                                    @s.FieldFor(m => m.PostalCode).Attrs(new { ng_model = "vm.referral.postalCode" })
+                                </div>
+
+                                <div class="col-md-12" ng-if="vm.requiredFields.indexOf('homePhone') != '-1' && vm.requiredFields.indexOf('mobilePhone') != '-1'">
+                                    <div class="form-group form-md-line-input">
+                                        <input type="text" ng-model="vm.referral.homePhone" class="form-control" id="homePhone" name="homePhone" ng-maxlength="10" placeholder="Provide Home phone number" ng-required="!vm.referral.mobilePhone" required-message="'You must provide a value either for mobile phone or home phone'">
+                                        <label class="control-label" for="otherReferred">@L("HomePhone")<span class="required" ng-if="!vm.referral.mobilePhone">*</span></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" ng-if="vm.requiredFields.indexOf('homePhone') != '-1' && vm.requiredFields.indexOf('mobilePhone') != '-1'">
+                                    <div class="form-group form-md-line-input">
+                                        <input type="text" ng-model="vm.referral.mobilePhone" class="form-control" id="mobilePhone" name="mobilePhone" ng-maxlength="10" placeholder="Provide Mobile phone number" ng-required="!vm.referral.homePhone" required-message="'You must provide a value either for mobile phone or home phone'">
+                                        <label class="control-label" for="otherReferred">@L("MobilePhone")<span class="required" ng-if="!vm.referral.homePhone">*</span></label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 ui-select-required" ng-if="vm.requiredFields.indexOf('highestEducationId') != '-1'">
+                                    @s.FieldFor(m => m.HighestEducationId).AsDropDown().Attrs(new { ng_model = "vm.referral.highestEducationId", name = "HigestEducation" }).AddClass("lookup-required")
+                                </div>
+                                <div class="col-md-12" ng-if="vm.requiredFields.indexOf('lastOccupationId') != '-1'">
+                                    @s.FieldFor(m => m.LastOccupationId).AsDropDown().Attrs(new { ng_model = "vm.referral.lastOccupationId", name = "LastOccupation" }).AddClass("lookup-required")
+                                </div>
+
+
+                                <h5 class="fontStealGreen bold" ng-if="vm.referralInfoHead">@L("ReferralInformation")  </h5>
+                                <div class="col-md-12 ui-select-required" ng-if="vm.requiredFields.indexOf('referredById') != '-1'">
+                                    @s.FieldFor(m => m.ReferredById).AsDropDown().Attrs(new { ng_model = "vm.referral.referredById", name = "referredById", ng_change = "vm.referredByChange($select.selected.description,vm.referral)" }).AddClass("lookup-required")
+                                </div>
+                                <div class="col-md-12" ng-if="vm.referredByOthers">
+                                    <div class="form-group form-md-line-input" ng-if="vm.referredByOthers">
+                                        <input type="text" ng-disabled="vm.referral.disabled" ng-model="vm.otherReferred" class="form-control" id="otherReferred" name="otherReferred" ng-maxlength="300" placeholder="Provide Other Refererred by" required required-message="'You must provide a value for Others'">
+                                        <label class="control-label" for="otherReferred">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                                    </div>
+                                </div>
+
+                                <h5 class="fontStealGreen bold" ng-if="vm.referralSTHead">@L("ReferralServiceTypeInfo") </h5>
+                                <div class="col-md-12 ui-select-required" ng-if="vm.requiredFields.indexOf('referringInstitutionId') != '-1'">
+                                    @s.FieldFor(m => m.ReferringInstitutionId).AsDropDown().Attrs(new { ng_model = "vm.referral.referringInstitutionId", name = "referringInstitutionId", repeat = "vm.institutions" }).AddClass("lookup-required")
+                                </div>
+                                <div class="col-md-12" ng-if="(vm.referral.referralServiceType.referral.referredBy.description == 'AIC' || vm.referredByDesc == 'AIC') && vm.requiredFields.indexOf('aicReferralServiceType') != '-1'">
+                                    <div class="form-group form-md-line-input">
+                                        <input type="text" ng-model="vm.referral.aicReferralServiceType" class="form-control" id="AICReferralServiceType" name="aicReferralServiceType" ng-maxlength="300" placeholder="" required-message="'You must provide an AIC Referral Service Type'" ng-required="vm.referral.referralServiceType.referral.referredBy.description == 'AIC' || vm.referredByDesc == 'AIC'">
+                                        <label class="formlabel" for="AICReferralServiceType">@L("AICReferralServiceType")<span class="businessRequired"> * </span></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" ng-if="(vm.referral.referralServiceType.referral.referredBy.description == 'AIC' || vm.referredByDesc == 'AIC') && vm.requiredFields.indexOf('aicAssignmentDate') != '-1'">
+                                    <div class="form-group form-md-line-input">
+                                        <div class="input-group date date-picker">
+                                            <input name="AICAssignmentDate"  data-date-picker="" maxdate="0d" type="text" ng-model="vm.referral.aicAssignmentDate" id="AicAssignmentDate" class="form-control" Validate="false" Restrict="reject" required required-message="'You must provide a value for AIC Assignment Date'" />
+                                            <div class="input-group-addon">
+                                                <i class="material-icons" style="line-height: 14px;">date_range</i>
+                                            </div>
+                                            <label class="formlabel" for="AICAssignmentDate">@L("AICAssignmentDate")<span class="businessRequired"> * </span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            <div class="form-actions noborder right">
+                <button type="submit" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.saving"><i class="material-icons ps-btn-material">check</i>Ok</button>
+                <button type="button" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()" ng-disabled="vm.saving"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+    });
+</script>

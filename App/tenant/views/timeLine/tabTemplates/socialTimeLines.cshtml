@@ -1,0 +1,53 @@
+﻿<div class="col-md-12 col-sm-12" busy-if="vm.loading">
+    <div class="timeline-box">
+        <ul id="timline-list">
+            <li class="" ng-repeat="event in vm.socialTimeline" style="margin-top:0px; padding-top:0px;"  ng-class="{'cursor-pointer':event.isEditable}">
+                <span class="none white"></span>
+                <div class="title"></div>
+                <div class="info row delete-block">
+                    <div style="display:inline-block"  ng-class="{'col-md-11 no-padding nopadding pull-left':event.isEditable && vm.permissions.deleteLifeEvent && event.creatorUserId == vm.currentUserId && (event.module == vm.timeLineModulesMain.LifeEvents || event.module == vm.timeLineModulesMain.TimeLineNotes)}">
+                        <span ng-if="!event.hidden" ng-click="vm.editLifeEvent(event.isEditable, event.sourceId, event.isSignificantEvent)" ng-bind-html="event.description | limitTo: 300" ng-class="{'cursor-pointer':event.isEditable}"></span>
+                        <span ng-if="event.hidden" ng-click="vm.editLifeEvent(event.isEditable, event.sourceId, event.isSignificantEvent)" ng-bind-html="event.description" ng-class="{'cursor-pointer':event.isEditable && vm.permissions.editLifeEvent}"></span>
+
+                        <span class="btn-link ngTruncateToggleText nopadding no-padding" ng-click="event.hidden = !event.hidden" ng-if="event.description.length > 300 && event.hidden">...see less</span>
+                        <span class="btn-link ngTruncateToggleText nopadding no-padding" ng-click="event.hidden = !event.hidden" ng-if="event.description.length > 300 && !event.hidden">...see more</span>
+                    </div>
+                    <div class="delete-button col-md-1 no-padding nopadding pull-right" style="display:inline-block;" ng-if="event.isEditable && vm.permissions.deleteLifeEvent && event.creatorUserId == vm.currentUserId && (event.module == vm.timeLineModulesMain.LifeEvents || event.module == vm.timeLineModulesMain.TimeLineNotes)">
+                        <a class="actions list-unstyled list-inline" href="#" title="Delete Event" ng-click="vm.deleteTimeLine(event.id)"><i class="fa fa-trash-o" style="color:#00bfb5;font-size: 20px;"></i></a>
+                    </div>
+                </div>
+                <div class="time">
+                    <span style="display: block;padding-top: 15px;" ng-if="event.module != vm.timeLineModulesMain.LifeEvents && event.module != vm.timeLineModulesMain.TimeLineNotes">{{event.eventDate | dateFormat }}</span>
+                    <span style="display: block;padding-top: 15px;" ng-if="event.module == vm.timeLineModulesMain.LifeEvents || event.module == vm.timeLineModulesMain.TimeLineNotes">{{event.eventDate | monthYearFormat }}</span>
+                    <span></span>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <hr style="margin:15px 0" />
+    <div class="row" style="padding-top: 5px;">
+        <div class="col-md-12">
+            <div class="col-md-4 pull-left nopadding-left">
+                <div class="records pull-left" style="text-align: left;width: 130%;">
+                    <span>Records: </span><select class="pagination-page-sizes" ng-model="vm.pageSizeSocial" ng-options="pageSizes as pageSizes for pageSizes in vm.pageSizes" ng-change="vm.resetSocial()"></select> <br />
+                    <span class="pull-left" style="padding-top: 10px;text-align:left; width:130%"> Showing {{ vm.recordFromSocial }} to {{ vm.recordToSocial }} of {{ vm.socialTimeLineTotal }}</span>
+                </div>
+            </div>
+            <div class="col-md-8 nopadding-right">
+                <div class="pull-right no-padding nopadding">
+                    <ul uib-pagination
+                        class="pagination-sm"
+                        style="margin-top: 0px;"
+                        total-items="vm.socialTimeLineTotal"
+                        items-per-page="vm.pageSizeSocial"
+                        previous-text="&lsaquo;"
+                        next-text="&rsaquo;"
+                        boundary-link-numbers="true"
+                        max-size="3"
+                        ng-model="vm.currentPageSocial"
+                        ng-change="vm.pageChangedSocial()"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

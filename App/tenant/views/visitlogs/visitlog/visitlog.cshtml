@@ -1,0 +1,119 @@
+﻿<style>
+    .rendered-services .rendered-services-title {
+        margin-bottom: 10px;
+        font-weight: 700 !important;
+        border-bottom: 1px solid #eee;
+    }
+
+        .rendered-services .rendered-services-title .caption {
+            color: black;
+            padding: 0 0 10px 0;
+        }
+
+    .visit-service-categories > li {
+        border-bottom: 1px solid #eee;
+        padding: 10px 0;
+    }
+
+        .visit-service-categories > li:last-of-type {
+            border-bottom: 0;
+            padding: 10px 0 0 0;
+            margin: 0 !important;
+        }
+
+        .visit-service-categories > li:first-of-type {
+            margin: 0;
+            padding: 0 0 10px 0;
+        }
+
+    .visit-service-categories .description {
+        color: black;
+        margin-bottom: 5px;
+    }
+
+    .visit-services > li {
+        margin-left: 25px !important;
+        padding: 10px 0;
+    }
+
+        .visit-services > li:last-of-type {
+            padding: 10px 0 0 0;
+        }
+</style>
+
+<div class="row" ng-click="$ctrl.goToVisitLog()">
+    <div class="col-md-7">
+        <div class="row margin-bottom-10">
+            <div class="col-md-12 flex-center">
+                @*<span ng-if="$ctrl.model.person.gender.description.toLowerCase()=='male'" class="ps-icon-male male-icon-blue padding-right-10"></span>
+                    <span ng-if="$ctrl.model.person.gender.description.toLowerCase()=='female'" class="ps-icon-female female-icon-pink padding-right-10"></span>*@
+                <span class="caption margin-right-5">{{ $ctrl.model.person.fullName }}</span>
+                <span ng-if="$ctrl.model.person.registrationDocumentNumber" class="otherText uppercase">
+                    ({{ $ctrl.model.person.registrationDocumentNumber }})
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div>
+            <span class="caption margin-right-10">{{ $ctrl.model.admission.admissionNumber }}</span><br />
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="pull-right margin-top-5">
+            <i class="fa fa-unlock" style="font-size: 20px;" ng-if="$ctrl.model.lastRecordAction == 0"></i>
+            <i class="fa fa-lock" style="font-size: 20px;" ng-if="$ctrl.model.lastRecordAction == 1"></i>
+            <i class="fa fa-ban" style="font-size: 20px;" ng-if="$ctrl.model.lastRecordAction == 2"></i>
+        </div>
+    </div>
+</div>
+<div class="row font-13-main">
+    <div class="col-md-12">
+        <div>
+            <span>{{ $ctrl.model.contactType | enumText: 'contactType' }}</span> 
+            <span ng-if="$ctrl.model.contactType != 2">-</span>
+            <span>{{ $ctrl.model.visitType.description }}</span>
+            <span ng-if="$ctrl.model.isFutile"><strong>(@L("Futile"))</strong></span>
+        </div>
+        <div>
+            Visited by <strong>{{ $ctrl.model.attendedByUser.fullName }}</strong>
+
+            <span ng-if="$ctrl.model.visitDateTimeIn && $ctrl.model.visitDateTimeOut && $ctrl.isSameDate($ctrl.model.visitDateTimeIn, $ctrl.model.visitDateTimeOut)">
+                on <strong>{{ $ctrl.model.visitDateTimeIn | dateFormat }}</strong>
+                from <strong>{{ $ctrl.model.visitDateTimeIn | date: 'hh:mm a' }}</strong>
+                to <strong>{{ $ctrl.model.visitDateTimeOut | date: 'hh:mm a' }}</strong>
+            </span>
+
+            <span ng-if="$ctrl.model.visitDateTimeIn && $ctrl.model.visitDateTimeOut && !$ctrl.isSameDate($ctrl.model.visitDateTimeIn, $ctrl.model.visitDateTimeOut)">
+                from <strong>{{ $ctrl.model.visitDateTimeIn | dateTimeFormat }}</strong>
+                to <strong>{{ $ctrl.model.visitDateTimeOut | dateTimeFormat }}</strong>
+            </span>
+
+            <span ng-if="$ctrl.model.visitDateTimeIn && !$ctrl.model.visitDateTimeOut">
+                on <strong>{{ $ctrl.model.visitDateTimeIn | dateTimeFormat }}</strong>
+            </span>
+        </div>
+        <div ng-if="$ctrl.model.nextVisitDate">
+            <span>Next visit is on <strong>{{ $ctrl.model.nextVisitDate | dateFormat }}</strong></span>
+        </div>
+        <div class="well well-sm margin-top-10 rendered-services" ng-if="$ctrl.showDetails && $ctrl.hideRenderedServicesSection()">
+            <div class="rendered-services-title">
+                <div class="caption">
+                    <span class="caption-subject">@L("RenderedServices")</span>
+                </div>
+            </div>
+            <div class="rendered-services-body">
+                <ul class="visit-service-categories">
+                    <li ng-if="$ctrl.countSubItems($index)" ng-repeat="item in $ctrl.model.categories">
+                        <div class="description">{{ item.visitServiceCategoryDescription }}</div>
+                        <ul class="visit-services">
+                            <li ng-repeat="subitem in item.visitServices" ng-if="subitem.isChecked">
+                                <span>{{ subitem.visitServiceDescription }}</span>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,181 @@
+﻿@model CreateOrUpdateTransportRequisitionInput
+
+@using Pulsesync.IngoTPCC.Application.TransportRequisitions.Dto
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("General")</div>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @*@{
+                    var attrs = new Dictionary<string, object>();
+                    attrs.Add("name", "vm.form");
+                    attrs.Add("novalidate", "");
+                    attrs.Add("angular-validator", "");
+                }*@
+
+                @using (var f = Html.BeginSubForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        @(@s.FieldFor(m => m.RequestForId)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.requestForId",
+                                repeat = "vm.requestForMaster",
+                                ng_change = "vm.processRequestFor(vm.model.requestForId)",
+                                ui_select_required = "ui-select-required"
+                            })
+                            .AsDropDown())
+
+                        <div ng-if="vm.model.requestFor.description == 'Person'">
+                            <person-ui-select person-id="vm.model.personId"
+                                              uiselect-disabled="vm.$stateParams.person || vm.mode != 'new'"
+                                              on-select="vm.loadAdmissions(vm.model.personId); vm.loadMedicalAppointments(vm.model.personId); vm.loadEscorts(vm.model.personId); vm.loadFamilyMembers(vm.model.personId)"
+                                              conditional-required="vm.requestFor.description == 'Person'"
+                                              has-admission="true"></person-ui-select>
+                            @(@s.FieldFor(m => m.AdmissionId)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.admissionId",
+                                    repeat = "vm.admissions",
+                                    conditional_required = "vm.model.requestFor.description == 'Person'",
+                                    ng_disabled = "vm.disableAdmission()"
+                                })
+                                .AsDropDown())
+
+                            @(@s.FieldFor(m => m.TCUId)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.tCUId",
+                                    ng_disabled = "vm.mode != 'new'",
+                                    repeat = "vm.medicalAppointments"
+                                })
+                                .AsDropDown())
+
+                            @(@s.FieldFor(m => m.EscortId)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.escortId",
+                                    repeat = "vm.escorts"
+                                    //ng_change = "vm.loadEscortDetails(vm.model.escortId)"
+                                })
+                                .AsDropDown())
+
+                            @(@s.FieldFor(m => m.EscortName)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.escortName"
+                                }))
+
+                            @(@s.FieldFor(m => m.FamilyMemberCaregiverId)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.familyMemberCaregiverId",
+                                    repeat = "vm.familyMemberCaregivers",
+                                    ng_change = "vm.loadFamilyMemberCaregiverDetails(vm.model.familyMemberCaregiverId)"
+                                })
+                                .AsDropDown())
+
+                            @(@s.FieldFor(m => m.FamilyMemberCaregiverContact)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.familyMemberCaregiverContact"
+                                }))
+                        </div>
+
+                        <div ng-if="vm.model.requestFor.description == 'Staff'">
+                            @(@s.FieldFor(m => m.StaffId)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.staffId",
+                                    repeat = "vm.staffs",
+                                    ng_disabled = "vm.mode != 'new'",
+                                    conditional_required = "vm.model.requestFor.description == 'Staff'"
+                                })
+                                .AsDropDown())
+
+                            @(@s.FieldFor(m => m.StaffType)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.staffType",
+                                    ng_change = "vm.clearOthersStaffType(vm.model.staffType)",
+                                    ng_disabled = "vm.mode != 'new'",
+                                    ng_required = "vm.model.requestFor.description == 'Staff'",
+                                    required_message = "'You must provide a value for Staff Type.'"
+                                }))
+
+                            <div class="form-group form-md-line-input" ng-class="{ 'has-error': vm.form.OthersStaffType.$error.required && vm.form.submitted }">
+                                <input type="text" id="OthersStaffType" name="OthersStaffType" class="form-control" ng-model="vm.model.othersStaffType" ng-disabled="vm.model.staffType != 'Others'" ng-required="vm.model.staffType == 'Others'" />
+                                <label for="OthersStaffType" class="control-label">@L("StaffTypeOthersPleaseSpecify")<span class="businessRequired" ng-if="vm.model.staffType == 'Others'"> * </span></label>
+                                <p class="help-block has-error" ng-if="vm.form.OthersStaffType.$error.required && vm.form.submitted">You must provide a value for Others Staff Type.</p>
+                            </div>
+                        </div>
+
+                        @(@s.FieldFor(m => m.PlannedVehicleNumber)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.plannedVehicleNumber"
+                            }))
+                    }
+                }
+            </div>
+            <div class='view' ng-switch-default>
+                <strong>@L("RequestFor")</strong>
+                <p>{{ vm.model.requestFor.description }}</p>
+
+                <div ng-if="vm.model.requestFor.description == 'Person'">
+                    <strong>@L("Person")</strong>
+                    <p>{{ vm.model.person.fullName }}</p>
+
+                    <div ng-if="vm.model.isCancelled">
+                        <strong>@L("CancellationReasonNew")</strong>
+                        <p>{{ vm.model.cancellationReason }}</p>
+                    </div>
+
+                    <strong>@L("Admission")</strong>
+                    <p>{{ vm.model.admission.admissionNumber || '-' }}</p>
+
+                    <strong>@L("TCU")</strong>
+                    <p ng-if="vm.model.tcuId">{{vm.getTCUName(vm.model.tcuId)}}</p>
+                    <p ng-if="!vm.model.tcuId">-</p>
+                    
+                    <strong>@L("Escort")</strong>
+                    <p>{{ (vm.model.escort.fullName | enumText: "xx") || '-' }}</p>
+
+                    <strong>@L("EscortName")</strong>
+                    <p>{{ vm.model.escortName || '-' }}</p>
+
+                    <strong>@L("FamilyMemberCaregiver")</strong>
+                    <p>{{ vm.model.familyMemberCaregiver.familyMemberPerson.fullName || '-' }}</p>
+
+                    <strong>@L("FamilyMemberCaregiverContact")</strong>
+                    <p>{{ vm.model.familyMemberCaregiverContact || '-' }}</p>
+                </div>
+
+                <div ng-if="vm.model.requestFor.description == 'Staff'">
+                    <strong>@L("Staff")</strong>
+                    <p>{{ vm.model.staff.fullName }}</p>
+
+                    <div ng-if="vm.model.isCancelled">
+                        <strong>@L("CancellationReasonNew")</strong>
+                        <p>{{ vm.model.cancellationReason }}</p>
+                    </div>
+
+                    <strong>@L("StaffType")</strong>
+                    <p>{{ vm.model.staffType }}</p>
+
+                    <strong>@L("StaffTypeOthersPleaseSpecify")</strong>
+                    <p>{{ vm.model.othersStaffType || '-' }}</p>
+                </div>
+
+                <strong>@L("VehicleNumber")</strong>
+                <p>{{ vm.model.plannedVehicleNumber || '-' }}</p>
+            </div>
+        </div>
+    </div>
+</div>

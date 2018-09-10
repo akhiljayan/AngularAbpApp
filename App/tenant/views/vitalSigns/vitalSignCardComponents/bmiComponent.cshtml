@@ -1,0 +1,69 @@
+﻿<div class="col-md-12 col-sm-12" style="padding-bottom:10px">
+    <div class="row">
+        <div class="col-md-12 col-sm-12"><span class="bold">Body Mass Index</span></div>
+    </div>
+    <div class="row" style="padding-bottom:5px">
+        <div class="col-md-12 col-sm-12" style="margin-left: 20px">
+            <div class="col-md-12 col-sm-12" style="padding:0px">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px"><small class="bold">{{$ctrl.GetBmiValue($ctrl.vitalsign.weight.values[0].value, $ctrl.vitalsign.height.values[0].value)}} </small></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px"><small>{{$ctrl.vitalsign.weight.values[0].takenOn | dateTimeFormat}}</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding-bottom:5px">
+        <div class="col-md-12 col-sm-12">
+            <div class="row" style="padding-bottom: 5px;">
+                <div class="col-md-12 col-sm-12" style="margin-left: 20px">
+                    <div class="col-md-12 col-sm-12" style="padding:0px">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12" style="padding:0px"><span class="bold">Height</span></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12" style="padding:0px" ng-if="$ctrl.forPerson">
+                                <small class="bold">{{$ctrl.vitalsign.height.values[0].value ? $ctrl.vitalsign.height.values[0].value : '-'}} <span ng-if="$ctrl.vitalsign.height.values[0].value">cm</span></small>&nbsp;
+                                <small ng-if="$ctrl.vitalsign.height.delta == '1' && !$ctrl.vitalsign.height.normalChange"><i class="fa fa-arrow-up" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.height.abruptChange }"></i></small>
+                                <small ng-if="$ctrl.vitalsign.height.delta == '-1' && !$ctrl.vitalsign.height.normalChange"><i class="fa fa-arrow-down" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.height.abruptChange }"></i></small>
+                            </div>
+
+                            <div class="col-md-12 col-sm-12" style="padding:0px" ng-if="!$ctrl.forPerson">
+                                <small class="bold">{{$ctrl.vitalsign.height.values[0].value ? $ctrl.vitalsign.height.values[0].value : '-'}} <span ng-if="$ctrl.vitalsign.height.values[0].value">cm</span></small>&nbsp;
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12" style="padding:0px"><small>{{$ctrl.vitalsign.height.values[0].takenOn | dateTimeFormat}}</small></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12" style="margin-left: 20px">
+                    <div class="col-md-12 col-sm-12" style="padding:0px">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12" style="padding:0px"><span class="bold">Weight</span></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12" style="padding:0px" ng-if="$ctrl.forPerson">
+                                <small class="bold">{{$ctrl.vitalsign.weight.values[0].value ? $ctrl.vitalsign.weight.values[0].value : '-'}} <span ng-if="$ctrl.vitalsign.weight.values[0].value">Kg</span> </small>&nbsp;
+                                <small ng-if="$ctrl.vitalsign.weight.delta == '1' && !$ctrl.vitalsign.weight.normalChange"><i class="fa fa-arrow-up" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.weight.abruptChange }"></i></small>
+                                <small ng-if="$ctrl.vitalsign.weight.delta == '-1' && !$ctrl.vitalsign.weight.normalChange"><i class="fa fa-arrow-down" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.weight.abruptChange }"></i></small>
+                            </div>
+
+                            <div class="col-md-12 col-sm-12" style="padding:0px" ng-if="!$ctrl.forPerson">
+                                <small class="bold">{{$ctrl.vitalsign.weight.values[0].value ? $ctrl.vitalsign.weight.values[0].value : '-'}} <span ng-if="$ctrl.vitalsign.weight.values[0].value">Kg</span> </small>&nbsp;
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12" style="padding:0px"><small>{{$ctrl.vitalsign.weight.values[0].takenOn | dateTimeFormat}}</small></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

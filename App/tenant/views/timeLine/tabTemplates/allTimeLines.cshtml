@@ -1,0 +1,69 @@
+﻿<div class="col-md-12 col-sm-12" busy-if="vm.loading">
+    <div class="multisidetimeline">
+        <div class="container {{all.colorCode}}" ng-repeat="all in vm.allTimeline" ng-class="{
+             'right': (all.eventCategoryId == vm.catagoryIds.medicalId || all.eventCategoryId == vm.catagoryIds.serviceId),
+             'left': all.eventCategoryId == vm.catagoryIds.socialId,
+             'Green' : (all.eventSeverity == vm.timeLineColors.normal && all.module == vm.timeLineModulesMain.Assessment),
+             'Yellow' : (all.eventSeverity == vm.timeLineColors.moderate && all.module == vm.timeLineModulesMain.Assessment),
+             'Red' : (all.eventSeverity == vm.timeLineColors.critical && all.module == vm.timeLineModulesMain.Assessment),
+             'White' : (all.eventSeverity == vm.timeLineColors.default && all.module == vm.timeLineModulesMain.Assessment),
+             'life-event-marker' : all.isEditable,
+             }">
+
+            <div class="content" ng-class="{'life-event-color delete-block':all.isEditable}">
+                <div class="row">
+                    <div ng-class="{'col-md-11 no-padding nopadding pull-left':all.isEditable && vm.permissions.deleteLifeEvent && all.creatorUserId == vm.currentUserId && (all.module == vm.timeLineModulesMain.LifeEvents || all.module == vm.timeLineModulesMain.TimeLineNotes)}">
+                        <span style="display: block;padding-bottom: 10px;" class="bold" ng-if="(all.module == vm.timeLineModulesMain.LifeEvents || all.module == vm.timeLineModulesMain.TimeLineNotes) && all.module != vm.timeLineModulesMain.MedicalAppointment">
+                            {{all.eventDate | monthYearFormat }}
+                        </span>
+                        <span style="display: block;padding-bottom: 10px;" class="bold" ng-if="all.module != vm.timeLineModulesMain.LifeEvents && all.module != vm.timeLineModulesMain.TimeLineNotes && all.module == vm.timeLineModulesMain.MedicalAppointment">
+                            {{all.eventDate | dateTimeFormat }}
+                        </span>
+                        <span style="display: block;padding-bottom: 10px;" class="bold" ng-if="all.module != vm.timeLineModulesMain.LifeEvents && all.module != vm.timeLineModulesMain.TimeLineNotes && all.module != vm.timeLineModulesMain.MedicalAppointment">
+                            {{all.eventDate | dateFormat }}
+                        </span>
+                        <span class="bold" ng-if="all.module && all.module != vm.timeLineModulesMain.Person && all.module != vm.timeLineModulesMain.LifeEvents && all.module != vm.timeLineModulesMainTimeLineNotes && all.module != vm.timeLineModulesMain.Membership">{{(vm.timeLineModules | filter:{value: all.module})[0].description }} :</span>
+                        @*<span class="bold" ng-click="vm.editLifeEvent(all.isEditable, all.sourceId, all.isSignificantEvent)" ng-class="{'cursor-pointer':all.isEditable}">{{all.description}}</span>*@
+                    </div>
+                    <div class="delete-button col-md-1 no-padding nopadding pull-right" style="display:inline-block;" ng-if="all.isEditable && vm.permissions.deleteLifeEvent && all.creatorUserId == vm.currentUserId  && (all.module == vm.timeLineModulesMain.LifeEvents || all.module == vm.timeLineModulesMain.TimeLineNotes)">
+                        <a class="actions list-unstyled list-inline" href="#" title="Delete Event"  ng-click="vm.deleteTimeLine(all.id)"><i class="fa fa-trash-o" style="color:#00bfb5;font-size: 20px;"></i></a>
+                    </div>
+                </div>
+
+                <div class="row" style="display:inline-block">
+                    <span ng-if="!all.hidden" ng-click="vm.editLifeEvent(all.isEditable, all.sourceId, all.isSignificantEvent)" ng-bind-html="all.description | limitTo: 300" ng-class="{'cursor-pointer':all.isEditable}"></span>
+                    <span ng-if="all.hidden" ng-click="vm.editLifeEvent(all.isEditable, all.sourceId, all.isSignificantEvent)" ng-bind-html="all.description" ng-class="{'cursor-pointer':all.isEditable}"></span>
+
+                    <span class="btn-link ngTruncateToggleText nopadding no-padding" ng-click="all.hidden = !all.hidden" ng-if="all.description.length > 300 && all.hidden">...see less</span>
+                    <span class="btn-link ngTruncateToggleText nopadding no-padding" ng-click="all.hidden = !all.hidden" ng-if="all.description.length > 300 && !all.hidden">...see more</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr style="margin:15px 0" />
+    <div class="row" style="padding-top: 5px;">
+        <div class="col-md-12">
+            <div class="col-md-4 pull-left nopadding-left">
+                <div class="records pull-left" style="text-align: left;width: 130%;">
+                    <span>Records: </span><select class="pagination-page-sizes" ng-model="vm.pageSizeAll" ng-options="pageSizes as pageSizes for pageSizes in vm.pageSizes" ng-change="vm.resetAll()"></select> <br />
+                    <span class="pull-left" style="padding-top: 10px;text-align:left; width:130%"> Showing {{ vm.recordFromAll }} to {{ vm.recordToAll }} of {{ vm.allTimeLineTotal }}</span>
+                </div>
+            </div>
+            <div class="col-md-8 nopadding-right">
+                <div class="pull-right no-padding nopadding">
+                    <ul uib-pagination
+                        class="pagination-sm"
+                        style="margin-top: 0px;"
+                        total-items="vm.allTimeLineTotal"
+                        items-per-page="vm.pageSizeAll"
+                        previous-text="&lsaquo;"
+                        next-text="&rsaquo;"
+                        boundary-link-numbers="true"
+                        max-size="3"
+                        ng-model="vm.currentPageAll"
+                        ng-change="vm.pageChangedAll()"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,102 @@
+﻿@model LanguageDialectDto
+
+@using Pulsesync.IngoTPCC.Application.LanguageDialects.Dto;
+
+<style>
+    .language-dialects {
+        margin: 0;
+    }
+
+        .language-dialects .language-dialect {
+            padding: 0px 0px 5px 0px;
+            margin-left: 0px !important;
+            margin-top: 0px !important;
+            margin-bottom: 20px !important;
+        }
+
+    .language-dialect {
+        cursor: pointer;
+    }
+
+        .language-dialect .language-dialect-details {
+            padding-top: 5px;
+            padding-bottom: 10px;
+        }
+
+            .language-dialect .language-dialect-details div {
+                margin: 0px;
+                padding-left: 0px;
+            }
+
+    .language-dialects .language-dialect .language-dialect-details .actions > li > a:hover {
+        color: #00bfb5;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .language-dialects .language-dialect .language-dialect-details .actions > li > a {
+        color: #36c6d3;
+        text-transform: none;
+        font-weight: bold;
+    }
+
+    .language-dialect:hover .actions {
+        display: inline-block;
+    }
+
+    .font-color {
+        color: rgb(19, 134, 200);
+    }
+</style>
+
+<div id="LanguageDialect" class="portlet light"  busy-if="vm.loading" ng-class="{ 'div-disabled': (vm.isNewPerson || vm.mode=='new') }">
+    <div class="portlet-title">
+        @*<div class="caption" data-toggle="collapse" href="#LanguageDialectBody">
+                <span class="caption-subject">@L("SpokenLanguageDialect")</span>
+            </div>*@
+        <div class="caption" data-toggle="collapse" href="#LanguageDialectBody">
+            <span class="caption-subject">@L("SpokenLanguageDialect")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            @*<a href="javascript:;" class="collapse" data-original-title="" title=""> </a>*@
+            <a class="icon-wrapper" ng-if="vm.permissions.createLanguageDialect && !vm.lockCard" ng-click="vm.createLanguageDialect()">
+                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+            </a>
+        </div>
+    </div>
+    <div id="LanguageDialectBody" class="portlet-body collapse in">
+        <div ng-if="vm.resultCount <= 0">
+            <div class="row col-md-12">
+                <span> Add Spoken Language / Dialect</span>
+            </div>
+        </div>
+        <div class="language-dialects row">
+            <div class="language-dialect" ng-repeat="item in vm.languageDialects" ng-click="vm.editLanguageDialect(item.id)">
+                <div class="language-dialect-details">
+                    <div class="col-sm-4 text-left font-color" ng-if="item.languageDialectType != 1">{{ item.language.description }}</div>
+                    <div class="col-sm-4 text-left font-color" ng-if="item.languageDialectType == 1"><u>{{ item.language.description }}</u></div>
+                    <div class="col-sm-4 text-left">{{ item.languageDialectType | enumText: 'languageDialectType' }}</div>
+                    <div class="col-sm-4">
+                        <ul class="actions list-unstyled list-inline">
+                            <li>
+                                <a ng-if="vm.permissions.deleteLanguageDialect && !vm.lockCard" href="#" ng-click="vm.deleteLanguageDialect(item.id);$event.stopPropagation()">@L("Delete")</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" ng-if="vm.resultCount > vm.pageSize && vm.languageDialects.length < vm.resultCount">
+            <div class="col-md-12">
+                <hr />
+            </div>
+        </div>
+        <div class="row" ng-if="vm.resultCount > vm.pageSize && vm.languageDialects.length < vm.resultCount">
+            <div class="col-md-12">
+                <div class="seeMore clearfix text-center">
+                    <a ng-click="vm.loadMore()">@L("SeeMore")</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

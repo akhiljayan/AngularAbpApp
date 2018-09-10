@@ -1,0 +1,80 @@
+﻿<div id="familyMemberIndex" class="view-content" ng-controller="tenant.views.familymember.index as vm">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="portlet light" busy-if="vm.loading">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("FamilyMemberOrCaregiver")<span ng-if="vm.filterStatusTitle"> - {{ vm.filterStatusTitle }}</span></span>
+                    </div>
+                    <div class="actions dropdown inputs">
+                        <div class="input-small-new inline-block">
+                            <form action="" class="search-form">
+                                <div class="form-group has-feedback input-inline">
+                                    <label for="search" class="sr-only">@L("Search")</label>
+                                    <input type="text" ng-model="vm.filter" enter-key="vm.load()" class="form-control form-control-solid input-circle search-input font-13-main clearable" placeholder="search keywords...">
+                                    <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="vm.clearFilter()"></a>
+                                    <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                                </div>
+                            </form>
+                        </div>
+                        <a ng-click="vm.create()" ng-if="vm.permissions.create" class="icon-wrapper">
+                            <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                        </a>
+                        <a class="icon-wrapper" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <i class="material-icons custom-icon">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a class="bold" ng-click="vm.changeView(0)">@L("All")</a>
+                            </li>
+                            <li class="divider"> </li>
+                            <li>
+                                <a class="bold" ng-click="vm.changeView(2)">@L("Inactive")</a>
+                            </li>
+                            <li>
+                                <a class="bold" ng-click="vm.changeView(1)">@L("Active")</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="portlet-body air-card p-0-top-bottom">
+                    <section class="air-card-hover" ng-repeat="patient in vm.data.items">
+                        <div class="row margin-bottom-10" ng-click="vm.view(patient.personId)">
+                            <div class="col-md-10 inline-flex-center">
+                                <span ng-if="patient.gender == 'male'" class="ps-icon-male male-icon-blue padding-right-10"></span>
+                                <span ng-if="patient.gender == 'female'" class="ps-icon-female female-icon-pink padding-right-10"></span>
+                                <span class="caption margin-right-5 empty-gender">{{ patient.fullName }}</span>
+                                <span ng-if="patient.registrationDocumentNumber" class="otherText uppercase">
+                                    ({{ patient.registrationDocumentNumber }})
+                                </span>
+                            </div>
+                        </div>
+                        <div class="well well-sm font-13-main">
+                            <div class="row margin-bottom-10 cursor-pointer" ng-repeat="familyMember in patient.familyMembers"
+                                 ng-click="vm.viewFamilyMember(familyMember.id, patient.personId)"
+                                 style="align-items: center; display: flex; ">
+                                <div class="col-md-4 col-sm-12 col-xs-12" style=" align-items: center;">
+                                    <span class="caption">{{ familyMember.fullName }}</span>&nbsp;
+                                    <span ng-if="familyMember.relationship" class="text-capitalize caption">
+                                        ({{ familyMember.relationship }})
+                                    </span>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-6 icon" style=" align-items: center;">
+                                    <i class="material-icons">phone</i>
+                                    <span class="otherText">{{ familyMember.homePhone }}</span>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-6 icon" style="align-items: center;">
+                                    <i class="material-icons">phone_iphone</i>
+                                    <span class="otherText">{{ familyMember.mobilePhone }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <simple-paginator data="vm.data" key="vm.key" on-page-changed="vm.load(requestParams)"></simple-paginator>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

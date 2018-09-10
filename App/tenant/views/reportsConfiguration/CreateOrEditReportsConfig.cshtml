@@ -1,0 +1,80 @@
+﻿@using Pulsesync.IngoTPCC.Report.Dto
+@model ReportDto
+<div class="portlet light" data-drag="true" id="ReportsConfigModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("ReportsConfiguration")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <fieldset>
+        <div class="portlet-body" style="display:block">
+            <div class="form-body" style="padding-top:0px;">
+                @{
+                    var attributes = new Dictionary<string, object>();
+                    attributes.Add("role", "form");
+                    attributes.Add("id", "reportsConfigForm");
+                    attributes.Add("name", "reportsConfigForm");
+                    attributes.Add("novalidate", "");
+                    attributes.Add("action", "#");
+                    attributes.Add("angular-validator-submit", "vm.save(vm.report)");
+                    attributes.Add("angular-validator", "");
+                    attributes.Add("ng-validate", "general.validationOptions");
+                }
+                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body ng-pristine ng-invalid")))
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <fieldset>
+                            <div class="portlet-body" style="display: block;">
+                                <div class="form-body" style="padding-top: 0px;">                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @s.FieldFor(r => r.Name).Attrs(new { ng_model = "vm.report.name", ng_disabled = "vm.editMode", ng_required="true", required_message = "You must provide a value for Name.", name = "Name" })
+                                        </div>
+                                        <div class="col-md-6">
+                                            @s.FieldFor(r => r.DisplayOrder).Attrs(new { ng_model = "vm.report.displayOrder", name = "DisplayOrder" })                                            
+                                        </div>
+                                    </div>
+                                    <div class="row">                                        
+                                        <div class="col-md-6">
+                                            @s.FieldFor(r => r.Description).Attrs(new { ng_model = "vm.report.description", ng_required = "true", required_message = "You must provide a value for Description.", name = "Description" })                                            
+                                        </div>
+                                        <div class="col-md-6">
+                                            @s.FieldFor(m => m.IsListed).Attrs(new { ng_model = "vm.report.isListed" })
+                                        </div>
+                                    </div>  
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @s.FieldFor(r => r.ReportName).Attrs(new { ng_model = "vm.report.reportName", ng_required = "true", required_message = "You must provide a value for Report RDL.", name = "ReportName" })
+                                        </div>
+                                        <div class="col-md-6">
+                                            @s.FieldFor(r => r.IsActive).AsDropDown().Attrs(new { ng_model = "vm.report.isActive", repeat = "vm.statusList", name = "Status" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    }
+                    <p class="bodyContext" ng-if="vm.editMode">
+                        @Html.Raw(L("CreationInfo", "vm.report.creatorUser.fullName", "vm.report.creationTime | date:'d-MMM-yyyy h:mm a'"))
+                    </p>
+                    <p class="bodyContext" ng-if="vm.editMode">
+                        @Html.Raw(L("ModificationInfo", "vm.report.lastModifierUser.fullName", "vm.report.lastModificationTime | date:'d-MMM-yyyy h:mm a'"))
+                    </p>
+                    <div class="form-actions margin-top-10 noborder pull-right">
+                        <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.disableSave"><i class="material-icons  font-18-main v-top">save</i>Save</button>
+                        <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </fieldset>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+</script>

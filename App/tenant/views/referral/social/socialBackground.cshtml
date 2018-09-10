@@ -1,0 +1,47 @@
+﻿<div id="SocialBackground" class="socialBackground portlet light" ng-controller="tenant.views.referral.medicalRAF as sb">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("SocialBackground")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a class="icon-wrapper" ng-if="sb.mode.toLowerCase()=='view' && !vm.isNew && vm.permissions.edit" ng-click="sb.edit()">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools">
+            <a class="remove" ng-if="sb.mode.toLowerCase()=='edit' && !vm.isNew" ng-click="sb.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="sb.mode">
+                <div ng-switch-when="edit">
+                    <form role="form" id="generalViewForm" name="generalViewForm" novalidate action="#" class="form-validation horizontal-form" angular-validator-submit="sb.save(vm.referral)" angular-validator>
+                        <div class="col-md-12">
+                            <div class="form-group form-md-line-input margin-bottom-20" style="padding-top: 0px;">
+                                <textarea class="form-control animate msd-elastic: \n;  ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched" cols="200" data-val="true" id="SocialBackground" name="SocialBackground" ng-model="vm.referral.socialBackground" rows="4" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 89px; margin:5px" placeholder="Description..."></textarea>
+                            </div>
+                            @*Save/Cancel*@
+                            <div class="form-actions pull-right" ng-if="!vm.isNew">
+                                <button type="submit" card-button-busy="sb.isSaving" class="linkButton btn-small">
+                                    <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                                </button>
+                                <a class="linkButton btn-small" card-button-busy="sb.isSaving" ng-click="sb.close()">
+                                    <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                @*view mode*@
+                <div ng-switch-default>
+                    <div class="col-md-12">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text" style="text-indent: 20px;">{{vm.referral.socialBackground}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

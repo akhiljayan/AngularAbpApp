@@ -1,0 +1,67 @@
+﻿@model CreateOrUpdateInterventionInput
+
+@using Pulsesync.IngoTPCC.MasterLookup.Interventions.Dto;
+
+<div class="portlet light" data-drag="true" id="masterDataTypeItemModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Intervention")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancelIntervention()"></a>
+        </div>
+    </div>
+
+    <div class="portlet-body form">
+        @{
+            var attributes = new Dictionary<string, object>();
+            attributes.Add("name", "interventionFrom");
+            attributes.Add("novalidate", "");
+            attributes.Add("angular-validator-submit", "vm.save()");
+            attributes.Add("angular-validator", "");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body")))
+        {
+            using (var s = f.BeginSection())
+            {
+                <div class="portlet-body" style="display: block;">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.Code).Attrs(new { ng_model = "vm.intervention.code" })
+                                @s.FieldFor(m => m.Description).Attrs(new { ng_model = "vm.intervention.description" })
+
+                                <div class="form-group form-md-checkboxes">
+                                    <p class="margin-bottom-0">@L("IsStandard")</p>
+                                    <div class="md-checkbox-list">
+                                        <div class="md-checkbox">
+                                            <input id="isStandard" type="checkbox" class="form-control"
+                                                   ng-model="vm.intervention.isStandard" />
+                                            <label for="isStandard">
+                                                <span class="inc"></span>
+                                                <span class="check"></span>
+                                                <span class="box"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <p class="bodyContext" ng-if="!vm.isCreateMode">
+                @Html.Raw(L("CreationInfo", "vm.intervention.creatorUser.fullName", "vm.intervention.creationTime | dateTimeFormat"))
+            </p>
+            <p class="bodyContext" ng-if="!vm.isCreateMode">
+                @Html.Raw(L("ModificationInfo", "vm.intervention.lastModifierUser.fullName", "vm.intervention.lastModificationTime | dateTimeFormat"))
+            </p>
+
+            <div class="form-actions noborder right">
+                <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="!vm.permissions.edit"><i class="material-icons ps-btn-material">check</i>Ok</button>
+                <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancelIntervention()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+            </div>
+        }
+    </div>
+</div>

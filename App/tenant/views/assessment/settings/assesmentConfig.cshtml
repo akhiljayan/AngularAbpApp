@@ -1,0 +1,64 @@
+﻿@model CentreDto
+@using Pulsesync.IngoTPCC.CentreApi.Dto;
+
+<div class="portlet light" data-drag="true" id="centreModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">Assesment - Modify Next Review Month</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        @{
+            var attributes = new Dictionary<string, object>();
+            attributes.Add("role", "form");
+            attributes.Add("id", "assesmentConfigForm");
+            attributes.Add("name", "assesmentConfigForm");
+            attributes.Add("novalidate", "");
+            attributes.Add("action", "#");
+            attributes.Add("angular-validator-submit", "vm.save()");
+            attributes.Add("angular-validator", "");
+            attributes.Add("ng-validate", "vm.validationOptions");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form")))
+        {
+            using (var s = f.BeginSection())
+            {
+                <div class="portlet-body" style="display: block;">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12">
+                                <div class="col-md-6">
+                                    <div class="form-group form-md-line-input">
+                                        <input type="text" ng-disabled="true" disabled="disabled" ng-model="vm.assesmentText" class="form-control" id="assesmentText" ng-maxlength="300" required="">
+                                        <label class="control-label" for="referralCode">Assesment<span class="required">*</span></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group form-md-line-input">
+                                        <ui-select id="NextReviewMonth" ng-model="vm.assesment.nextReviewMonth" ui-select-validation  name="drugCategory" ui-select-required  required-message="You must select a value for Drug Category." theme="select2" title="Choose a Next Review Month">
+                                            <ui-select-match placeholder="Select Next Review Month">
+                                                {{ $select.selected.description }}
+                                                <a class="fa fa-times" ng-click="$select.clear($event);"></a>
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="m.id as m in vm.monthsInteger | filter: { description: $select.search }">
+                                                <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                        <label for="ReportedBy" class="control-label">Next Review Month</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="form-actions noborder right">
+                <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.disableSave"><i class="material-icons ps-btn-material">check</i>Ok</button>
+                <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+            </div>
+        }
+    </div>
+</div>

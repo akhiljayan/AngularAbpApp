@@ -1,0 +1,139 @@
+﻿@using Pulsesync.IngoTPCC.Authorization
+
+<style>
+    .portlet.light > .portlet-title > .nav-tabs > li > a {
+        padding: 8px 10px;
+        font-size: 16px;
+    }
+
+    .portlet.light > .portlet-title > .nav-tabs > li.active > a {
+        color: #00bfb5;
+    }
+
+    .carePortlet .tab-pane {
+        min-height: 0px;
+        max-height: inherit;
+    }
+</style>
+
+<div class="carePortlet row">
+    <div class="col-md-6">
+        <ownnote-card id="OwnNotes" mode="$ctrl.mode" person-id="$ctrl.personId"></ownnote-card>
+
+        @if (IsGranted(AppPermissions.Pages_Tenant_PersonProblems) || IsGranted(AppPermissions.Pages_Tenant_CarePlans))
+        {
+            <div id="PersonProblems" class="portlet light bordered" ng-class="{ 'div-disabled': $ctrl.mode == 'new' }" busy-if="$ctrl.loading">
+                <div class="portlet-title tabbable-line">
+                    <ul class="nav nav-tabs pull-left">
+                        @if (IsGranted(AppPermissions.Pages_Tenant_PersonProblems))
+                        {
+                            <li @*class="active"*@ ng-class="{'active': ($ctrl.permissions.viewPersonProblem && $ctrl.selectedTab == 'PersonProblem')}">
+                                <a href="#tabProblemList" data-toggle="tab" class="font-18-main" target="_self" aria-expanded="true" ng-click="$ctrl.selectTab('PersonProblem')">@L("ProblemList")</a>
+                            </li>
+                        }
+                        @if (IsGranted(AppPermissions.Pages_Tenant_CarePlans))
+                        {
+                            <li @*class=""*@ ng-class="{'active': ($ctrl.permissions.viewCarePlan && $ctrl.selectedTab == 'CarePlan')}">
+                                <a href="#tabCarePlan" data-toggle="tab" class="font-18-main" target="_self" aria-expanded="false" ng-click="$ctrl.selectTab('CarePlan')">@L("CarePlan")</a>
+                            </li>
+                        }
+                    </ul>
+
+                    <div class="actions dropdown inputs">
+                        <div class="input-small-new inline-block">
+                            <form action="" class="search-form">
+                                <div class="form-group has-feedback input-inline">
+                                    <label for="search" class="sr-only">@L("Search")</label>
+                                    <input type="text" ng-model="$ctrl.filter" enter-key="$ctrl.load()" class="form-control form-control-solid input-circle search-input font-13-main clearable" placeholder="search keywords...">
+                                    <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="$ctrl.clearFilter()"></a>
+                                    <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                                </div>
+                            </form>
+                        </div>
+                        @*<a ng-click="$ctrl.showDetails = !$ctrl.showDetails" title="Show associated Service types and Status" class="icon-wrapper">
+                                <i ng-show="!$ctrl.showDetails" class="material-icons custom-icon">menu</i>
+                                <i ng-show="$ctrl.showDetails" class="material-icons custom-icon">view_headline</i>
+                            </a>*@
+
+                        <a ng-click="$ctrl.showDetailsBtn()" title="Show associated Service types and Status" class="icon-wrapper">
+                            <i ng-show="$ctrl.showMenu" class="material-icons custom-icon">menu</i>
+                            <i ng-show="$ctrl.showHeadline" class="material-icons custom-icon">view_headline</i>
+                        </a>
+
+                        <a ng-click="$ctrl.create()" @*ng-if="$ctrl.permissions.create && $ctrl.mode!='new'"*@ ng-if="$ctrl.showCreateIcon && $ctrl.isPatient" class="icon-wrapper">
+                            <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                        </a>
+                        <a class="icon-wrapper" href="javascript:;" title="Filter" ng-click="$ctrl.toggleDropDownMenu($event);" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <i class="material-icons custom-icon">more_vert</i>
+                        </a>
+                        <ul class="custom-multiselect multiselect-container dropdown-menu pull-right checkbox">
+                            <li ng-repeat="view in $ctrl.views track by $index">
+                                <span ng-click=";$event.stopPropagation();">
+                                    <label class="checkbox" for="cbk{{ view.value }}">
+                                        <input type="checkbox" id="cbk{{ view.value }}" @*ng-checked="view.value == 1"*@
+                                               ng-click='$ctrl.onChecked(view, $event)' ng-model="view.isChecked" value="{{ view.value }}" />
+                                        {{ $ctrl.L(view.localizedName) }}
+                                    </label>
+                                </span>
+                                <hr ng-if="$index == 4 && $ctrl.views.length > 5" />
+                            </li>
+                        </ul>
+
+                        @*<ul class="multiselect-container dropdown-menu pull-right checkbox" ng-class="{'open': $ctrl.filterMenuOpened }">
+                                <li><span><label class="checkbox" for="cb1"><input type="checkbox" id="cb1" value="pepperoni" ng-click="$ctrl.clicktest(0, $event)" />Pepperoni</label></span></li>
+                                <li><span><label class="checkbox" for="cb2"><input type="checkbox" id="cb2" value="sausage" ng-click="$ctrl.clicktest(1, $event)" />Sausage</label></span></li>
+                                <li><span><label class="checkbox" for="cb3"><input type="checkbox" id="cb3" value="mushrooms" ng-click="$ctrl.clicktest(2, $event)" />Mushrooms</label></span></li>
+                                <li><span><label class="checkbox" for="cb4"><input type="checkbox" id="cb4" value="onions" ng-click="$ctrl.clicktest(3, $event)" />Onions</label></span></li>
+                                <li><span><label class="checkbox" for="cb5"><input type="checkbox" id="cb5" value="gpeppers" ng-click="$ctrl.clicktest(4, $event)" />Green Peppers</label></span></li>
+                            </ul>*@
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="tab-content">
+                        @if (IsGranted(AppPermissions.Pages_Tenant_PersonProblems))
+                        {
+                            <div class="tab-pane" id="tabProblemList" ng-class="{'fade active in': ($ctrl.permissions.viewPersonProblem && $ctrl.selectedTab == 'PersonProblem')}">
+                                <problemlist-card person-id="$ctrl.personId"
+                                                  select-views="$ctrl.selectedPersonProblemViews"
+                                                  select-view-change="$ctrl.isSelectedViewChange"
+                                                  filter="$ctrl.filter"
+                                                  show-details="$ctrl.showPLDetails"
+                                                  selected-person-problems="$ctrl.selectedPersonProblems"
+                                                  loading="$ctrl.loading"
+                                                  on-select-person-problem="$ctrl.selectPersonProblem(event)"></problemlist-card>
+                            </div>
+                        }
+                        @if (IsGranted(AppPermissions.Pages_Tenant_CarePlans))
+                        {
+                            <div class="tab-pane" id="tabCarePlan" ng-class="{'fade active in': ($ctrl.permissions.viewCarePlan && $ctrl.selectedTab == 'CarePlan')}">
+                                <careplan-card person-id="$ctrl.personId"
+                                               select-views="$ctrl.selectedPersonProblemViews"
+                                               select-view-change="$ctrl.isSelectedViewChange"
+                                               filter="$ctrl.filter"
+                                               show-details="$ctrl.showCPDetails"
+                                               on-select-person-problem="$ctrl.selectPersonProblem(event)"
+                                               loading="$ctrl.loading"
+                                               load-progress-note="$ctrl.loadProgressNote"></careplan-card>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-md-6">
+        <sharednote-card id="SharedNotes" mode="$ctrl.mode" person-id="$ctrl.personId"></sharednote-card>
+
+        @if (IsGranted(AppPermissions.Pages_Tenant_ProgressNotes))
+        {
+            @*select-views="$ctrl.selectedPersonProblemViews" select-view-change="$ctrl.isSelectedViewChange" filter="$ctrl.filter"*@
+            <progressnote-card mode="$ctrl.mode"
+                               person-id="$ctrl.personId"
+                               show-details="$ctrl.showDetails"
+                               selected-person-problems="$ctrl.selectedPersonProblems"
+                               load-progress-note="$ctrl.loadProgressNote"></progressnote-card>
+        }
+    </div>
+</div>

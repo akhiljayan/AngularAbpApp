@@ -1,0 +1,124 @@
+﻿@model CreateOrUpdateInvestigationInput
+
+@using Pulsesync.IngoTPCC.Application.Investigations.Dto
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("General")</div>
+        </div>
+        <div class="actions dropdown inputs" ng-if="vm.mode!='new'">
+            <a class="icon-wrapper" ng-if="vm.mode=='view' && vm.permissions.edit" ng-click="vm.mode='edit'">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools" ng-if="vm.mode!='new'">
+            <a class="remove" ng-if="vm.mode=='edit'" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @{
+                    var attrs = new Dictionary<string, object>();
+                    attrs.Add("name", "vm.form");
+                    attrs.Add("novalidate", "");
+                    attrs.Add("angular-validator", "");
+                    attrs.Add("angular-validator-submit", "vm.save($event)");
+                }
+
+                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs)))
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <person-ui-select person-id="vm.workingModel.personId" uiselect-disabled="vm.$stateParams.person || vm.mode!='new'" ng-if="vm.$stateParams.person"></person-ui-select>
+                        <div ng-if="vm.$stateParams.referral">
+                            @s.FieldFor(m => m.ReferralId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.referralId", repeat = "vm.referrals", ng_disabled = "true", ui_select_required = "ui-select-required" })
+                        </div>
+
+                        @s.FieldFor(m => m.InvestigationDate).Attrs(new { ng_model = "vm.workingModel.investigationDate" })
+                        @s.FieldFor(m => m.InvestigationTypeId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.investigationTypeId", repeat = "vm.investigationTypesMaster", ng_change = "vm.setInvestigationTypeDescription(vm.workingModel.investigationTypeId)", ui_select_required = "ui-select-required" })
+
+                        <div class="form-group form-md-line-input" ng-class="{ 'has-error': vm.form.OthersInvestigationType.$error.required && vm.form.submitted }">
+                            <input type="text" id="OthersInvestigationType" name="OthersInvestigationType" class="form-control" ng-model="vm.workingModel.othersInvestigationType" ng-disabled="vm.workingModel.investigationType != 'Others'" ng-required="vm.workingModel.investigationType == 'Others'" />
+                            <label for="OthersInvestigationType" class="control-label">@L("OthersPleaseSpecify")<span class="businessRequired" ng-if="vm.workingModel.investigationType == 'Others'"> * </span></label>
+                            <p class="help-block has-error" ng-if="vm.form.OthersInvestigationType.$error.required && vm.form.submitted">You must provide a value for Others Investigation Type.</p>
+                        </div>
+
+                        @s.FieldFor(m => m.Subject).Attrs(new { ng_model = "vm.workingModel.subject" })
+                        @s.FieldFor(m => m.DocumentsReferenceNo).Attrs(new { ng_model = "vm.workingModel.documentsReferenceNo" })
+                        @s.FieldFor(m => m.ResultType).Attrs(new { ng_model = "vm.workingModel.resultType" })
+                        @s.FieldFor(m => m.ResultDate).Attrs(new { ng_model = "vm.workingModel.resultDate", validator = "vm.validateResultDate()===true", invalid_message = "vm.validateResultDate();", })  @*beforeoron = "vm.workingModel.investigationDate", beforeoron_message = "'Result Date must be on or after Investigation Date.'"*@
+                        @s.FieldFor(m => m.Remarks).AddClass("animate msd-elastic: \\n; ").Rows(4).Attrs(new { ng_model = "vm.workingModel.remarks" })
+                        @*<div class="form-group form-md-line-input">
+                                <input class="form-control animate msd-elastic: \n;  ng-pristine ng-untouched ng-valid ng-binding ng-not-empty ng-valid-maxlength" id="Remarks" maxlength-message="'Input cannot exceed 4000 characters.'" name="Remarks" ng-bind-html="vm.workingModel.remarks" ng-maxlength="4000" ng-model="vm.workingModel.remarks" rows="4" type="text" validate-on="dirty">
+                                <label class="control-label" for="Remarks">Remarks</label>
+                            </div>*@
+
+                        <div class="form-actions pull-right" ng-if="vm.mode!='new'">
+                            <button class="linkButton btn-small" type="submit">
+                                <i class="material-icons font-18-main v-top">save</i> @L("Save")
+                            </button>
+                            <button class="linkButton btn-small" type="button" ng-click="vm.cancel()">
+                                <i class="material-icons font-18-main v-top">close</i> @L("Cancel")
+                            </button>
+                        </div>
+                    }
+                }
+            </div>
+            <div ng-switch-default>
+                @using (var f = Html.BeginForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.model.personId">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.person.fullName" /></div>
+                            <label class="control-label">@L("Person")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.model.referralId">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><span>{{ vm.model.referral.referralCode ? vm.model.referral.referralCode + " (" + vm.model.referral.person.fullName + " - " + vm.model.referral.person.registrationDocumentNumber + ")" : "-" }}</span></div>
+                            <label class="control-label">@L("Referral")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.model.isCancelled">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.cancellationReason"></div>
+                            <label class="control-label">@L("CancellationReasonNew")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.investigationDate | dateFormat" /></div>
+                            <label class="control-label">@L("InvestigationDate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.investigationType.description" /></div>
+                            <label class="control-label">@L("InvestigationType")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.othersInvestigationType" /></div>
+                            <label class="control-label">@L("OthersInvestigationType")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.subject" /></div>
+                            <label class="control-label">@L("Subject")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.documentsReferenceNo" /></div>
+                            <label class="control-label">@L("DocumentsReferenceNo")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.resultType | enumText: 'investigationResultType'" /></div>
+                            <label class="control-label">@L("Result")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.resultDate | dateFormat" /></div>
+                            <label class="control-label">@L("ResultDate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div ng-if="!vm.model.remarks" class="form-control remove-border auto-height" style="white-space: pre-wrap;">-</div>
+                            <div ng-if="vm.model.remarks" class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind-html="vm.model.remarks"></div>
+                            <label class="control-label">@L("Remarks")</label>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

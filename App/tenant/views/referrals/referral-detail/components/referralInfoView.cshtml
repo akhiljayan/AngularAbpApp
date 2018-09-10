@@ -1,0 +1,335 @@
+﻿@using Pulsesync.IngoTPCC.Application.Referral.Dto
+@model ReferralDto
+
+<style type="text/css">
+    .form-group.form-md-line-input .form-control[readonly], .form-group.form-md-line-input .form-control[disabled], fieldset[disabled] .form-group.form-md-line-input .form-control {
+        background: #f9f9f9;
+    }
+</style>
+<div id="ReferralInformation" class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("ReferralInformation")</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="vm.mode">
+                @*edit mode*@
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+                        @using (var f = Html.BeginSubForm())
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                <h5 class="fontStealGreen bold">@L("SourceOfReferral")</h5>
+                                @s.FieldFor(m => m.ReferralDate).Attrs(new { ng_model = "vm.referral.referralDate", maxdate = "0d", ng_disabled = "vm.referral.disabled", Validate = "false", Restrict = "reject" })
+                                @s.FieldFor(m => m.SubmissionDate).Attrs(new { ng_model = "vm.referral.submissionDate", maxdate = "0d", ng_disabled = "vm.referral.disabled", Validate = "false", Restrict = "reject" })
+                                @s.FieldFor(m => m.ReferenceCode).Attrs(new { ng_model = "vm.referral.referenceCode", ng_disabled = "vm.referral.disabled", name = "referenceCode", ng_maxlength = "300" })
+                                @s.FieldFor(m => m.ReferredById).AsDropDown().Attrs(new { ng_model = "vm.referral.referredById", ng_disabled = "vm.isReadOnlyMode", name = "referredById", ng_change = "vm.referredByChange($select.selected.description,vm.referral)" })
+                                <div class="form-group form-md-line-input" ng-if="vm.referredByOthers">
+                                    <input type="text" ng-disabled="vm.referral.disabled" ng-model="vm.referral.otherReferred" class="form-control" id="otherReferred" name="otherReferred" ng-maxlength="300" placeholder="Provide Other Refererred by" required required-message="'You must provide a value for Others'">
+                                    <label class="control-label" for="otherReferred">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                                </div>
+                                @*@s.FieldFor(m => m.ReasonForReferral).Attrs(new { ng_model = "vm.referral.reasonForReferral", ng_disabled = "vm.referral.disabled", name = "reasonForReferral", ng_maxlength = "300" })*@
+                                @s.FieldFor(m => m.LivingArragementId).AsDropDown().Attrs(new { ng_model = "vm.referral.livingArragementId", ng_disabled = "vm.isReadOnlyMode", name = "livingArragementId", repeat = "vm.livingArrangementMaster", ng_change = "vm.livingArrangementChange($select.selected.description, vm.referral)" })
+                                <div class="form-group form-md-line-input" ng-if="vm.livingArrangementOthers">
+                                    <input type="text" ng-disabled="vm.referral.disabled" ng-model="vm.referral.otherLivingArrangement" class="form-control" id="otherLivingArrangement" name="otherLivingArrangement" ng-maxlength="300" placeholder="Provide Other Living arrangement" required required-message="'You must provide a value for Others'">
+                                    <label class="control-label" for="otherCurrentLivingArrangement">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                                </div>
+                            }
+
+                            using (var s = f.BeginSection())
+                            {
+                                <h5 class="fontStealGreen bold">@L("CurrentLocation")</h5>
+                                @s.FieldFor(m => m.CurrentLocationId).AsDropDown().Attrs(new { ng_model = "vm.referral.currentLocationId", ng_disabled = "vm.isReadOnlyMode", name = "currentLocationId", repeat = "vm.currentLocationMaster", ng_change = "vm.currentLocationChange($select.selected.description,vm.referral)" })
+                                <div class="form-group form-md-line-input" ng-if="vm.currentLocationOthers">
+                                    <input type="text" ng-disabled="vm.referral.disabled" ng-model="vm.referral.otherLocation" class="form-control" id="currentLocationOthers" name="currentLocationOthers" ng-maxlength="300" placeholder="Provide Other Current location" required required-message="'You must provide a value for Others'">
+                                    <label class="control-label" for="otherLocation">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                                </div>
+                                <div class="show-nursing-home" ng-if="vm.currentLocationNursingHome">
+                                    @s.FieldFor(m => m.NursingHomeName).Attrs(new { ng_model = "vm.referral.nursingHomeName", ng_disabled = "vm.referral.disabled", name = "nursingHomeName", ng_maxlength = "300" })
+                                </div>
+                                @s.FieldFor(m => m.HospitalId).AsDropDown().Attrs(new { ng_model = "vm.referral.hospitalId", ng_disabled = "vm.hospitalDisabled", name = "hospitalId", repeat = "vm.hospitalsMaster" })
+                                <div class="form-group form-md-line-input">
+                                    <div class="input-group date date-picker" ng-click="vm.preventEvent(vm.hospitalDisabled, $event)">
+                                        <input data-date-picker="" ng-disabled="vm.hospitalDisabled" id="admissionDate" type="text" class="form-control" name="AdmissionDate" ng-model="vm.referral.admissionDate" Validate="false" Restrict="reject" ng-readonly="vm.hospitalDisabled" />
+                                        <div class="input-group-addon" ng-click="vm.preventEvent(vm.hospitalDisabled, $event)">
+                                            <i class="material-icons" style="line-height: 14px;" ng-click="vm.preventEvent(vm.hospitalDisabled, $event)">date_range</i>
+                                        </div>
+                                        <label for="admissionDate">@L("AdmissionDate")</label>
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input">
+                                    <div class="input-group date date-picker" ng-click="vm.preventEvent(vm.hospitalDisabled, $event)">
+                                        <input ng-disabled="vm.hospitalDisabled" data-date-picker="" id="dischargedDate" type="text" class="form-control" name="DischargedDate" ng-model="vm.referral.dischargedDate" Validate="false" Restrict="reject" ng-readonly="vm.hospitalDisabled" />
+                                        <div class="input-group-addon" ng-click="vm.preventEvent(vm.hospitalDisabled, $event)">
+                                            <i class="material-icons" style="line-height: 14px;" ng-click="vm.preventEvent(vm.hospitalDisabled, $event)">date_range</i>
+                                        </div>
+                                        <label for="dischargedDate">@L("DischargedDate")</label>
+                                    </div>
+                                </div>
+                                @s.FieldFor(m => m.Ward).Attrs(new { ng_model = "vm.referral.ward", ng_disabled = "vm.hospitalDisabled", name = "ward", ng_maxlength = "300" })
+                                @s.FieldFor(m => m.RoomOrBed).Attrs(new { ng_model = "vm.referral.roomOrBed", ng_disabled = "vm.hospitalDisabled", name = "roomOrBed", ng_maxlength = "300" })
+                                @s.FieldFor(m => m.WardTelephone).Attrs(new { ng_model = "vm.referral.wardTelephone", ng_disabled = "vm.hospitalDisabled", name = "wardTelephone", ng_maxlength = "300" })
+                                @s.FieldFor(m => m.PreviousLivingArragementId).AsDropDown().Attrs(new { ng_model = "vm.referral.previousLivingArragementId", ng_disabled = "vm.isReadOnlyMode", name = "previousLivingArragementId", repeat = "vm.livingArrangementMaster" })
+                            }
+
+                            using (var s = f.BeginSection())
+                            {
+                                <h5 class="fontStealGreen bold">@L("PersonInCharge")</h5>
+                                @s.FieldFor(m => m.PersonInCharge.NameOfHospitalCoordinator).Attrs(new { ng_model = "vm.referral.personInCharge.nameOfHospitalCoordinator", ng_disabled = "vm.referral.disabled", name = "nameOfHospitalCoordinator", ng_maxlength = "300" })
+                                @s.FieldFor(m => m.PersonInCharge.Designation).Attrs(new { ng_model = "vm.referral.personInCharge.designation", ng_disabled = "vm.referral.disabled", name = "designationIncharge", ng_maxlength = "300" })
+                                @s.FieldFor(m => m.PersonInCharge.Telephone).Attrs(new { ng_model = "vm.referral.personInCharge.telephone", ng_disabled = "vm.referral.disabled", name = "telephoneIncharge", ng_maxlength = "300" })
+                                @s.FieldFor(m => m.PersonInCharge.EmailAdress).Attrs(new { ng_model = "vm.referral.personInCharge.emailAdress" })
+                            }
+
+                            using (var s = f.BeginSection())
+                            {
+                                <h5 class="fontStealGreen bold">@L("KnownToActionTeam")</h5>
+                                <div class="form-group form-md-line-input">
+                                    @s.FieldFor(m => m.KnownToActionTeam.IsPatientKnownToActionTeam).Label(@L("IsThePatientKnownToActionTeam")).Id("isThePatientKnownToActionTeam").Attrs(new { ng_model = "vm.referral.knownToActionTeam.isPatientKnownToActionTeam", ng_disabled = "vm.referral.disabled" })
+                                </div>
+                                @s.FieldFor(m => m.KnownToActionTeam.Name).Attrs(new { ng_model = "vm.referral.knownToActionTeam.name", ng_disabled = "vm.referral.disabled", name = "name-kat", ng_maxlength = "300" })
+                                @s.FieldFor(m => m.KnownToActionTeam.Designation).Attrs(new { ng_model = "vm.referral.knownToActionTeam.designation", ng_disabled = "vm.referral.disabled", name = "designation-kat", ng_maxlength = "300" })
+                                @s.FieldFor(m => m.KnownToActionTeam.Telephone).Attrs(new { ng_model = "vm.referral.knownToActionTeam.telephone", ng_disabled = "vm.referral.disabled", name = "telephone-kat", ng_maxlength = "300" })
+                                @s.FieldFor(m => m.KnownToActionTeam.EmailAddress).Attrs(new { ng_model = "vm.referral.knownToActionTeam.emailAddress", ng_disabled = "vm.referral.disabled", name = "emailAddress-kat", ng_maxlength = "300" })
+                            }
+
+                            using (var s = f.BeginSection())
+                            {
+                                <h5 class="fontStealGreen bold">@L("Planning")</h5>
+                                @s.FieldFor(m => m.Planning.ExpectedDateOfAdmission).Attrs(new { ng_model = "vm.referral.planning.expectedDateOfAdmission", ng_disabled = "vm.referral.disabled", Validate = "false", Restrict = "reject" })
+                                @s.FieldFor(m => m.Planning.PlannedDateOfDischarge).Attrs(new { ng_model = "vm.referral.planning.plannedDateOfDischarge", ng_disabled = "vm.referral.disabled", Validate = "false", Restrict = "reject" })
+                                <div class="form-group form-md-line-input margin-bottom-20">
+                                    @s.FieldFor(m => m.Planning.IsPatientKnownToOtherCommunity).Label(@L("IsPatientKnownToOtherCommunityService")).Id("isPatientKnownToOtherCommunityService").Attrs(new { ng_model = "vm.referral.planning.isPatientKnownToOtherCommunity", ng_disabled = "vm.referral.disabled" })
+                                </div>
+                                @s.FieldFor(m => m.Planning.OtherCommunityService).Attrs(new { ng_model = "vm.referral.planning.otherCommunityService", name = "otherCommunityService", ng_disabled = "vm.referral.disabled", ng_maxlength = "300" })
+                                @s.FieldFor(m => m.Planning.Remarks).Attrs(new { ng_model = "vm.referral.planning.remarks", name = "planing-remarks", ng_disabled = "vm.referral.disabled", ng_maxlength = "300" }).AddClass("form-control animate msd-elastic: \\n;  ng-valid ng-not-empty ng-dirty ng-valid-parse")
+                            }
+
+
+                        }
+                    </div>
+                </div>
+
+                @*view mode*@
+                <div ng-switch-default>
+                    <div class="col-md-12">
+                        <h5 class="fontStealGreen bold">@L("SourceOfReferral")</h5>
+                        <div class="form-group form-md-line-input">
+                            <div ng-if="vm.referral.referralDate" class="form-control remove-border auto-height view-text">
+                                {{vm.referral.referralDate | date :  "dd-MMM-y"}}
+                            </div>
+                            <div ng-if="!vm.referral.referralDate" class="form-control remove-border auto-height view-text">-</div>
+                            <label class="control-label view-label" for="referralDate">@L("ReferralDate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div ng-if="vm.referral.submissionDate" class="form-control remove-border auto-height view-text">
+                                {{vm.referral.submissionDate | date :  "dd-MMM-y"}}
+                            </div>
+                            <div ng-if="!vm.referral.submissionDate" class="form-control remove-border auto-height view-text">-</div>
+                            <label class="control-label view-label" for="submissionDate">@L("SubmissionDate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.referenceCode ? vm.referral.referenceCode : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="referenceCode">@L("ReferenceCode")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.referredBy.description ? vm.referral.referredBy.description : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="referredById">@L("ReferredBy")</label>
+                        </div>
+                        <div class="form-group form-md-line-input" ng-if="vm.referral.referredBy.description == 'Others'">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.otherReferred ? vm.referral.otherReferred : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="otherReferred">@L("OthersPleaseSpecify")</label>
+                        </div>
+                        @*<div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.reasonForReferral ? vm.referral.reasonForReferral : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="reasonForReferral">@L("ReasonForReferral")</label>
+                        </div>*@
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.livingArragement.description ? vm.referral.livingArragement.description : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="livingArrangement">@L("LivingArrangementAtTheTimeOfApplication")</label>
+
+                        </div>
+                        <div class="form-group form-md-line-input" ng-if="vm.referral.livingArragement.description == 'Others'">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.otherLivingArrangement ? vm.referral.otherLivingArrangement : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="otherCurrentLivingArrangement">@L("OthersPleaseSpecify")</label>
+                        </div>
+
+
+
+                        <h5 class="fontStealGreen bold">@L("CurrentLocation")</h5>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.currentLocation.description ? vm.referral.currentLocation.description : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="currentLocation">@L("CurrentLocation")</label>
+                        </div>
+                        <div class="form-group form-md-line-input" ng-if="vm.referral.currentLocation.description == 'Others'">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.otherLocation ? vm.referral.otherLocation : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="otherLocation">@L("OthersPleaseSpecify")</label>
+                        </div>
+                        <div class="form-group form-md-line-input" ng-if="vm.referral.currentLocation.description == 'Hospital/ Institution'">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.hospital.description ? vm.referral.hospital.description : "-"}}
+                            </div>
+                            <label for="hospital" class="control-label view-label">@L("Hospital")</label>
+                        </div>
+                        <div class="form-group form-md-line-input" ng-if="vm.referral.currentLocation.description == 'Hospital/ Institution'">
+                            <div ng-if="vm.referral.admissionDate" class="form-control remove-border auto-height view-text">
+                                {{ vm.referral.admissionDate | date :  "dd-MMM-y"}}
+                            </div>
+                            <div ng-if="!vm.referral.admissionDate" class="form-control remove-border auto-height view-text">-</div>
+                            <label for="admissionDate" class="control-label view-label">@L("AdmissionDate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input" ng-if="vm.referral.currentLocation.description == 'Hospital/ Institution'">
+                            <div ng-if="vm.referral.dischargedDate" class="form-control remove-border auto-height view-text">
+                                {{vm.referral.dischargedDate | date :  "dd-MMM-y"}}
+                            </div>
+                            <div ng-if="!vm.referral.dischargedDate" class="form-control remove-border auto-height view-text">-</div>
+                            <label for="dischargedDate" class="control-label view-label">@L("DischargedDate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input" ng-if="vm.referral.currentLocation.description == 'Hospital/ Institution'">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.ward ? vm.referral.ward : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="ward">@L("Ward")</label>
+                        </div>
+                        <div class="form-group form-md-line-input" ng-if="vm.referral.currentLocation.description == 'Hospital/ Institution'">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.roomOrBed ? vm.referral.roomOrBed : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="roomBed">@L("RoomBed")</label>
+                        </div>
+                        <div class="form-group form-md-line-input" ng-if="vm.referral.currentLocation.description == 'Hospital/ Institution'">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.wardTelephone ? vm.referral.wardTelephone : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="wardTel">@L("WardTel")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.previousLivingArragement.description ? vm.referral.previousLivingArragement.description : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="previousLivingArrangement">@L("PreviousLivingArrangement")</label>
+                        </div>
+
+
+
+                        <h5 class="fontStealGreen bold">@L("PersonInCharge")</h5>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.personInCharge.nameOfHospitalCoordinator ? vm.referral.personInCharge.nameOfHospitalCoordinator : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="nameOfHospitalCoordinator">@L("NameOfHospitalCoordinator")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.personInCharge.designation ? vm.referral.personInCharge.designation : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="designation">@L("Designation")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.personInCharge.telephone ? vm.referral.personInCharge.telephone : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="telephone">@L("Telephone")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.personInCharge.emailAdress ? vm.referral.personInCharge.emailAdress : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="email">@L("Email")</label>
+                        </div>
+
+
+
+                        <h5 class="fontStealGreen bold">@L("KnownToActionTeam")</h5>
+                        <div class="form-group form-md-line-input">
+                            <label class="control-label view-label" for="name">@L("IsThePatientKnownToActionTeam")</label>
+                            <div class="form-control remove-border auto-height view-text">
+                                <span ng-if="vm.referral.knownToActionTeam.isPatientKnownToActionTeam">Yes</span>
+                                <span ng-if="!vm.referral.knownToActionTeam.isPatientKnownToActionTeam">No</span>
+                            </div>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.knownToActionTeam.name ? vm.referral.knownToActionTeam.name : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="name">@L("Name")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.knownToActionTeam.designation ? vm.referral.knownToActionTeam.designation : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="designation">@L("Designation")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.knownToActionTeam.telephone ? vm.referral.knownToActionTeam.telephone : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="telephone">@L("Telephone")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.knownToActionTeam.emailAddress ? vm.referral.knownToActionTeam.emailAddress : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="email">@L("Email")</label>
+                        </div>
+
+
+
+                        <h5 class="fontStealGreen bold">@L("Planning")</h5>
+                        <div class="form-group form-md-line-input">
+                            <div ng-if="vm.referral.planning.expectedDateOfAdmission" class="form-control remove-border auto-height view-text">
+                                {{vm.referral.planning.expectedDateOfAdmission | date :  "dd-MMM-y"}}
+                            </div>
+                            <div ng-if="!vm.referral.planning.expectedDateOfAdmission" class="form-control remove-border auto-height view-text">-</div>
+                            <label for="expectedDateOfAdmission" class="control-label view-label">@L("ExpectedDateOfAdmission")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div ng-if="vm.referral.planning.plannedDateOfDischarge" class="form-control remove-border auto-height view-text">
+                                {{vm.referral.planning.plannedDateOfDischarge | date :  "dd-MMM-y"}}
+                            </div>
+                            <div ng-if="!vm.referral.planning.plannedDateOfDischarge" class="form-control remove-border auto-height view-text">-</div>
+                            <label for="plannedDischargeDate" class="control-label view-label">@L("PlannedDischargeDate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <label class="control-label view-label">@L("IsPatientKnownToOtherCommunityService")</label>
+                            <div class="form-control remove-border auto-height view-text">
+                                <span ng-if="vm.referral.planning.isPatientKnownToOtherCommunity">Yes</span>
+                                <span ng-if="!vm.referral.planning.isPatientKnownToOtherCommunity">No</span>
+                            </div>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.referral.planning.otherCommunityService ? vm.referral.planning.otherCommunityService : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="otherCommunityService">@L("OtherCommunityService")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text" style="white-space: pre-wrap;">{{vm.referral.planning.remarks ? vm.referral.planning.remarks : "-"}}</div>
+                            <label class="control-label view-label">@L("Remarks")</label>
+                        </div>
+                        @*Save/Cancel*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

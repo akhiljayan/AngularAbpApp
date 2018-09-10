@@ -1,0 +1,94 @@
+﻿@using Pulsesync.IngoTPCC.Hospitalization
+@model HospitalizationDto
+<style type="text/css">
+</style>
+<div id="OtherInformation" class="general portlet light" ng-controller="tenant.views.hospitalization.otherInfo as ovm">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("OtherInformation")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a class="icon-wrapper" ng-if="ovm.mode.toLowerCase()=='view' && !vm.isNew && vm.permissions.edit && !vm.hospitalization.isConfirmed && !vm.hospitalization.isCancelled" ng-click="ovm.edit()">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools">
+            <a class="remove" ng-if="ovm.mode.toLowerCase()=='edit' && !vm.isNew" ng-click="ovm.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="ovm.mode">
+                <!--edit mode-->
+                <div ng-switch-when="edit">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        @{
+                            var attributes = new Dictionary<string, object>();
+                            attributes.Add("role", "form");
+                            attributes.Add("id", "otherInfoForm");
+                            attributes.Add("name", "ovm.otherInfoForm");
+                            attributes.Add("novalidate", "");
+                            attributes.Add("action", "#");
+                            attributes.Add("angular-validator-submit", "ovm.save(vm.hospitalization)");
+                            attributes.Add("angular-validator", "");
+                            attributes.Add("ng-validate", "ovm.validationOptions");
+                        }
+                        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("form-validation horizontal-form")))
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                @s.FieldFor(m => m.IsPlanned).Label(@L("IsPlanned")).Attrs(new { ng_model = "vm.hospitalization.isPlanned" })
+                                <div ng-if="vm.hospitalization.isPlanned">
+                                    @s.FieldFor(m => m.EventType).AsDropDown().Attrs(new { ng_model = "vm.hospitalization.eventType.id", name = "EventTypeId" })
+                                </div>
+                                <div ng-if="!vm.hospitalization.isPlanned">
+                                    @*@s.FieldFor(m => m.EventType).AsDropDown().Attrs(new { ng_model = "vm.hospitalization.eventType.id", name = "EventTypeId", ui_select_validation="", ui_select_required="", required_message = "You_must_provide_a_value_for_Event_type." })*@
+                                    <div class="form-group form-md-line-input">
+                                        <ui-select id="personId" ng-model="vm.hospitalization.eventType.id" theme="select2" title="Select Event Type" name="EventTypeId" ui-select-validation ui-select-required required-message="You must provide a value for Event Type">
+                                            <ui-select-match placeholder="Select Event Type">
+                                                {{$select.selected.description}}
+                                                <a class="fa fa-times" ng-hide="vm.personDisabled" ng-click="$select.clear($event);"></a>
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="m.id as m in  ovm.eventType | filter: { description: $select.search }" refresh-delay="0">
+                                                <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                        <label for="personId" class="formlabel">@L("EventType")<span class="businessRequired"> * </span></label>
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="form-actions pull-right" ng-if="!vm.isNew">
+                                <button type="submit" card-button-busy="vm.isSaving" class="linkButton btn-small">
+                                    <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                                </button>
+                                <a class="linkButton btn-small" card-button-busy="vm.isSaving" ng-click="ovm.close()">
+                                    <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!--view mode-->
+                <div ng-switch-default>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.hospitalization.isPlanned ? "Yes" : "No"}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("IsPlanned")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.hospitalization.eventType ? vm.hospitalization.eventType.name : "-"}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("EventType")</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+</script>

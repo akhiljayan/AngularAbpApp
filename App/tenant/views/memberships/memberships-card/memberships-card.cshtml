@@ -1,0 +1,67 @@
+﻿<style type="text/css">
+    .episode-aircard:after {
+        content: " ";
+        display: block;
+        position: relative;
+        top: 20px;
+    }
+
+    .episode-aircard.air-card-hover:hover {
+        box-shadow: 0 2px 8px 1px rgba(57,73,76,.4), 0 1px 2px rgba(57,73,76,.25);
+        background-color: #f2f2f2;
+        outline: none;
+        cursor: pointer;
+    }
+</style>
+<div id="Episode" class="portlet light" busy-if="$ctrl.loading" ng-if="$ctrl.permissions.view">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">
+                Episode
+            </span>
+        </div>
+        <div class="actions dropdown inputs">
+
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="entities">
+                <div ng-if="$ctrl.membershipApplications.firstCompletedApplication || $ctrl.membershipApplications.pendingApplications">
+                    <div class="col-md-12 col-sm-12" style="padding:0px">
+                        <div class="col-md-12 col-sm-12 cursor-pointer" ng-click="$ctrl.viewMembershipApplication($ctrl.membershipApplications.firstCompletedApplication.membershipId)">
+                            <div class="col-md-12 col-sm-12">
+                                <span class="bold" ng-if="$ctrl.membershipApplications.firstCompletedApplication">First joined as a member on {{$ctrl.membershipApplications.firstCompletedApplication.membershipStartDate | dateFormat}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12"> <hr /> </div>
+                        <div class="col-md-12 col-sm-12 air-card-hover episode-aircard padding-bottom-10 padding-bottom-10" ng-repeat="membership in $ctrl.membershipApplications.pendingApplications" ng-click="$ctrl.viewMembershipApplication(membership.membershipId)">
+                            <div class="col-md-12 col-sm-12"><span class="bold">{{membership.membershipApplicationNo}}</span></div>
+                            <div class="col-md-12 col-sm-12">
+                                <span>Applied on {{membership.applicationDate | dateFormat}}</span><br />
+                                <span>{{membership.membershipCardInfo}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12" ng-if="$ctrl.membershipApplications.pendingApplications.length"> <hr /> </div>
+                        <div class="col-md-12 col-sm-12 air-card-hover episode-aircard padding-bottom-10 padding-bottom-10" ng-repeat="membership in $ctrl.membershipApplications.completedApplications" ng-click="$ctrl.viewMembershipApplication(membership.membershipId)">
+                            <div class="col-md-12 col-sm-12"><span class="bold">{{membership.membershipApplicationNo}}</span></div>
+                            <div class="col-md-12 col-sm-12">
+                                <span ng-if="membership.membershipStatus == $ctrl.status.Withdrawn || membership.membershipStatus == $ctrl.status.Terminated">
+                                    <span>Joined on {{membership.applicationDate | dateFormat}}</span><br />
+                                </span>
+                                <span>{{membership.membershipCardInfo}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="!$ctrl.membershipApplications">
+                    <div class="col-md-12  col-sm-12">
+                        <span ng-if="$ctrl.filter == 'active'"></span>
+                        <span>No records found!</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

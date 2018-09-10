@@ -1,0 +1,68 @@
+﻿@using Pulsesync.IngoTPCC.Localization
+<style type="text/css">
+    .ui-grid-cell, .ui-grid-row {
+        height: auto !important;
+    }
+</style>
+<div ng-controller="tenant.views.auditlog.index as vm">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("AuditLogs")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-body" enter-key="vm.getAuditLogs()">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-3">
+                                <ui-select id="entityTypeName" name="entityTypeName" class="entityTypeName" ng-model="vm.filter.entityTypeName" theme="select2" title="Choose a Module" style="padding-top: 8px;">
+                                    <ui-select-match placeholder="Select Module">
+                                        {{$select.selected.name}}
+                                        <a class="fa fa-times" ng-click="$select.clear($event);"></a>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="m.value as m in vm.modules | filter: { name: $select.search }">
+                                        <span ng-bind-html="m.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <ui-select id="event" name="event" ng-model="vm.filter.event" theme="select2" title="Select Action" style="padding-top: 8px;">
+                                    <ui-select-match placeholder="Select Action">
+                                        {{$select.selected.name}}
+                                        <a class="fa fa-times" ng-click="$select.clear($event);"></a>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="e.value as e in vm.events | filter: { name: $select.search }">
+                                        <span ng-bind-html="e.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-md-2 col-sm-2 form-group form-md-line-input" style="padding-top: 0px;">
+                                <input date-range-picker type="text" ng-model="vm.dateRangeModel" options="vm.dateRangeOptions" min="vm.dateRangeOptions.min" max="vm.dateRangeOptions.max" class="form-control date-picker" placeholder="Period Range..." />
+                            </div>
+                            <div class="col-md-3 col-sm-3 form-group form-md-line-input" style="padding-top: 0px;">
+                                <input type="text" ng-model="vm.filter.searchInput" class="form-control" placeholder="Search..." />
+                            </div>
+                            <div class="col-md-1 col-sm-1 form-group right">
+                                <button ng-click="vm.search()" class="btn btn-default bold fontStealGreen">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div busy-if="vm.loading">
+                                <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns ui-grid-pinning dir=@(CultureHelper.IsRtl ? "rtl" : "")>
+                                    <div class="ui-grid-nodata-watermark" ng-show="!vm.gridOptions.data.length">No data available</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <simple-paginator data="vm.data" key="vm.key" on-page-changed="vm.loadResults(requestParams)"></simple-paginator>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

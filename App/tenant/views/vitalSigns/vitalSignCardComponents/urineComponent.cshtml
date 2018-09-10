@@ -1,0 +1,55 @@
+﻿<div class="col-md-12 col-sm-12" style="padding-bottom:10px">
+    <div class="row">
+        <div class="col-md-12 col-sm-12"><span class="bold">Urine</span></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12" style="margin-left: 20px">
+            <div class="col-md-12 col-sm-12" style="padding:0px">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px" ng-if="$ctrl.forPerson"><small> {{$ctrl.getLatestUrineTakenOnDate($ctrl.vitalsign)}}</small></div>
+                    <div class="col-md-12 col-sm-12" style="padding:0px" ng-if="!$ctrl.forPerson"><small> {{$ctrl.getLatestUrineTakenOnDateForSorce($ctrl.vitalsign)}}</small></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px">
+                        <small class="bold" style="font-size:9px">PH:</small>
+                        <small class="bold" ng-class="{'abnormal' : $ctrl.vitalsign.urinePH.category != '0' }"> {{$ctrl.vitalsign.urinePH.values[0].value ? $ctrl.vitalsign.urinePH.values[0].value : '-'}}</small>&nbsp;
+                        <small ng-if="$ctrl.vitalsign.urinePH.delta == '1' && $ctrl.forPerson && !$ctrl.vitalsign.urinePH.normalChange"><i class="fa fa-arrow-up" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.urinePH.abruptChange }"></i></small>
+                        <small ng-if="$ctrl.vitalsign.urinePH.delta == '-1' && $ctrl.forPerson && !$ctrl.vitalsign.urinePH.normalChange"><i class="fa fa-arrow-down" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.urinePH.abruptChange }"></i></small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px">
+                        <small class="bold" style="font-size:9px">Blood:</small>
+                        <small class="bold"> {{$ctrl.vitalsign.urineBlood ? $ctrl.vitalsign.urineBlood[0].value : '-'}}</small>&nbsp;
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px">
+                        <small class="bold" style="font-size:9px">Ketone:</small>
+                        <small class="bold"> {{$ctrl.vitalsign.urineKetone ? $ctrl.vitalsign.urineKetone[0].value : '-'}}</small>&nbsp;
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px">
+                        <small class="bold" style="font-size:9px">Glucose:</small>
+                        <small class="bold"> {{$ctrl.vitalsign.urineGlucose ? $ctrl.vitalsign.urineGlucose[0].value : '-'}}</small>&nbsp;
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px">
+                        <small class="bold" style="font-size:9px">Luekocytes:</small>
+                        <small class="bold" ng-if="$ctrl.vitalsign.unrineLuekocytes.value">{{$ctrl.vitalsign.unrineLuekocytes.value[0] == '1' ? 'Positive' : 'Negative'}}</small>
+                        <small class="bold" ng-if="!$ctrl.vitalsign.unrineLuekocytes.value">-</small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="padding:0px">
+                        <small class="bold" style="font-size:9px">Nitrite:</small>
+                        <small class="bold" ng-if="$ctrl.vitalsign.urineNitirte.value"> {{$ctrl.vitalsign.urineNitirte.value[0] == '1' ? 'Positive' : 'Absent/Negative'}}</small>
+                        <small class="bold" ng-if="!$ctrl.vitalsign.urineNitirte.value || !$ctrl.vitalsign.urine.nitrite">-</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

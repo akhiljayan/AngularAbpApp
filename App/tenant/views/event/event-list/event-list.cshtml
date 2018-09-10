@@ -1,0 +1,59 @@
+﻿<style>
+    .person-list .person-list-title {
+        margin-bottom: 10px;
+        font-weight: 700 !important;
+        border-bottom: 1px solid #eee;
+    }
+
+        .person-list .person-list-title .caption {
+            color: black;
+            padding: 0 0 10px 0;
+        }
+
+    .person-list-body > ul > li {
+        padding: 0px 0px 10px 0;
+    }
+</style>
+
+<div class="row" ng-click="$ctrl.goToEvent()">
+    <div class="col-md-12">
+        <div class="row margin-bottom-10">
+            <div class="col-md-12 col-sm-12">
+                <div class="col-md-3 col-sm-12 bold">{{$ctrl.model.activityEvent.description}}<span ng-if="$ctrl.model.activityEvent.descriptionInChinese"> ({{$ctrl.model.activityEvent.descriptionInChinese}})</span></div>
+                <div class="col-md-3 col-sm-12 bold">{{$ctrl.model.centre.code}}</div>
+                <div class="col-md-3 col-sm-12 bold">{{$ctrl.model.eventTime | dateTimeFormat}}</div>
+            </div>
+            <div class="col-md-12 col-sm-12 flex-center" style="height:10px;"></div>
+            <div class="col-md-12 col-sm-12">
+                <div class="col-md-3 col-sm-12">Venue: {{$ctrl.model.eventVenue}}<span ng-if="$ctrl.model.eventVenueInChinese">({{$ctrl.model.eventVenueInChinese}})</span></div>
+                <div class="col-md-3 col-sm-12">Maximum Capacity: {{$ctrl.model.maxCapacity ? $ctrl.model.maxCapacity : '-'}}</div>
+                <div class="col-md-3 col-sm-12">Person Count: {{$ctrl.model.registeredPersonCount ? $ctrl.model.registeredPersonCount: '-'}}</div>
+                <div class="col-md-3 col-sm-12">Attendee: {{$ctrl.model.attendeeCount ? $ctrl.model.attendeeCount : '-'}}</div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row font-13-main">
+    <div class="col-md-12">
+        @*<div class="well well-sm margin-top-10 person-list" ng-if="$ctrl.showDetails && ($ctrl.model.persons.length > 0)">
+                <div class="person-list-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("PersonList")</span>
+                    </div>
+                </div>
+                <div class="person-list-body">
+                    <ul>
+                        <li ng-repeat="item in $ctrl.model.persons">
+                            <div class="description">
+                                {{ item.fullName }}
+                                <span ng-if="item.registrationDocumentNumber" class="otherText uppercase">
+                                    ({{ item.registrationDocumentNumber }})
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>*@
+    </div>
+</div>

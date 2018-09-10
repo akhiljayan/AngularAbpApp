@@ -1,0 +1,55 @@
+﻿<style type="text/css">
+    .largeWidth {
+        width: 100% !important;
+    }
+
+    .smallWidth {
+        width: 65.667% !important;
+    }
+</style>
+<div ng-controller="tenant.views.hospitalization.cardListing as cl">
+    <div id="Hospitalization" class="portlet light" busy-if="cl.loadinghos">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject">@L("Hospitalization")</span>
+            </div>
+            <div class="actions dropdown inputs">
+                <a ng-click="cl.addHospitalization()" ng-if="cl.permissions.create && !vm.isNew" class="icon-wrapper">
+                    <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                </a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div ng-if="cl.permissions.view">
+                <div ng-repeat="data in cl.hospitalizationList">
+                    <div class="row margin-bottom-10 cursor-pointer" ng-click="cl.editHospitalization(data.id)">
+                        <div class="col-md-9 col-sm-9">
+                            <div class="font-14-main margin-bottom-10" ng-if="!data.to">Hospitalized on {{data.from | date : "dd-MMM-y hh:mm a" }} at {{data.hospital}}</div>
+                            <div class="font-14-main margin-bottom-10" ng-if="data.to">Hospitalized on {{data.from | date : "dd-MMM-y hh:mm a" }} to {{data.to | date : "dd-MMM-y hh:mm a"}} at {{data.hospital}}</div>
+                            <div class="font-14-main margin-bottom-10">{{data.reasonForHospitalization}}</div>
+                            <div class="font-14-main margin-bottom-10">
+                                <div class="col-md-12 col-sm-12 nopadding">
+                                    <div class="col-md-6 col-sm-6 pull-left" style="padding-left:0px">
+                                        Is Planned &nbsp;<span class="bold">{{data.isPlanned ? "Yes":"No"}}</span>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 pull-right" style="padding-right:0px">
+                                        Event Type &nbsp;<span class="bold">{{data.eventType ? data.eventType : "-"}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="font-14-main">Ward &amp; Bed Info &nbsp;<span class="bold">{{data.wardAndBedInformation ? data.wardAndBedInformation : "-"}}</span></div>
+                        </div>
+                        <div class="col-md-3 col-sm-3 text-right">
+                            <a class="no-decoration padding-right-10" title="Hospitalized" href="#" ng-if="data.isHospitalized"><i class="fa fa-hospital-o" style="font-size:20px" aria-hidden="true"></i></a>
+                            <a class="no-decoration padding-right-10" title="To be Confirmed" href="#" ng-if="!data.isConfirmed && !data.isCancelled"><i class="fa fa-unlock" style="font-size:20px" aria-hidden="true"></i></a>
+                            <a class="no-decoration padding-right-10" title="Confirmed" href="#" ng-if="data.isConfirmed  && !data.isCancelled"><i class="fa fa-lock" style="font-size:20px" aria-hidden="true"></i></a>
+                            <a class="no-decoration padding-right-10" title="Cancelled" href="#" ng-if="data.isCancelled"><i class="fa fa fa-ban" style="font-size:20px" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                    <hr />
+                </div>
+                <simple-paginator data="cl.data" key="cl.key" small-page-size="true" on-page-changed="cl.loadResults(requestParams)"></simple-paginator>
+            </div>
+        </div>
+    </div>
+</div>

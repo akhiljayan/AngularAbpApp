@@ -1,0 +1,268 @@
+﻿<style type="text/css">
+    .person-list-grid {
+        min-height: initial !important;
+    }
+
+    .activitiesattendance-ext .activitiesattendance-item-header {
+        background-color: #f5f5f5;
+        padding: 10px;
+    }
+
+    .activitiesattendance-ext .activitiesattendance-item-body .attendance-actions {
+        background-color: #E5E5E5;
+        padding: 10px;
+    }
+
+        .activitiesattendance-ext .activitiesattendance-item-body .attendance-actions .attendance-actions-left {
+            display: inline-block;
+        }
+
+        .activitiesattendance-ext .activitiesattendance-item-body .attendance-actions .attendance-actions-right {
+            float: right;
+        }
+
+            .activitiesattendance-ext .activitiesattendance-item-body .attendance-actions .attendance-actions-right a:first-child .splitter {
+                display: none;
+            }
+
+        .activitiesattendance-ext .activitiesattendance-item-body .attendance-actions a {
+            font-weight: bold;
+            color: rgba(0, 0, 0, 0.54);
+        }
+
+            .activitiesattendance-ext .activitiesattendance-item-body .attendance-actions a.disable-links {
+                opacity: 0.5;
+            }
+
+    .collapse.in {
+        height: auto !important;
+    }
+
+
+
+    .person-list-grid ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .person-list-grid ul li {
+            display: block;
+            position: relative;
+        }
+
+    .person-list-grid-item ul li {
+        width: 12%;
+        text-align: center;
+        padding: 10px;
+        margin: 10px 0 0;
+        display: inline-block;
+        min-height: 150px;
+        vertical-align: top;
+        cursor: pointer;
+    }
+
+    @@media (max-width: 976px) {
+        .person-list-grid-item ul li {
+            width: 24%;
+        }
+    }
+
+    .person-list-grid-item ul li .check-icon {
+        display: none;
+    }
+
+    .person-list-grid-item ul li .selected,
+    .person-list-grid-item ul li .attended {
+        border: 4px solid #00bfb5;
+        border-radius: 50%;
+    }
+
+        .person-list-grid-item ul li .selected .check-icon,
+        .person-list-grid-item ul li .lock-icon,
+        .person-list-grid-item ul li .cross-icon {
+            display: block;
+            position: absolute;
+            height: 27px;
+            width: 27px;
+            bottom: -10px;
+            right: 15px;
+        }
+
+            .person-list-grid-item ul li .selected .check-icon i.check:before {
+                background-color: #00bfb5;
+                border-radius: 50%;
+                padding: 6px;
+                color: #fff;
+            }
+
+    .person-list-grid-item ul li i.lock:before {
+        background-color: #00bfb5;
+        border-radius: 50%;
+        padding: 6px 8px;
+        color: #fff;
+    }
+
+    .person-list-grid-item ul li i.cross:before {
+        background-color: #ff0000;
+        border-radius: 50%;
+        padding: 6px 10px;
+        color: #fff;
+    }
+
+    .person-list-grid-item .person-list-grid-image {
+        display: block;
+        margin: 0 auto;
+        max-width: 160px;
+        max-height: 160px;
+        position: relative;
+    }
+
+        .person-list-grid-item .person-list-grid-image img {
+            display: inline-block;
+            max-width: 100%;
+            border: none;
+            width: 160px;
+        }
+
+        .person-list-grid-item .person-list-grid-image .action-icon {
+            display: inline-block;
+            position: absolute;
+            bottom: 5%;
+            right: 10%;
+        }
+
+    .person-list-grid-image:hover .remove-selected {
+        opacity: 1;
+        background-color: rgba(255,255,255,.5);
+    }
+
+    .person-list-grid-image .remove-selected {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        opacity: 0;
+    }
+
+        .person-list-grid-image .remove-selected i {
+            line-height: 0px;
+            margin: 50% 0px;
+        }
+
+    .person-list-grid-item .person-list-grid-details {
+        max-width: 300px;
+        min-height: 70px;
+        margin: 0 auto;
+        padding-top: 10px;
+    }
+
+    .person-list-grid-item .person-list-grid-title {
+        font-weight: bold;
+        font-size: 12px;
+    }
+</style>
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Registrations")</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+
+        <div class="mt-element-list">
+            <div class="mt-list-container list-card activitiesattendance-ext">
+                <ul>
+                    <li class="mt-list-item activitiesattendance-item">
+                        <div class="activitiesattendance-item-header" data-target="#{{ vm.model.id }}" data-toggle="collapse" ng-class="'collapsed'">
+                            <div>
+                                {{vm.registeredEventPersons.length}} Registered Persons   <span ng-if="vm.registeredEventPersons.length > vm.model.maxCapacity" style="color:red">(Maximum Capacity {{vm.model.maxCapacity}})</span>
+                            </div>
+                        </div>
+
+                        <div id="{{ vm.model.id }}" class="activitiesattendance-item-body collapse in">
+                            <div class="attendance-actions">
+                                <div class="attendance-actions-left">
+                                    <a ng-click="vm.selectAll();">Select All</a> |
+                                    <a ng-click="vm.deselectAll();" ng-class="vm.selectedPersons.length > 0 ? '' : 'disable-links'">Deselect All</a>
+                                </div>
+                                <div class="attendance-actions-right">
+                                    <a ng-click="vm.addPersonToEvent();"
+                                       ng-if="vm.permissions.create">
+                                        <span>@L("Add")</span>
+                                    </a>
+
+                                    <a ng-click="vm.remove();"
+                                       ng-class="vm.selectedPersons.length> 0 ? '' : 'disable-links'"
+                                       ng-if="vm.permissions.delete">
+                                        <span class="splitter">| </span>
+                                        <span>@L("Delete")</span>
+                                    </a>
+
+                                    <a ng-click="vm.confirm();"
+                                       ng-class="vm.selectedPersons.length > 0 ? '' : 'disable-links'"
+                                       ng-if="vm.permissions.confirm">
+                                        <span class="splitter">| </span>
+                                        <span>@L("Confirm")</span>
+                                    </a>
+
+                                    <a ng-click="vm.cancel();"
+                                       ng-class="(vm.selectedPersons.length > 0 && !vm.selectCancelPerson) ? '' : 'disable-links'"
+                                       ng-if="vm.permissions.cancel">
+                                        <span class="splitter">| </span>
+                                        <span>@L("Cancel")</span>
+                                    </a>
+
+                                    <a ng-click="vm.saveAttendance();"
+                                       ng-class="vm.selectedPersons.length >0 ? '' : 'disable-links'"
+                                       ng-if="vm.permissions.create">
+                                        <span class="splitter">| </span>
+                                        <span>@L("SaveAttendance")</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="person-list-grid person-list-grid-item">
+                                <ul>
+                                    <li ng-repeat="per in vm.registeredEventPersons | orderBy : 'person.fullName'" ng-click="vm.selectedPerson(per.person, per.id)">
+                                        <a class="person-list-grid-image" ng-class="{'selected': per.person.selected, 'attended': per.isAttended }" href="#">
+                                            <img alt="{{ per.person.fullName }}" class="img-circle" ng-src="{{ vm.appPath }}Person/GetPersonPictureById?personPictureName={{ per.person.pictureId }}&t=Clock.Now.Ticks.ToString()" />
+                                            <div class="action-icon">
+                                                <div class="check-icon" ng-if="per.person.selected">
+                                                    <i class="check fa fa-check"></i>
+                                                </div>
+                                                <div class="lock-icon" ng-if="!per.person.selected && !per.isCancelled && per.isConfirmed">
+                                                    <i class="lock fa fa-lock"></i>
+                                                </div>
+                                                <div class="cross-icon" ng-if="!per.person.selected && per.isCancelled">
+                                                    <i class="cross fa fa-ban"></i>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <div class="person-list-grid-details">
+                                            <span class="person-list-grid-title">
+                                                {{ per.person.fullName }}
+                                                <br />
+                                                <span ng-if="per.person.registrationDocumentNumber">
+                                                    ({{ per.person.registrationDocumentNumber }})
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            @*<pre>{{vm.selectedPersons|json}}</pre>*@
+                            @*<pre>{{vm.registeredPersons|json}}</pre>*@
+                            @*<pre>{{vm.persons|json}}</pre>*@
+                            @*<pre>{{vm.registeredEventPersons|json}}</pre>*@
+                        </div>
+                        <div style="clear: both;"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

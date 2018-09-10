@@ -1,0 +1,16 @@
+﻿@model UiSelectDto
+@using Pulsesync.IngoTPCC.Common.Dto
+@using (var f = Html.BeginForm())
+{
+    using (var s = f.BeginSection())
+    {
+        <div ng-if="vm.required">
+            @s.FieldFor(fa => fa.CentreIdRequired).AsDropDown().Attrs(new { ng_model = "vm.centreId", repeat = "vm.centres", ng_disabled = "vm.disabled", ui_select_required = "ui-select-required", required_message = "'You must provide a value for Centre.'", on_select = "vm.select($item)" })
+        </div>
+        <div ng-if="!vm.required">
+            @s.FieldFor(fa => fa.CentreId).AsDropDown().Attrs(new { ng_model = "vm.centreId", repeat = "vm.centres", ng_disabled = "vm.disabled", on_select = "vm.select($item)" })
+        </div>
+
+    }
+}
+

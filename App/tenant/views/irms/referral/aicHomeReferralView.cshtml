@@ -1,0 +1,234 @@
+﻿@model ReferralDto
+@using IRMS.Entities.Dto;
+<div ng-controller="tenant.views.irms.aicHomeReferralView as aicHomeReferral">
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div busy-if="vm.loading">
+            <!-- Heart Failure Condition Section -->
+            <div id="HeartFailureCondition" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("HeartFailureCondition")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isHeartFailure }}</div>
+                                <label class="control-label view-label" for="isHeartFailure">@L("HeartFailureConditionQ1")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isHeartFailureNYHA }}</div>
+                                <label class="control-label view-label" for="isHeartFailureNYHA">@L("HeartFailureConditionQ2")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isHeartFailureOthers }}</div>
+                                <label class="control-label view-label" for="isHeartFailureOthers">@L("HeartFailureConditionQ3")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.heartFailureReasonList.heartFailureReason }}</div>
+                                <label class="control-label view-label" for="heartFailureReason">@L("HeartFailureReason")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Respiratory Failure Condition Section -->
+            <div id="RespiratoryFailureCondition" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("RespiratoryFailureCondition")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isRespiratory }}</div>
+                                <label class="control-label view-label" for="isRespiratory">@L("RespiratoryFailureConditionQ1")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isRespiratoryDyspnoea }}</div>
+                                <label class="control-label view-label" for="isRespiratoryDyspnoea">@L("RespiratoryFailureConditionQ2")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isRespiratoryRepeated }}</div>
+                                <label class="control-label view-label" for="isRespiratoryRepeated">@L("RespiratoryFailureConditionQ3")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isRespiratoryHypoxaemia }}</div>
+                                <label class="control-label view-label" for="isRespiratoryHypoxaemia">@L("RespiratoryFailureConditionQ4")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isRespiratoryCOPD }}</div>
+                                <label class="control-label view-label" for="isRespiratoryCOPD">@L("RespiratoryFailureConditionQ5")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Renal Failure Condition Section -->
+            <div id="RenalFailureCondition" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("RenalFailureCondition")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isRenalFailure }}</div>
+                                <label class="control-label view-label" for="isRenalFailure">@L("RenalFailureConditionQ1")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isRenalGFR }}</div>
+                                <label class="control-label view-label" for="isRenalGFR">@L("RenalFailureConditionQ2")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isRenalDialysisReason }}</div>
+                                <label class="control-label view-label" for="isRenalDialysisReason">@L("RenalFailureConditionQ3")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Liver Failure Conditionn Section -->
+            <div id="LiverFailureCondition" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("LiverFailureCondition")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isLiverFailure }}</div>
+                                <label class="control-label view-label" for="isLiverFailure">@L("LiverFailureConditionQ1")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isLiverINR }}</div>
+                                <label class="control-label view-label" for="isLiverINR">@L("LiverFailureConditionQ2")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isLiverSerum }}</div>
+                                <label class="control-label view-label" for="isLiverSerum">@L("LiverFailureConditionQ3")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isLiverOthers }}</div>
+                                <label class="control-label view-label" for="isLiverOthers">@L("LiverFailureConditionQ4")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.liverFailureReasonList.liverFailureReason }}</div>
+                                <label class="control-label view-label" for="liverFailureReason">@L("LiverFailureReason")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diagnosis & Prognosis Section -->
+            <div id="DiagnosisPrognosis" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("DiagnosisPrognosis")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.diagnosis }}</div>
+                                <label class="control-label view-label" for="diagnosis">@L("PatientDiagnosis")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.presentCondition }}</div>
+                                <label class="control-label view-label" for="presentCondition">@L("PatientPresentCondition")</label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isAwareDiagnosis }}</div>
+                                <label class="control-label view-label" for="isAwareDiagnosis">@L("PatientAwareDiagnosis")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isFamilyAwareDiagnosis }}</div>
+                                <label class="control-label view-label" for="isFamilyAwareDiagnosis">@L("PatientFamilyAwareDiagnosis")</label>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isAwarePrognosis }}</div>
+                                <label class="control-label view-label" for="isAwarePrognosis">@L("PatientAwarePrognosis")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.isFamilyAwarePrognosis }}</div>
+                                <label class="control-label view-label" for="isFamilyAwarePrognosis">@L("PatientFamilyAwarePrognosis")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Remarks Section -->
+            <div id="Remarks" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("Remarks")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ aicHomeReferral.aicHomeReferralList.addendumRemarks }}</div>
+                                <label class="control-label view-label" for="addendumRemarks">@L("Remarks")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

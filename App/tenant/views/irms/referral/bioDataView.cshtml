@@ -1,0 +1,412 @@
+﻿@model ReferralDto
+@using IRMS.Entities.Dto;
+<div ng-controller="tenant.views.irms.bioDataView as bioData">
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div busy-if="vm.loading">
+            <!-- Referral Information Section -->
+            <div id="ReferralInformation" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("ReferralInformation")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.referralRegNo }}</div>
+                                <label class="control-label view-label" for="referralRegNo">@L("ReferralRegNo")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.referralType }}</div>
+                                <label class="control-label view-label" for="referralType">@L("ReferralType")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.referralDate | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="referralDate">@L("ReferralDate")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.submittedDate | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="submittedDate">@L("SubmissionDate")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.referralSource }}</div>
+                                <label class="control-label view-label" for="referralSource">@L("ReferralSource")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.referralStatus }}</div>
+                                <label class="control-label view-label" for="referralStatus">@L("ReferralStatus")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.specialityDiscipline }}</div>
+                                <label class="control-label view-label" for="specialityDiscipline">@L("SpecialityDiscipline")</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.classStay }}</div>
+                                <label class="control-label view-label" for="classStay">@L("ClassStay")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.admissionDate | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="admissionDate">@L("AdmissionDate")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.dateOfDischarge | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="dateOfDischarge">@L("DischargedDate")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.ward }}</div>
+                                <label class="control-label view-label" for="ward">@L("Ward")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.bed }}</div>
+                                <label class="control-label view-label" for="ward">@L("RoomBed")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.wardTel }}</div>
+                                <label class="control-label view-label" for="wardTel">@L("WardTel")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.wardFax }}</div>
+                                <label class="control-label view-label" for="wardFax">@L("WardFax")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bio Data Section -->
+            <div id="BioData" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("BioData")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.patientName }}</div>
+                                <label class="control-label view-label" for="patientName">@L("FullName")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.caseNo }}</div>
+                                <label class="control-label view-label" for="caseNo">@L("CaseNo")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.patientNRIC }}</div>
+                                <label class="control-label view-label" for="patientNRIC">@L("RegistrationDocumentNo")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.citizenship }}</div>
+                                <label class="control-label view-label" for="citizenship">@L("Citizenship")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.dob | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="dob">@L("DateOfBirth")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.age }}</div>
+                                <label class="control-label view-label" for="age">@L("Age")</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.gender }}</div>
+                                <label class="control-label view-label" for="gender">@L("Gender")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.martialStatus }}</div>
+                                <label class="control-label view-label" for="martialStatus">@L("MaritalStatus")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.race }}</div>
+                                <label class="control-label view-label" for="race">@L("Race")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.religion }}</div>
+                                <label class="control-label view-label" for="religion">@L("Religion")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.telephone1 }}</div>
+                                <label class="control-label view-label" for="telephone1">@L("Telephone1")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.telephone2 }}</div>
+                                <label class="control-label view-label" for="telephone2">@L("Telephone2")</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.address }}</div>
+                                <label class="control-label view-label" for="address">@L("Address")</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>@L("SpokenLanguage")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in bioData.bioDataLanguageList">
+                                        <td>{{ (item.languageOthers ? item.languageOthers : item.language) }}</td>
+                                    </tr>
+                                    <tr ng-show="!bioData.bioDataLanguageList">
+                                        <td>
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>@L("SpokenDialect")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in bioData.bioDataDialectsList">
+                                        <td>{{ (item.dialtectsOthers ? item.dialtectsOthers : item.dialect) }}</td>
+                                    </tr>
+                                    <tr ng-show="!bioData.bioDataDialectsList">
+                                        <td>
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other Information Section -->
+            <div id="OtherInformation" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("OtherInformation")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.livingArrangement }}</div>
+                                <label class="control-label view-label" for="livingArrangement">@L("LivingArrangement")</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.liftLanding }}</div>
+                                <label class="control-label view-label" for="liftLanding">@L("LiftLanding")</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Accommodation Section -->
+            <div id="CurrentAccommodation" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("CurrentAccommodation")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.accStatus }}</div>
+                                <label class="control-label view-label" for="accStatus">@L("Status")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.hdbRoomType }}</div>
+                                <label class="control-label view-label" for="hdbRoomType">@L("HDBRoomType")</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.types }}</div>
+                                <label class="control-label view-label" for="types">@L("TypeOfAccommodation")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.institution }}</div>
+                                <label class="control-label view-label" for="institution">@L("Institution")</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.others }}</div>
+                                <label class="control-label view-label" for="others">@L("Others")</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Discharge Destination Section -->
+            <div id="DischargeDestination" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("DischargeDestination")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.dischargeAddress }}</div>
+                                <label class="control-label view-label" for="dischargeAddress">@L("Address")</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.dD_Telephone }}</div>
+                                <label class="control-label view-label" for="dD_Telephone">@L("Telephone")</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Person and Care Giver Information Section -->
+            <div id="ContactPersonCareGiverInformation" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("ContactPersonCareGiverInformation")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+
+
+
+                        <div class="col-md-12 col-sm-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 25%;">@L("Name")</th>
+                                            <th style="width: 5%;">@L("Carer")</th>
+                                            <th style="width: 7%;">@L("DecisionMaker")</th>
+                                            <th style="width: 10%;">@L("AddressType")</th>
+                                            <th style="width: 15%;">@L("Address")</th>
+                                            <th style="width: 10%;">@L("Relationship")</th>
+                                            <th style="width: 15%;">@L("Remarks")</th>
+                                            <th style="width: 15%;">@L("Email")</th>
+                                            <th style="width: 7%;">@L("MobilePhone")</th>
+                                            <th style="width: 7%;">@L("HomePhone")</th>
+                                            <th style="width: 7%;">@L("OfficePhone")</th>
+                                            <th style="width: 7%;">@L("OtherPhone")</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in bioData.bioDataCareGiverList">
+                                            <td style="width: 25%;">{{ item.nokName }}</td>
+                                            <td>{{ item.isCarer }}</td>
+                                            <td>{{ item.isDecisionMaker }}</td>
+                                            <td>{{ item.addressType }}</td>
+                                            <td>{{ item.address1 }}</td>
+                                            <td>{{ item.relationShip }}</td>
+                                            <td>{{ item.remarks }}</td>
+                                            <td>{{ item.email }}</td>
+                                            <td>{{ item.handPhone }}</td>
+                                            <td>{{ item.homePhone }}</td>
+                                            <td>{{ item.officePhone }}</td>
+                                            <td>{{ item.otherPhone }}</td>
+                                        </tr>
+                                        <tr ng-show="!bioData.bioDataCareGiverList">
+                                            <td colspan="12">
+                                                @L("NoRecordsFound")
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed By Section -->
+            <div id="CompletedBy" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("CompletedBy")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.careIdentified }}</div>
+                                <label class="control-label view-label" for="careIdentified">@L("CarerIdentified")</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ bioData.bioDataInfoList.careRelation }}</div>
+                                <label class="control-label view-label" for="careRelation">@L("CarerRelationship")</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

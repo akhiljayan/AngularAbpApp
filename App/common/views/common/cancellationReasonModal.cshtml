@@ -1,0 +1,36 @@
+﻿<div class="portlet light" id="cancellationModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">{{vm.titleName}}</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+
+    <div class="portlet-body form">
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="bs-callout bs-callout-danger">
+                        <h4 style="font-weight: 600;"><i class="icon fa fa-warning"></i>&nbsp; Alert!</h4>
+                        Please fill in the following required field to proceed Cancellation for {{vm.moduleName}}
+                    </div>
+
+                    <form action="#" angular-validator="" angular-validator-submit="vm.save()" dirty-check="" method="post" name="vm.form" novalidate="">
+                        <div class="form-group form-md-line-input" ng-class="{ 'has-error': vm.form.CancellationReason.$error.required && vm.form.submitted }">
+                            <input type="text" id="CancellationReason" name="CancellationReason" class="form-control" ng-model="vm.cancellationReason" required />
+                            <label for="CancellationReason" class="control-label">@L("CancellationReason")<span class="businessRequired"> * </span></label>
+                            <p class="help-block" ng-if="vm.form.CancellationReason.$error.required && vm.form.submitted">You must provide a value for Reason for Cancellation *Mandatory for Cancellation*.</p>
+                        </div>
+
+                        <div class="form-actions noborder right">
+                            <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small"><i class="material-icons ps-btn-material">check</i>@L("Ok")</button>
+                            <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>@L("Cancel")</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

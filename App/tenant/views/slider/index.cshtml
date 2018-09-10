@@ -1,0 +1,83 @@
+﻿<div class="slider-container" pageslide ps-open="vm.checked" ps-side="left" ps-key-listener="true">
+    <div id="slider-navigation-box" class="slider-navigation-handler">
+        <ul>
+            <li class="slider-navigation-handler-icon" title="Favorite List">
+                <a class="font-16-important bold txt-align-cntr" href="#favourite-list" target="_self" ng-click="vm.toggleSlider()"><i class="fa fa-sliders" aria-hidden="true"></i> </a>
+            </li>
+            <!--
+            <li class="slider-navigation-handler-icon" title="Upcomming Birthdays">
+                <a class="font-16-important bold txt-align-cntr" href="#upcomming-birthday" target="_self" ng-click="vm.toggleSlider()"><i class="fa fa-users" aria-hidden="true"></i></a>
+            </li>
+            <li class="slider-navigation-handler-icon" title="Reference List">
+                <a class="font-16-important bold txt-align-cntr" href="#reference-list" target="_self" ng-click="vm.toggleSlider()"><i class="fa fa-clone" aria-hidden="true"></i></a>
+            </li>
+            -->
+        </ul>
+    </div>
+    <div class="slider-sidebar">
+
+        <div id="favorite-list">
+            <div class="row">
+                <div class="col-md-12 col-sm-12" style="padding:0px 0px 0px 0px; ">
+                    <div class="col-md-10 col-sm-10 padding-right-0">
+                        <span class="bold font-16-main">Favourite List</span>
+                        &nbsp;<a ng-click="vm.refreshFavoriteList()" title="Refresh Favourite List" class="no-decoration"><i class="slider-icon fa fa-refresh slider-icon-color" aria-hidden="true"></i></a>
+                    </div>
+                    <div class="col-md-1 col-sm-1 nopadding">
+                        <a ng-click="vm.goToFavouriteSetting()" class="no-decoration"><i id="setting-icon" class="slider-icon fa fa-cog font-16-main slider-icon-color"></i></a>
+                    </div>
+                    <div class="col-md-1 col-sm-1 nopadding">
+                        <a ng-click="vm.toggleFavouriteList()" class="no-decoration"><i id="favourite-list-icon" class="slider-icon fa fa-angle-up font-16-main slider-icon-color"></i></a>
+                    </div>
+                </div>
+                <div id="favourite-list" class="col-md-12 col-sm-12 nopadding">
+                    <ul class="slider-menu">
+                        <li ng-repeat="item in vm.userFavouriteList">
+                            <a class="facoririte-menu-link" ng-click="vm.goTo(item.stateName);" ng-class="{'selected':vm.selectedMenu == item.stateName}">
+                                <span class="slider-menu-text">{{ item.displayName }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="slider-divider"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12" style="padding:10px 0px 0px 0px; ">
+                    <div class="col-md-11 col-sm-11 padding-right-0">
+                        <span class="bold font-16-main">Watch List</span>
+                        &nbsp;<a ng-click="vm.refreshWatchList()" title="Refresh Watch List" class="no-decoration"><i class="slider-icon fa fa-refresh slider-icon-color" aria-hidden="true"></i></a>
+                    </div>
+                    <div class="col-md-1 col-md-1 nopadding">
+                        <a ng-click="vm.toggleWatchList()" class="no-decoration"><i id="watch-list-icon" class="slider-icon fa fa-angle-up font-16-main slider-icon-color"></i></a>
+                    </div>
+                </div>
+                <div id="watch-list" class="col-md-12 col-sm-12 nopadding">
+                    <ul class="slider-watch-list">
+                        <li ng-repeat="item in vm.watchedPersonList">
+                            <a ng-click="vm.navigateToPerson(item.id)">
+                                <span class="slider-menu-no-icon-text">{{ item.name }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="slider-divider"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var heightInit = $(window).innerHeight() - 75;
+        var height = (heightInit - 120)/2
+        $(".slider-watch-list").attr("style", "max-height: " + height + "px");
+        $(".slider-menu").attr("style", "max-height: " + height + "px");
+        $("#slider-navigation-box").attr("style", "top: " + height + "px");
+        $(window).resize(function () {
+            var heightInit = $(window).innerHeight() - 75;
+            var height = (heightInit - 120) / 2
+            $(".slider-watch-list").attr("style", "max-height: " + height + "px");
+            $(".slider-menu").attr("style", "max-height: " + height + "px");
+            $("#slider-navigation-box").attr("style", "top: " + height + "px");
+        });
+    });
+</script>

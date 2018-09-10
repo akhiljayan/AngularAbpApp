@@ -1,0 +1,47 @@
+﻿<div id="VisitLog" class="portlet light" busy-if="$ctrl.loading" ng-class="{ 'div-disabled': $ctrl.mode=='new' }">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="fontStealGreen">{{ $ctrl.title }}</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <div class="input-small-new inline-block">
+                <form action="" class="search-form">
+                    <div class="form-group has-feedback input-inline">
+                        <label for="search" class="sr-only">@L("Search")</label>
+                        <input type="text" ng-model="$ctrl.filter" enter-key="$ctrl.load()" class="form-control form-control-solid input-circle search-input font-13-main clearable" placeholder="search keywords...">
+                        <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="$ctrl.filter=''"></a>
+                        <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                    </div>
+                </form>
+            </div>
+            <a ng-click="$ctrl.showDetails = !$ctrl.showDetails" title="Show associated Details" class="icon-wrapper">
+                <i ng-show="!$ctrl.showDetails" class="material-icons custom-icon">menu</i>
+                <i ng-show="$ctrl.showDetails" class="material-icons custom-icon">view_headline</i>
+            </a>
+            <a ui-sref="tenant.visitLogsNew({ person: $ctrl.personId })" ng-if="$ctrl.permissions.create" class="icon-wrapper">
+                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+            </a>
+            <a class="icon-wrapper" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                <i class="material-icons custom-icon">more_vert</i>
+            </a>
+            <ul class="dropdown-menu pull-right">
+                <li ng-repeat="view in $ctrl.views">
+                    <a href="javascript:;" class="bold" ng-click="$ctrl.changeView(view.value)">{{ $ctrl.L(view.localizedName) }}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="portlet-body p-0-top-bottom">
+        <div class="filter-results-card">
+            <ul class="filter-list">
+                <li class="filter-list-item" ng-repeat="model in $ctrl.data.items">
+                    <div class="filter-list-item-content">
+                        <a ui-sref="tenant.visitLogsEdit({ id: model.id, person: model.personId})">
+                            <visitlog model="model" show-details="$ctrl.showDetails"></visitlog>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

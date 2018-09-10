@@ -1,0 +1,1135 @@
+﻿@model ReferralDto
+@using IRMS.Entities.Dto;
+<div ng-controller="tenant.views.irms.serviceApplicationView as serviceApplication">
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div busy-if="vm.loading">
+
+            <!-- Referral Service Type Section -->
+            <div id="ReferralServiceType" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("ReferralServiceType")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.referralServiceTypeList.referralServiceType }}</div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Referral Assignment To Service Provider Section -->
+            <div id="ReferralAssignmentServiceProvider" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("ReferralAssignmentServiceProvider")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%;">@L("ReferralServiceType")</th>
+                                        <th style="width: 50%;">@L("ReferralSource")</th>
+                                        <th style="width: 20%;">@L("AICAssignmentDate")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in serviceApplication.referralAssignmentInfoList">
+                                        <td>{{ item.referralService }}</td>
+                                        <td>{{ item.referralSource }}</td>
+                                        <td>{{ item.aicAssignmentDate | irmsDateFormat }}</td>
+                                    </tr>
+                                    <tr ng-show="!serviceApplication.referralAssignmentInfoList">
+                                        <td colspan="3">
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service Preferences Section -->
+            <div id="ServicePreferences" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("ServicePreferences")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.servicePreferencesList.diet }}</div>
+                                <label class="control-label view-label" for="diet">@L("Diet")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.servicePreferencesList.othersDiet }}</div>
+                                <label class="control-label view-label" for="othersDiet">@L("OtherDiet")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.servicePreferencesList.relegion }}</div>
+                                <label class="control-label view-label" for="relegion">@L("Religion")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.servicePreferencesList.otherReligion }}</div>
+                                <label class="control-label view-label" for="otherReligion">@L("OtherReligion")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.servicePreferencesList.location }}</div>
+                                <label class="control-label view-label" for="location">@L("Location")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.servicePreferencesList.yesLocationSpecifyValue }}</div>
+                                <label class="control-label view-label" for="yesLocationSpecifyValue">@L("OtherLocation")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.servicePreferencesList.duration }}</div>
+                                <label class="control-label view-label" for="duration">@L("Duration")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.servicePreferencesList.otherDuration }}</div>
+                                <label class="control-label view-label" for="otherDuration">@L("OtherDuration")</label>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.servicePreferencesList.preferredServiceProvider }}</div>
+                                <label class="control-label view-label" for="preferredServiceProvider">@L("PreferredServiceProvider")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.servicePreferencesList.applicantFees }}</div>
+                                <label class="control-label view-label" for="applicantFees">@L("ApplicantFees")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.servicePreferencesList.dayCareFrequency }}</div>
+                                <label class="control-label view-label" for="dayCareFrequency">@L("DayCareFrequency")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.servicePreferencesList.dayCareTransportRequired }}</div>
+                                <label class="control-label view-label" for="dayCareTransportRequired">@L("DayCareTransportRequired")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.servicePreferencesList.dayCareStairCrawlRequired }}</div>
+                                <label class="control-label view-label" for="dayCareStairCrawlRequired">@L("DayCareStairCrawlRequired")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.servicePreferencesList.dayCareEscortRequired }}</div>
+                                <label class="control-label view-label" for="dayCareEscortRequired">@L("DayCareEscortRequired")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Location of Patient Section -->
+            <div id="PatientCurrentLocation" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("PatientCurrentLocation")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.serviceApplicationList.currentLocationOfPatient }}</div>
+                                <label class="control-label view-label" for="currentLocationOfPatient">@L("PatientLocation")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.serviceApplicationList.homeAddress }}</div>
+                                <label class="control-label view-label" for="homeAddress">@L("PatientHomeAddress")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.serviceApplicationList.homeTelephone }}</div>
+                                <label class="control-label view-label" for="homeTelephone">@L("Telephone")</label>
+                            </div>
+
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.serviceApplicationList.institution }}</div>
+                                <label class="control-label view-label" for="institution">@L("Institution")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.serviceApplicationList.othersInstitutionValue }}</div>
+                                <label class="control-label view-label" for="othersInstitutionValue">@L("OtherInstitution")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.serviceApplicationList.briefSocialHistory }}</div>
+                                <label class="control-label view-label" for="briefSocialHistory">@L("BriefSocialHistory")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Discharge Planning Section -->
+            <div id="DischargePlanning" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("DischargePlanning")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.serviceApplicationList.hospitalExpectedDischargeDate | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="hospitalExpectedDischargeDate">@L("PlannedDischargeDate")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.serviceApplicationList.isPatientKnownToOtherCommunity }}</div>
+                                <label class="control-label view-label" for="isPatientKnownToOtherCommunity">@L("IsPatientKnownToOtherCommunityService")</label>
+                            </div>
+
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.serviceApplicationList.otherCommunityService }}</div>
+                                <label class="control-label view-label" for="otherCommunityService">@L("OtherCommunityService")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Person in Charge Section -->
+            <div id="PersonInCharge" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("PersonInCharge")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.personInChargeList.personinChargeName }}</div>
+                                <label class="control-label view-label" for="personinChargeName">@L("NameOfHospitalCoordinator")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.personInChargeList.personinChargeDesignation }}</div>
+                                <label class="control-label view-label" for="personinChargeDesignation">@L("Designation")</label>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.personInChargeList.personinChargeContactNo }}</div>
+                                <label class="control-label view-label" for="personinChargeContactNo">@L("Telephone")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.personInChargeList.personinChargeEmail }}</div>
+                                <label class="control-label view-label" for="personinChargeEmail">@L("Email")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Known to MSW/ CM/ CC Section -->
+            <div id="KnownToMSW_CM_CC" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("KnownToMSW_CM_CC")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.knowntoMSW_CM_CCList.isPatientKnownTo }}</div>
+                                <label class="control-label view-label" for="isPatientKnownTo">@L("IsThePatientKnownToMWS_CM_CC")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.knowntoMSW_CM_CCList.name }}</div>
+                                <label class="control-label view-label" for="name">@L("Name")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.knowntoMSW_CM_CCList.designation }}</div>
+                                <label class="control-label view-label" for="designation">@L("Designation")</label>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.knowntoMSW_CM_CCList.telephone }}</div>
+                                <label class="control-label view-label" for="telephone">@L("Telephone")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.knowntoMSW_CM_CCList.fax }}</div>
+                                <label class="control-label view-label" for="fax">@L("Fax")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.knowntoMSW_CM_CCList.handPhone }}</div>
+                                <label class="control-label view-label" for="handPhone">@L("MobilePhone")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.knowntoMSW_CM_CCList.email }}</div>
+                                <label class="control-label view-label" for="email">@L("Email")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Therapist Details Section -->
+            <div id="TherapistDetails" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("TherapistDetails")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40%;">@L("TherapyType")</th>
+                                        <th style="width: 60%;">@L("AttendingTherapistDetails")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in serviceApplication.therapistDetailsList">
+                                        <td>{{ item.therapyType }}</td>
+                                        <td>{{ item.therapistDetails }}</td>
+                                    </tr>
+                                    <tr ng-show="!serviceApplication.therapistDetailsList">
+                                        <td colspan="2">
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patient TCU Section -->
+            <div id="PatientTCU" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("PatientTCU")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.serviceApplicationList.patientRequiresFollowUpAtOPDSpecialistClinicMR }}</div>
+                                <label class="control-label view-label" for="patientRequiresFollowUpAtOPDSpecialistClinicMR">@L("PatientTCUFollowUp")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 20%;">@L("Clinic")</th>
+                                        <th style="width: 15%;">@L("DoctorName")</th>
+                                        <th style="width: 15%;">@L("Speciality")</th>
+                                        <th style="width: 20%;">@L("Description")</th>
+                                        <th style="width: 10%;">@L("VisitDate")</th>
+                                        <th style="width: 20%;">@L("SpecialInstruction")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in serviceApplication.patientTCUList">
+                                        <td>{{ item.clinic }}</td>
+                                        <td>{{ item.doctorName }}</td>
+                                        <td>{{ item.speciality }}</td>
+                                        <td>{{ item.description }}</td>
+                                        <td>{{ item.date | irmsDateFormat }}</td>
+                                        <td>{{ item.specialInstruction }}</td>
+                                    </tr>
+                                    <tr ng-show="!serviceApplication.patientTCUList">
+                                        <td colspan="6">
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Home Care - Home Medical Service Section -->
+            <div id="HomeMedicalService" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("HomeMedicalService")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50%;">@L("HomeMedicalServiceType")</th>
+                                        <th style="width: 50%;">@L("HomeMedicalServiceDetail")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in serviceApplication.homeCareMedicalServiceList">
+                                        <td>{{ item.homeMedicalService }}</td>
+                                        <td>{{ item.othersHomeMedicalServiceValue }}</td>
+                                    </tr>
+                                    <tr ng-show="!serviceApplication.homeCareMedicalServiceList">
+                                        <td colspan="2">
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Home Care - Home Nursing Service Section -->
+            <div id="HomeNursingService" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("HomeNursingService")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50%;">@L("HomeNursingServiceType")</th>
+                                        <th style="width: 50%;">@L("HomeNursingServiceDetail")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in serviceApplication.homeCareNursingServiceList">
+                                        <td>{{ item.homeNursingService }}</td>
+                                        <td>{{ item.othersHomeNursingServiceValue }}</td>
+                                    </tr>
+                                    <tr ng-show="!serviceApplication.homeCareNursingServiceList">
+                                        <td colspan="2">
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Home Care - Home Therapy Service Section -->
+            <div id="HomeTherapyService" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("HomeTherapyService")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50%;">@L("HomeTherapyServiceType")</th>
+                                        <th style="width: 50%;">@L("HomeTherapyServiceDetail")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in serviceApplication.homeCareTherapyServiceList">
+                                        <td>{{ item.homeTherapyService }}</td>
+                                        <td>{{ item.othersHomeTherapyServiceValue }}</td>
+                                    </tr>
+                                    <tr ng-show="!serviceApplication.homeCareTherapyServiceList">
+                                        <td colspan="2">
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reason For NH Respite Care Section -->
+            <div id="ReasonForNHRespiteCare" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("ReasonForNHRespiteCare")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50%;">@L("ReasonForNHRespiteCareDetail")</th>
+                                        <th style="width: 50%;">@L("ReasonForNHRespiteCareOthers")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in serviceApplication.reasonForNHRespiteCareList">
+                                        <td>{{ item.reasonForNHRespiteCare }}</td>
+                                        <td>{{ item.otherDesc }}</td>
+                                    </tr>
+                                    <tr ng-show="!serviceApplication.reasonForNHRespiteCareList">
+                                        <td colspan="2">
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reason for Senior Home Care Ensuite Section -->
+            <div id="SeniorHomeCareEnsuite" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("SeniorHomeCareEnsuite")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.seniorHomeCareEnsuiteList.seniorHomeCareService }}</div>
+                                <label class="control-label view-label" for="seniorHomeCareService">@L("SeniorHomeCareEnsuiteService")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reason for Senior Home Care Meals/ Escort Section -->
+            <div id="SeniorHomeCareMealsOrEscort" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("SeniorHomeCareMealsOrEscort")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.seniorHomeCareMealsOrEscortList.seniorHomeCareService }}</div>
+                                <label class="control-label view-label" for="seniorHomeCareService">@L("SeniorHomeCareMealsOrEscortService")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reason For Centre Based Nursing Service Section -->
+            <div id="ReasonForCBNS" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("ReasonForCBNS")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50%;">@L("ReasonForCBNSDetail")</th>
+                                        <th style="width: 50%;">@L("ReasonForCBNSOthers")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in serviceApplication.reasonForCBNSList">
+                                        <td>{{ item.reasonForCentreBasedNursing }}</td>
+                                        <td>{{ item.otherCentreBasedNursing }}</td>
+                                    </tr>
+                                    <tr ng-show="!serviceApplication.reasonForCBNSList">
+                                        <td colspan="2">
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hospice Referral Service Section -->
+            <div id="HospiceReferralService" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("HospiceReferralService")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.hospiceReferralServiceList.hospiceServiceProvider }}</div>
+                                <label class="control-label view-label" for="hospiceServiceProvider">@L("HospiceServiceProvider")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.hospiceReferralServiceList.hospiceHospital }}</div>
+                                <label class="control-label view-label" for="hospiceHospital">@L("HospiceHospital")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.hospiceReferralServiceList.hospiceConsultant }}</div>
+                                <label class="control-label view-label" for="hospiceConsultant">@L("HospiceConsultant")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.hospiceReferralServiceList.hospiceOtherConsultant }}</div>
+                                <label class="control-label view-label" for="hospiceOtherConsultant">@L("HospiceOtherConsultant")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.hospiceReferralServiceList.isPatientHospiceService }}</div>
+                                <label class="control-label view-label" for="isPatientHospiceService">@L("PatientUnderHospiceService")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.hospiceReferralServiceList.isHospicePalliativeCareTeam }}</div>
+                                <label class="control-label view-label" for="isHospicePalliativeCareTeam">@L("HospicePalliativeCareTeamQuestion")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.hospiceReferralServiceList.othersHospiceCare }}</div>
+                                <label class="control-label view-label" for="othersHospiceCare">@L("HospicePalliativeCareTeam")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.hospiceReferralServiceList.isHospicePatientInform }}</div>
+                                <label class="control-label view-label" for="isHospicePatientInform">@L("PatientFamilyInformedForHospiceReferral")</label>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.hospiceReferralServiceList.copdChecked }}</div>
+                                <label class="control-label view-label" for="copdChecked">@L("COPDICPIncluded")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.hospiceReferralServiceList.copDforName }}</div>
+                                <label class="control-label view-label" for="copDforName">@L("COPDICPName")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.hospiceReferralServiceList.copDforDesignation }}</div>
+                                <label class="control-label view-label" for="copDforDesignation">@L("COPDICPDesignation")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.hospiceReferralServiceList.copDforPhone }}</div>
+                                <label class="control-label view-label" for="copDforPhone">@L("COPDICPPhoneNumber")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.hospiceReferralServiceList.copDforEmail }}</div>
+                                <label class="control-label view-label" for="copDforEmail">@L("COPDICPEmail")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.hospiceReferralServiceList.isProjectDiginity }}</div>
+                                <label class="control-label view-label" for="isProjectDiginity">@L("HospiceReferralInvolvedForProjectDignity")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reason For Hospice Referral Section -->
+            <div id="ReasonForHospiceReferral" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("ReasonForHospiceReferral")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50%;">@L("ReasonForHospiceReferral")</th>
+                                        <th style="width: 25%;">@L("ReasonForHospiceReferralOthers")</th>
+                                        <th style="width: 25%;">@L("ReasonForHospiceReferralOtherDrugTitration")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in serviceApplication.reasonForHospiceReferralList">
+                                        <td>{{ item.reasonForHospiceReferral }}</td>
+                                        <td>{{ item.othersHospiceReferral }}</td>
+                                        <td>{{ item.othersDrugTitration }}</td>
+                                    </tr>
+                                    <tr ng-show="!serviceApplication.reasonForHospiceReferralList">
+                                        <td colspan="3">
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informed Of Diagnosis Section -->
+            <div id="InformedOfDiagnosis" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("InformedOfDiagnosis")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.informedOfDiagnosisList.informedOfDiagnosis }}</div>
+                                <label class="control-label view-label" for="informedOfDiagnosis">@L("InformedOfDiagnosisDetail")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informed Of Prognosis Section -->
+            <div id="InformedOfPrognosis" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("InformedOfPrognosis")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.informedOfPrognosisList.informedOfPrognosis }}</div>
+                                <label class="control-label view-label" for="informedOfDiagnosis">@L("InformedOfPrognosisDetail")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reason For Project Dignity Section -->
+            <div id="ReasonForProjectDignity" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("ReasonForProjectDignity")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 100%;">@L("ReasonForProjectDignity")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in serviceApplication.reasonForProjectDignityList">
+                                        <td>{{ item.reasonForProjectDignity }}</td>
+                                    </tr>
+                                    <tr ng-show="!serviceApplication.reasonForProjectDignityList">
+                                        <td>
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Community Hospital Referral Service Section -->
+            <div id="CHReferralService" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("CHReferralService")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.chReferralServiceList.assignToCH }}</div>
+                                <label class="control-label view-label" for="assignToCH">@L("CHReferralAssignedTo")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.chReferralServiceList.typeofWardCH }}</div>
+                                <label class="control-label view-label" for="typeofWardCH">@L("TypeOfWard")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.chReferralServiceList.chkApplicantCH }}</div>
+                                <label class="control-label view-label" for="chkApplicantCH">@L("CHReferralAdmittedThisCalendarYear")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.chReferralServiceList.chcscCardHolder }}</div>
+                                <label class="control-label view-label" for="chcscCardHolder">@L("CHCSCCardHolder")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.chReferralServiceList.chIndustrialAccident }}</div>
+                                <label class="control-label view-label" for="chIndustrialAccident">@L("CHIndustrialAccidentCase")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.chReferralServiceList.chPoliceCase }}</div>
+                                <label class="control-label view-label" for="chPoliceCase">@L("CHPoliceCase")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.chReferralServiceList.specifyPoliceCase }}</div>
+                                <label class="control-label view-label" for="specifyPoliceCase">@L("CHPoliceCaseDetail")</label>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.chReferralServiceList.chkCOPDCH }}</div>
+                                <label class="control-label view-label" for="chkCOPDCH">@L("COPDICPIncluded")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.chReferralServiceList.copDforNameCH }}</div>
+                                <label class="control-label view-label" for="copDforNameCH">@L("COPDICPName")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.chReferralServiceList.copDforDesignationCH }}</div>
+                                <label class="control-label view-label" for="copDforDesignationCH">@L("COPDICPDesignation")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.chReferralServiceList.copDforPhoneCH }}</div>
+                                <label class="control-label view-label" for="copDforPhoneCH">@L("COPDICPPhoneNumber")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.chReferralServiceList.copDforEmailCH }}</div>
+                                <label class="control-label view-label" for="copDforEmailCH">@L("COPDICPEmail")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reason for Community Hospital Referral Section -->
+            <div id="ReasonForCHReferral" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("ReasonForCHReferral")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 100%;">@L("ReasonForCHReferral")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in serviceApplication.reasonForCHReferralList">
+                                        <td>{{ item.cHreasonForReferral }}</td>
+                                    </tr>
+                                    <tr ng-show="!serviceApplication.reasonForCHReferralList">
+                                        <td>
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub-Acute Reason for Community Hospital Referral Section -->
+            <div id="SubAcuteReasonForCH" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("SubAcuteReasonForCH")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50%;">@L("SubAcuteReasonForCH")</th>
+                                        <th style="width: 50%;">@L("SubAcuteReasonForCHOther")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in serviceApplication.subAcuteReasonListList">
+                                        <td>{{ item.chSubAcuteReasonList }}</td>
+                                        <td>{{ item.otherSubAcuteReason }}</td>
+                                    </tr>
+                                    <tr ng-show="!serviceApplication.subAcuteReasonListList">
+                                        <td>
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Community Hospital List that the patient is admitted this calender year Section -->
+            <div id="CommunityHospitalAdmissionCalendarYear" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("CHPatientAdmittedCalendarYear")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 100%;">@L("CHApplicant")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in serviceApplication.admittedCHThisCalenderYearList">
+                                        <td>{{ item.chApplicantList }}</td>
+                                    </tr>
+                                    <tr ng-show="!serviceApplication.admittedCHThisCalenderYearList">
+                                        <td>
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Type of Ward in Community Hospital Section -->
+            <div id="TypeOfWardCH" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("TypeOfWardCH")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 100%;">@L("TypeOfWardCH")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in serviceApplication.typeOfWardCHList">
+                                        <td>{{ item.typeOfWard }}</td>
+                                    </tr>
+                                    <tr ng-show="!serviceApplication.typeOfWardCHList">
+                                        <td>
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Information Section -->
+            <div id="FinancialInformation" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("FinancialInformation")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.financialInformationList.iltcTestCompleted }}</div>
+                                <label class="control-label view-label" for="iltcTestCompleted">@L("ILTCTestCompleted")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.financialInformationList.noILTCTestCompleted }}</div>
+                                <label class="control-label view-label" for="noILTCTestCompleted">@L("NoILTCTestCompleted")</label>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.financialInformationList.paRefNo }}</div>
+                                <label class="control-label view-label" for="paRefNo">@L("PARefNo")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.financialInformationList.mfecNo }}</div>
+                                <label class="control-label view-label" for="mfecNo">@L("MFECNo")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other Remarks Section -->
+            <div id="OtherRemarks" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("OtherRemarks")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ serviceApplication.serviceApplicationList.otherRemarks }}</div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

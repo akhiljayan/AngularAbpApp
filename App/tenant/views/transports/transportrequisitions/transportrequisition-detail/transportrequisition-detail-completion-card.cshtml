@@ -1,0 +1,61 @@
+﻿<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("Completion")</div>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class='view'>
+            <strong>@L("CompletedOn")</strong>
+            <p>{{ vm.model.completionDateTime | dateTimeFormat }}</p>
+
+            <strong>@L("TypeOfVehicleProvided")</strong>
+            <p>{{ vm.model.vehicleTypeProvided.description }}</p>
+
+            <strong>@L("VehicleNumber")</strong>
+            <p>{{ vm.model.actualVehicleNumber || '-' }}</p>
+
+            <div class="font-16-important padding-bottom-10" style="font-weight: bold !important">
+                <strong>@L("Pickup")</strong>
+            </div>
+
+            <strong>@L("PickupDriver")</strong>
+            <p>{{ vm.model.pickupDriver.fullName }}</p>
+
+            <strong>@L("PickupStatus")</strong>
+            <p>{{ vm.model.pickupStatus | enumText: 'pickupReturnStatus' }}</p>
+
+            <strong>@L("PickupDateTime")</strong>
+            <p>{{ vm.model.actualPickupDateTime | dateTimeFormat }}</p>
+
+            <strong>@L("AbortTripReason")</strong>
+            <p ng-if="!vm.isNumber(vm.model.pickupAbortTripReason)">-</p>
+            <p ng-if="vm.isNumber(vm.model.pickupAbortTripReason)">{{ vm.model.pickupAbortTripReason | enumText: 'abortTripReason' }}</p>
+
+            <strong>@L("AbortTripRemarks")</strong>
+            <p>{{ vm.model.pickupAbortTripRemarks || '-' }}</p>
+
+            <div ng-if="vm.model.tripType == 'TwoWays'">
+                <div class="font-16-important padding-bottom-10" style="font-weight: bold !important">
+                    <strong>@L("Return")</strong>
+                </div>
+
+                <strong>@L("ReturnDriver")</strong>
+                <p>{{ vm.model.returnDriver.fullName }}</p>
+
+                <strong>@L("ReturnStatus")</strong>
+                <p>{{ vm.model.returnStatus | enumText: 'pickupReturnStatus' }}</p>
+
+                <strong>@L("ReturnDateTime")</strong>
+                <p>{{ vm.model.returnDateTime | dateTimeFormat }}</p>
+
+                <strong>@L("AbortTripReason")</strong>
+                <p ng-if="!vm.isNumber(vm.model.returnAbortTripReason)">-</p>
+                <p ng-if="vm.isNumber(vm.model.returnAbortTripReason)">{{ vm.model.returnAbortTripReason | enumText: 'abortTripReason' }}</p>
+
+                <strong>@L("AbortTripRemarks")</strong>
+                <p>{{ vm.model.returnAbortTripRemarks || '-' }}</p>
+            </div>
+        </div>
+    </div>
+</div>

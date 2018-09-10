@@ -1,0 +1,718 @@
+﻿@model ReferralDto
+@using IRMS.Entities.Dto;
+<div ng-controller="tenant.views.irms.medicalView as medical">
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div busy-if="vm.loading">
+            <!-- Primary Diagnosis Section -->
+            <div id="PrimaryDiagnosis" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("PrimaryDiagnosis")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.medicalReportList.primaryDiagnosisDescription }}</div>
+                                <label class="control-label view-label" for="primaryDiagnosisDescription">@L("Description")</label>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.medicalReportList.primaryDiagnosisCode }}</div>
+                                <label class="control-label view-label" for="primaryDiagnosisCode">@L("Code")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.medicalReportList.primaryDiagnosisRemarks }}</div>
+                                <label class="control-label view-label" for="primaryDiagnosisRemarks">@L("Remarks")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secondary Diagnosis Section -->
+            <div id="SecondaryDiagnosis" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("SecondaryDiagnosis")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%;">@L("Description")</th>
+                                        <th style="width: 20%;">@L("Code")</th>
+                                        <th style="width: 50%;">@L("Remarks")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in medical.secondaryDiagnosisList">
+                                        <td>{{ item.secondaryDiagnosisDescription }}</td>
+                                        <td>{{ item.code }}</td>
+                                        <td>{{ item.secondaryDiagnosisRemarks }}</td>
+                                    </tr>
+                                    <tr ng-show="!medical.secondaryDiagnosisList">
+                                        <td colspan="3">
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other Secondary Diagnosis Section -->
+            <div id="OtherSecondaryDiagnosis" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("OtherSecondaryDiagnosis")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 100%;">@L("Description")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in medical.otherSecondaryDiagnosisList">
+                                        <td>{{ item.diseaseSpecifyDetail }}</td>
+                                    </tr>
+                                    <tr ng-show="!medical.otherSecondaryDiagnosisList">
+                                        <td>
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Disease Section -->
+            <div id="Disease" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("Disease")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+
+                    <!-- Infectious Disease Sub-Section -->
+                    <div id="InfectiousDisease">
+                        <div class="caption">
+                            <h4 class="bold">@L("InfectiousDisease")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10%;">@L("MRSA")</th>
+                                            <th style="width: 10%;">@L("MRSASpecified")</th>
+                                            <th style="width: 10%;">@L("VRE")</th>
+                                            <th style="width: 10%;">@L("PTB")</th>
+                                            <th style="width: 10%;">@L("PTBSpecified")</th>
+                                            <th style="width: 10%;">@L("OtherInfectious")</th>
+                                            <th style="width: 10%;">@L("NDMInfectious")</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in medical.infectiousDiseaseList">
+                                            <td>{{ item.mrsa }}</td>
+                                            <td>{{ item.mrsaSpecify }}</td>
+                                            <td>{{ item.vre }}</td>
+                                            <td>{{ item.ptb }}</td>
+                                            <td>{{ item.ptbDescription }}</td>
+                                            <td>{{ item.otherInfectiousRemarks }}</td>
+                                            <td>{{ item.ndmInfectiousRemarks }}</td>
+                                        </tr>
+                                        <tr ng-show="!medical.infectiousDiseaseList">
+                                            <td colspan="9">
+                                                @L("NoRecordsFound")
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Other Infectious Disease Sub-Section -->
+                    <div id="OtherInfectiousDisease">
+                        <div class="caption">
+                            <h4 class="bold">@L("OtherInfectiousDisease")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 100%;">@L("OtherDisease")</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in medical.otherInfectiousDiseaseList">
+                                            <td>{{ item.infectiousDisease }}</td>
+                                        </tr>
+                                        <tr ng-show="!medical.otherInfectiousDiseaseList">
+                                            <td colspan="1">
+                                                @L("NoRecordsFound")
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Precaution Required Section -->
+            <div id="PrecautionRequired" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("PrecautionRequired")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+
+                    <!-- Precaution Required Sub-Section -->
+                    <div id="PrecautionRequired">
+                        <div class="caption">
+                            <h4 class="bold">@L("PrecautionRequired")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ medical.precautionRequiredList.precautionRequired }}</div>
+                                    <label class="control-label view-label" for="precautionRequired">@L("PrecautionRequired")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ medical.precautionRequiredList.otherPrecautionRequired }}</div>
+                                    <label class="control-label view-label" for="otherPrecautionRequired">@L("OtherPrecautionRequired")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medical Clinical History Sub-Section -->
+                    <div id="MedicalClinicalHistory">
+                        <div class="caption">
+                            <h4 class="bold">@L("MedicalClinicalHistory")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text"><span class="html-format-body-content" ng-bind-html="medical.medicalReportList.history"></span></div>
+                                    <label class="control-label view-label" for="history">@L("History")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ medical.procedureDescriptionList.procedureDescription }}</div>
+                                    <label class="control-label view-label" for="procedureDescription">@L("Procedure")</label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ medical.procedureDescriptionList.procedureDescriptionDate | irmsDateFormat }}</div>
+                                    <label class="control-label view-label" for="procedureDescriptionDate">@L("ProcedureDate")</label>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ medical.procedureDescriptionList.procedureDescriptionCode }}</div>
+                                    <label class="control-label view-label" for="procedureDescriptionCode">@L("ProcedureCode")</label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ medical.procedureDescriptionList.procedureDescriptionRemarks }}</div>
+                                    <label class="control-label view-label" for="procedureDescriptionRemarks">@L("ProcedureRemarks")</label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Medical Investigation Sub-Section -->
+                    <div id="MedicalInvestigation">
+                        <div class="caption">
+                            <h4 class="bold">@L("MedicalInvestigation")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text"><span class="html-format-body-content" ng-bind-html="medical.medicalReportList.investigations"></span></div>
+                                    <label class="control-label view-label" for="investigations">@L("Investigation")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text"><span class="html-format-body-content" ng-bind-html="medical.medicalReportList.otherInvestigation"></span></div>
+                                    <label class="control-label view-label" for="otherInvestigation">@L("OtherInvestigation")</label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ medical.medicalReportList.xRayDate | irmsDateFormat }}</div>
+                                    <label class="control-label view-label" for="xRayDate">@L("X-RayDate")</label>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ medical.medicalReportList.xRayType }}</div>
+                                    <label class="control-label view-label" for="xRayType">@L("X-RayType")</label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ medical.medicalReportList.xRayResultRemark }}</div>
+                                    <label class="control-label view-label" for="xRayResultRemark">@L("X-RayResult")</label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Drug Allery History Sub-Section -->
+                    <div id="MedicalDrugAlleryHistory">
+                        <div class="caption">
+                            <h4 class="bold">@L("MedicalDrugAlleryHistory")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%;">@L("Description")</th>
+                                            <th style="width: 15%;">@L("Code")</th>
+                                            <th style="width: 15%;">@L("Date")</th>
+                                            <th style="width: 40%;">@L("Remarks")</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in medical.drugAllergyList">
+                                            <td>{{ item.drugAllergyDescription }}</td>
+                                            <td>{{ item.drugAllergyCode }}</td>
+                                            <td>{{ item.drugAllergyDate | irmsDateFormat }}</td>
+                                            <td>{{ item.drugAllergyRemarks }}</td>
+                                        </tr>
+                                        <tr ng-show="!medical.drugAllergyList">
+                                            <td colspan="4">
+                                                @L("NoRecordsFound")
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Current Medication Sub-Section -->
+                    <div id="MedicalCurrentMedication">
+                        <div class="caption">
+                            <h4 class="bold">@L("MedicalCurrentMedication")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%;">@L("Name")</th>
+                                            <th style="width: 10%;">@L("Code")</th>
+                                            <th style="width: 30%;">@L("Instructions")</th>
+                                            <th style="width: 15%;">@L("DosageRegimen")</th>
+                                            <th style="width: 15%;">@L("Route")</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in medical.currentMedicationList">
+                                            <td>{{ item.medicationName }}</td>
+                                            <td>{{ item.medicationCode }}</td>
+                                            <td>{{ item.instructions }}</td>
+                                            <td>{{ item.dosageRegimen }}</td>
+                                            <td>{{ item.route }}</td>
+                                        </tr>
+                                        <tr ng-show="!medical.currentMedicationList">
+                                            <td colspan="5">
+                                                @L("NoRecordsFound")
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medical Alert Sub-Section -->
+                    <div id="MedicalAlertAttention">
+                        <div class="caption">
+                            <h4 class="bold">@L("MedicalAlertAttention")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%;">@L("Description")</th>
+                                            <th style="width: 15%;">@L("Code")</th>
+                                            <th style="width: 15%;">@L("Date")</th>
+                                            <th style="width: 40%;">@L("Remarks")</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in medical.alertList">
+                                            <td>{{ item.alDescription }}</td>
+                                            <td>{{ item.alCode }}</td>
+                                            <td>{{ item.alDate | irmsDateFormat }}</td>
+                                            <td>{{ item.remarks }}</td>
+                                        </tr>
+                                        <tr ng-show="!medical.alertList">
+                                            <td colspan="4">
+                                                @L("NoRecordsFound")
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Patient Rehabilitation Sub-Section -->
+                    <div id="MedicalPatientRehabilitation">
+                        <div class="caption">
+                            <h4 class="bold">@L("MedicalPatientRehabilitation")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ medical.medicalReportList.patientRequiredRehab }}</div>
+                                    <label class="control-label view-label" for="patientRequiredRehab">@L("PatientRehabilitationRequired")</label>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ medical.medicalReportList.patientFitToUndergoRehab }}</div>
+                                    <label class="control-label view-label" for="patientFitToUndergoRehab">@L("PatientRehabilitationFit")</label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ medical.medicalReportList.patientRehabRemarks }}</div>
+                                    <label class="control-label view-label" for="patientRehabRemarks">@L("Remarks")</label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Weight Bearing Status Sub-Section -->
+                    <div id="WeightBearingStatus">
+                        <div class="caption">
+                            <h4 class="bold">@L("MedicalWeightBearingStatus")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ medical.medicalReportList.weightBearingStatus }}</div>
+                                    <label class="control-label view-label" for="weightBearingStatus">@L("WeightBearingStatus")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ medical.medicalReportList.patialNWBValue }}</div>
+                                    <label class="control-label view-label" for="patialNWBValue">@L("PatialNWBValue")</label>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ medical.medicalReportList.nwbDuration }}</div>
+                                    <label class="control-label view-label" for="nwbDuration">@L("NWBDuration")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ medical.medicalReportList.dateAllowedToBearweight }}</div>
+                                    <label class="control-label view-label" for="dateAllowedToBearweight">@L("NWBAllowDate")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ medical.medicalReportList.nwbReviewDate | irmsDateFormat }}</div>
+                                    <label class="control-label view-label" for="nwbReviewDate">@L("NWBReviewDate")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Other Remarks Sub-Section -->
+                    <div id="MedicalOtherRemarks">
+                        <div class="caption">
+                            <h4 class="bold">@L("MedicalOtherRemarks")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ medical.medicalReportList.otherRemarks }}</div>
+                                    <label class="control-label view-label" for="otherRemarks">@L("OtherRemarks")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medical Report For Community Hospital Service Section -->
+            <div id="MedicalReportForCommunityHospitalService" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("MedicalReportForCommunityHospitalService")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.latestHBTWDCDate_CH | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="latestHBTWDCDate_CH">@L("HBTWDCLatestDate")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.onHBTWDCAdmDate_CH | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="onHBTWDCAdmDate_CH">@L("HBTWDCAdmissionDate")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.latestHB_CH }}</div>
+                                <label class="control-label view-label" for="latestHB_CH">@L("LatestHB")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.onAdmHB_CH | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="onAdmHB_CH">@L("HBAdmissionDate")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.latestTWC_CH }}</div>
+                                <label class="control-label view-label" for="latestTWC_CH">@L("LatestTWDC")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.onAdmTWC_CH | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="onAdmTWC_CH">@L("TWDCAdmissionDate")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.latestPlatelets_CH }}</div>
+                                <label class="control-label view-label" for="latestPlatelets_CH">@L("LatestPlatelets")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.onAdmPlatelets_CH | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="onAdmPlatelets_CH">@L("PlateletsAdmissionDate")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.latestUECrSugarDate_CH }}</div>
+                                <label class="control-label view-label" for="latestUECrSugarDate_CH">@L("LatestUECrSugar")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.onUECrSugarAdmDate_CH | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="onUECrSugarAdmDate_CH">@L("UECrSugarAdmissionDate")</label>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.latestUrea_CH }}</div>
+                                <label class="control-label view-label" for="latestUrea_CH">@L("LatestUrea")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.onAdmUrea_CH | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="onAdmUrea_CH">@L("UreaAdmissionDate")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.latestSodium_CH }}</div>
+                                <label class="control-label view-label" for="latestSodium_CH">@L("LatestSodium")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.onAdmSodium_CH | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="onAdmSodium_CH">@L("SodiumAdmissionDate")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.latestPotassium_CH }}</div>
+                                <label class="control-label view-label" for="latestPotassium_CH">@L("LatestPotassium")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.onAdmPotassium_CH | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="onAdmPotassium_CH">@L("PotassiumAdmissionDate")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.latestSugar_CH }}</div>
+                                <label class="control-label view-label" for="latestSugar_CH">@L("LatestSugar")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.onAdmSugar_CH | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="onAdmSugar_CH">@L("SugarAdmissionDate")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.latestCr_CH }}</div>
+                                <label class="control-label view-label" for="latestCr_CH">@L("LatestCr")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForCHService.onAdmCr_CH | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="onAdmCr_CH">@L("CrAdmissionDate")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medical Report For Hospice Service Section -->
+            <div id="MedicalReportForHospiceService" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("MedicalReportForHospiceService")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForHospiceService.histopathoLogical_Diagnosis_HP }}</div>
+                                <label class="control-label view-label" for="histopathoLogical_Diagnosis_HP">@L("HistopathologicalDiagnosis")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForHospiceService.siteofMetastases_HP }}</div>
+                                <label class="control-label view-label" for="siteofMetastases_HP">@L("SitesOfMetastasis")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForHospiceService.dateofDiagnosis_HP | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="dateofDiagnosis_HP">@L("DiagnosisDate")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForHospiceService.prognosis_HP }}</div>
+                                <label class="control-label view-label" for="prognosis_HP">@L("Prognosis")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ medical.mrForHospiceService.presentCondition_HP }}</div>
+                                <label class="control-label view-label" for="presentCondition_HP">@L("PresentCondition")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

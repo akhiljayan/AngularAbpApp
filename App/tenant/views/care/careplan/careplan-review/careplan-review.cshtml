@@ -1,0 +1,92 @@
+﻿@model CreateReviewInput
+
+@using PulseSync.IngoTPCC.Application.Care.CarePlans.Dto
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">{{ vm.action }}</span>
+        </div>
+        <div class="tools pull-right">
+            @*<minimize-modal></minimize-modal>*@
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form modal-body">
+        <div class="form-wizard">
+            <div class="form-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        @{
+                            var attrs = new Dictionary<string, object>();
+                            attrs.Add("name", "vm.form");
+                            attrs.Add("novalidate", "");
+                            attrs.Add("angular-validator", "");
+                        }
+                        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs).AddClass("scrollable-form-body")))
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                @*<div class="form-group form-md-line-input">
+                                    <select class="form-control" id="Problem" ng-model="vm.workingModel.problem" disabled>
+                                        <option ng-repeat="x in vm.problemMaster" value="{{ x.id }}">{{ x.description }}</option>
+                                    </select>
+                                    <label class="control-label" for="Problem">@L("SelectProblem")</label>
+                                </div>*@
+                                @s.FieldFor(c => c.PersonProblemId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.problemId", repeat = "vm.problemMaster", ng_disabled = "true" })
+                                
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4">
+                                        @*<div class="form-group form-md-line-input">
+                                            <select class="form-control" id="ReviewedBy" ng-model="vm.workingModel.reviewedByUserId" required required-message="'You must provide a value for Reviewed By.'" validate-on="dirty">
+                                                <option ng-repeat="x in vm.peopleMaster" value="{{ x.id }}">{{ x.name }}</option>
+                                            </select>
+                                            <label class="control-label" for="ReviewedBy">@L("ReviewedBy")</label>
+                                        </div>*@
+                                        @s.FieldFor(c => c.ReviewedByUserId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.reviewedByUserId", repeat = "vm.peopleMaster", ui_select_required = "ui_select_required" })
+                                    </div>
+
+                                    <div class="col-md-4 col-sm-4">
+                                        @*<div class="form-group form-md-line-input">
+                                            <div class="input-group date date-picker">
+                                                <input class="form-control dateinput" data-date-picker="" id="ReviewedOn" ng-model="vm.workingModel.reviewedOn" required required-message="'You must provide a value for Reviewed On.'" type="text" validate-on="dirty"  />
+                                                <div class="input-group-addon">
+                                                    <i class="material-icons" style="line-height: 14px;">date_range</i>
+                                                </div>
+                                                <label class="control-label" for="ReviewedOn">@L("ReviewedOn")<span class="businessRequired"> * </span></label>
+                                            </div>
+                                        </div>*@
+                                        @s.FieldFor(c => c.ProgressNoteDateTime).Attrs(new { ng_model = "vm.workingModel.progressNoteDateTime", Validate = "false", Restrict = "reject", required = "required", required_message = "'You must provide a value for Reviewed On.'", maxdate = "0d" })
+                                    </div>
+
+                                    <div class="col-md-4 col-sm-4">
+                                        @*<div class="form-group form-md-line-input">
+                                            <div class="input-group date date-picker">
+                                                <input class="form-control dateinput" data-date-picker="" id="NextReviewDate" ng-model="vm.workingModel.nextReviewDate" required required-message="'You must provide a value for Next Review Date.'" type="text" validate-on="dirty"  />
+                                                <div class="input-group-addon">
+                                                    <i class="material-icons" style="line-height: 14px;">date_range</i>
+                                                </div>
+                                                <label class="control-label" for="NextReviewDate">@L("CarePlanNextReviewDate")<span class="businessRequired"> * </span></label>
+                                            </div>
+                                        </div>*@
+                                        @s.FieldFor(c => c.NextReviewDate).Attrs(new { ng_model = "vm.workingModel.nextReviewDate", mindate = "0d", Validate = "false", Restrict = "reject", required = "required", required_message = "'You must provide a value for Reviewed On.'" })
+                                    </div>
+
+                                </div>
+                                
+                                @s.FieldFor(c => c.Remarks).Attrs(new { ng_model = "vm.workingModel.remarks" }).AddClass("animate msd-elastic: \\n;").Rows(2)
+                                <span></span>
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions noborder right modal-footer">
+            <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.onSave()"> Save <i class="fa fa-check"></i></button>
+            <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>@L("Cancel")</button>
+        </div>
+    </div>
+</div>

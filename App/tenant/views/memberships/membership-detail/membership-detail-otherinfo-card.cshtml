@@ -1,0 +1,108 @@
+﻿@model MembershipDto
+
+@using Pulsesync.IngoTPCC.Application.Membership.Dto;
+
+@{
+    var autosizeClass = "animate msd-elastic: \\n;";
+}
+
+<div id="OtherInformation" class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("OtherInformation")</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+            <div ng-switch="vm.mode">
+                <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                    @using (var f = Html.BeginSubForm())
+                    {
+                        using (var s = f.BeginSection())
+                        {
+                            @(s.FieldFor(m => m.Person.HighestEducationId)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.person.highestEducationId",
+                                ng_change = "vm.initialiseOthersHighestEducation($select.selected.description)"
+
+                            })
+                            .AsDropDown())
+
+                            <div class="form-group form-md-line-input" ng-if="vm.showOthersHighestEducation">
+                                <input type="text" ng-model="vm.model.person.othersHighestEducation" class="form-control" id="othersHighestEducation" name="othersHighestEducation" placeholder="Provide Other Highest Education" ng-required="true" required-message="'@L("OthersPleaseSpecifyErrorMessage")'">
+                                <label class="control-label" for="othersHighestEducation">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                            </div>
+
+                            @(s.FieldFor(m => m.Person.LastOccupationId)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.person.lastOccupationId"
+                            })
+                            .AsDropDown())
+
+                            @(s.FieldFor(m => m.Person.OccupationDetailsPrevious)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.person.occupationDetailsPrevious"
+                            }))
+
+                            @(s.FieldFor(m => m.Person.LiftLandingId)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.person.liftLandingId"
+                            })
+                            .AsDropDown())
+
+                            @(s.FieldFor(m => m.Person.LivingArrangementId)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.person.livingArrangementId",
+                                ng_change = "vm.initialiseOthersLivingArrangement($select.selected.description)"
+                            })
+                            .AsDropDown())
+
+                            <div class="form-group form-md-line-input" ng-if="vm.showOthersLivingArrangement">
+                                <input type="text" ng-model="vm.model.person.othersLivingArrangement" class="form-control" id="othersLivingArrangement" name="othersLivingArrangement" placeholder="Provide Other Living Arrangement" ng-required="true" required-message="'@L("OthersPleaseSpecifyErrorMessage")'">
+                                <label class="control-label" for="othersLivingArrangement">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                            </div>
+                        }
+                    }
+                </div>
+
+                <div ng-switch-default>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group form-md-line-input margin-bottom-20">
+                                <div class="form-control remove-border auto-height">{{ vm.model.person.highestEducation.description || '-' }}</div>
+                                <label class="control-label view-label">@L("HighestEducation")</label>
+                            </div>
+                            <div ng-if="vm.model.person.othersHighestEducation" class="form-group form-md-line-input margin-bottom-20">
+                                <div class="form-control remove-border auto-height">{{ vm.model.person.othersHighestEducation || '-' }}</div>
+                                <label class="control-label view-label">@L("OthersHighestEducation")</label>
+                            </div>
+                            <div class="form-group form-md-line-input margin-bottom-20">
+                                <div class="form-control remove-border auto-height">{{ vm.model.person.lastOccupation.description || '-' }}</div>
+                                <label class="control-label view-label">@L("LastOccupation")</label>
+                            </div>
+                            <div class="form-group form-md-line-input margin-bottom-20">
+                                <div class="form-control remove-border auto-height">{{ vm.model.person.occupationDetailsPrevious || '-' }}</div>
+                                <label class="control-label view-label">@L("OccupationDetailsPrevious")</label>
+                            </div>
+                            <div class="form-group form-md-line-input margin-bottom-20">
+                                <div class="form-control remove-border auto-height">{{ vm.model.person.liftLanding.description || '-' }}</div>
+                                <label class="control-label view-label">@L("LiftLanding")</label>
+                            </div>
+                            <div class="form-group form-md-line-input margin-bottom-20">
+                                <div class="form-control remove-border auto-height">{{ vm.model.person.livingArrangement.description || '-' }}</div>
+                                <label class="control-label view-label">@L("LivingArrangement")</label>
+                            </div>
+                            <div ng-if="vm.model.person.othersLivingArrangement" class="form-group form-md-line-input margin-bottom-20">
+                                <div class="form-control remove-border auto-height">{{ vm.model.person.othersLivingArrangement || '-' }}</div>
+                                <label class="control-label view-label">@L("OthersLivingArrangement")</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+     </div>
+</div>

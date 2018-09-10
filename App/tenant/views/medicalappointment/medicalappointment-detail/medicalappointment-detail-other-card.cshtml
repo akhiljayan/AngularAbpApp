@@ -1,0 +1,85 @@
+﻿@using Pulsesync.IngoTPCC.MedicalAppointment
+@model MedicalAppointmentDto
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("Others")</div>
+        </div>
+        <div class="actions dropdown inputs" ng-if="vm.mode!='new'">
+            <a class="icon-wrapper" ng-if="vm.mode=='view' && vm.permissions.edit && !vm.model.isConfirmed && !vm.model.isCancelled" ng-click="vm.mode='edit'">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools" ng-if="vm.mode!='new'">
+            <a class="remove" ng-if="vm.mode=='edit'" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @{
+                    var attrs = new Dictionary<string, object>();
+                    attrs.Add("name", "vm.form");
+                    attrs.Add("novalidate", "");
+                    attrs.Add("angular-validator", "");
+                    attrs.Add("angular-validator-submit", "vm.save($event)");
+                }
+
+                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs)))
+                {
+                    using (var s = f.BeginSection())
+                    {
+                         @s.FieldFor(m => m.TransportArrangementRequired).Label(@L("TransportArrangementRequired")).Attrs(new { ng_model = "vm.workingModel.transportArrangementRequired" })
+                        @s.FieldFor(m => m.NurseCompanionOrEscortRequired).Label(@L("NurseCompanionOrEscortRequired")).Attrs(new { ng_model = "vm.workingModel.nurseCompanionOrEscortRequired" })
+                        @s.FieldFor(m => m.Status).AsDropDown().Attrs(new { ng_model = "vm.workingModel.status", repeat= "vm.appointmentStatusList", name = "Status" })
+                        @s.FieldFor(m => m.FollowUp).AsDropDown().Attrs(new { ng_model = "vm.workingModel.followUp", repeat = "vm.followUpList", name = "FollowUp" }).Label(@L("FollowUp"))
+                        @s.FieldFor(m => m.ReasonForAppointment).Attrs(new { ng_model = "vm.workingModel.reasonForAppointment", name = "Remarks", ng_maxlength = "4000" }).AddClass("form-control animate msd-elastic: \\n;  ng-valid ng-not-empty ng-dirty ng-valid-parse").Label(@L("ReasonForAppointment"))
+                        @s.FieldFor(m => m.Remarks).Attrs(new { ng_model = "vm.workingModel.remarks", name = "Remarks", ng_maxlength = "4000" }).AddClass("form-control animate msd-elastic: \\n;  ng-valid ng-not-empty ng-dirty ng-valid-parse")
+
+                        <div class="form-actions pull-right" ng-if="vm.mode!='new'">
+                            <button class="linkButton btn-small" type="submit">
+                                <i class="material-icons font-18-main v-top">save</i> @L("Save")
+                            </button>
+                            <button class="linkButton btn-small" type="button" ng-click="vm.cancel()">
+                                <i class="material-icons font-18-main v-top">close</i> @L("Cancel")
+                            </button>
+                        </div>
+                    }
+                }
+            </div>
+            <div ng-switch-default>
+                @using (var f = Html.BeginForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.model.transportArrangementRequired ? "Yes" : "No"}}</div>
+                            <label class="control-label view-label" for="transportArrangementRequired">@L("TransportArrangementRequired")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.model.nurseCompanionOrEscortRequired ? "Yes" : "No"}}</div>
+                            <label class="control-label view-label" for="nurseCompanionOrEscortRequired">@L("NurseCompanionOrEscortRequired")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.status | enumText: 'medicalAppointmentStatusType'}}</div>
+                            <label class="control-label" for="status">@L("Status")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.followUp | enumText: 'medicalAppointmentFollowUpType'}}</div>
+                            <label class="control-label" for="followUp">@L("FollowUp")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.model.reasonForAppointment}}</div>
+                            <label class="control-label view-label" for="reasonForAppointment">@L("ReasonForAppointment")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.model.remarks}}</div>
+                            <label class="control-label view-label" for="remarks">@L("Remarks")</label>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

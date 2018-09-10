@@ -1,0 +1,128 @@
+﻿@model ReferralDto
+@using IRMS.Entities.Dto;
+<div ng-controller="tenant.views.irms.socialView as social">
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div busy-if="vm.loading">
+            <!-- Social Background/ Family Background Section -->
+            <div id="SocialBackground" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("SocialBackground")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text"><span class="html-format-body-content" ng-bind-html="social.socialReportList.socialbackground"></span></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Premorbid Condition (ADL) / Functional Status and Care Need Section -->
+            <div id="PremorbidConditionADLFunctionalStatusAndCareNeed" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("PremorbidConditionADLFunctionalStatusAndCareNeed")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text"><span class="html-format-body-content" ng-bind-html="social.socialReportList.functionalStatusAndCareNeed"></span></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Criteria Assessment -->
+            <div id="SocialCriteriaAssessment" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("SocialCriteriaAssessment")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text"><span class="html-format-body-content" ng-bind-html="social.socialReportList.socialCriteriaAssessment"></span></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Background/ Financial Assessment -->
+            <div id="FinancialBackgroundFinancialAssessment" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("FinancialBackgroundFinancialAssessment")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text"><span class="html-format-body-content" ng-bind-html="social.socialReportList.financialAssessment"></span></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Assistance -->
+            <div id="AdditionalAssistance" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("AdditionalAssistance")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text"><span class="html-format-body-content" ng-bind-html="social.socialReportList.additionalAssistance"></span></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendation -->
+            <div id="Recommendation" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("Recommendation")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text"><span class="html-format-body-content" ng-bind-html="social.socialReportList.recommendation"></span></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

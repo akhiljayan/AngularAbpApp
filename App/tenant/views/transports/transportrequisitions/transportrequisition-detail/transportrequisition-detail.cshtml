@@ -1,0 +1,117 @@
+﻿<style>
+    .portlet p {
+        padding: 6px 0;
+        margin: 0 0 25px 0;
+    }
+
+    .portlet .view strong {
+        font-weight: normal;
+        color: #757575;
+    }
+
+    .portlet .view p {
+        color: #555555;
+    }
+</style>
+
+@{
+    var attrs = new Dictionary<string, object>();
+    attrs.Add("name", "vm.form");
+    attrs.Add("novalidate", "");
+    attrs.Add("angular-validator", "");
+}
+@using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs)))
+{
+    <div class="row" busy-if="vm.loading">
+        <div id="main-header-with-tab header-sticky-index" class="row main-header-with-tab" hide-on-scroll sticky offset="75" pinned="{{vm.personHeaderisPinned}}" style="z-index:1000 !important;">
+            <div class="row bg-white header-sticky-index" @*id="person-header" *@ @*sticky offset="75" *@ @*media-query="min-width: 992px" *@ style="height: 86px; padding: 6px 0px; border-bottom:0.2px solid #d8d8d8;box-shadow: 0 0 0 rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.18)">
+                <person-header person-id="vm.model.personId" mode="vm.mode"></person-header>
+                <div class="col-xs-1 col-sm-1 text-right pull-right" style="margin-top:-15px">
+                    <span ng-if="!vm.personHeaderisPinned" class="mt-comment-date otherText" ng-click="vm.personHeaderisPinned = true">
+                        <i class="icon-pin font-default"></i>
+                    </span>
+                    <span ng-if="vm.personHeaderisPinned" class="mt-comment-date otherText" ng-click="vm.personHeaderisPinned = false">
+                        <i class="icon-pin fontStealGreen"></i>
+                    </span>
+                </div>
+            </div>
+            @* --- Navigation Tabs --- *@
+            <div class="row" id="person-tabs" @*set-class-when-at-top="fix-to-top" *@ @*sticky offset="160" *@ @*media-query="min-width: 992px" *@ style="top:0px;background-color:#f9f9f9;margin-bottom: 10px; box-shadow: 0 0 0 rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.18)">
+                <div class="col-md-12 col-sm-12">
+                    <div class="col-md-1 col-sm-1 tabbable-line" style="text-align:left">
+                        <div class="dropdown">
+                            <span class="dropdown-toggle" id="navigation-menu" type="button" data-toggle="dropdown" style="cursor:pointer;margin-top: 15px; display: inline-block;">
+                                @*<i class="fa fa-th-list" aria-hidden="true" style="padding-top:18px; font-size:20px;color:#acacac;"></i>*@
+                                <i class="ps-icon-section-menu" style="font-size:20px;color:#acacac;"></i>
+                            </span>
+                            <div class="dropdown-menu" aria-labelledby="navigation-menu" role="menu" style="width: 350px; background-color:#f9f9f9">
+                                <li role="presentation" ng-repeat="navigate in vm.navigationalMenu" ng-if="navigate.permission">
+                                    <a role="menuitem" tabindex="-1" class="bold" href="#" ng-click="vm.gotoAnchor(navigate.key)">{{navigate.displayName}}</a>
+                                </li>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-11 col-sm-11 tabbable-line" style="text-align:left">
+                        <div class="form-actions pull-right">
+                            <a class="linkButton btn-small inline-flex-center" master-save ng-click="vm.saveTransportRequisition()" ng-if="vm.mode=='new' || vm.mode=='edit'" ng-class="{'disabled-link': vm.isSavingDisabled }">
+                                <i class="material-icons font-18-main v-top">save</i> @L("Save")
+                            </a>
+                            <a class="linkButton btn-small inline-flex-center" master-save ng-click="vm.saveTransportRequisition(true)" ng-if="vm.mode=='new' || vm.mode=='edit'" ng-class="{'disabled-link': vm.isSavingDisabled }">
+                                <i class="ps-icon-1x ps-icon-savenclose grey"></i> @L("SaveAndClose")
+                            </a>
+                            <a class="linkButton btn-small inline-flex-center" ng-click="vm.mode='edit'" ng-if="vm.mode!='new' && vm.mode!='edit' && vm.permissions.edit && !vm.model.isCancelled && !vm.model.isConfirmed && !vm.model.isCompleted" ng-class="{'disabled-link': vm.isSavingDisabled }">
+                                <i class="material-icons font-18-main v-top">edit</i> @L("Edit")
+                            </a>
+                            <a class="linkButton btn-small inline-flex-center" ng-click="vm.confirmTransportRequisition()" ng-if="vm.mode!='new' && vm.mode!='edit' && vm.permissions.confirm && !vm.model.isConfirmed && !vm.model.isCancelled">
+                                <i class="material-icons  font-18-main v-top">lock</i> @L("Confirm")
+                            </a>
+                            <a class="linkButton btn-small inline-flex-center" ng-click="vm.completeTransportRequisition()" ng-if="vm.mode!='new' && vm.mode!='edit' && vm.permissions.complete && vm.model.isConfirmed && !vm.model.isCancelled && !vm.model.isCompleted">
+                                <i class="fa fa-check-circle font-18-main v-top" style="font-size: 20px;"></i> @L("Complete")
+                            </a>
+                            <a class="linkButton btn-small inline-flex-center" ng-click="vm.cancelTransportRequisition()" ng-if="vm.mode!='new' && vm.mode!='edit' && vm.permissions.cancel && !vm.model.isCancelled">
+                                <i class="material-icons  font-18-main v-top">block</i> @L("Cancel")
+                            </a>
+                            <a class="linkButton btn-small inline-flex-center" ng-click="vm.deleteTransportRequisition()" ng-if="vm.mode!='new' && vm.permissions.delete && !vm.model.isCancelled && !vm.model.isConfirmed && !vm.model.isCompleted">
+                                <i class="material-icons font-18-main v-top">delete_forever</i> @L("Delete")
+                            </a>
+                            <a class="linkButton btn-small inline-flex-center" ng-if="vm.mode!='edit'" ng-click="vm.close()">
+                                <i class="material-icons  font-18-main v-top">close</i> @L("Close")
+                            </a>
+                            <a class="linkButton btn-small inline-flex-center" ng-if="vm.mode=='edit'" ng-click="vm.close(true)">
+                                <i class="material-icons  font-18-main v-top">close</i> @L("Close")
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+        <div class="tab-content">
+            <div id="PersonDetails" class="tab-pane fade in active">
+                <div class="col-md-6 col-sm-12">
+                    <div busy-if="vm.loading">
+                        <transportrequisition-detail-general-card id="General"
+                                                                  mode="vm.mode"
+                                                                  model="vm.model"
+                                                                  permissions="vm.permissions"></transportrequisition-detail-general-card>
+                        
+                        <transportrequisition-detail-specialarrangement-card id="SpecialArrangement"
+                                                                             mode="vm.mode"
+                                                                             model="vm.model"
+                                                                             permissions="vm.permissions"></transportrequisition-detail-specialarrangement-card>
+                   
+                        <transportrequisition-detail-completion-card id="Completion"
+                                                                     ng-if="vm.model.isCompleted"
+                                                                     model="vm.model"></transportrequisition-detail-completion-card>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <transportrequisition-detail-booking-card id="Booking"
+                                                              mode="vm.mode"
+                                                              model="vm.model"
+                                                              permissions="vm.permissions"></transportrequisition-detail-booking-card>
+                </div>
+            </div>
+        </div>
+}

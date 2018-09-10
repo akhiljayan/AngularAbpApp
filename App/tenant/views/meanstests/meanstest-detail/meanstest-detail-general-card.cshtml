@@ -1,0 +1,93 @@
+﻿@model CreateOrUpdateMeansTestInput
+
+@using Pulsesync.IngoTPCC.Application.MeansTests.Dto
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("General")</div>
+        </div>
+        <div class="actions dropdown inputs" ng-if="vm.mode!='new'">
+            <a class="icon-wrapper" ng-if="vm.mode=='view' && vm.permissions.edit" ng-click="vm.mode='edit'">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools" ng-if="vm.mode!='new'">
+            <a class="remove" ng-if="vm.mode=='edit'" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @{
+                    var attrs = new Dictionary<string, object>();
+                    attrs.Add("name", "vm.form");
+                    attrs.Add("novalidate", "");
+                    attrs.Add("angular-validator", "");
+                    attrs.Add("angular-validator-submit", "vm.save($event)");
+                }
+
+                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs)))
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <div ng-if="vm.isPreAdmission">
+                            @s.FieldFor(m => m.ReferralId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.referralId", repeat = "vm.referrals", ng_disabled = "vm.$stateParams.referral", ng_change = "vm.loadReferralServiceType(vm.workingModel.referralId)" })
+                            @s.FieldFor(m => m.ReferralServiceTypeId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.referralServiceTypeId", repeat = "vm.referralServiceTypes", ng_required = "vm.isPreAdmission" })
+                        </div>
+                        <div ng-if="vm.isPostAdmission">
+                            <person-ui-select person-id="vm.workingModel.personId" uiselect-disabled="vm.$stateParams.person" on-select="vm.loadAdmissions(personId)"></person-ui-select>
+                            @s.FieldFor(m => m.AdmissionId).AsDropDown().Attrs(new {ng_model = "vm.workingModel.admissionId", repeat = "vm.admissions", conditional_required = "vm.isPostAdmission"})
+                        </div>
+
+                        @*@s.FieldFor(m => m.CancellationReason).Attrs(new { ng_model = "vm.workingModel.cancellationReason", ng_required = "vm.model.isCancelling", ng_disabled = "!vm.model.isCancelling" })*@
+
+                        <div class="form-actions pull-right" ng-if="vm.mode!='new'">
+                            <button class="linkButton btn-small" type="submit" ng-click="vm.save($event)">
+                                <i class="material-icons font-18-main v-top">save</i> @L("Save")
+                            </button>
+                            <button class="linkButton btn-small" type="button" ng-click="vm.cancel()">
+                                <i class="material-icons font-18-main v-top">close</i> @L("Cancel")
+                            </button>
+                        </div>
+                    }
+                    @*using (var s = f.BeginNavigation())
+                        {
+                            <div class="pull-right" ng-if="vm.mode!='new'">
+                                @s.Button(L("Save")).Attrs(new { ng_click = "vm.save($event)" })
+                                @s.Button(L("Cancel")).Attrs(new { ng_click = "vm.cancel()" })
+                            </div>
+                        }*@
+                }
+            </div>
+            <div ng-switch-default>
+                @using (var f = Html.BeginForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.isPostAdmission">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.person.fullName" /></div>
+                            <label class="control-label">@L("Person")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.isPostAdmission">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.admission.admissionNumber" /></div>
+                            <label class="control-label">@L("Admission")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.isPreAdmission">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><span>{{ vm.model.referral.referralCode ? vm.model.referral.referralCode + " (" + vm.model.referral.person.fullName + " - " + vm.model.referral.person.registrationDocumentNumber + ")" : "-" }}</span></div>
+                            <label class="control-label">@L("Referral")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.isPreAdmission">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.referralServiceType.serviceType.description" /></div>
+                            <label class="control-label">@L("ReferralServiceType")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.model.isCancelled">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.cancellationReason" /></div>
+                            <label class="control-label">@L("CancellationReason")</label>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

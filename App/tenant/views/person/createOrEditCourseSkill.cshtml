@@ -1,0 +1,73 @@
+﻿<div class="portlet light " id="bulletinModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject" ng-if="vm.isCreateMode">@L("CreateCourseOrSkill")</span>
+            <span class="caption-subject" ng-if="vm.isEditMode">@L("EditCourseOrSkill")</span>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <form role="form" name="inputForm" novalidate action="#" class="form-validation horizontal-form">
+            <div class="form-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group form-md-line-input">
+                            <label for="fromMonth" class="control-label formlabel labelLookupInModal">@L("From")</label>
+                            <ui-select id="fromMonth" ng-model="vm.data.fromMonth" theme="selectize" title="Choose a Month">
+                                <ui-select-match placeholder="Select Month From">{{$select.selected.name}}<a class="fa fa-times" ng-click="$select.clear($event);"></a></ui-select-match>
+                                <ui-select-choices repeat="m.value as m in vm.months | filter: { description: $select.search }">
+                                    <span ng-bind-html="m.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-md-line-input">
+                            <ui-select id="fromyear" ng-model="vm.data.fromYear" theme="selectize" title="Choose a Month">
+                                <ui-select-match placeholder="Select Month From">{{$select.selected}}<a class="fa fa-times" ng-click="$select.clear($event);"></a></ui-select-match>
+                                <ui-select-choices repeat="year in vm.years | filter: { description: $select.search }">
+                                    <span ng-bind-html="year | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group form-md-line-input">
+                            <label for="toMonth" class="control-label formlabel labelLookupInModal">@L("To")</label>
+                            <ui-select id="toMonth" ng-model="vm.data.toMonth" theme="selectize" title="Choose a Month">
+                                <ui-select-match placeholder="Select Month To">{{$select.selected.name}}<a class="fa fa-times" ng-click="$select.clear($event);"></a></ui-select-match>
+                                <ui-select-choices repeat="m.value as m in vm.months | filter: { description: $select.search }">
+                                    <span ng-bind-html="m.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-md-line-input">
+                            <ui-select id="toYear" ng-model="vm.data.toYear" theme="selectize" title="Choose a Month">
+                                <ui-select-match placeholder="Select Month From">{{$select.selected}}<a class="fa fa-times" ng-click="$select.clear($event);"></a></ui-select-match>
+                                <ui-select-choices repeat="year in vm.years | filter: { description: $select.search }">
+                                    <span ng-bind-html="year | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group form-md-line-input">
+                            <input type="text" class="form-control" ng-model="vm.data.courseOrSkill" />
+                            <label>@L("CourseOrSkill")</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions noborder right">
+                <button type="button" class="btn btn-circle green-steel" ng-click="vm.save()" ng-disabled="inputForm.$invalid" ng-if="vm.isCreateMode">@L("Create")</button>
+                <button type="button" class="btn btn-circle green-steel" ng-click="vm.save()" ng-disabled="inputForm.$invalid" ng-if="vm.isEditMode">@L("Update")</button>
+                <button type="button" class="btn btn-circle default" ng-click="vm.cancel()">@L("Cancel")</button>
+            </div>
+        </form>
+    </div>
+</div>

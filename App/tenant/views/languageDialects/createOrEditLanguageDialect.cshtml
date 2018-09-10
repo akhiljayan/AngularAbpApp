@@ -1,0 +1,73 @@
+﻿@model CreateOrUpdateLanguageDialectInput
+
+@using Pulsesync.IngoTPCC.Application.LanguageDialects.Dto;
+
+<style>
+    .padding-top-0 {
+        padding-top: 0px !important;
+    }
+</style>
+
+<div class="portlet light" id="createOrEditLanguageDialectModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject" ng-if="vmx.isCreateMode">@L("Create") @L("SpokenLanguageDialect")</span>
+            <span class="caption-subject" ng-if="vmx.isEditMode">@L("Edit") @L("SpokenLanguageDialect")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vmx.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-12">
+                    @{
+                        var attrs = new Dictionary<string, object> {
+                            { "name", "vmx.languageDialectForm" },
+                            { "novalidate", "" },
+                            { "angular-validator", ""},
+                            { "angular-validator-submit", "vmx.save()"}
+                        };
+                    }
+                    @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs).AddClass("scrollable-form-body")))
+                    {
+                        using (var s = f.BeginSection())
+                        {
+                            @s.FieldFor(m => m.PersonId).Attrs(new { ng_model = "vmx.languageDialect.person.fullName", ng_disabled = "true" })
+                            @*@s.FieldFor(m => m.LanguageId).AsDropDown().Attrs(new { ng_model = "vmx.languageDialect.languageId", repeat = "vmx.languageDialectMaster" })*@
+
+                            <div class="form-group form-md-line-input">
+                                <ui-select id="languageDialectId" ng-model="vmx.languageDialect.languageId" theme="select2" title="Choose a Language / Dialect" name="languageDialectId" ui-select-validation ui-select-required required-message="You must provide a value for Language / Dialect.">
+                                    <ui-select-match placeholder="Select Language / Dialect">
+                                        {{$select.selected.description}}
+                                        <a class="fa fa-times" ng-click="$select.clear($event);"></a>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="m.id as m in vmx.languageDialectMaster | filter: { description: $select.search }">
+                                        <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <label for="languageDialectId" class="control-label">@L("LanguageDialect")</label>
+                            </div>
+
+                            @s.FieldFor(m => m.LanguageDialectType).AsDropDown().Attrs(new { ng_model = "vmx.languageDialect.languageDialectType" })
+                        }
+
+                        <p class="bodyContext" ng-if="!vmx.isCreateMode">
+                            @Html.Raw(L("CreationInfo", "vmx.languageDialect.creatorUser.fullName", "vmx.languageDialect.creationTime | date:'d-MMM-yyyy h:mm a'"))
+                        </p>
+                        <p class="bodyContext" ng-if="!vmx.isCreateMode">
+                            @Html.Raw(L("ModificationInfo", "vmx.languageDialect.lastModifierUser.fullName", "vmx.languageDialect.lastModificationTime | date:'d-MMM-yyyy h:mm a'"))
+                        </p>
+
+                        <div class="form-actions noborder right">
+                            <button type="submit" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-if="vmx.isCreateMode && vmx.permissions.createLanguageDialect" ng-disabled="languageDialectForm.$invalid"><i class="material-icons  font-18-main v-top">save</i>@L("Save")</button>
+                            <button type="submit" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-if="vmx.isEditMode && vmx.permissions.editLanguageDialect" ng-disabled="languageDialectForm.$invalid"><i class="material-icons  font-18-main v-top">save</i>@L("Save")</button>
+                            <button type="button" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vmx.cancel()"><i class="material-icons ps-btn-material">clear</i>@L("Cancel")</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

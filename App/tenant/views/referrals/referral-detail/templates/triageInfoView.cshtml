@@ -1,0 +1,54 @@
+﻿@using Pulsesync.IngoTPCC.Application.Referral.Dto
+@model TriageInformationDto
+<div id="TrigeInfo" class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("TrigeInfo")</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="vm.mode">
+                @*edit mode*@
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+                        @using (var f = Html.BeginSubForm())
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                @s.FieldFor(m => m.VisitDateTime).Attrs(new { ng_model = "vm.model.triageInformation.visitDateTime", Validate = "false", Restrict = "reject", name = "triageInformation.visitDateTime", data_date_format = "DD-MMM-YYYY hh:mm A" })
+                                @s.FieldFor(m => m.PatientAcuityId).AsDropDown().Attrs(new { ng_model = "vm.model.triageInformation.patientAcuityId", ng_disabled = "vm.isReadOnlyMode", name = "PatientAcuity" })
+                                @s.FieldFor(m => m.Remarks).Attrs(new { ng_model = "vm.model.triageInformation.remarks", name = "triage-remarks", ng_disabled = "vm.isReadOnlyMode", ng_maxlength = "4000" }).AddClass("form-control animate msd-elastic: \\n;  ng-valid ng-not-empty ng-dirty ng-valid-parse")
+                            }
+                        }
+                    </div>
+                </div>
+
+                @*view mode*@
+                <div ng-switch-default>
+                    <div class="col-md-12">
+                        <div class="form-group form-md-line-input">
+                            <div ng-if="vm.model.triageInformation.visitDateTime" class="form-control remove-border auto-height view-text">{{vm.model.triageInformation.visitDateTime  | date :  "dd-MMM-y hh:mm a" }}</div>
+                            <div ng-if="!vm.model.triageInformation.visitDateTime" class="form-control remove-border auto-height view-text">-</div>
+                            <label class="control-label view-label" for="referralCode">@L("VisitDateTime")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.model.triageInformation.patientAcuityId ? vm.model.triageInformation.patientAcuity.description : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="careCoordinator">@L("PatientAcuity")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text" style="white-space: pre-wrap;">{{vm.model.triageInformation.remarks ? vm.model.triageInformation.remarks : "-"}}</div>
+                            <label class="control-label view-label" for="remarks">@L("Remarks")</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+    });
+</script>

@@ -1,0 +1,24 @@
+﻿@model CreateOrUpdatePersonInput
+
+@using Pulsesync.IngoTPCC.Application.Person.Dto;
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("HashSymbolTags")</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="edit">
+                <ps-tagsinput multiple
+                              ng-model="vm.model.tags"></ps-tagsinput>
+            </div>
+            <div class="view" ng-switch-default>
+                <ps-tagsinput multiple
+                              ng-model="vm.model.tags"
+                              disabled></ps-tagsinput>
+            </div>
+        </div>
+    </div>
+</div>

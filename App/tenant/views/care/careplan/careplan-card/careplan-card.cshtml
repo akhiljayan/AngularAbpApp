@@ -1,0 +1,357 @@
+﻿<style>
+    .mt-element-list.careplan-list-ext .mt-list-head .list-title {
+        font-size: 16px;
+    }
+
+    .mt-element-list.careplan-list-ext .mt-list-head {
+        cursor: pointer;
+        border: 1px solid #e7ecf1;
+    }
+
+    .mt-element-list .mt-list-head.priority-high {
+        background-color: rgba(255,0,0,0.06);
+        border-left: 15px solid black;
+        border-left-color: #E50000;
+    }
+
+    .mt-element-list .mt-list-head.priority-medium {
+        background-color: rgba(255,255,0,0.06);
+        border-left: 15px solid black;
+        border-left-color: #F29E43;
+    }
+
+    .mt-element-list .mt-list-head.priority-low {
+        background-color: rgba(0,128,0,0.06);
+        border-left: 15px solid black;
+        border-left-color: #14A371;
+    }
+
+    .mt-element-list.careplan-list-ext .list-todo.mt-list-container ul > .mt-list-item > .list-todo-item .task-list .task-list-item > .task-content {
+        padding: 0;
+    }
+
+        .mt-element-list.careplan-list-ext .list-todo.mt-list-container ul > .mt-list-item > .list-todo-item .task-list .task-list-item > .task-content h4 {
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 14px;
+        }
+
+        .mt-element-list.careplan-list-ext .list-todo.mt-list-container ul > .mt-list-item > .list-todo-item .task-list .task-list-item > .task-content > p {
+            font-size: 13px;
+            margin: 0;
+        }
+
+    .mt-element-list.careplan-list-ext .list-todo.mt-list-container ul > .mt-list-item > .list-todo-item {
+        width: 98%;
+    }
+
+    /*.mt-element-list.careplan-list-ext .dropdown-toggle ul {
+        position: absolute;
+        z-index: 1000;
+    }*/
+
+    .list-head-title-container > .pull-right > a.dropdown-toggle {
+        color: #6f6f6f;
+    }
+
+    .list-head-title-container > .pull-right > ul.dropdown-menu > li > a {
+        color: #6f6f6f;
+    }
+
+    .careplan-list-ext .list-todo.mt-list-container ul {
+        position: initial;
+    }
+
+    .dropdown.innerddl > ul.dropdown-menu {
+        max-height: 237px;
+        overflow-y: auto;
+        background-color: #ffffff;
+        position: absolute;
+        z-index: 1000;
+        right: 0;
+        left: auto;
+    }
+
+        .dropdown.innerddl > ul.dropdown-menu > li {
+            /*padding: 8px 16px;*/
+            color: #6f6f6f;
+            text-decoration: none;
+            display: block;
+            clear: both;
+            font-weight: 300;
+            line-height: 18px;
+            white-space: nowrap;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+            .dropdown.innerddl > ul.dropdown-menu > li:hover {
+                background-color: #00bfb5;
+                color: #fff !important;
+            }
+
+    .oneline {
+        display: inline-block;
+    }
+
+    .task-footer > .pull-right > .btn.btn-circle.white:hover {
+        background-color: #00bfb5;
+        border: solid 1px rgba(0, 0, 0, 0.16);
+        color: white;
+    }
+
+    .mt-element-list.careplan-list-ext .popover {
+        background-color: #ffffff;
+    }
+
+        .mt-element-list.careplan-list-ext .popover ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+            .mt-element-list.careplan-list-ext .popover ul li {
+                padding-bottom: 15px;
+            }
+
+                .mt-element-list.careplan-list-ext .popover ul li:last-of-type {
+                    padding-bottom: 0;
+                }
+    .isoverdue {
+        color: red;
+    }
+</style>
+
+<div class="mt-element-list careplan-list-ext">
+    <div ng-repeat="personProblemGroup in $ctrl.result.data.items">
+        <div class="mt-list-head list-todo" data-toggle="collapse" href="#{{ personProblemGroup.personProblem.id }}"
+             ng-class="{ 'priority-high': personProblemGroup.personProblem.priority == 2, 'priority-medium': personProblemGroup.personProblem.priority == 1, 'priority-low': personProblemGroup.personProblem.priority == 0 , overdue: personProblemGroup.hasOverdueCarePlan }">
+            <div class="row">
+                <div class="list-head-title-container">
+                    <div class="pull-left" style="padding-left: 15px;">
+                        <div class="md-checkbox" ng-click="$ctrl.select(personProblemGroup.personProblem)">
+                            <input id="{{ personProblemGroup.personProblem.id }}3" type="checkbox" class="form-control"
+                                   ng-checked="personProblemGroup.personProblem.isSelected" />
+                            <label for="{{ personProblemGroup.personProblem.id }}3">
+                                <span class="inc"></span>
+                                <span class="check"></span>
+                                <span class="box"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="pull-left" style="width:65%">
+                        <h3 class="list-title sbold">
+                            <span>{{ personProblemGroup.personProblem.problem.description }}</span>
+                            <span class="icon-info" uib-popover-html="personProblemGroup.personProblem.popoverContent" popover-trigger="'mouseenter'" popover-placement="bottom"></span>
+                        </h3>
+                        <div>
+                            @L("CarePlan"): {{ personProblemGroup.summary }}
+                        </div>
+                    </div>
+                    <div class="pull-right dropdown" style="padding-right: 15px;">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-sm fa-circle" ng-class="{ 'icon-background-blue': personProblemGroup.personProblem.status == 0, 'icon-background-yellow': personProblemGroup.personProblem.status == 1, 'icon-background-gray': personProblemGroup.personProblem.status == 3, 'icon-background-green': personProblemGroup.personProblem.status == 2}"></i>
+                            {{ personProblemGroup.personProblem.status | enumText: 'careStatusType'}}
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            <li ng-class="$ctrl.setActionButtonRule(personProblemGroup.personProblem.status)['Open'] ? '' : 'disabled'">
+                                <a ng-click="$ctrl.change($ctrl.setActionButtonRule(personProblemGroup.personProblem.status)['Open'], 'Problem List', personProblemGroup.personProblem.id, 0); $event.stopPropagation();">
+                                    <i class="fa fa-sm fa-circle fa-stack-2x icon-background-blue"></i> @L("Open")
+                                </a>
+                            </li>
+                            <li ng-class="$ctrl.setActionButtonRule(personProblemGroup.personProblem.status)['Suspended'] ? '' : 'disabled'">
+                                <a ng-click="$ctrl.change($ctrl.setActionButtonRule(personProblemGroup.personProblem.status)['Suspended'], 'Problem List', personProblemGroup.personProblem.id, 1); $event.stopPropagation();">
+                                    <i class="fa fa-sm fa-circle fa-stack-2x icon-background-yellow"></i> @L("Suspended")
+                                </a>
+                            </li>
+                            <li ng-class="$ctrl.setActionButtonRule(personProblemGroup.personProblem.status)['Closed'] ? '' : 'disabled'">
+                                <a ng-click="$ctrl.change($ctrl.setActionButtonRule(personProblemGroup.personProblem.status)['Closed'], 'Problem List', personProblemGroup.personProblem.id, 3); $event.stopPropagation();">
+                                    <i class="fa fa-sm fa-circle fa-stack-2x icon-background-gray"></i> @L("Closed")
+                                </a>
+                            </li>
+                            <li ng-class="$ctrl.setActionButtonRule(personProblemGroup.personProblem.status)['Resolved'] ? '' : 'disabled'">
+                                <a ng-click="$ctrl.change($ctrl.setActionButtonRule(personProblemGroup.personProblem.status)['Resolved'], 'Problem List', personProblemGroup.personProblem.id, 2); $event.stopPropagation();">
+                                    <i class="fa fa-sm fa-circle fa-stack-2x icon-background-green"></i> @L("Resolved")
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="{{ personProblemGroup.personProblem.id }}" class="mt-list-container list-todo collapse in">
+            <ul>
+                <li class="mt-list-item" ng-repeat="carePlan in personProblemGroup.carePlans">
+                    <div class="list-todo-item grey">
+
+                        <div class="list-toggle-container " data-toggle="collapse" ng-class="$ctrl.showDetails? '':'collapsed'"
+                             data-target="#{{ personProblemGroup.personProblem.id }}{{ carePlan.id }}" onclick="">
+                            <div class="list-toggle">
+                                <div class="pull-left" style="width:55%">
+                                    <div class="list-toggle-title bold" ng-class="{isoverdue: $ctrl.isOverdue(carePlan.nextReviewDate | dateFormat ) }">
+                                        {{ carePlan.carePlanType.description }}
+                                        <span class="icon-info" uib-popover-html="carePlan.log" popover-placement="top-left" popover-class="abc" popover-trigger="'mouseenter'"></span>
+                                    </div>
+                                    <div ng-if="carePlan.status != 2 && carePlan.status != 3" ng-class="{isoverdue: $ctrl.isOverdue(carePlan.nextReviewDate | dateFormat ) }">
+                                        @L("NextReviewDate"): {{ carePlan.nextReviewDate | dateFormat }}
+                                        <span class="icon-info" uib-popover-html="carePlan.popoverContent" popover-trigger="'mouseenter'"></span>
+                                    </div>
+                                    <div>{{ carePlan.summary }}</div>
+                                </div>
+                                <div class="pull-right">
+                                    <div class="btn btn-circle btn-icon-only oneline white" ng-click="$ctrl.addCarePlanGoal(carePlan.id, personProblemGroup); $event.stopPropagation();" ng-if="$ctrl.permissions.editCarePlan"><i class="material-icons ps-btn-material">playlist_add</i></div>
+                                    <div class="btn btn-circle btn-icon-only oneline white" ng-click="$ctrl.edit(carePlan.id, personProblemGroup); $event.stopPropagation();" ng-if="$ctrl.permissions.editCarePlan"><i class="material-icons ps-btn-material">edit</i></div>
+                                    <div class="dropdown innerddl oneline">
+                                        <div class="dropdown-toggle" type="button" id="dropdownMenu22" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onclick="" >
+                                            <i class="fa fa-sm fa-circle" ng-class="{ 'icon-background-blue': carePlan.status == 0, 'icon-background-yellow': carePlan.status == 1, 'icon-background-gray': carePlan.status == 3, 'icon-background-green': carePlan.status == 2}"></i>
+                                            {{ carePlan.status | enumText: 'careStatusType'}}
+                                            <span class="caret"></span>
+                                        </div>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu22">
+                                            <li ng-class="$ctrl.setActionButtonRule(carePlan.status)['Open'] ? '' : 'disabled'">
+                                                <a ng-click="$ctrl.change($ctrl.setActionButtonRule(carePlan.status)['Open'], 'CarePlan', carePlan.id, 0); $event.stopPropagation();">
+                                                    <i class="fa fa-sm fa-circle fa-stack-2x icon-background-blue"></i> @L("Open")
+                                                </a>
+                                            </li>
+                                            <li ng-class="$ctrl.setActionButtonRule(carePlan.status)['Suspended'] ? '' : 'disabled'">
+                                                <a ng-click="$ctrl.change($ctrl.setActionButtonRule(carePlan.status)['Suspended'], 'CarePlan', carePlan.id, 1); $event.stopPropagation();">
+                                                    <i class="fa fa-sm fa-circle fa-stack-2x icon-background-yellow"></i> @L("Suspended")
+                                                </a>
+                                            </li>
+                                            <li ng-class="$ctrl.setActionButtonRule(carePlan.status)['Closed'] ? '' : 'disabled'">
+                                                <a ng-click="$ctrl.change($ctrl.setActionButtonRule(carePlan.status)['Closed'], 'CarePlan', carePlan.id, 3); $event.stopPropagation();">
+                                                    <i class="fa fa-sm fa-circle fa-stack-2x icon-background-gray"></i> @L("Closed")
+                                                </a>
+                                            </li>
+                                            <li ng-class="$ctrl.setActionButtonRule(carePlan.status)['Resolved'] ? '' : 'disabled'">
+                                                <a ng-click="$ctrl.change($ctrl.setActionButtonRule(carePlan.status)['Resolved'], 'CarePlan', carePlan.id, 2); $event.stopPropagation();">
+                                                    <i class="fa fa-sm fa-circle fa-stack-2x icon-background-green"></i> @L("Resolved")
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+
+                        <div id="{{ personProblemGroup.personProblem.id }}{{ carePlan.id }}" class="task-list panel-collapse collapse" ng-class="$ctrl.showDetails? 'in':''">
+                            @* Goals *@
+                            <ul>
+                                <li class="task-list-item" ng-repeat="goal in carePlan.carePlanGoals">
+                                    @*class="cursor-pointer"*@
+                                    <div class="task-content" style="background-color: white;" data-toggle="collapse" href="#{{ carePlan.id }}{{ goal.id }}" onclick="">
+                                        <div>
+                                            @*<div class="pull-left">
+                                                    <h4><strong>{{ $index + 1 }})&nbsp;</strong></h4>
+                                                </div>*@
+                                            <div class="pull-left" style="width:70%">
+                                                <div class="pull-left">
+                                                    <h4>
+                                                        <strong style="vertical-align: top;">Goal: {{ goal.goal.description }}</strong>
+                                                        <span class="icon-info" uib-popover-html="goal.popoverContent" popover-trigger="'mouseenter'"></span>
+                                                    </h4>
+                                                    {{ goal.summary }}
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div class="pull-right">
+                                                <div class="dropdown innerddl">
+                                                    <div class="dropdown-toggle" type="button" id="dropdownMenu{{ carePlan.id }}{{ goal.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onclick="">
+                                                        <i class="fa fa-sm fa-circle" ng-class="{ 'icon-background-blue': goal.status == 0, 'icon-background-yellow': goal.status == 1, 'icon-background-gray': goal.status == 3, 'icon-background-green': goal.status == 2}"></i>
+                                                        {{ goal.status | enumText: 'careStatusType'}}
+                                                        <span class="caret"></span>
+                                                    </div>
+
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu{{ carePlan.id }}{{ goal.id }}">
+                                                        <li ng-class="$ctrl.setActionButtonRule(goal.status)['Open'] ? '' : 'disabled'">
+                                                            <a ng-click="$ctrl.change($ctrl.setActionButtonRule(goal.status)['Open'], 'Goal', goal.id, 0, carePlan.id); $event.stopPropagation();">
+                                                                <i class="fa fa-sm fa-circle fa-stack-2x icon-background-blue"></i> @L("Open")
+                                                            </a>
+                                                        </li>
+                                                        <li ng-class="$ctrl.setActionButtonRule(goal.status)['Suspended'] ? '' : 'disabled'">
+                                                            <a ng-click="$ctrl.change($ctrl.setActionButtonRule(goal.status)['Suspended'], 'Goal', goal.id, 1, carePlan.id); $event.stopPropagation();">
+                                                                <i class="fa fa-sm fa-circle fa-stack-2x icon-background-yellow"></i> @L("Suspended")
+                                                            </a>
+                                                        </li>
+                                                        <li ng-class="$ctrl.setActionButtonRule(goal.status)['Closed'] ? '' : 'disabled'">
+                                                            <a ng-click="$ctrl.change($ctrl.setActionButtonRule(goal.status)['Closed'], 'Goal', goal.id, 3, carePlan.id); $event.stopPropagation();">
+                                                                <i class="fa fa-sm fa-circle fa-stack-2x icon-background-gray"></i> @L("Closed")
+                                                            </a>
+                                                        </li>
+                                                        <li ng-class="$ctrl.setActionButtonRule(goal.status)['Resolved'] ? '' : 'disabled'">
+                                                            <a ng-click="$ctrl.change($ctrl.setActionButtonRule(goal.status)['Resolved'], 'Goal', goal.id, 2, carePlan.id); $event.stopPropagation();">
+                                                                <i class="fa fa-sm fa-circle fa-stack-2x icon-background-green"></i> @L("Resolved")
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+
+                                    <div id="{{ carePlan.id }}{{ goal.id }}" class="collapse in">
+                                        @* Interventions *@
+                                        <ul>
+                                            <li style="margin-left: 35px;" ng-repeat="int in goal.carePlanGoalInterventions">
+                                                <div style="display: -webkit-flex;display: flex;padding: 0;justify-content: flex-end;">
+                                                    <div style="width: 70%; margin-right: auto;">
+                                                        {{ int.intervention.description }}
+                                                        <span class="icon-info" uib-popover-html="int.popoverContent" popover-trigger="'mouseenter'"></span>
+                                                    </div>
+                                                    
+                                                    <div class="pull-right">
+                                                        <div class="dropdown innerddl">
+                                                            <div class="dropdown-toggle" type="button" id="dropdownMenu{{ carePlan.id }}{{ goal.id }}{{ int.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onclick="">
+                                                                <i class="fa fa-sm fa-circle" ng-class="{ 'icon-background-blue': int.status == 0, 'icon-background-yellow': int.status == 1, 'icon-background-gray': int.status == 3, 'icon-background-green': int.status == 2}"></i>
+                                                                {{ int.status | enumText: 'careStatusType'}}
+                                                                <span class="caret"></span>
+                                                            </div>
+
+                                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu{{ carePlan.id }}{{ goal.id }}{{ int.id }}">
+                                                                <li ng-class="$ctrl.setActionButtonRule(int.status)['Open'] ? '' : 'disabled'">
+                                                                    <a ng-click="$ctrl.change($ctrl.setActionButtonRule(int.status)['Open'], 'Intervention', int.id, 0, carePlan.id); $event.stopPropagation();">
+                                                                        <i class="fa fa-sm fa-circle fa-stack-2x icon-background-blue"></i> @L("Open")
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-class="$ctrl.setActionButtonRule(int.status)['Suspended'] ? '' : 'disabled'">
+                                                                    <a ng-click="$ctrl.change($ctrl.setActionButtonRule(int.status)['Suspended'], 'Intervention', int.id, 1, carePlan.id); $event.stopPropagation();">
+                                                                        <i class="fa fa-sm fa-circle fa-stack-2x icon-background-yellow"></i> @L("Suspended")
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-class="$ctrl.setActionButtonRule(int.status)['Closed'] ? '' : 'disabled'">
+                                                                    <a ng-click="$ctrl.change($ctrl.setActionButtonRule(int.status)['Closed'], 'Intervention', int.id, 3, carePlan.id); $event.stopPropagation();">
+                                                                        <i class="fa fa-sm fa-circle fa-stack-2x icon-background-gray"></i> @L("Closed")
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-class="$ctrl.setActionButtonRule(int.status)['Resolved'] ? '' : 'disabled'">
+                                                                    <a ng-click="$ctrl.change($ctrl.setActionButtonRule(int.status)['Resolved'], 'Intervention', int.id, 2, carePlan.id); $event.stopPropagation();">
+                                                                        <i class="fa fa-sm fa-circle fa-stack-2x icon-background-green"></i> @L("Resolved")
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="task-footer bg-grey" style="height:60px">
+                                <div class="pull-right">
+                                    <button class="btn btn-circle white" uib-popover-html="carePlan.reviewHistoryPopoverContent" popover-trigger="'mouseenter'">Review History</button>
+                                    <button class="btn btn-circle white" ng-click="$ctrl.reviewCareplan(carePlan.id, personProblemGroup);$event.stopPropagation(); ">Review</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<simple-paginator data="$ctrl.result.data" key="$ctrl.key" small-page-size="true" on-page-changed="$ctrl.load(requestParams)"></simple-paginator>

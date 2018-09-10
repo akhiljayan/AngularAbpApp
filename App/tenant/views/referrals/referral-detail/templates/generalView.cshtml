@@ -1,0 +1,67 @@
+﻿
+<div id="General" class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("General")</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="vm.mode">
+                @*edit mode*@
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+                        @using (var f = Html.BeginSubForm())
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                <div class="form-group form-md-line-input">
+                                    <input type="text" ng-disabled="true" disabled ng-model="vm.model.referralCode" class="form-control" id="referralCode" ng-maxlength="300">
+                                    <label class="control-label" for="referralCode">@L("ReferralCode")<span class="required">*</span></label>
+                                </div>
+                                <div class="form-group form-md-line-input">
+                                    <input type="text" ng-disabled="true" disabled ng-model="vm.model.processedByUserName" class="form-control" id="processedBy" ng-maxlength="300" required>
+                                    <label class="control-label" for="processedBy">@L("ProcessedBy")<span class="required">*</span></label>
+                                </div>
+                                <user-ui-select user-id="vm.model.careCoordinatorId" uiselect-disabled="false" label="'Care Coordinator'" required="true"></user-ui-select>
+                                <div class="form-group form-md-line-input">
+                                    <textarea ng-disabled="vm.referral.disabled" class="form-control animate msd-elastic: \n;" cols="20" data-val="true" data-val-length="The field Remarks must be a string with a maximum length of 4000." data-val-length-max="4000" id="Remarks" name="Remarks" ng-model="vm.model.referralRemarks" rows="4" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 89px;"></textarea>
+                                    <label class="control-label" for="remarks">@L("Remarks")</label>
+                                </div>
+                            }
+                        }
+                    </div>
+
+                </div>
+
+                @*view mode*@
+                <div ng-switch-default>
+                    <div class="col-md-12">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.model.referralCode ? vm.model.referralCode : "-"}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("ReferralCode")<span class="required">*</span></label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.model.processedByUserName ? vm.model.processedByUserName : "-"}}</div>
+                            <label class="control-label view-label" for="processedBy">@L("ProcessedBy")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.model.careCoordinatorUserName ? vm.model.careCoordinatorUserName : "-"}}</div>
+                            <label class="control-label view-label" for="careCoordinator">@L("CareCoordinator")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text" style="white-space: pre-wrap;">{{vm.model.referralRemarks ? vm.model.referralRemarks : "-"}}</div>
+                            <label class="control-label view-label" for="remarks">@L("Remarks")</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+</script>

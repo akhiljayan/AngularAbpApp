@@ -1,0 +1,154 @@
+﻿@using System.Threading
+@using System.Web.Optimization
+@using Abp.Application.Features
+@using Abp.Extensions
+@using Abp.MultiTenancy
+@using Abp.Timing
+@using Abp.Web.Mvc.Extensions
+@using Pulsesync.IngoTPCC.Features
+@using Pulsesync.IngoTPCC.Localization
+@using Pulsesync.IngoTPCC.Web.Bundling
+@{
+    SetAntiForgeryCookie();
+}
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js" data-ng-app="app"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js" data-ng-app="app"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en" data-ng-app="app" dir=@(CultureHelper.IsRtl ? "rtl" : "")>
+<!--<![endif]-->
+<head>
+    <title>IngoTPCC</title>
+    <meta charset="utf-8" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+
+    @*<link rel="shortcut icon" href="~/favicon.ico" />*@
+    @*<link rel="icon" href="~/favicon.ico" type="image/x-icon" />*@
+    @*<link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />*@
+    <link href="data:image/x-icon;base64,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" rel="icon" type="image/x-icon" />
+
+
+
+    <link href="~/Content/fonts-open-sans.css" rel="stylesheet" type="text/css" />
+
+    @Styles.Render("~/Bundles/App/libs/css" + (CultureHelper.IsRtl ? "RTL" : ""))
+    <link id="ng_load_plugins_before" />
+    @Styles.Render("~/Bundles/App/metronic/css" + (CultureHelper.IsRtl ? "RTL" : ""))
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    @*<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">*@
+    @Styles.Render("~/Bundles/Common/css")
+    @Styles.Render("~/Bundles/App/css")
+    <link href="~/Common/customcss/custom.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        @* This is used to get the application's root path from javascript.
+        It's useful if you're running application in a virtual directory under IIS. *@
+        var abp = abp || {}; abp.appPath = '@ApplicationPath';
+    </script>
+</head>
+<!-- END HEAD -->
+<!-- BEGIN BODY -->
+<!-- DOC: Apply "page-header-fixed-mobile" and "page-footer-fixed-mobile" class to body element to force fixed header or footer in mobile devices -->
+<!-- DOC: Apply "page-sidebar-closed" class to the body and "page-sidebar-menu-closed" class to the sidebar menu element to hide the sidebar by default -->
+<!-- DOC: Apply "page-sidebar-hide" class to the body to make the sidebar completely hidden on toggle -->
+<!-- DOC: Apply "page-sidebar-closed-hide-logo" class to the body element to make the logo hidden on sidebar toggle -->
+<!-- DOC: Apply "page-sidebar-hide" class to body element to completely hide the sidebar on sidebar toggle -->
+<!-- DOC: Apply "page-sidebar-fixed" class to have fixed sidebar -->
+<!-- DOC: Apply "page-footer-fixed" class to the body element to have fixed footer -->
+<!-- DOC: Apply "page-sidebar-reversed" class to put the sidebar on the right side -->
+<!-- DOC: Apply "page-full-width" class to the body element to have full width page without the sidebar menu -->
+<body ng-controller="common.views.layout as vm" class="page-md page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed-hide-logo page-on-load" ng-class="{'page-sidebar-closed': settings.layout.pageSidebarClosed}">
+
+    <div class="wrapper" style="min-height: 100%; position: relative;">
+
+        <div ng-spinner-bar class="page-spinner-bar">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
+
+        <div data-ng-include="'~/App/common/views/layout/header.cshtml'" data-ng-controller="common.views.layout.header as vm" class="page-header navbar navbar-fixed-top md-shadow-zero-light" style="position:fixed"></div>
+
+        <div class="clearfix">
+        </div>
+
+        <div class="page-container clearfix">
+            <div class="clearfix">
+                <staff-list></staff-list>
+                <div ng-if="hasSliderAccess" data-ng-include="'~/App/tenant/views/slider/index.cshtml'" data-ng-controller="tenent.views.slider.index as vm"></div>
+                <div class="page-content clearfix" id="main-content">
+                    <div ui-view class="fade-in-up">
+                    </div>
+                </div>
+            </div>
+            @*@if (AbpSession.MultiTenancySide == MultiTenancySides.Host || IsFeatureEnabled(AppFeatures.ChatFeature))
+                {
+                    <div data-ng-include="'~/App/common/views/layout/chatbar.cshtml'" data-ng-controller="common.views.layout.chatbar as vm"></div>
+                }*@
+        </div>
+
+        <footer class="clearfix" style="flex: 0 0 50px;margin-top: auto;">
+            @*<div data-ng-include="'~/App/common/views/layout/footer.cshtml'" data-ng-controller="common.views.layout.footer as vm" class="page-footer"></div>*@
+        </footer>
+
+    </div>
+    <!--[if lt IE 9]>
+        <script src="~/libs/respond/respond.min.js"></script>
+        <script src="~/libs/html5shiv/html5shiv.js"></script>
+        <script src="~/libs/excanvas/excanvas.min.js"></script>
+    <![endif]-->
+    @Scripts.Render("~/Bundles/App/libs/js")
+
+    <script>
+        abp.localization.defaultSourceName = '@LocalizationSourceName';
+        moment.locale('@Thread.CurrentThread.CurrentUICulture.Name'); //Localizing moment.js
+    </script>
+
+    @Html.IncludeScript(ScriptPaths.Angular_Localization)
+    @Html.IncludeScript(ScriptPaths.Bootstrap_Select_Localization)
+    @Html.IncludeScript(ScriptPaths.JQuery_Timeago_Localization)
+    @Html.IncludeScript(ScriptPaths.Angular_Breadcrumb)
+    @Html.IncludeScript(ScriptPaths.CKEditor)
+
+    <!-- Dynamic scripts of ABP system (They are created on runtime and can not be bundled) -->
+    <script src="~/api/AbpServiceProxies/GetAll?type=angular&v=@(Clock.Now.Ticks)"></script>
+    <script src="~/api/AbpServiceProxies/GetAll?v=@(Clock.Now.Ticks)"></script>
+    <script src="~/AbpScripts/GetScripts?v=@(Clock.Now.Ticks)" type="text/javascript"></script>
+
+    <!-- SignalR scripts -->
+    <script src="~/signalr/hubs"></script>
+    @Html.IncludeScript("~/Abp/Framework/scripts/libs/abp.signalr.js")
+
+    @Scripts.Render("~/Bundles/App/metronic/js")
+
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    @Scripts.Render("~/Bundles/Common/js")
+    @Scripts.Render("~/Bundles/App/js")
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+            $(".chzn-drop").show(0, function () {
+                $(this).parents("div").css("overflow", "visible");
+            });
+
+            $(".chzn-drop").hide(0, function () {
+                $(this).parents("div").css("overflow", "");
+            });
+
+            $(document).click(function (event) {
+                var clickover = $(event.target);
+                var $navbar = $(".navbar-collapse");
+                var _opened = $navbar.hasClass("in");
+                if (_opened === true && !clickover.hasClass("navbar-toggle") && !clickover.hasClass("menutabs") && !clickover.hasClass("menutab-search-input") && !clickover.hasClass("menutab-content") && !clickover.hasClass("tab-pane") && !clickover.hasClass("menu-open-space")) {
+                    $navbar.collapse('hide');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

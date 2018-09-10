@@ -1,0 +1,78 @@
+﻿
+@model ActualAssessmentDto
+
+@using Pulsesync.IngoTPCC.Application.Assessment
+
+
+<div class="row">
+    <div class="col-md-10 col-sm-12 col-md-offset-1">
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject">General</span>
+                </div>
+            </div>
+
+            @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes()))
+            {
+                using (var s = f.BeginSection())
+                {
+                    <div class="portlet-body">
+                        <div class="row  padding-bottom-10">
+                            <div class="col-md-5">
+                                <div ng-if="vm.isPostAdmission">
+                                    <person-ui-select person-id="vm.model.actualAssessment.personId" uiselect-disabled="vm.personDisabled" on-select="vm.onChangePerson(personId)"></person-ui-select>
+                                </div>
+                                <div ng-if="vm.isPreAdmission">
+                                    @s.FieldFor(m => m.ReferralId).AsDropDown().Attrs(new { ng_model = "vm.model.actualAssessment.referralId", repeat = "vm.referrals", ng_disabled = "true" })
+                                </div>
+                                <div ng-if="!vm.model.disabled">
+                                    @s.FieldFor(m => m.AssessmentDate).DatePickerOptions(new { data_date_end_date = "0d" }).Attrs(new { ng_model = "vm.model.actualAssessment.assessmentDate", ng_disabled = "vm.model.disabled", ng_change = "vm.calculateNextReviewDate()", maxdate = "0d" })
+
+                                    <div ng-if="vm.model.isNextReviewMonthRequired && !vm.model.confirmationCheck">
+                                        @s.FieldFor(m => m.NextReviewDate).DatePickerOptions(new { data_date_end_date = "0d" }).Attrs(new { ng_model = "vm.model.actualAssessment.nextReviewDate", beforeoron = "vm.model.actualAssessment.assessmentDate", beforeoron_message = "'Next Review Date must be after Assessment Date.'", Validate = "vm.model.confirmationCheck" })
+                                    </div>
+
+                                    <div class="form-group form-md-line-input" ng-if="vm.model.isNextReviewMonthRequired && vm.model.confirmationCheck" ng-class="{ 'has-error': vm.parentForm.NextReviewDate.$error.required && vm.parentForm.submitted }">
+                                        <div class="input-group date date-picker">
+                                            <input class="form-control dateinput" data-date-picker id="NextReviewDate" name="NextReviewDate" ng-model="vm.model.actualAssessment.nextReviewDate" type="text" required required-message="'You must provide a value for Next Review Date.'" validate-on="dirty" beforeoron="vm.model.actualAssessment.assessmentDate" , beforeoron-message="'Next Review Date must be later than Assessment Date.'" Validate="false" Restrict="reject">
+                                            <span class="help-block validationMessage" ng-if="vm.parentForm.NextReviewDate.$error.required && vm.parentForm.submitted">You must provide a value for Next Review Date.</span>
+                                            <div class="input-group-addon">
+                                                <i class="material-icons" style="line-height: 14px">date_range</i>
+                                            </div>
+                                            <label for="NextReviewDate" class="control-label">@L("NextReviewDate")<span class="businessRequired"> * </span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.model.disabled">
+                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.actualAssessment.assessmentDate | dateFormat}}</div>
+                                    <label class="control-label">@L("AssessmentDate")</label>
+                                </div>
+                                <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.model.isNextReviewMonthRequired && vm.model.disabled">
+                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.actualAssessment.nextReviewDate | dateFormat}}</div>
+                                    <label class="control-label">@L("NextReviewDate")</label>
+                                </div>
+                                <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.model.disabled && vm.model.actualAssessment.isCancelled">
+                                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.actualAssessment.cancellationReason}}</div>
+                                    <label class="control-label">@L("CancellationReasonLbl")</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 center-allign">
+                                <ui-knob value="vm.model.totalScore" options="vm.option"></ui-knob>
+                                <div class="form-group" ng-if="vm.model.isCategoryRequired">
+                                    {{vm.model.category}}
+                                </div>
+                            </div>
+                            <div class="col-md-5" ng-if="vm.assessmentChartData.length != 0">
+                                <ps-line-graph config="vm.assessmentConfig" type="singleLine"></ps-line-graph>
+                            </div>
+                            @*<div class="col-md-5" ng-if="vm.assessmentChartData.length != 0">
+                                <canvas tc-chartjs-line chart-data="vm.assessmentChart.data" chart-options="vm.assessmentChart.options"></canvas>
+                            </div>*@
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

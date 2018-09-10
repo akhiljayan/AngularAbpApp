@@ -1,0 +1,47 @@
+@using Abp.Web.Mvc.Extensions
+@using Pulsesync.IngoTPCC.Authorization.Users.Profile.Dto
+@model CurrentUserProfileEditDto
+<div>
+    <form name="mySettingsForm" role="form" novalidate class="form-validation">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <span>@L("ChangeProfile")</span>
+            </h3>
+        </div>
+        <div class="modal-body">
+            @{
+                var attrs = new Dictionary<string, object>();
+                attrs.Add("name", "vm.form");
+                attrs.Add("novalidate", "");
+                attrs.Add("angular-validator", "");
+            }
+            @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs)))
+            {
+                using (var s = f.BeginSection())
+                {
+                    @s.FieldFor(c => c.Status).Attrs(new { ng_model = "vm.model.status" })
+                    @s.FieldFor(c => c.Birthday).Attrs(new { ng_model = "vm.model.birthday", Validate = "false", Restrict = "reject", maxdate = "0d" })
+                    @s.FieldFor(c => c.Likes).Attrs(new { ng_model = "vm.model.likes" })
+                    @s.FieldFor(c => c.FavouriteFood).Attrs(new { ng_model = "vm.model.favouriteFood" })
+                    @s.FieldFor(c => c.PhoneNumber).Attrs(new { ng_model = "vm.model.phoneNumber" })
+                    @s.FieldFor(c => c.AboutMe).Attrs(new { ng_model = "vm.model.aboutMe" })
+
+                    <label style="font-size: 14px;color: #888888;">Change Profile Picture</label>
+                    <div class="input-group">
+                        <input id="fileinput" type="file" class="form-control" nv-file-select uploader="vm.uploader">
+                        <a class="input-group-addon" ng-click="vm.removeUpload()">
+                            <i class="fa fa-trash-o font-red"></i>
+                        </a>
+                    </div>
+                    <span class="help-block m-b-none">@L("ProfilePicture_Change_Info")</span>
+
+                    <img id="ProfilePictureResize" src="" ng-show="vm.uploadedFileName" />
+                }
+            }
+        </div>
+        <div class="modal-footer">
+            <button type="button" ng-disabled="vm.saving" class="btn btn-default" ng-click="vm.cancel()">@L("Cancel")</button>
+            <button type="submit" button-busy="vm.saving" busy-text="@L("SavingWithThreeDot")" class="btn btn-primary blue" ng-click="vm.save()" ng-disabled="mySettingsForm.$invalid"><i class="fa fa-save"></i> <span>@L("Save")</span></button>
+        </div>
+    </form>
+</div>

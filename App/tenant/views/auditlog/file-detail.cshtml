@@ -1,0 +1,130 @@
+﻿<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("FileAuditLogDetail")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="form-body" busy-if="vm.loading">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <h3 class="form-section" style="margin-top: 3px;">@L("ActionInformations")</h3>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">@L("DateTime"):</label>
+                                <div class="col-sm-9">
+                                    {{vm.detail.auditDate | dateTimeFormat}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">@L("Module"):</label>
+                                <div class="col-sm-9">
+                                    {{vm.camelCaseToWords(vm.detail.source)}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">@L("Record"):</label>
+                                <div class="col-sm-9">
+                                    {{vm.detail.recordName}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">@L("Action"):</label>
+                                <div class="col-sm-9">
+                                    {{vm.detail.stateName}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">@L("ActionBy"):</label>
+                                <div class="col-sm-9">
+                                    {{vm.detail.userName}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">@L("FileName"):</label>
+                                <div class="col-sm-9">
+                                    {{vm.detail.fileName}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">@L("FileType"):</label>
+                                <div class="col-sm-9">
+                                    {{vm.detail.fileType}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">@L("FileSize"):</label>
+                                <div class="col-sm-9">
+                                    {{vm.detail.fileSize}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <h3 class="form-section" style="margin-top: 3px;">@L("UserInformations")</h3>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">@L("UserName"):</label>
+                                <div class="col-sm-9">
+                                    {{vm.detail.userName}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">@L("IpAddress"):</label>
+                                <div class="col-sm-9">
+                                    {{vm.detail.clientIpAddress}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">@L("Client"):</label>
+                                <div class="col-sm-9">
+                                    {{vm.detail.clientName}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">@L("Browser"):</label>
+                                <div class="col-sm-9">
+                                    {{vm.detail.browserInfo}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="modal-footer">
+            <div class="row" style="padding: 15px 15px 5px 15px;">
+                <div class="form-actions pull-right">
+                    <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.close()"><i class="material-icons ps-btn-material">check</i>@L("Ok")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

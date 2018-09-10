@@ -1,0 +1,58 @@
+﻿<div id="Allergies" class="portlet light" busy-if="$ctrl.loading">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">
+                @L("Allergies") <span ng-if="$ctrl.filter == 'inactive'"> - Inactive</span>
+            </span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a ng-click="$ctrl.create()" title="Add Allergy" ng-if="$ctrl.permissions.create && !$ctrl.lockCard" class="icon-wrapper">
+                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+            </a>
+            <a class="icon-wrapper" title="Filter" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                <i class="material-icons custom-icon">more_vert</i>
+            </a>
+            <ul class="dropdown-menu pull-right">
+                <li>
+                    <a href="javascript:;" class="bold" ng-click="$ctrl.getAllActive()">@L("Active")</a>
+                </li>
+                <li class="divider"> </li>
+                <li>
+                    <a href="javascript:;" class="bold" ng-click="$ctrl.getAllInactive()">@L("Inactive")</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="mt-comment-date" ng-if="!$ctrl.models.length">@L("NoRecordsFound")</div>
+        <div class="row">
+
+            <div class="entities">
+                <div ng-if="$ctrl.models.length">
+                    <div class="col-md-12" style="padding-bottom:10px" ng-if="$ctrl.drugAllergies.length">
+                        <span class="font-13-main font-red-main">Drug Allergies:</span><br />
+                        <span class="allergy-edit font-red-main font-14-main bold" ng-repeat="drug in $ctrl.drugAllergies">
+                            <a ng-click="$ctrl.editAllergy(drug)">
+                                <span class="allergy-edit font-red-main font-14-main bold" ng-if="drug.name.toLowerCase() != 'no known drug allergy (nkda)'">{{ drug.name.toLowerCase() == 'others' ? drug.description :drug.name }}</span>
+                                <span class="allergy-edit font-black-main font-14-main bold" ng-if="drug.name.toLowerCase() == 'no known drug allergy (nkda)'">{{ drug.name }}</span>
+                            </a>{{$last ? '' : ', '}}
+                        </span>
+                    </div>
+                    <div class="col-md-12" style="padding-bottom:10px" ng-if="$ctrl.adrAllergies.length">
+                        <span class="font-13-main font-blue-main">Drug Allergies with ADR:</span><br />
+                        <span class="allergy-edit font-blue-main font-14-main bold" ng-repeat="adr in $ctrl.adrAllergies">
+                            <a class="allergy-edit font-blue-main font-14-main bold" ng-click="$ctrl.editAllergy(adr)">{{ adr.name.toLowerCase() == 'others' ? adr.description :adr.name }}</a>{{$last ? '' : ', '}}
+                        </span>
+                    </div>
+                    <div class="col-md-12" ng-if="$ctrl.nondrugAllergies.length">
+                        <span class="font-13-main font-black-main">Non-Drug Allergies:</span><br />
+                        <span class="allergy-edit font-black-main font-14-main bold" ng-repeat="nondrug in $ctrl.nondrugAllergies">
+                            <a class="allergy-edit font-black-main font-14-main bold" ng-click="$ctrl.editAllergy(nondrug)">{{ nondrug.name }}</a>{{$last ? '' : ', '}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

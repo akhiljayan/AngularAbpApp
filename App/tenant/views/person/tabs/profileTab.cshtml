@@ -1,0 +1,22 @@
+﻿@using Abp.Timing
+@using Pulsesync.IngoTPCC.Authorization
+<div class="row" id="Profile" ng-controller="tenant.views.person.tabs.profileTab as profileTab">
+    <div class="col-md-12 col-sm-12 col-xs-12 no-padding">
+        <div class="col-md-6 col-sm-12">
+            @if (IsGranted(AppPermissions.Pages_Tenant_Allergies_View))
+            {
+                <allergies-card id="Allergies" maintitle="'@L("Allergies")'" mode="vm.isNew ? 'new' : 'view'" template="'person'" person-id="vm.person.id" is-referral="false" referral-id="null" is-patient="vm.person.isPatient"></allergies-card>
+            }
+            @if (IsGranted(AppPermissions.Pages_Tenant_MedicationHistory_View))
+            {
+                <medication-history-card id="medicationhistories" maintitle="'@L("medicationhistory")'" mode="vm.isNew ? 'new' : 'view'" template="'person'" person-id="vm.person.id" is-referral="false" referral-id="null" is-patient="vm.person.isPatient"></medication-history-card>
+            }
+        </div>
+        <div class="col-md-6 col-sm-12">
+            @if (IsGranted(AppPermissions.Pages_Tenant_MedicalHistory_View))
+            {
+                <medical-history-card id="medicalhistories" maintitle="'@L("medicalhistory")'" mode="vm.isNew ? 'new' : 'view'" template="'person'" person-id="vm.person.id" is-referral="false" referral-id="null" is-patient="vm.person.isPatient"></medical-history-card>
+            }
+        </div>
+    </div>
+</div>

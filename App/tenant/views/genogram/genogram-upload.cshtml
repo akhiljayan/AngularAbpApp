@@ -1,0 +1,89 @@
+﻿<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("UploadGenogram")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="form-body">
+            <div nv-file-drop uploader="vm.uploader">
+                <div nv-file-over uploader="vm.uploader" over-class="another-file-over-class">
+                    <input type="file" nv-file-select uploader="vm.uploader" multiple accept="image/*" />
+                    <table class="table" style="table-layout: fixed; width: 100%">
+                        <thead>
+                            <tr>
+                                <th width="30%">@L("FileName")</th>
+                                <th width="15%" ng-show="vm.uploader.isHTML5">@L("Size")</th>
+                                <th width="15%" ng-show="vm.uploader.isHTML5">@L("Progress")</th>
+                                <th width="10%" class="text-center">@L("Status")</th>
+                                <th width="30%">@L("Actions")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in vm.uploader.queue">
+                                <td style="word-wrap: break-word">
+                                    <strong>{{ item.file.name }}</strong>
+                                    <!--auto width-->
+                                    <div ng-show="vm.uploader.isHTML5" ng-thumb="{ file: item._file, height: 100 }"></div>
+                                </td>
+                                <td ng-show="vm.uploader.isHTML5" nowrap>{{ item.file.size | formatFileSize }}</td>
+                                <td ng-show="vm.uploader.isHTML5">
+                                    <div class="progress progress-striped" style="height: 20px;">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" style="color: #00bfb5;" ng-style="{ 'width': item.progress + '%' }"></div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <span ng-show="item.isSuccess"><i class="material-icons ps-btn-material" style="color: green;">check</i></span>
+                                    <span ng-show="item.isCancel"><i class="material-icons ps-btn-material" style="color: red;">clear</i></span>
+                                    <span ng-show="item.isError"><i class="fa fa-times-circle" style="color: red; font-size: 1.5em;"></i></span>
+                                </td>
+                                <td>
+                                    <div style="margin-top: 4px;">
+                                        <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-smallest" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                            <i class="material-icons ps-btn-material"><span class="fa fa-upload"></span></i> @L("Upload")
+                                        </button>
+                                        <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-smallest" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                            <i class="material-icons ps-btn-material">clear</i> @L("Cancel")
+                                        </button>
+                                        <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-smallest" ng-click="item.remove()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                            <i class="material-icons ps-btn-material">delete</i> @L("Remove")
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div>
+                        <div>
+                            Queue progress:
+                            <div class="progress progress-striped" style="height: 20px;">
+                                <div class="progress-bar progress-bar-success" role="progressbar" ng-style="{ 'width': vm.uploader.progress + '%' }"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.uploader.uploadAll()" ng-disabled="!vm.uploader.getNotUploadedItems().length">
+                            <i class="material-icons ps-btn-material"><span class="fa fa-upload"></span></i> @L("UploadAll")
+                        </button>
+                        <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.uploader.cancelAll()" ng-disabled="!vm.uploader.isUploading">
+                            <i class="material-icons ps-btn-material">clear</i> @L("CancelAll")
+                        </button>
+                        <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.uploader.clearQueue()" ng-disabled="!vm.removeEnabled">
+                            <i class="material-icons ps-btn-material">delete</i> @L("RemoveAll")
+                        </button>
+                    </div>
+                    <div>
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                    <div class="form-actions pull-right">
+                        <button type="button" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.save()" ng-disabled="vm.saving"><i class="material-icons ps-btn-material">check</i>@L("Ok")</button>
+                        <button type="button" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()" ng-disabled="vm.saving"><i class="material-icons ps-btn-material">clear</i>@L("Cancel")</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

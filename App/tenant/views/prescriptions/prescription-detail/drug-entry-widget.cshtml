@@ -1,0 +1,162 @@
+﻿@model CreatePrescription
+
+@using Pulsesync.IngoTPCC.Application.Prescriptions.Dto
+
+<style>
+    /* This setup is for typeahead drop down menu to match the width with input */
+    ul.dropdown-menu {
+        width: 100% !important;
+    }
+
+    .dropdown-menu > li > a {
+        white-space: normal;
+        height: auto;
+    }
+
+    .dropdown-menu > li:hover > a,
+    .dropdown-menu > li.active > a,
+    .dropdown-menu > li.active:hover > a {
+        background-color: #00bfb5;
+        color: #ffffff;
+    }
+
+    a.caption-subject {
+        text-decoration: none !important;
+    }
+</style>
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption" @*data-toggle="collapse" href="#EntryFormBody"*@ ng-click="vm.isCollaped = !vm.isCollaped">
+            <a class="caption-subject">Enter New Drugs</a>
+        </div>
+    </div>
+    <div id="EntryFormBody" class="portlet-body" ng-if="vm.isCollaped">
+        @{
+            var attrs = new Dictionary<string, object>();
+            attrs.Add("name", "vm.form");
+            attrs.Add("novalidate", "");
+            attrs.Add("angular-validator", "");
+        }
+
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs)))
+        {
+            using (var s = f.BeginSection())
+            {
+                <div class="row">
+                    <div class="col-md-4 col-sm-4">
+                        @s.FieldFor(m => m.OrderedDate).Attrs(new { ng_model = "vm.workingModel.orderedDate", Validate = "false", Restrict = "reject" })
+                    </div>
+                    <div class="col-md-4 col-sm-4">
+                        <div class="form-group form-md-line-input ">
+                            <input name="DrugType" class="form-control" id="DrugType" type="text" ng-model="vm.workingModel.drug.drugTypeDescription" disabled>
+                            <label class="control-label" for="DrugType">Drug Type</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-4">
+                        @s.FieldFor(m => m.DrugFrequencyId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.drugFrequencyId", repeat = "vm.drugFrequencyMaster", ng_change = "vm.loadDrugFrequencyDetail(vm.workingModel.drugFrequencyId)" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 col-sm-4">
+                        @s.FieldFor(m => m.Type).AsDropDown().Attrs(new { ng_model = "vm.workingModel.type" })
+                    </div>
+                    <div class="col-md-4 col-sm-4">
+                        <div class="form-group form-md-line-input ">
+                            <input name="Category" class="form-control" id="Category" type="text" ng-model="vm.workingModel.drug.drugCategoryDescription" disabled>
+                            <label class="control-label" for="Category">Category</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-4">
+                        @s.FieldFor(m => m.DrugRouteId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.drugRouteId", repeat = "vm.drugRouteMaster", ng_change = "vm.loadDrugRouteDetail(vm.workingModel.drugRouteId)" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 col-sm-4">
+                        @s.FieldFor(m => m.DrugSourceId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.drugSourceId", repeat = "vm.drugSourceMaster", ng_change = "vm.loadDrugBasedOnSource(vm.workingModel.drugSourceId)" })
+                    </div>
+                    <div class="col-md-4 col-sm-4">
+                        @*@s.FieldFor(m => m.Dose).Attrs(new { ng_model = "vm.workingModel.dose" })*@
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group form-md-line-input" style="display: inline-block;  width:30%">
+                                    <input id="doseInteger" name="doseInteger" class="form-control" type="text" ng-keypress="vm.NumberOnly(event);" maxlength="4" ng-model="vm.workingModel.doseInteger" validator="vm.doseValidator(vm.workingModel.doseInteger,vm.workingModel.doseFractional)===true" invalid-message="vm.doseValidator(vm.workingModel.doseInteger,vm.workingModel.doseFractional)" validate-on="dirty">
+                                    <label class="control-label">Dose<span class="businessRequired"> * </span></label>
+                                </div>.
+                                <div class="form-group form-md-line-input" style="display: inline-block;  width:25%">
+                                    <input id="doseFractional" name="doseFractional" class="form-control" type="text" ng-keypress="vm.NumberOnly(event);" maxlength="4" ng-model="vm.workingModel.doseFractional" validator="vm.doseValidator(vm.workingModel.doseInteger,vm.workingModel.doseFractional)===true" invalid-message="''" validate-on="dirty">
+                                </div>
+                                <div class="form-group form-md-line-input" style="display: inline-block;  width:30%">
+                                    <select name="DoseUOM" class="form-control" id="DoseUom" ng-model="vm.workingModel.doseUomId" required required-message="'You must provide a value for Dose Unit of Measurement.'" validate-on="dirty">
+                                        <option ng-repeat="x in vm.unitOfMeasurementMaster" value="{{ x.id }}">{{ x.description }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4 col-sm-4">
+                        @*@s.FieldFor(m => m.DurationQuantity).Attrs(new { ng_model = "vm.workingModel.durationQuantity" })*@
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group form-md-line-input" style="display: inline-block;  width:18%">
+                                    <input class="form-control" type="text" ng-keypress="vm.NumberOnly(event);" maxlength="4" ng-model="vm.workingModel.quantityInteger" ng-change="vm.quantityTextChanged()">
+                                    <label class="control-label">Qty/Duration</label>
+                                </div> .
+                                <div class="form-group form-md-line-input" style="display: inline-block;  width:18%">
+                                    <input class="form-control" type="text" ng-keypress="vm.NumberOnly(event);" maxlength="4" ng-model="vm.workingModel.quantityFractional" ng-change="vm.quantityTextChanged()">
+                                </div>
+                                <div class="form-group form-md-line-input" style="display: inline-block;  width:25%">
+                                    <select name="QuantityUOM" class="form-control" id="QuantityUOM" ng-model="vm.workingModel.quantityUomId">
+                                        <option ng-repeat="x in vm.unitOfMeasurementMaster" value="{{ x.id }}">{{ x.description }}</option>
+                                    </select>
+                                </div>/
+                                <div class="form-group form-md-line-input" style="display: inline-block;  width:25%">
+                                    <input class="form-control" type="text" ng-model="vm.workingModel.duration">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        @s.FieldFor(m => m.DrugStrength).Attrs(new { ng_model = "vm.workingModel.drugStrength", uib_typeahead = "drug.description for drug in vm.drugs | filter: {description:$viewValue} | limitTo:5", typeahead_on_select = "vm.loadDrugDetails(vm.workingModel.drugStrength)", ng_change = "vm.loadDrugDetails(vm.workingModel.drugStrength)" })
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <p class="margin-bottom-0">@L("IsShortTermUse")</p>
+                        <div class="form-group form-md-checkboxes">
+                            <div class="md-checkbox-list">
+                                <div class="md-checkbox">
+                                    <input id="isShortTermUse" type="checkbox" class="form-control"
+                                           ng-model="vm.workingModel.isShortTermUse" />
+                                    <label for="isShortTermUse">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-4">
+                        @s.FieldFor(m => m.SpecialInstructions).Attrs(new { ng_model = "vm.workingModel.specialInstructions" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-actions pull-right">
+                        <button class="linkButton btn-small" type="submit" ng-click="vm.saveOrUpdate('save', $event)" ng-if="vm.mode == 'new'">
+                            <i class="material-icons font-18-main v-top">save</i> Add
+                        </button>
+                        <button class="linkButton btn-small" type="submit" ng-click="vm.saveOrUpdate('update', $event)" ng-if="vm.mode == 'edit'">
+                            <i class="material-icons font-18-main v-top">save</i> Update
+                        </button>
+                        <button class="linkButton btn-small" type="reset" ng-click="vm.clearEntryFrom()">
+                            <i class="material-icons font-18-main v-top">close</i> Clear
+                        </button>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+

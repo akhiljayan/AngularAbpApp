@@ -1,0 +1,50 @@
+@using Pulsesync.IngoTPCC.Localization
+
+<div ng-controller="host.views.masterdata.index as vm">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("MasterDataList")</span>
+                    </div>
+                    <div class="actions dropdown inputs">
+                        <a ng-click="vm.createMasterDataItem()" ng-disabled="!vm.permissions.create">
+                            <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6 padding-bottom-10">
+                            <ui-select id="masterData" ng-model="vm.masterData.select" theme="selectize" title="Choose a Master Data" ng-disabled="vm.isReadOnlyMode" on-select="vm.onchange()">
+                                <ui-select-match placeholder="Select Master Data">
+                                    {{$select.selected.type}}
+                                    <a class="fa fa-times" ng-hide="vm.isReadOnlyMode" ng-click="$select.clear($event);"></a>
+                                </ui-select-match>
+                                <ui-select-choices repeat="m in vm.masterDataList | filter: { type: $select.search } | orderBy:'type'">
+                                    <span ng-bind-html="m.type | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-12">
+                            <div busy-if="vm.loading">
+                                <div ui-grid="vm.masterDataGridOptions" ui-grid-pagination="" ui-grid-resize-columns ui-grid-edit ui-grid-row-edit ui-grid-cellNav dir=@(CultureHelper.IsRtl ? "rtl" : "")>
+                                </div>
+                            </div>
+                            <div class="pull-right">
+                                <ul uib-pagination 
+                                    total-items="vm.masterDataGridOptions.totalItems" 
+                                    ng-model="vm.masterDataGridOptions.paginationCurrentPage" 
+                                    max-size="vm.paginationMaxSize"
+                                    class="pagination-sm" 
+                                    boundary-link-numbers="true" 
+                                    previous-text="&lsaquo;" 
+                                    next-text="&rsaquo;"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

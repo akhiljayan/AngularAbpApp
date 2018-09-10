@@ -1,0 +1,64 @@
+﻿<style>
+    .portlet-body > .row:nth-last-child(2) > div:last-child > hr {
+        display: none;
+    }
+</style>
+
+<div class="portlet light" busy-if="$ctrl.loading" ng-class="{ 'div-disabled': $ctrl.mode=='new' }">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">{{ $ctrl.title }}</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a ng-click="vm.detailsOpen = !vm.detailsOpen" title="Show associated Service types and Status" class="icon-wrapper">
+                <i ng-show="!vm.detailsOpen" class="material-icons custom-icon">menu</i>
+                <i ng-show="vm.detailsOpen" class="material-icons custom-icon">view_headline</i>
+            </a>
+            <a ng-click="$ctrl.create()" ng-if="$ctrl.permissions.create && $ctrl.mode!='new'" class="icon-wrapper">
+                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+            </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row cursor-pointer" ng-repeat="model in $ctrl.models" ng-click="$ctrl.edit(model.id)">
+            <div class="col-md-8 col-sm-7 margin-bottom-10">
+                <div class="bold">{{ model.financialAssistanceTypeDescription }}</div>
+                <div class="inline-flex">
+                    <span class="badge custom-badge margin-right-10" style="font-weight: bolder;">{{ model.amountPercentage }}</span>
+                    <span>
+                        <span>{{model.amountPercentage ? 'from' : 'From'}}</span> {{ model.effectiveDate | dateFormat }}
+                        <span ng-if="model.expiryDate"> to {{ model.expiryDate | dateFormat }}</span>
+                        <span ng-if="model.status"> ({{ model.status | enumText : 'financialAssistanceStatus' }})</span>
+                    </span>
+                </div>
+                <div ng-show="vm.detailsOpen">
+                    <span>
+                        <span ng-if="model.issueDate">Issued card on {{ model.issueDate | dateFormat }}</span>
+                        <span ng-if="model.returnDate">{{model.issueDate ? 'and returned' : 'Returned'}} on {{ model.returnDate | dateFormat }}</span>
+                        <span ng-if="financialAssistance.issueDate || financialAssistance.returnDate"><br /></span>
+                    </span>
+                    <span ng-if="model.applicationDate">Applied on {{ model.applicationDate | dateFormat }}<br /></span>
+                    <span ng-if="model.beneficiary">Beneficiary: {{ model.beneficiary | enumText: 'financialAssistanceBeneficiary' }}</span>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-5 text-right margin-bottom-10 bold">
+                <div>{{ model.lastRecordAction | enumText: 'lastRecordAction'}}</div>
+                <div class="margin-top-5">
+                    <i class="fa fa-unlock" style="font-size: 20px;" ng-if="model.lastRecordAction == 0"></i>
+                    <i class="fa fa-lock" style="font-size: 20px;" ng-if="model.lastRecordAction == 1"></i>
+                    <i class="fa fa-ban" style="font-size: 20px;" ng-if="model.lastRecordAction == 2"></i>
+                </div>
+            </div>
+            <div class="col-md-12 col-sm-12 clearfix">
+                <hr />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12" ng-if="!$ctrl.models.length">
+                <span ng-if="$ctrl.mode!='new'">Add Financial Assistances.</span>
+                <span ng-if="$ctrl.mode=='new'">Financial Assistances can be added once this record is saved.</span>
+            </div>
+        </div>
+    </div>
+</div>

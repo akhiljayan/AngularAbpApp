@@ -1,0 +1,98 @@
+﻿<div busy-if="$ctrl.loading" ng-if="$ctrl.isPatient || $ctrl.isReferral">
+    <div id="specialcares" class="portlet light">
+        <div class="portlet-title">
+            <div class="caption" data-toggle="collapse" href="#SpecialCaresBody">
+                <span class="caption-subject">@L("SpecialCare"){{$ctrl.headingAppend}}</span>
+            </div>
+            <div class="actions dropdown inputs" ng-if="$ctrl.isPatient">
+                <a class="icon-wrapper" ng-if="$ctrl.permissions.create" ng-click="$ctrl.create()">
+                    <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                </a>
+                <a ng-click="$ctrl.specialCareDetailsOpen = !$ctrl.specialCareDetailsOpen" title="Show Special Care Detail view" class="icon-wrapper">
+                    <i ng-show="!$ctrl.specialCareDetailsOpen" class="material-icons custom-icon">menu</i>
+                    <i ng-show="$ctrl.specialCareDetailsOpen" class="material-icons custom-icon">view_headline</i>
+                </a>
+                <a class="icon-wrapper" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                    <i class="material-icons custom-icon">more_vert</i>
+                </a>
+                <ul class="dropdown-menu pull-right">
+                    <li>
+                        <a href="javascript:;" class="bold" ng-click="$ctrl.getAllActive()">@L("Active")</a>
+                    </li>
+                    <li class="divider"> </li>
+                    <li>
+                        <a href="javascript:;" class="bold" ng-click="$ctrl.getAllInactive()">@L("Inactive")</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="SpecialCareBody" class="portlet-body collapse in" ng-if="$ctrl.template == 'person'">
+            <div class="row">
+                @*Summary View*@
+                <div class="special-care col-md-12 col-sm-12" ng-show="!$ctrl.specialCareDetailsOpen">
+                    <span class="font-14-main" ng-repeat="sc in $ctrl.specialcares" style="">
+                        <a class="font-14-main font-black-main" ng-click="$ctrl.editSpecialCare(sc)">
+                            <span style="text-decoration:underline;">{{sc.specialCareItem.description}}</span>
+                            <span style="text-decoration:underline;" ng-if="sc.specialCareItem.description == 'Others'">: {{sc.otherSpecialCare}}</span>
+                        </a>{{$last ? '' : ', '}}
+                    </span>
+                </div>
+                @*Detail View*@
+                <div class="special-care col-md-12 col-sm-12" ng-repeat="sc in $ctrl.specialcares" ng-click="$ctrl.editSpecialCare(sc)" ng-show="$ctrl.specialCareDetailsOpen">
+                    <div class="special-care-description row">
+                        <div class="col-md-12 col-sm-12 nopadding no-padding">
+                            <div class="col-md-10 col-sm-10 bold">
+                                <span>{{sc.specialCareItem.description}}</span>
+                                <span ng-if="sc.specialCareItem.description == 'Others'">: {{sc.otherSpecialCare}}</span>
+                            </div>
+                            <div class="col-md-2 col-sm-2">
+                                <div class="actions list-unstyled list-inline">
+                                    <a class="actions list-unstyled list-inline" ng-if="$ctrl.permissions.delete" href="#" ng-click="$ctrl.deleteSpecialCare(sc.id);$event.stopPropagation()">@L("Delete")</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="special-care-details">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span ng-if="sc.frequency.description">
+                                    Frequency
+                                    <span class="bold"> {{sc.frequency.description}}</span>
+                                </span>
+                                <span class="bold" ng-if="sc.otherFrequency"> - {{sc.otherFrequency}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span ng-if="sc.nextChangeDate">
+                                    Next Change Date on
+                                    <span class="bold"> {{sc.nextChangeDate|date:'dd-MMM-yyyy'}}</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span ng-if="sc.lastChangeDate">
+                                    Last Change Date on
+                                    <span class="bold"> {{sc.lastChangeDate|date:'dd-MMM-yyyy'}}</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span ng-if="sc.startDate">
+                                    Start Date on
+                                    <span class="bold"> {{sc.startDate|date:'dd-MMM-yyyy'}}</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                </div>
+            </div>
+            <simple-paginator data="$ctrl.data" small-page-size="true" on-page-changed="$ctrl.load(requestParams)"></simple-paginator>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,36 @@
+﻿@model VitalSignDto
+@using Pulsesync.IngoTPCC.Application.VitalSign.Dto;
+@{
+    var attributes = new Dictionary<string, object>();
+    attributes.Add("role", "form");
+    attributes.Add("id", "bloodGlucoseVitalSignsForm");
+    attributes.Add("name", "bloodGlucoseVitalSignsForm");
+    attributes.Add("novalidate", "");
+    attributes.Add("action", "#");
+    attributes.Add("angular-validator-submit", "$ctrl.parentScope.save($ctrl.vitalSign)");
+    attributes.Add("angular-validator", "");
+    attributes.Add("error-focus", "");
+}
+@using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body")))
+{
+    using (var s = f.BeginSection())
+    {
+        <div id="Vitalsigns" class="portlet light" style="padding-bottom:0px;padding-top:0px">
+            <div class="portlet-body" style="padding-top:2px">
+                <div class="row">
+                    <h5 class="fontStealGreen bold col-md-12">Blood Glucose</h5>
+                    <div class="col-md-4">
+                        @s.FieldFor(m => m.BloodGlucose.TwoHPP).Attrs(new { ng_model = "$ctrl.vitalSign.bloodGlucose.twoHPP", type = "number", ng_pattern = @"/^[0-9]+(\.[0-9]{1,2})?$/", ng_keydown= "$ctrl.parentScope.preventUnwantedChars($event)" })
+                    </div>
+                    <div class="col-md-4">
+                        @s.FieldFor(m => m.BloodGlucose.Random).Attrs(new { ng_model = "$ctrl.vitalSign.bloodGlucose.random", type = "number", ng_pattern = @"/^[0-9]+(\.[0-9]{1,2})?$/" , ng_keydown = "$ctrl.parentScope.preventUnwantedChars($event)" })
+                    </div>
+                    <div class="col-md-4">
+                        @s.FieldFor(m => m.BloodGlucose.Fasting).Attrs(new { ng_model = "$ctrl.vitalSign.bloodGlucose.fasting", type = "number", ng_pattern = @"/^[0-9]+(\.[0-9]{1,2})?$/", ng_keydown = "$ctrl.parentScope.preventUnwantedChars($event)" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+

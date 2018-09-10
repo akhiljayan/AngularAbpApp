@@ -1,0 +1,11 @@
+﻿@model UiSelectDto
+@using Pulsesync.IngoTPCC.Common.Dto
+@using (var f = Html.BeginForm())
+{
+    using (var s = f.BeginSection())
+    {
+        @s.FieldFor(fa => fa.PersonId).AsDropDown().Attrs(new { ng_model = "vm.personId", repeat = "vm.persons", ng_disabled = "vm.disabled", ui_select_required = "ui-select-required", required_message = "'You must provide a value for Person.'", refresh = "vm.refreshPerson($select, $event,false);", load_more = "vm.refreshPerson($select,$event,true);", maxcount = "vm.personsCount", on_select = "vm.select($item)" })
+ 
+    }
+}
+

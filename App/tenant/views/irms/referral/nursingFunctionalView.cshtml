@@ -1,0 +1,634 @@
+﻿@model ReferralDto
+@using IRMS.Entities.Dto;
+<div ng-controller="tenant.views.irms.nursingFunctionalView as nursingFunctional">
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div busy-if="vm.loading">
+            <!-- Nursing Procedure Section -->
+            <div id="NursingProcedure" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("NursingProcedure")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+
+                    <!-- Feeding Tube Sub-Section -->
+                    <div id="FeedingTube">
+                        <div class="caption">
+                            <h4 class="bold">@L("FeedingTube")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.feedingTubeTypeDueForChangingOn | irmsDateFormat }}</div>
+                                    <label class="control-label view-label" for="feedingTubeTypeDueForChangingOn">@L("DueForChange")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.feedingTubeTypeSize }}</div>
+                                    <label class="control-label view-label" for="feedingTubeTypeSize">@L("Size")</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.feedingTubeNPType }}</div>
+                                    <label class="control-label view-label" for="feedingTubeNPType">@L("Type")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.othersFeedingTubeTypeValue }}</div>
+                                    <label class="control-label view-label" for="othersFeedingTubeTypeValue">@L("OtherType")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Urinary Catheter Sub-Section -->
+                    <div id="UrinaryCatheter">
+                        <div class="caption">
+                            <h4 class="bold">@L("UrinaryCatheter")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.urinaryCatheter }}</div>
+                                    <label class="control-label view-label" for="urinaryCatheter">@L("UrinaryCatheter")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.urinaryTypeDueForChangingOn | irmsDateFormat }}</div>
+                                    <label class="control-label view-label" for="urinaryTypeDueForChangingOn">@L("DueForChange")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.urinaryCatheterSize }}</div>
+                                    <label class="control-label view-label" for="urinaryCatheterSize">@L("Size")</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.urinaryCatheterFrequency }}</div>
+                                    <label class="control-label view-label" for="urinaryCatheterFrequency">@L("Frequency")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.urinaryCatheterType }}</div>
+                                    <label class="control-label view-label" for="urinaryCatheterType">@L("Type")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.othersUrinaryCatheterTypeValue }}</div>
+                                    <label class="control-label view-label" for="othersUrinaryCatheterTypeValue">@L("OtherType")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tracheostomy Sub-Section -->
+                    <div id="Tracheostomy">
+                        <div class="caption">
+                            <h4 class="bold">@L("Tracheostomy")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.tracheostomy }}</div>
+                                    <label class="control-label view-label" for="tracheostomy">@L("Tracheostomy")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.tracheostomyDueForChanging | irmsDateFormat }}</div>
+                                    <label class="control-label view-label" for="tracheostomyDueForChanging">@L("DueForChange")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PEG Sub-Section -->
+                    <div id="PEG">
+                        <div class="caption">
+                            <h4 class="bold">@L("PEG")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.peg }}</div>
+                                    <label class="control-label view-label" for="peg">@L("PEG")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.pegDueForChanging | irmsDateFormat }}</div>
+                                    <label class="control-label view-label" for="pegDueForChanging">@L("DueForChange")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Colostomy Sub-Section -->
+                    <div id="Colostomy">
+                        <div class="caption">
+                            <h4 class="bold">@L("Colostomy")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.colostomy }}</div>
+                                    <label class="control-label view-label" for="colostomy">@L("Colostomy")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.colostomyDueForChanging | irmsDateFormat }}</div>
+                                    <label class="control-label view-label" for="colostomyDueForChanging">@L("DueForChange")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ileostomy Sub-Section -->
+                    <div id="Ileostomy">
+                        <div class="caption">
+                            <h4 class="bold">@L("Ileostomy")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.ileostomy }}</div>
+                                    <label class="control-label view-label" for="ileostomy">@L("Ileostomy")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.ileostomyDueForChanging | irmsDateFormat }}</div>
+                                    <label class="control-label view-label" for="ileostomyDueForChanging">@L("DueForChange")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cope Loop Sub-Section -->
+                    <div id="CopeLoop">
+                        <div class="caption">
+                            <h4 class="bold">@L("CopeLoop")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.copeLoopNP }}</div>
+                                    <label class="control-label view-label" for="copeLoopNP">@L("CopeLoop")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.copeLoopType }}</div>
+                                    <label class="control-label view-label" for="copeLoopType">@L("Type")</label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.copeLoopNPOthers }}</div>
+                                    <label class="control-label view-label" for="copeLoopNPOthers">@L("OtherCopeLoop")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PCNNP Sub-Section -->
+                    <div id="PCNNP">
+                        <div class="caption">
+                            <h4 class="bold">@L("PCNNP")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.pcnnp }}</div>
+                                    <label class="control-label view-label" for="pcnnp">@L("PCNNP")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.pcnnpType }}</div>
+                                    <label class="control-label view-label" for="pcnnpType">@L("Type")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Other Procedure Sub-Section -->
+                    <div id="OtherProcedure">
+                        <div class="caption">
+                            <h4 class="bold">@L("OtherProcedure")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.nursingProcedureList.otherProcedure }}</div>
+                                    <label class="control-label view-label" for="otherProcedure">@L("OtherProcedure")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Wound Care Sub-Section -->
+                    <div id="WoundCare">
+                        <div class="caption">
+                            <h4 class="bold">@L("WoundCare")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10%;">@L("WoundType")</th>
+                                            <th style="width: 15%;">@L("OtherWoundType")</th>
+                                            <th style="width: 20%;">@L("Site")</th>
+                                            <th style="width: 10%;">@L("Size")</th>
+                                            <th style="width: 15%;">@L("DressingType")</th>
+                                            <th style="width: 15%;">@L("ChangeFrequency")</th>
+                                            <th style="width: 15%;">@L("LastChangeDate")</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in nursingFunctional.woundList">
+                                            <td>{{ item.woundType }}</td>
+                                            <td>{{ item.otherWoundType }}</td>
+                                            <td>{{ item.site }}</td>
+                                            <td>{{ item.size }}</td>
+                                            <td>{{ item.dressingType }}</td>
+                                            <td>{{ item.freqChange }}</td>
+                                            <td>{{ item.lastChangeDate | irmsDateFormat }}</td>
+                                        </tr>
+                                        <tr ng-show="nursingFunctional.woundList.length == 0">
+                                            <td colspan="7">
+                                                @L("NoRecordsFound")
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Injection Sub-Section -->
+                    <div id="Injection">
+                        <div class="caption">
+                            <h4 class="bold">@L("Injection")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10%;">@L("Drug")</th>
+                                            <th style="width: 10%;">@L("Dosage")</th>
+                                            <th style="width: 15%;">@L("Frequency")</th>
+                                            <th style="width: 10%;">@L("InjectionIM")</th>
+                                            <th style="width: 10%;">@L("InjectionSC")</th>
+                                            <th style="width: 10%;">@L("InjectionIV")</th>
+                                            <th style="width: 15%;">@L("ISPICCLine")</th>
+                                            <th style="width: 15%;">@L("LastInjectionDate")</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in nursingFunctional.injectionList">
+                                            <td>{{ item.drugName }}</td>
+                                            <td>{{ item.dosage }}</td>
+                                            <td>{{ item.frequency }}</td>
+                                            <td>{{ item.im }}</td>
+                                            <td>{{ item.sc }}</td>
+                                            <td>{{ item.iv }}</td>
+                                            <td>{{ item.ispiccline }}</td>
+                                            <td>{{ item.lastInjectionDate | irmsDateFormat }}</td>
+                                        </tr>
+                                        <tr ng-show="nursingFunctional.injectionList.length == 0">
+                                            <td colspan="8">
+                                                @L("NoRecordsFound")
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Functional Status Section -->
+            <div id="FunctionalStatus" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("FunctionalStatus")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+
+                    <!-- Previous Functional Status Sub-Section -->
+                    <div id="PreviousFunctionalStatus">
+                        <div class="caption">
+                            <h4 class="bold">@L("PreviousFunctionalStatus")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.prevFeeding }}</div>
+                                    <label class="control-label view-label" for="prevFeeding">@L("PreviousFeedingStatus")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.prevFeedingDependence }}</div>
+                                    <label class="control-label view-label" for="prevFeedingDependence">@L("PreviousFeedingDependence")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.prevToileting }}</div>
+                                    <label class="control-label view-label" for="prevToileting">@L("PreviousToileting")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.prevToiletingDependence }}</div>
+                                    <label class="control-label view-label" for="prevToiletingDependence">@L("PreviousToiletingDependence")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.prevMobility }}</div>
+                                    <label class="control-label view-label" for="prevMobility">@L("PreviousMobility")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.prevMobilityAidsNeeded }}</div>
+                                    <label class="control-label view-label" for="prevMobilityAidsNeeded">@L("PreviousMobilityAidsNeeded")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.prevMobilityAssistLevel }}</div>
+                                    <label class="control-label view-label" for="prevMobilityAssistLevel">@L("PreviousMobilityAssistanceLevel")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.prevMobilityEnvironmentAccess }}</div>
+                                    <label class="control-label view-label" for="prevMobilityEnvironmentAccess">@L("PreviousMobilityEnvironmentalAccess")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Current Functional Status Sub-Section -->
+                    <div id="CurrentFunctionalStatus">
+                        <div class="caption">
+                            <h4 class="bold">@L("CurrentFunctionalStatus")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.curFeeding }}</div>
+                                    <label class="control-label view-label" for="curFeeding">@L("CurrentFeeding")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.curFeedingDependence }}</div>
+                                    <label class="control-label view-label" for="curFeedingDependence">@L("CurrentFeedingDependence")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.curToileting }}</div>
+                                    <label class="control-label view-label" for="curToileting">@L("CurrentToileting")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.curToiletingNeedsAssistance }}</div>
+                                    <label class="control-label view-label" for="curToiletingNeedsAssistance">@L("CurrentToiletingDependence")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.bowelManagement }}</div>
+                                    <label class="control-label view-label" for="bowelManagement">@L("CurrentBowelManagement")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.otherBowelManagement }}</div>
+                                    <label class="control-label view-label" for="otherBowelManagement">@L("CurrentOtherBowelManagement")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.curMobility }}</div>
+                                    <label class="control-label view-label" for="curMobility">@L("CurrentMobility")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.curAidsNeeded }}</div>
+                                    <label class="control-label view-label" for="curAidsNeeded">@L("CurrentMobilityAidsNeeded")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.curAssistLevel }}</div>
+                                    <label class="control-label view-label" for="curAssistLevel">@L("CurrentMobilityAssistanceLevel")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.curTransfer }}</div>
+                                    <label class="control-label view-label" for="curTransfer">@L("Transfer")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.activityTolerance }}</div>
+                                    <label class="control-label view-label" for="activityTolerance">@L("ActivityTolerance")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Respiratory Care Sub-Section -->
+                    <div id="RespiratoryCare">
+                        <div class="caption">
+                            <h4 class="bold">@L("RespiratoryCare")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalRespiratoryCareList.respiratoryCare }}</div>
+                                    <label class="control-label view-label" for="respiratoryCare">@L("RespiratoryCare")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalRespiratoryCareList.othersRespiratoryCareValue }}</div>
+                                    <label class="control-label view-label" for="othersRespiratoryCareValue">@L("OtherRespiratoryCare")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mental Status Sub-Section -->
+                    <div id="MentalStatus">
+                        <div class="caption">
+                            <h4 class="bold">@L("MentalStatus")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.mentalStatus }}</div>
+                                    <label class="control-label view-label" for="mentalStatus">@L("MentalStatus")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.othersMentalStatusValue }}</div>
+                                    <label class="control-label view-label" for="othersMentalStatusValue">@L("OtherMentalStatus")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.onsetDate | irmsDateFormat }}</div>
+                                    <label class="control-label view-label" for="onsetDate">@L("OnsetDate")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Impairment Sub-Section -->
+                    <div id="VisualImpairment">
+                        <div class="caption">
+                            <h4 class="bold">@L("VisualImpairment")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.visualImpairment }}</div>
+                                    <label class="control-label view-label" for="visualImpairment">@L("VisualImpairment")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.visualImpairmentSpecify }}</div>
+                                    <label class="control-label view-label" for="visualImpairmentSpecify">@L("OtherVisualImpairment")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hearing Impairment Sub-Section -->
+                    <div id="HearingImpairment">
+                        <div class="caption">
+                            <h4 class="bold">@L("HearingImpairment")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.hearingImpairment }}</div>
+                                    <label class="control-label view-label" for="hearingImpairment">@L("HearingImpairment")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ nursingFunctional.functionalStatusList.hearingImpairmentSpecify }}</div>
+                                    <label class="control-label view-label" for="hearingImpairmentSpecify">@L("OtherHearingImpairment")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

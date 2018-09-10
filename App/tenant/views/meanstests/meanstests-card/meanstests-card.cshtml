@@ -1,0 +1,65 @@
+﻿<div id="MeansTest" class="portlet light" busy-if="$ctrl.loading" ng-class="{ 'div-disabled': $ctrl.mode=='new' }">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">{{ $ctrl.title }}</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a ng-click="$ctrl.create()" ng-if="$ctrl.permissions.create && $ctrl.mode!='new'" class="icon-wrapper">
+                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+            </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="filter-results-card">
+                    <ul class="filter-list">
+                        <li class="filter-list-item" ng-repeat="model in $ctrl.models">
+                            <div class="filter-list-item-content" ng-click="$ctrl.edit(model)">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div ng-if="$ctrl.template=='referral'"><strong>{{ model.referralServiceType.serviceType.description }}</strong></div>
+                                        <div ng-if="$ctrl.template=='person'"><strong>{{ model.admission.admissionNumber }}</strong></div>
+                                        <div>
+                                            @*<span><strong>{{ model.finalSubsidyRate.description }}</strong></span>*@
+                                            <span class="badge custom-badge margin-right-10">{{ model.finalSubsidyRate.description }}</span>
+                                            <span>from {{ model.effectiveDate | dateFormat }}</span>
+                                            <span ng-if="model.expiryDate">to {{ model.expiryDate | dateFormat }}</span>
+                                        </div>
+                                        <div>
+                                            <span ng-if="model.isDeviated"><strong>Deviated from</strong> <span class="margin-right-10 color-black">{{ model.subsidyRate.description }}</span></span>
+                                            <span ng-if="!model.isDeviated"><strong>No Deviation</strong></span>
+                                        </div>
+                                        <div ng-if="!model.hasFinancialAssistance">No Financial Assistance</div>
+                                        <div ng-if="model.hasFinancialAssistance">
+                                            <span>Financial Assistance</span>
+                                            <span>from {{ model.financialAssistanceEffectiveDate | dateFormat }}</span>
+                                            <span ng-if="model.financialAssistanceExpiryDate">to {{ model.financialAssistanceExpiryDate | dateFormat }}</span>
+                                        </div>
+                                        <div>Means Test Date {{ model.meansTestDate | dateFormat }}</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="pull-right text-right">
+                                            <strong>{{ model.lastRecordAction | enumText: 'lastRecordAction'}}</strong>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="pull-right margin-top-5">
+                                            <i class="fa fa-unlock" style="font-size: 20px; display: inline;" ng-if="model.lastRecordAction == 0"></i>
+                                            <i class="fa fa-lock" style="font-size: 20px; display: inline;" ng-if="model.lastRecordAction == 1"></i>
+                                            <i class="fa fa-ban" style="font-size: 20px; display: inline;" ng-if="model.lastRecordAction == 2"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <div ng-if="!$ctrl.models.length">
+                        <span ng-if="$ctrl.mode!='new'">Add Means Tests.</span>
+                        <span ng-if="$ctrl.mode=='new'">Means Tests can be added once this record is saved.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

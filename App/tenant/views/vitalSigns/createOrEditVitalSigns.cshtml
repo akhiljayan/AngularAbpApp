@@ -1,0 +1,125 @@
+﻿@model VitalSignDto
+@using Pulsesync.IngoTPCC.Application.VitalSign.Dto;
+
+<style type="text/css">
+    .remark-height {
+        height: 34px !important;
+        margin: 0px;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        border-color: transparent;
+        height: 34px;
+        border: 1px solid #000;
+        resize: none;
+    }
+
+    .blood-preasure-control > span.help-block {
+        display: block !important;
+        position: unset !important;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /*.form-group > .help-block {
+        display: block !important;
+        position: unset !important;
+    }*/
+
+    /*.form-group.form-md-line-input > span.help-block {
+        position: unset !important;
+        display: block !important;
+    }*/
+</style>
+<div class="portlet light" data-drag="true" id="vitalSignModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("VitalSign")</span>
+        </div>
+        <div class="tools pull-right">
+            <minimize-modal></minimize-modal>
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form modal-body">
+
+        @{
+            var attributes = new Dictionary<string, object>();
+            attributes.Add("role", "form");
+            attributes.Add("id", "vitalSignForm");
+            attributes.Add("name", "vm.vitalSignForm");
+            attributes.Add("novalidate", "");
+            attributes.Add("action", "#");
+            attributes.Add("angular-validator-submit", "vm.save(vm.vitalSign)");
+            attributes.Add("angular-validator", "");
+            attributes.Add("error-focus", "");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body")))
+            {
+                using (var s = f.BeginSection())
+                {
+                <div class="portlet-body" style="display: block;" busy-if="vm.loading">
+                    <div class="form-body padding-top-0-imp">
+
+                        <div class="col-md-12">
+                            <div id="Vitalsigns" class="portlet light" style="padding-bottom:0px;padding-top:0px">
+                                <div class="portlet-body" style="padding-top:2px">
+                                    <div class="row">
+                                        <h5 class="fontStealGreen bold col-md-12">General</h5>
+                                        <div class="col-md-6">
+                                            <person-ui-select person-id="vm.vitalSign.personId" uiselect-disabled="vm.personDisabled"></person-ui-select>
+                                        </div>
+                                        <div class="col-md-6" ng-if="vm.templateDateOut">
+                                            @s.FieldFor(m => m.TakenOn).Attrs(new { ng_model = "vm.vitalSign.takenOn", Validate = "false", Restrict = "reject", name = "TakenOn", ng_required = "true", required_message = "You must provide a value for Taken on Date", maxdate = "{{vm.templateDateOut}}", mindate = "{{vm.minimumDate}}", beforeoron_message = "'Taken On Date Time must be later than Vital Sign Out.'" })
+                                        </div>
+                                        <div class="col-md-6" ng-if="!vm.templateDateOut">
+                                            @s.FieldFor(m => m.TakenOn).Attrs(new { ng_model = "vm.vitalSign.takenOn", Validate = "false", Restrict = "reject", name = "TakenOn", ng_required = "true", required_message = "You must provide a value for Taken on Date"})
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            @s.FieldFor(m => m.Remarks).Attrs(new { ng_model = "vm.vitalSign.remarks", name = "Remarks", ng_disabled = "vm.isReadOnlyMode", ng_maxlength = "4000" }).AddClass("remark-height")
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <general-measurement id="usual-vital-sign" maintitle="" mode="vm.editMode ? 'view' : 'new'" template="'vitalsign'" person-id="" is-patient="true" vital-sign="vm.vitalSign" parent-scope="vm"></general-measurement>
+                        </div>
+
+                        <div class="col-md-12">
+                            <blood-pressure id="blood-pressure-vital-vigns" maintitle="" mode="vm.editMode ? 'view' : 'new'" template="'vitalsign'" person-id="" is-patient="true" vital-sign="vm.vitalSign" parent-scope="vm"></blood-pressure>
+                        </div>
+
+                        <div class="col-md-12">
+                            <blood-glucose id="blood-glucose-vital-vigns" maintitle="" mode="vm.editMode ? 'view' : 'new'" template="'vitalsign'" person-id="" is-patient="true" vital-sign="vm.vitalSign" parent-scope="vm"></blood-glucose>
+                        </div>
+
+                        <div class="col-md-12">
+                            <urine id="urine-vital-vigns" maintitle="" mode="vm.editMode ? 'view' : 'new'" template="'vitalsign'" person-id="" is-patient="true" vital-sign="vm.vitalSign" parent-scope="vm"></urine>
+                        </div>
+
+                        <div class="col-md-12">
+                            <mass-index id="bmi-vital-vigns" maintitle="" mode="vm.editMode ? 'view' : 'new'" template="'vitalsign'" person-id="" is-patient="true" vital-sign="vm.vitalSign" parent-scope="vm"></mass-index>
+                        </div>
+
+                    </div>
+                </div>
+
+            }
+            <div class="form-actions noborder right modal-footer">
+                <button type="submit" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.saving" ng-class="{'disabled-link': vm.saving }"><i class="material-icons  font-18-main v-top">save</i>Save</button>
+                <button type="button" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()" ng-disabled="vm.saving" ng-class="{'disabled-link': vm.saving }"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+    });
+</script>

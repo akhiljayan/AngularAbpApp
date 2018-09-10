@@ -1,0 +1,62 @@
+﻿@using Pulsesync.IngoTPCC.CentreServicesApi.Dto;
+@model CentreServiceDto
+<div class="portlet light" data-drag="true" id="centreServiceTypeModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("CentreServiceType")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        @{
+            var attributes = new Dictionary<string, object>();
+            attributes.Add("role", "form");
+            attributes.Add("id", "centreServiceTypeForm");
+            attributes.Add("name", "centreServiceTypeForm");
+            attributes.Add("novalidate", "");
+            attributes.Add("action", "#");
+            attributes.Add("angular-validator-submit", "vm.save()");
+            attributes.Add("angular-validator", "");
+            //attributes.Add("ng-validate", "vm.validationOptions");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form")))
+        {
+            using (var s = f.BeginSection())
+            {
+                <div class="portlet-body" style="display: block;"> 
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @*@s.FieldFor(m => m.CentreId).AsDropDown().Attrs(new { ng_model = "vm.centreServiceType.centreId", ng_disabled = "vm.isReadOnlyMode", name = "centreId", repeat = "vm.centrelist", required_message = "You must select a Centre" })*@
+                                <centre-ui-select centre-id="vm.centreServiceType.centreId" required="true" uiselect-disabled="false"></centre-ui-select>
+                            </div>
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.ServiceId).AsDropDown().Attrs(new { ng_model = "vm.centreServiceType.serviceId", ng_disabled = "vm.isReadOnlyMode", name = "serviceId", repeat = "vm.serviceTypes", required_message = "You must select a Service Type" })
+                            </div>
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.InstitutionCode).AsDropDown().Attrs(new { ng_model = "vm.centreServiceType.institutionCode", ng_disabled = "vm.isReadOnlyMode" })
+                            </div>
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.HCICode).AsDropDown().Attrs(new { ng_model = "vm.centreServiceType.hciCode", ng_disabled = "vm.isReadOnlyMode"})
+                            </div>
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.Url).AsDropDown().Attrs(new { ng_model = "vm.centreServiceType.url", ng_disabled = "vm.isReadOnlyMode"})
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="form-actions noborder right">
+                <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.disableSave" ng-click="vm.save($event)"><i class="material-icons ps-btn-material">check</i>Ok</button>
+                <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+            </div>
+        }
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+    });
+</script>

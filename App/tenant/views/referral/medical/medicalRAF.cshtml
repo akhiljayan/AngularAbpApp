@@ -1,0 +1,85 @@
+﻿@model ResidentAssessmentFormDto
+
+@using Pulsesync.IngoTPCC.Application.Referral.Dto;
+
+<div id="RAF" class="functionalStatus portlet light" ng-controller="tenant.views.referral.medicalRAF as mraf">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("RAF")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a class="icon-wrapper" ng-if="mraf.mode.toLowerCase()=='view' && !vm.isNew && vm.permissions.edit" ng-click="mraf.edit()">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools">
+            <a class="remove" ng-if="mraf.mode.toLowerCase()=='edit' && !vm.isNew" ng-click="mraf.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="mraf.mode">
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+                        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(name => "mraf.mraForm", ng_validate => "mraf.validationOptions")))
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                @s.FieldFor(m => m.SourceId).AsDropDown().Attrs(new { ng_model = "vm.referral.raf.sourceId", repeat = "vm.rafSourceMaster", name = "RafSourse" })
+                                <div class="form-group form-md-line-input">
+                                    <div class="input-group date date-picker">
+                                        <input id="completedDate" type="text" class="form-control" name="CompletedDate"
+                                                data-date-picker="" ng-model="vm.referral.raf.completedDate" Validate="false" Restrict="reject" />
+                                        <div class="input-group-addon">
+                                            <i class="material-icons" style="line-height: 14px;">date_range</i>
+                                        </div>
+                                        <label for="completedDate">@L("RAFCompletedDate")</label>
+                                    </div>
+                                </div>
+                                @s.FieldFor(m => m.CompletedBy).Attrs(new { ng_model = "vm.referral.raf.completedBy" })
+                                @s.FieldFor(m => m.CategoryId).AsDropDown().Attrs(new { ng_model = "vm.referral.raf.categoryId", repeat = "vm.rafCategoryMaster", name = "rafCategory" })
+                                @s.FieldFor(m => m.TotalPoints).Attrs(new { ng_model = "vm.referral.raf.totalPoints", })
+
+                                <div class="form-actions pull-right" ng-if="!vm.isNew">
+                                    <a class="linkButton btn-small" card-button-busy="mraf.isSaving" ng-click="mraf.save(vm.referral)">
+                                        <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                                    </a>
+                                    <a class="linkButton btn-small" card-button-busy="mraf.isSaving" ng-click="mraf.close()">
+                                        <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                                    </a>
+
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+                @*view mode*@
+                <div ng-switch-default>
+                    <div class="col-md-12">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.referral.raf.sourceId ? vm.getMasterDataDescription(vm.referral.raf.sourceId,vm.rafSourceMaster) : "-"}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("SourceOfRAF")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div ng-if="vm.referral.raf.completedDate" class="form-control remove-border auto-height view-text">{{vm.referral.raf.completedDate | date :  "dd-MMM-y"}}</div>
+                            <div ng-if="!vm.referral.raf.completedDate" class="form-control remove-border auto-height view-text">-</div>
+                            <label class="control-label view-label" for="processedBy">@L("RAFCompletedDate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.referral.raf.completedBy ? vm.referral.raf.completedBy : "-"}}</div>
+                            <label class="control-label view-label" for="careCoordinator">@L("RAFCompletedBy")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.referral.raf.categoryId ? vm.getMasterDataDescription(vm.referral.raf.categoryId,vm.rafCategoryMaster) : "-"}}</div>
+                            <label class="control-label view-label" for="careCoordinator">@L("Category")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text" style="white-space: pre-wrap;">{{vm.referral.raf.totalPoints ? vm.referral.raf.totalPoints : "-"}}</div>
+                            <label class="control-label view-label" for="remarks">@L("TotalScore")</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

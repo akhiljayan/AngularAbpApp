@@ -1,0 +1,70 @@
+﻿@model ResidentAssessmentFormDto
+
+@using Pulsesync.IngoTPCC.Application.Referral.Dto;
+
+<div id="RAF" class="functionalStatus portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("RAF")</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="vm.mode">
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+                        @using (var f = Html.BeginSubForm())
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                @s.FieldFor(m => m.SourceId).AsDropDown().Attrs(new { ng_model = "vm.model.raf.sourceId", repeat = "vm.rafSourceMaster", name = "RafSourse" })
+                                <div class="form-group form-md-line-input">
+                                    <div class="input-group date date-picker">
+                                        <input id="completedDate" type="text" class="form-control" name="CompletedDate" data-date-picker="" ng-model="vm.model.raf.completedDate" Validate="false" Restrict="reject" />
+                                        <div class="input-group-addon">
+                                            <i class="material-icons" style="line-height: 14px;">date_range</i>
+                                        </div>
+                                        <label for="completedDate">@L("RAFCompletedDate")</label>
+                                    </div>
+                                </div>
+                                @s.FieldFor(m => m.CompletedBy).Attrs(new { ng_model = "vm.model.raf.completedBy" })
+                                @s.FieldFor(m => m.CategoryId).AsDropDown().Attrs(new { ng_model = "vm.model.raf.categoryId", repeat = "vm.rafCategoryMaster", name = "rafCategory" })
+                                @s.FieldFor(m => m.TotalPoints).Attrs(new { ng_model = "vm.model.raf.totalPoints", })
+                            }
+                        }
+                    </div>
+                </div>
+                @*view mode*@
+                <div ng-switch-default>
+                    <div class="col-md-12">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.model.raf.source.description ? vm.model.raf.source.description : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="referralCode">@L("SourceOfRAF")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div ng-if="vm.model.raf.completedDate" class="form-control remove-border auto-height view-text">{{vm.model.raf.completedDate | date :  "dd-MMM-y"}}</div>
+                            <div ng-if="!vm.model.raf.completedDate" class="form-control remove-border auto-height view-text">-</div>
+                            <label class="control-label view-label" for="processedBy">@L("RAFCompletedDate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.model.raf.completedBy ? vm.model.raf.completedBy : "-"}}</div>
+                            <label class="control-label view-label" for="careCoordinator">@L("RAFCompletedBy")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.model.raf.category.description ? vm.model.raf.category.description : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="careCoordinator">@L("Category")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text" style="white-space: pre-wrap;">{{vm.model.raf.totalPoints ? vm.model.raf.totalPoints : "-"}}</div>
+                            <label class="control-label view-label" for="remarks">@L("TotalScore")</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

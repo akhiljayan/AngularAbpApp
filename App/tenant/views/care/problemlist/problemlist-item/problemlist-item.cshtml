@@ -1,0 +1,154 @@
+﻿<style>
+    .vertical-align-middle {
+        vertical-align: text-bottom !important;
+    }
+
+    .remove-border {
+        border: 0 !important;
+    }
+
+    .bootstrap-tagsinput .tag {
+        padding: 2px 12px !important;
+    }
+
+    .tag-spacing {
+        display: inline-block !important;
+        margin-right: 5px !important;
+    }
+
+    /*.popover {
+        max-width: 100%;
+    }
+
+    .popover-content {
+        background-color: white;
+    }
+
+        .popover-content .bootstrap-tagsinput .tag {
+            padding: 2px 12px !important;
+        }
+
+        .popover-content .bootstrap-tagsinput input {
+            display: none;
+        }
+
+        .popover-content .bootstrap-tagsinput {
+            border-bottom: none !important;
+        }
+
+        .popover-content .remove-border {
+            border: 0;
+        }
+
+        .popover-content .tag-spacing {
+            display: inline-block !important;
+            margin-right: 5px !important;
+        }
+
+        .popover-content .bootstrap-tagsinput a {
+            color: #36c6d3;
+            text-transform: none;
+            text-decoration: none;
+            font-weight: bold;
+            padding-right: 10px;
+        }*/
+</style>
+
+<div class="problem-list-item" ng-class="{ 'priority-high': $ctrl.model.priority == 2, 'priority-medium': $ctrl.model.priority == 1, 'priority-low': $ctrl.model.priority == 0}"
+     @*ng-mouseover="$ctrl.mouseOver=true" ng-mouseleave="$ctrl.mouseOver=false"*@>
+    <div class="row font-13-main">
+        <div class="col-md-8 col-sm-8" ng-click="$ctrl.edit($event);$event.stopPropagation()">
+            <div id="ProblemListTitle" class="padding-left-15" @*uib-popover-html="$ctrl.popoverHtml" popover-placement="bottom" popover-trigger="'none'"
+                 popover-is-open="$ctrl.mouseOver&&$ctrl.viewDescription" data-container="'body'"*@>
+                <span class="bold font-16-main vertical-align-middle" ng-if="!$ctrl.seeMore">
+                    {{ $ctrl.model.problem.description | limitTo: 200 }}
+                    <span style="color: #36c6d3" ng-if="$ctrl.model.problem.description.length > 200" ng-click="$ctrl.seeMore = !$ctrl.seeMore">...</span>
+                </span>
+                <span class="bold font-16-main vertical-align-middle" ng-if="$ctrl.seeMore">{{ $ctrl.model.problem.description }}</span>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-4">
+            <div ng-if="$ctrl.showDetails" class="pull-right problemlist">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-sm fa-circle fa-stack-2x" ng-class="{ 'icon-background-blue': $ctrl.model.status == 0, 'icon-background-yellow': $ctrl.model.status == 1, 'icon-background-gray': $ctrl.model.status == 3, 'icon-background-green': $ctrl.model.status == 2}"></i>
+                    {{ $ctrl.model.status | enumText:'careStatusType' }}
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li ng-class="$ctrl.statusOptions['Open'] ? '' : 'disabled'">
+                        <a href="javascript:;" ng-class="$ctrl.statusOptions['Open'] ? '' : 'disable-links'" ng-click="$ctrl.changeStatus($ctrl.model.id, 0);$event.stopPropagation()">
+                            <i class="fa fa-sm fa-circle fa-stack-2x icon-background-blue"></i> @L("Open")
+                        </a>
+                    </li>
+                    <li ng-class="$ctrl.statusOptions['Suspended'] ? '' : 'disabled'">
+                        <a href="javascript:;" ng-class="$ctrl.statusOptions['Suspended'] ? '' : 'disable-links'" ng-click="$ctrl.changeStatus($ctrl.model.id, 1);$event.stopPropagation()">
+                            <i class="fa fa-sm fa-circle fa-stack-2x icon-background-yellow"></i> @L("Suspended")
+                        </a>
+                    </li>
+                    <li ng-class="$ctrl.statusOptions['Closed'] ? '' : 'disabled'">
+                        <a href="javascript:;" ng-class="$ctrl.statusOptions['Closed'] ? '' : 'disable-links'" ng-click="$ctrl.changeStatus($ctrl.model.id, 3);$event.stopPropagation()">
+                            <i class="fa fa-sm fa-circle fa-stack-2x icon-background-gray"></i> @L("Closed")
+                        </a>
+                    </li>
+                    <li ng-class="$ctrl.statusOptions['Resolved'] ? '' : 'disabled'">
+                        <a href="javascript:;" ng-class="$ctrl.statusOptions['Resolved'] ? '' : 'disable-links'" ng-click="$ctrl.changeStatus($ctrl.model.id, 2);$event.stopPropagation()">
+                            <i class="fa fa-sm fa-circle fa-stack-2x icon-background-green"></i> @L("Resolved")
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="pull-right" ng-if="!$ctrl.showDetails">
+                <div class="md-checkbox" ng-click="$ctrl.select($event)">
+                    <input id="{{ $ctrl.model.id }}1" type="checkbox" class="form-control"
+                           ng-checked="$ctrl.model.isSelected" />
+                    <label for="{{ $ctrl.model.id }}1">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-sm-8" style="padding-top: 1%" ng-if="$ctrl.showDetails" ng-click="$ctrl.edit($event);$event.stopPropagation()">
+            <span class="padding-left-15">
+                @L("DateToOnset"): {{ $ctrl.model.onsetDate | dateFormat }}
+            </span>
+            <div class='bootstrap-tagsinput remove-border' style="padding-left: 15px" ng-if="$ctrl.model.tags.length > 0">
+                <span class='tag label label-info tag-spacing' ng-repeat="tag in $ctrl.model.tags">{{ tag.name }}</span>
+            </div>
+            <div class='form-control remove-border auto-height padding-left-15'>
+                {{ $ctrl.model.problemDescription ? $ctrl.model.problemDescription : 'N/A' }}
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-4" ng-if="$ctrl.showDetails">
+            <div class="md-checkboxes pull-right">
+                <div class="md-checkbox-list">
+                    <div class="md-checkbox" ng-click="$ctrl.select($event)">
+                        <input id="{{ $ctrl.model.id }}2" type="checkbox" class="form-control"
+                               ng-checked="$ctrl.model.isSelected" />
+                        <label for="{{ $ctrl.model.id }}2">
+                            <span class="inc"></span>
+                            <span class="check"></span>
+                            <span class="box"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<div class="row">
+            <div class="col-md-12 col-sm-12">
+                <ul class="actions list-unstyled list-inline">
+                    <li>
+                        <a id="Edit" ng-if="$ctrl.permissions.editPersonProblem" href="#" ng-click="$ctrl.edit($event);$event.stopPropagation()">@L("Edit")</a>
+                    </li>
+                    <li>
+                        <a id="ViewDescription" ng-if="$ctrl.permissions.viewPersonProblem" href="#"
+                           ng-click="$ctrl.viewDescription = !$ctrl.viewDescription">View Description</a>
+                    </li>
+                </ul>
+            </div>
+        </div>*@
+</div>

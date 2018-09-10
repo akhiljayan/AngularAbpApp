@@ -1,0 +1,61 @@
+﻿@using Pulsesync.IngoTPCC.ServiceType.Dto;
+@model ServiceTypeDto
+
+<div class="portlet light" data-drag="true" id="serviceTypeModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("ServiceType")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        @{
+            var attributes = new Dictionary<string, object>();
+            attributes.Add("role", "form");
+            attributes.Add("id", "vm.serviceTypeForm");
+            attributes.Add("name", "vm.serviceTypeForm");
+            attributes.Add("novalidate", "");
+            attributes.Add("action", "#");
+            attributes.Add("angular-validator-submit", "vm.save($event)");
+            attributes.Add("angular-validator", "");
+            //attributes.Add("ng-validate", "vm.validationOptions");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body")))
+        {
+            using (var s = f.BeginSection())
+            {
+                <div class="portlet-body" style="display: block;">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.CategoryId).AsDropDown().Attrs(new { ng_model = "vm.serviceType.categoryId", ng_disabled = "vm.isReadOnlyMode", name = "serviceCategory", repeat = "vm.serviceTypeCategories",  required_message = "You must select a Service Type Category." })
+                            </div>
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.Code).Attrs(new { ng_model = "vm.serviceType.code", ng_disabled = "vm.isReadOnlyMode", ng_maxlength = "500", name = "code", required = "", required_message = "'You must provide a value for Code.'" })
+                            </div>
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.Description).Attrs(new { ng_model = "vm.serviceType.description", ng_disabled = "vm.isReadOnlyMode", name = "description", ng_maxlength = "500", required = "", required_message = "'You must provide a value for Description.'" }).AddClass("form-control animate msd-elastic: \\n;  ng-valid ng-not-empty ng-dirty ng-valid-parse")
+                            </div>
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.Remarks).Attrs(new { ng_model = "vm.serviceType.remarks", ng_disabled = "vm.isReadOnlyMode", name = "remarks", ng_maxlength = "3000" }).AddClass("form-control animate msd-elastic: \\n;  ng-valid ng-not-empty ng-dirty ng-valid-parse")
+                            </div>
+                            <div class="col-md-12">
+                                    @s.FieldFor(m => m.IsILTCSubmissionRequired).Label(@L("IsILTCSubmissionRequired")).Attrs(new { ng_model = "vm.serviceType.isILTCSubmissionRequired", ng_required = "true", required_message = "You must select a value for Require ILTC Submission." })
+                            </div>
+                            <div class="col-md-12">
+                              @s.FieldFor(m => m.IsVisitLogRequired).Label(@L("IsVisitLogRequired")).Attrs(new { ng_model = "vm.serviceType.isVisitLogRequired", ng_required = "true", required_message = "You must select a value for Is Visit Log Required." })
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="form-actions noborder right">
+                <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.disableSave" ng-click="vm.save($event)"><i class="material-icons ps-btn-material">check</i>Ok</button>
+                <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+            </div>
+        }
+    </div>
+</div>

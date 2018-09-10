@@ -1,0 +1,46 @@
+﻿@using Pulsesync.IngoTPCC.Localization
+
+<div id="genogram" class="portlet light" busy-if="$ctrl.loading" ng-class="{ 'div-disabled': $ctrl.mode=='new' }">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Genogram")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a ng-click="$ctrl.toggleDetail()" title="Show Full Genogram Details view" class="icon-wrapper">
+                <i ng-show="!$ctrl.showFullDetails" class="material-icons custom-icon">menu</i>
+                <i ng-show="$ctrl.showFullDetails" class="material-icons custom-icon">view_headline</i>
+            </a>
+            <a ng-click="$ctrl.create()" ng-if="$ctrl.permissions.upload" class="icon-wrapper">
+                <i class="material-icons custom-icon"><span class="fa fa-upload"></span></i>
+            </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row" ng-if="$ctrl.mode!='new'">
+            <div ng-if="$ctrl.totalCount <= 0">
+                <div class="col-md-12">
+                    No genogram uploaded.
+                </div>
+            </div>
+            <div id="genogram" class="card-detail" ng-repeat="item in $ctrl.data" ng-click="$ctrl.view(item.id)">
+                <div class="col-sm-9">
+                    <a class="card-detail" href="#">{{ item.originalFileName }}</a> <br />
+                    Uploaded By {{ item.uploadedByUser.fullName }} on {{ item.uploadedOn | dateTimeFormat }}
+                </div>
+                <div class="col-sm-3">
+                    <ul class="actions list-unstyled list-inline">
+                        <li>
+                            <a ng-show="$ctrl.permissions.delete" href="#" ng-click="$ctrl.delete(item.id);$event.stopPropagation()">@L("Delete")</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12" ng-if="!$ctrl.data.length">
+                <span ng-if="$ctrl.mode=='new'">Genogram can be added once this record is saved.</span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,375 @@
+﻿@using Pulsesync.IngoTPCC.Authorization
+
+<style>
+    .list-inline-dot {
+        margin: 0;
+    }
+
+        .list-inline-dot li {
+            padding: 0;
+        }
+
+            .list-inline-dot li::before {
+                content: "•";
+            }
+
+            .list-inline-dot li:first-of-type::before {
+                content: none;
+            }
+
+    .biodata {
+    }
+
+        .biodata .biodata-line {
+            display: flex;
+            align-items: center;
+            margin: 3px 0px;
+        }
+
+            .biodata .biodata-line > span:first-child,
+            .biodata .biodata-line > i:first-child {
+                padding-right: 10px;
+            }
+
+        .biodata .contact,
+        .biodata .address {
+            margin-bottom: 24px;
+            display: table;
+        }
+
+    .portlet strong {
+        /*font-weight: normal;*/
+    }
+
+    .portlet p {
+        padding: 6px 0;
+        margin: 0 0 25px 0;
+    }
+
+    .portlet .view strong {
+        font-weight: normal;
+        color: #757575;
+    }
+
+    .portlet .view p {
+        color: #555555;
+    }
+
+    .portlet .view .bootstrap-tagsinput .tag {
+        padding: 2px 12px !important;
+    }
+
+        .portlet .view .bootstrap-tagsinput .tag [data-role="remove"] {
+            display: none;
+        }
+
+    .portlet.view .bootstrap-tagsinput input {
+        display: none;
+    }
+
+    .portlet .view .bootstrap-tagsinput {
+        border-bottom: none !important;
+    }
+</style>
+
+@{
+    var attrs = new Dictionary<string, object>();
+    attrs.Add("name", "vm.form");
+    attrs.Add("novalidate", "");
+    attrs.Add("angular-validator", "");
+}
+@using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs)))
+{
+    <ps-uib-tabset active="vm.activeTab"  tab-template="true" is-pinned="vm.isPinned">
+        <ps-uib-tab-person-header>
+            <person-header person-id="vm.model.id"></person-header>
+        </ps-uib-tab-person-header>
+
+        <ps-uib-tab-navigation navigation-menu="vm.navigationalMenu" goto-anchor="vm.gotoAnchor(key)">
+        </ps-uib-tab-navigation>
+
+        <ps-uib-tab-button>
+            <div class="col-md-12 col-sm-12" style="padding: 10px 0px 0px 0px;">
+                <div class="col-md-12 col-sm-12 no-padding nopadding pull-right">
+                    <div class="btn-group pull-right">
+                        <a ng-click="vm.close();" title="Close" class="icon-wrapper pull-right" style="cursor: pointer;">
+                            <i class="material-icons custom-icon">close</i>
+                        </a>
+                    </div>
+
+                    <div class="btn-group pull-right">
+                        <a class="btn green-haze btn-outline btn-circle btn-sm icon-wrapper pull-right"
+                           style="margin-top:0px !important"
+                           href="javascript:;"
+                           data-toggle="dropdown" data-hover="dropdown" data-close-others="true"
+                           aria-expanded="true">
+                            Actions
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a class="linkButton btn-small inline-flex-center"
+                                   style="width: 100%;"
+                                   ng-if="!vm.isNewPerson"
+                                   ng-click="vm.mode='edit'; vm.activeTab='personDetails';">
+                                    <i class="material-icons font-18-main v-top">edit</i> @L("Edit")
+                                </a>
+                            </li>
+                            <li>
+                                <a class="linkButton btn-small inline-flex-center"
+                                   style="width: 100%;"
+                                   ng-click="vm.save();">
+                                    <i class="material-icons font-18-main v-top">save</i> @L("Save")
+                                </a>
+                            </li>
+
+                            @if (IsGranted(AppPermissions.Pages_Tenant_Person_Delete))
+                            {
+                                <li>
+                                    <a class="linkButton btn-small inline-flex-center"
+                                       style="width: 100%;"
+                                       ng-if="!vm.isNewPerson"
+                                       ng-click="vm.deletePerson();">
+                                        <i class="material-icons font-18-main v-top">delete_forever</i> @L("Delete")
+                                    </a>
+                                </li>
+                            }
+
+                            <li ng-if="vm.person.isPatient">
+                                <a class="linkButton btn-small inline-flex-center"
+                                   style="width: 100%;"
+                                   ng-if="!vm.isNewPerson"
+                                   ng-click="vm.printPatientLabel();">
+                                    <i class="material-icons font-18-main v-top">print</i> @L("PrintLabel")
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    @*<div class="btn-group pull-right" style="padding-right: 5px;" ng-if="vm.person.isPatient">
+                        <a class="icon-wrapper pull-right" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true" style="cursor: pointer">
+                            <i class="material-icons custom-icon">bookmark</i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li ng-if="!vm.isWatched"><a ng-click="vm.watchPerson(vm.person.id)"><i class="fa fa-eye"></i> Add to watch list</a></li>
+                            <li ng-if="vm.isWatched"><a ng-click="vm.unWatchPerson(vm.person.id)"><i class="fa fa-eye-slash"></i> Remove from watch list</a></li>
+                            <li ng-if="!vm.isInCareList"><a ng-click="vm.addToCareList(vm.person.id)"><i class="fa fa-star"></i> Add to care list</a></li>
+                            <li ng-if="vm.isInCareList"><a ng-click="vm.removeFromCareList(vm.person.id)"><i class="fa fa-star-o"></i> Remove from care list</a></li>
+                        </ul>
+                    </div>*@
+                </div>
+            </div>
+        </ps-uib-tab-button>
+
+        <ps-uib-tab index="'personDetails'"
+                    heading="@L("PersonDetails")"
+                    set-navigation="vm.setPersonDetailsNavigation()">
+            <div class="col-md-6 col-sm-6 col-xs-6 no-padding">
+                @if (IsGranted(AppPermissions.Pages_Tenant_Person))
+                {
+                    @Html.Partial("~/App/tenant/views/persons/person-detail/templates/bio-data.cshtml")
+
+                    @Html.Partial("~/App/tenant/views/persons/person-detail/templates/contact-information.cshtml")
+
+                    @Html.Partial("~/App/tenant/views/persons/person-detail/templates/other-information.cshtml")
+                }
+
+                @if (IsGranted(AppPermissions.Pages_Tenant_LanguageDialects))
+                {
+                    @Html.Partial("~/App/tenant/views/languageDialects/languageDialectView.cshtml")
+                    <language-dialects id="Language" maintitle="'@L("SpokenLanguageDialect")'" template="'person'" person-id="vm.model.id" is-patient="vm.model.isPatient"></language-dialects>
+                }
+
+                @if (IsGranted(AppPermissions.Pages_Tenant_MeansTests))
+                {
+                    <meanstests-card id="MeansTesting"
+                                     title="'@L("MeansTesting")'"
+                                     mode="vm.isNewPerson ? 'new' : 'view'"
+                                     template="'person'"
+                                     person-id="vm.model.id"
+                                     ng-if="vm.model.isPatient"></meanstests-card>
+                }
+
+                @if (IsGranted(AppPermissions.Pages_Tenant_FinancialAssistances))
+                {
+                    <financialassistances-card id="FinancialAssistance"
+                                               title="'@L("FinancialAssistance")'"
+                                               mode="vm.isNewPerson ? 'new' : 'view'"
+                                               template="'person'"
+                                               person-id="vm.model.id"
+                                               ng-if="vm.model.isPatient"></financialassistances-card>
+                }
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-6 no-padding">
+                @if (IsGranted(AppPermissions.Pages_Tenant_FamilyMembers))
+                {
+                    <person-detail-familymembers-card is-new="vm.isNewPerson"
+                                                      person-id="vm.model.id"></person-detail-familymembers-card>
+                }
+
+                @Html.Partial("~/App/tenant/views/persons/person-detail/templates/social.cshtml")
+
+                @if (IsGranted(AppPermissions.Pages_Tenant_SocialReports))
+                {
+                    <socialreports-card id="SocialReports"
+                                        title="'@L("SocialReports")'"
+                                        mode="vm.isNewPerson ? 'new' : 'view'"
+                                        template="'person'"
+                                        person-id="vm.model.id"></socialreports-card>
+                }
+
+                @if (IsGranted(AppPermissions.Pages_Tenant_LifeEvents))
+                {
+                    @Html.Partial("~/App/tenant/views/lifeEvents/lifeEventView.cshtml")
+                }
+
+                @Html.Partial("~/App/tenant/views/persons/person-detail/templates/person-tags.cshtml")
+            </div>
+        </ps-uib-tab>
+        <ps-uib-tab index="'profile'"
+                    heading="@L("Profile")"
+                    set-navigation="vm.setProfileNavigation()">
+            <div class="col-md-6 col-sm-12">
+                @if (IsGranted(AppPermissions.Pages_Tenant_Allergies_View))
+                {
+                    <allergies-card id="Allergies"
+                                    maintitle="'@L("Allergies")'"
+                                    mode="vm.isNewPerson ? 'new' : 'view'"
+                                    template="'person'"
+                                    person-id="vm.model.id"
+                                    is-referral="false"
+                                    referral-id="null"
+                                    is-patient="vm.model.isPatient"></allergies-card>
+                }
+
+                @if (IsGranted(AppPermissions.Pages_Tenant_MedicationHistory_View))
+                {
+                    <medication-history-card id="medicationhistories"
+                                             maintitle="'@L("medicationhistory")'"
+                                             mode="vm.isNewPerson ? 'new' : 'view'"
+                                             template="'person'"
+                                             person-id="vm.model.id"
+                                             is-referral="false"
+                                             referral-id="null"
+                                             is-patient="vm.model.isPatient"></medication-history-card>
+                }
+            </div>
+            <div class="col-md-6 col-sm-12">
+                @if (IsGranted(AppPermissions.Pages_Tenant_MedicalHistory_View))
+                {
+                    <medical-history-card id="medicalhistories"
+                                          maintitle="'@L("medicalhistory")'"
+                                          mode="vm.isNewPerson ? 'new' : 'view'"
+                                          template="'person'"
+                                          person-id="vm.model.id"
+                                          is-referral="false"
+                                          referral-id="null"
+                                          is-patient="vm.model.isPatient"></medical-history-card>
+                }
+            </div>
+        </ps-uib-tab>
+        <ps-uib-tab index="'status'"
+                    heading="@L("Status")"
+                    set-navigation="vm.setStatusNavigation()">
+            <div class="col-md-6 col-sm-12">
+                @if (IsGranted(AppPermissions.Pages_Tenant_Prescriptions))
+                {
+                    <prescription-card id="Prescriptions"
+                                       mode="vm.isNewPerson ? 'new' : 'view'"
+                                       person-id="vm.model.id"></prescription-card>
+                }
+
+                @if (IsGranted(AppPermissions.Pages_Tenant_Assessment))
+                {
+                    <assessment-person-view id="Assessment"
+                                            maintitle="'@L("Assessment")'"
+                                            mode="vm.isNewPerson ? 'new' : 'view'"
+                                            template="'person'"
+                                            person-id="vm.model.id"
+                                            is-patient="vm.model.isPatient"></assessment-person-view>
+                }
+
+                @if (IsGranted(AppPermissions.Pages_Tenant_Diagnosis_View))
+                {
+                    <diagnosis-card id="Diagnosis"
+                                    maintitle="'@L("Diagnosis")'"
+                                    mode="vm.isNewPerson ? 'new' : 'view'"
+                                    template="'person'"
+                                    person-id="vm.model.id"
+                                    is-patient="vm.model.isPatient"></diagnosis-card>
+                }
+            </div>
+            <div class="col-md-6 col-sm-12">
+                @if (IsGranted(AppPermissions.Pages_Tenant_SpecialCare_View))
+                {
+                    <special-care-card id="specialcares"
+                                       maintitle="'@L("SpecialCare")'"
+                                       mode="vm.isNewPerson ? 'new' : 'view'"
+                                       template="'person'"
+                                       person-id="vm.model.id"
+                                       is-patient="vm.model.isPatient"></special-care-card>
+                }
+
+                @if (IsGranted(AppPermissions.Pages_Tenant_VitalSign_View))
+                {
+                    <vitalsign-summary id="VitalSigns"
+                                       maintitle="'@L("VitalSign")'"
+                                       mode="vm.isNewPerson ? 'new' : 'view'"
+                                       template="'person'"
+                                       create-template="'person'"
+                                       template-datetime=""
+                                       template-id=""
+                                       person-id="vm.model.id"
+                                       is-patient="vm.model.isPatient"></vitalsign-summary>
+                }
+
+                @if (IsGranted(AppPermissions.Pages_Tenant_MedicalAlert_View))
+                {
+                    <medical-alert-card id="MedicalAlert"
+                                        maintitle="'@L("MedicalAlert")'"
+                                        mode="vm.isNewPerson ? 'new' : 'view'"
+                                        template="'person'"
+                                        person-id="vm.model.id"
+                                        is-patient="vm.model.isPatient"></medical-alert-card>
+                }
+            </div>
+        </ps-uib-tab>
+        <ps-uib-tab index="'care'"
+                    heading="@L("Care")"
+                    set-navigation="vm.setCareNavigation()">
+            <div class="col-md-12 col-sm-12 col-xs-12 no-padding">
+                <care-tab-content mode="vm.isNewPerson ? 'new' : 'view'"
+                                  person-id="vm.model.id"></care-tab-content>
+            </div>
+        </ps-uib-tab>
+        <ps-uib-tab index="'encounter'"
+                    heading="@L("Encounter")"
+                    set-navigation="vm.setEncounterNavigation()">
+            <div class="col-md-6 col-sm-12">
+                @if (IsGranted(AppPermissions.Pages_Tenant_VisitLogs))
+                {
+                    <visitlogs-card id="VisitLogs"
+                                    mode="vm.isNewPerson ? 'new' : 'view'"
+                                    person-id="vm.model.id"
+                                    ng-if="vm.model.isPatient"></visitlogs-card>
+                }
+            </div>
+            <div class="col-md-6 col-sm-12">
+                @if (IsGranted(AppPermissions.Pages_Tenant_Hospitalization_View))
+                {
+                    <div ng-if="vm.model.isPatient">
+                        @Html.Partial("~/App/tenant/views/hospitalization/cardListing.cshtml")
+                    </div>
+                }
+                @if (IsGranted(AppPermissions.Pages_Tenant_MedicalAppointment))
+                {
+                    <medicalappointment-card id="MedicalAppointmentCard" 
+                                             mode="vm.isNew ? 'new' : 'view'" 
+                                             person-id="vm.person.id" 
+                                             ng-if="vm.person.isPatient">
+                    </medicalappointment-card>
+                }
+            </div>
+        </ps-uib-tab>
+    </ps-uib-tabset>
+}

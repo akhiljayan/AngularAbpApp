@@ -1,0 +1,89 @@
+﻿<style type="text/css">
+    .largeWidth {
+        width: 100% !important;
+    }
+
+    .smallWidth {
+        width: 65.667% !important;
+    }
+</style>
+<div ng-controller="tenant.views.medicalappointment.cardListing as vm">
+    <div id="MedicalAppointment" class="portlet light" busy-if="vm.loading">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject">@L("MedicalAppointment") {{vm.headingAppend}}</span>
+            </div>
+            <div class="actions dropdown inputs">
+                <a ng-click="vm.addMedicalAppointment()" ng-if="vm.permissions.create" class="icon-wrapper">
+                    <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                </a>
+                <a ng-click="vm.medicalAppointmentDetailsOpen = !vm.medicalAppointmentDetailsOpen" title="Show Medical Appointment Detail view" class="icon-wrapper">
+                    <i ng-show="!vm.medicalAppointmentDetailsOpen" class="material-icons custom-icon">menu</i>
+                    <i ng-show="vm.medicalAppointmentDetailsOpen" class="material-icons custom-icon">view_headline</i>
+                </a>
+                <a class="icon-wrapper" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                    <i class="material-icons custom-icon">more_vert</i>
+                </a>
+                <ul class="dropdown-menu pull-right">
+                    <li>
+                        <a href="javascript:;" class="bold" ng-click="vm.medicalAppointmentStatusFilterSelection(0)">@L("UpcomingMedicalAppointment")</a>
+                    </li>
+                    <li class="divider"> </li>
+                    <li ng-repeat="status in vm.medicalAppointmentFilterStatus">
+                        <a href="javascript:;" class="font-13-main bold" ng-click="vm.medicalAppointmentStatusFilterSelection(status.value)">{{status.description}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div ng-if="vm.permissions.view">
+                <div class="cursor-pointer" ng-repeat="data in vm.medicalAppointmentList" ng-click="vm.editMedicalAppointment(data.id)">
+                    <div class="row margin-bottom-0 cursor-pointer">
+                        <div class="col-md-8">
+                            <div class="font-14-main margin-bottom-0">Appointment on {{data.appointmentDateTime | date : "dd-MMM-y hh:mm a" }}</div>
+                        </div>
+                        <div class="col-md-4" style="text-align:right">
+                            <a class="no-decoration " title="To be Confirmed" href="#" ng-if="!data.isConfirmed && !data.isCancelled"><i class="fa fa-unlock" style="font-size:20px" aria-hidden="true"></i></a>
+                            <a class="no-decoration " title="Confirmed" href="#" ng-if="data.isConfirmed  && !data.isCancelled"><i class="fa fa-lock" style="font-size:20px" aria-hidden="true"></i></a>
+                            <a class="no-decoration " title="Cancelled" href="#" ng-if="data.isCancelled"><i class="fa fa fa-ban" style="font-size:20px" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                    <div class="row margin-bottom-5">
+                        <div class="col-md-6 font-14-main margin-bottom-0" style="text-align:left">
+                            <span class="otherText" ng-if="data.transportArrangementRequired || data.nurseCompanionOrEscortRequired">
+                                Require: <span class="otherText bold" ng-if="data.transportArrangementRequired">Transport</span>&nbsp;
+                                <span class="otherText bold" ng-if="data.transportArrangementRequired && data.nurseCompanionOrEscortRequired">&</span>&nbsp;
+                                <span class="otherText bold" ng-if="data.nurseCompanionOrEscortRequired">Escort</span>
+                            </span>
+                        </div>
+                        <div class="col-md-6 font-14-main margin-bottom-0" style="text-align:right">
+                            <span class="otherText">
+                                Status:
+                                <span class="otherText bold">{{data.status | enumText: 'medicalAppointmentStatusType'}}</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div ng-if="vm.medicalAppointmentDetailsOpen">
+                        <div class="row margin-bottom-5">
+                            <div class="col-md-12 font-14-main margin-bottom-0">
+                                <span class="otherText" ng-if="data.appointmentLocation">
+                                    Appointment at <span class="otherText bold">{{data.appointmentLocation}}</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row margin-bottom-0">
+                            <div class="col-md-12 font-14-main margin-bottom-0">
+                                <span ng-if="data.appointmentTypeId">
+                                    Appointment Type: <span class="otherText bold">{{data.appointmentType.description}}</span>
+                                </span>
+                                <span ng-if="data.specialistOutpatientClinic.description">({{data.specialistOutpatientClinic.description}})</span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                </div>                
+                <simple-paginator data="vm.data" key="vm.key" small-page-size="true" on-page-changed="vm.load(requestParams)"></simple-paginator>
+            </div>            
+        </div>
+    </div>
+</div>

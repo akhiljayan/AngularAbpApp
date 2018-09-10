@@ -1,0 +1,68 @@
+﻿<div class="row">
+    <div class="col-md-6">
+        <div class="portlet light">
+            <div class="portlet-title tabbable-line">
+                <div class="caption">
+                    <div class="caption-subject">@L("ProblemList")</div>
+                </div>
+                <div class="actions dropdown inputs">
+                    <a ng-click="vm.detailsOpen = !vm.detailsOpen" title="Show associated Service types and Status" class="icon-wrapper">
+                        <i ng-show="!vm.detailsOpen" class="material-icons custom-icon">menu</i>
+                        <i ng-show="vm.detailsOpen" class="material-icons custom-icon">view_headline</i>
+                    </a>
+                    <div class="input-small-new inline-block">
+                        <form action="" class="search-form">
+                            <div class="form-group has-feedback input-inline">
+                                <label for="search" class="sr-only">@L("Search")</label>
+                                <input type="text" ng-model="vm.filter" enter-key="vm.load()" class="form-control form-control-solid input-circle search-input font-13-main clearable" placeholder="search keywords...">
+                                <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="vm.clearFilter()"></a>
+                                <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                            </div>
+                        </form>
+                    </div>
+                    <a ng-click="$ctrl.create()" @*ng-if="$ctrl.permissions.create && $ctrl.mode!='new'"*@ class="icon-wrapper">
+                        <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                    </a> 
+                    <a class="icon-wrapper" href="javascript:;" title="Filter" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                        <i class="material-icons custom-icon">more_vert</i>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                        <li>
+                            <a href="javascript:;" class="bold" ng-click="vm.changeView(0)">@L("All")</a>
+                        </li>
+                        <li class="divider"> </li>
+                        <li>
+                            <a href="javascript:;" class="bold" ng-click="vm.changeView(2)">@L("Inactive")</a>
+                        </li>
+                        <li>
+                            <a href="javascript:;" class="bold" ng-click="vm.changeView(1)">@L("Active")</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <ul>
+                    <li ng-repeat="item in $ctrl.personproblems">
+                        {{ item.name }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="portlet light">
+            <div class="portlet-title tabbable-line">
+                <div class="caption">
+                    <div class="caption-subject">@L("CarePlan")</div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <ul>
+                    <li ng-repeat="item in $ctrl.careplans">
+                        {{ item.name }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

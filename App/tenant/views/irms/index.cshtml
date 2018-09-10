@@ -1,0 +1,44 @@
+﻿@using Pulsesync.IngoTPCC.Localization
+
+<div class="view-content" ng-controller="tenant.views.irms.index as vm">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("IRMSReferral")</span>
+                    </div>
+                    <div class="actions dropdown inputs">
+                        <div class="input-small-new inline-block">
+                            <form action="" class="search-form search-style-class">
+                                <div class="form-group has-feedback input-inline search-form-group">
+                                    <label for="search" class="sr-only">@L("Search")</label>
+                                    <input type="text" 
+                                           class="form-control form-control-solid search-input input-circle font-13-main clearable"
+                                           placeholder="search keywords..."
+                                           ng-model="vm.filterText" 
+                                           enter-key="vm.getIRMSReferral()">
+                                    <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="vm.clearFilter()"></a>
+                                    <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div busy-if="vm.loading">
+                                <div ui-grid="vm.gridOptions"></div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-12">
+                            <simple-paginator data="vm.data" on-page-changed="vm.loadResults(requestParams)"></simple-paginator>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

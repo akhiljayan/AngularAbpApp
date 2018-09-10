@@ -1,0 +1,89 @@
+﻿@using Pulsesync.IngoTPCC.Immunization.Dto
+@model ImmunizationDto
+<div class="portlet light bordered" id="form_wizard_1">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Immunization")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <fieldset>
+        <div class="portlet-body" style="display:block">
+            <div class="form-body" style="padding-top:0px;">
+                @{
+                    var attributes = new Dictionary<string, object>();
+                    attributes.Add("role", "form");
+                    attributes.Add("id", "vm.immunizationForm");
+                    attributes.Add("name", "vm.immunizationForm");
+                    attributes.Add("novalidate", "");
+                    attributes.Add("action", "#");
+                    attributes.Add("angular-validator-submit", "vm.save(vm.immunization)");
+                    attributes.Add("angular-validator", "");
+                    attributes.Add("ng-validate", "general.validationOptions");
+                }
+                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body ng-pristine ng-invalid")))
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <div class="row">
+                            <div class="col-md-12">                                
+                                <div class="person-name" style="padding-top:0px;">
+                                    <span class="caption-subject bold" style="color:rgba(0, 0, 0, 0.54)">{{vm.person.fullName}}</span>
+                                    <span class="caption-subject" style="color:rgba(0, 0, 0, 0.54)" ng-if="vm.person.registrationDocumentNumber">({{vm.person.registrationDocumentNumber}})</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="height:20px"></div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                @s.FieldFor(m => m.VaccineId).AsDropDown().Attrs(new { ng_model = "vm.immunization.vaccineId", ng_change = "vm.onChangeVaccine($select.selected)", ui_select_required = "ui-select-required", required_message = "You must provide a value for Vaccine." })
+                                <div ng-if="!vm.disableOtherVaccine">
+                                    @s.FieldFor(m => m.OtherVaccine).Attrs(new { ng_model = "vm.immunization.otherVaccine", ui_select_required = "ui-select-required", invalid_message = "'You must provide a value for Others, Please Specify.'" })
+                                </div>
+                                @s.FieldFor(m => m.Dose).Attrs(new { ng_model = "vm.immunization.dose" })
+                                @s.FieldFor(m => m.SiteId).AsDropDown().Attrs(new { ng_model = "vm.immunization.siteId", ng_change = "vm.onChangeSite($select.selected)" })
+                                <div ng-if="!vm.disableOtherSite">
+                                    @s.FieldFor(m => m.OtherSite).Attrs(new { ng_model = "vm.immunization.otherSite", ui_select_required = "ui-select-required", invalid_message = "'You must provide a value for Others, Please Specify.'" })
+                                </div>
+                                @s.FieldFor(m => m.RouteId).AsDropDown().Attrs(new { ng_model = "vm.immunization.routeId", ng_change = "vm.onChangeRoute($select.selected)" })
+                                <div ng-if="!vm.disableOtherRoute">
+                                    @s.FieldFor(m => m.OtherRoute).Attrs(new { ng_model = "vm.immunization.otherRoute", ui_select_required = "ui-select-required", invalid_message = "'You must provide a value for Others, Please Specify.'" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                @s.FieldFor(m => m.EffectiveDate).Attrs(new { ng_model = "vm.immunization.effectiveDate", maxdate = "0d", Validate = "false", Restrict = "reject", data_date_format = "dd-MMM-yyyy", ng_change = "vm.onChangeEffectiveDate()" })
+                                @s.FieldFor(m => m.EffectivePeriodId).AsDropDown().Attrs(new { ng_model = "vm.immunization.effectivePeriodId", ng_change = "vm.onChangeEffectivePeriod($select.selected)" })
+                                <div ng-if="!vm.disableOtherEffectivePeriod">
+                                    @s.FieldFor(m => m.OtherEffectivePeriod).Attrs(new { ng_model = "vm.immunization.otherEffectivePeriod", ui_select_required = "ui-select-required", invalid_message = "'You must provide a value for Others, Please Specify.'" })
+                                </div>
+                                @s.FieldFor(m => m.ExpiryDate).Attrs(new { ng_model = "vm.immunization.expiryDate", data_date_format = "dd-MMM-yyyy", beforeoron = "vm.immunization.effectiveDate", beforeoron_message = "'Expiry date must be on or after Effective Date.'", ng_change = "vm.onChangeExpiryDate(vm.immunization.expiryDate)" })
+                                @s.FieldFor(m => m.AdministeredBy).Attrs(new { ng_model = "vm.immunization.administeredBy" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.Remarks).AddClass("animate msd-elastic: \\n;").Rows(4).Attrs(new { ng_model = "vm.immunization.remarks" })
+                            </div>
+                        </div>
+                    }
+                    <p class="bodyContext" ng-if="vm.editMode">
+                        @Html.Raw(L("CreationInfo", "vm.immunization.creatorUser.fullName", "vm.immunization.creationTime | date:'d-MMM-yyyy h:mm a'"))
+                    </p>
+                    <p class="bodyContext" ng-if="vm.editMode">
+                        @Html.Raw(L("ModificationInfo", "vm.immunization.lastModifierUser.fullName", "vm.immunization.lastModificationTime | date:'d-MMM-yyyy h:mm a'"))
+                    </p>
+                    <div class="form-actions margin-top-10 noborder pull-right">
+                        <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.disableSave"><i class="material-icons  font-18-main v-top">save</i>Save</button>
+                        <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </fieldset>    
+</div>
+<script>
+    $(document).ready(function () {
+    });
+</script>

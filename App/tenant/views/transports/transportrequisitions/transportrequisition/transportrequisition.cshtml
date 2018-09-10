@@ -1,0 +1,108 @@
+﻿<style>
+    .special-arrangements .special-arrangements-title {
+        margin-bottom: 10px;
+        font-weight: 700 !important;
+        border-bottom: 1px solid #eee;
+    }
+
+        .special-arrangements .special-arrangements-title .caption {
+            color: black;
+            padding: 0 0 10px 0;
+        }
+
+    .special-arrangements-categories > li {
+        border-bottom: 1px solid #eee;
+        padding: 10px 0;
+    }
+
+        .special-arrangements-categories > li:last-of-type {
+            border-bottom: 0;
+            padding: 10px 0 0 0;
+            margin: 0 !important;
+        }
+
+        .special-arrangements-categories > li:first-of-type {
+            margin: 0;
+            padding: 0 0 10px 0;
+        }
+
+    .special-arrangements-categories .description {
+        color: black;
+        margin-bottom: 5px;
+    }
+
+    .special-arrangements > li {
+        margin-left: 25px !important;
+        padding: 10px 0;
+    }
+
+        .special-arrangements > li:last-of-type {
+            padding: 10px 0 0 0;
+        }
+</style>
+
+<div class="row">
+    <div class="col-md-7">
+        <div class="row margin-bottom-10">
+            <div class="col-md-12 flex-center">
+                <div ng-if="$ctrl.model.transportRequisition.requestFor.description == 'Person'">
+                    <span class="caption margin-right-5">{{ $ctrl.model.transportRequisition.person.fullName }}</span>
+                    <span ng-if="$ctrl.model.transportRequisition.person.registrationDocumentNumber" class="otherText uppercase">
+                        ({{ $ctrl.model.transportRequisition.person.registrationDocumentNumber }})
+                    </span>
+                </div>
+                <div ng-if="$ctrl.model.transportRequisition.requestFor.description == 'Staff'">
+                    <span class="caption margin-right-5">{{ $ctrl.model.transportRequisition.staff.fullName }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div>
+            <span class="caption margin-right-10">{{ $ctrl.model.transportRequisition.admission.admissionNumber }}</span><br />
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="pull-right margin-top-5">
+            <i class="fa fa-unlock" style="font-size: 20px;" ng-if="$ctrl.model.transportRequisition.lastRecordAction == 0" title="Pending Confirmation"></i>
+            <i class="fa fa-lock" style="font-size: 20px;" ng-if="$ctrl.model.transportRequisition.lastRecordAction == 1" title="Confirmed"></i>
+            <i class="fa fa-check-circle" style="font-size: 20px;" ng-if="$ctrl.model.transportRequisition.isCompleted" title="Completed"></i>
+            <i class="fa fa-ban" style="font-size: 20px;" ng-if="$ctrl.model.transportRequisition.lastRecordAction == 3" title="Cancelled"></i>
+        </div>
+    </div>
+</div>
+<div class="row font-13-main">
+    <div class="col-md-12" ng-if="$ctrl.model.transportRequisition.plannedPickupDateTime">
+        Pick up on <strong>{{ $ctrl.model.transportRequisition.plannedPickupDateTime |dateTimeFormat}}</strong> <span ng-if="$ctrl.model.transportRequisition.pickupAddress">at </span><strong ng-if="$ctrl.model.transportRequisition.pickupAddress">{{ $ctrl.model.transportRequisition.pickupAddress }}</strong>
+    </div>
+    <div class="col-md-12" ng-if="$ctrl.showDetails">
+        <div>
+            @L("TypeOfTrip"): <strong>{{ $ctrl.model.transportRequisition.tripType | enumText: "tripType" }}</strong>
+        </div>
+        <div>
+            Appointment on <strong>{{ $ctrl.model.transportRequisition.appointmentDateTime|dateTimeFormat }}</strong> at <strong>{{ $ctrl.model.transportRequisition.destination }}</strong>
+        </div>
+        <div>
+            @L("Purpose"): <strong>{{ $ctrl.model.transportRequisition.purpose | enumText: 'transportRequisitionPurpose' }}</strong><strong ng-if="$ctrl.model.transportRequisition.purpose == null">-</strong>
+        </div>
+        <div class="well well-sm margin-top-10 special-arrangements" ng-if="$ctrl.showDetails && $ctrl.hideSpecialArrangementSection()">
+            <div class="special-arrangements-title">
+                <div class="caption">
+                    <span class="caption-subject">@L("SpecialArrangements")</span>
+                </div>
+            </div>
+            <div class="special-arrangements-body">
+                <ul class="special-arrangements-categories">
+                    <li ng-if="$ctrl.countSubItems($index)" ng-repeat="item in $ctrl.model.categories">
+                        <div class="description">{{ item.type | enumText: 'specialArrangementType' }}</div>
+                        <ul class="special-arrangements">
+                            <li ng-repeat="subitem in item.specialArrangements" ng-if="subitem.isChecked">
+                                <span>{{ subitem.description }}</span>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,119 @@
+﻿<div id="HospitalizationIndex" class="view-content" ng-controller="tenant.views.hospitalization.index as vm">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="portlet light" busy-if="vm.loading">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("Hospitalization") {{vm.headingAppend}}</span>
+                    </div>
+                    <div class="actions dropdown inputs">
+                        <div class="input-small-new inline-block">
+                            <form action="" class="search-form search-style-class">
+                                <div class="form-group has-feedback input-inline search-form-group">
+                                    <label for="search" class="sr-only">@L("Search")</label>
+                                    <input type="text" ng-model="vm.filter" enter-key="vm.searchValue()" class="form-control form-control-solid search-input input-circle font-13-main clearable" placeholder="search keywords...">
+                                    <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="vm.clearFilter()"></a>
+                                    <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                                </div>
+                            </form>
+                        </div>
+                        <a ng-click="vm.hospitalisationDetailsOpen = !vm.hospitalisationDetailsOpen" title="Show Hospitalization Detail view" class="icon-wrapper">
+                            <i ng-show="!vm.hospitalisationDetailsOpen" class="material-icons custom-icon">menu</i>
+                            <i ng-show="vm.hospitalisationDetailsOpen" class="material-icons custom-icon">view_headline</i>
+                        </a>
+                        <a ng-click="vm.create()" ng-if="vm.permissions.create" title="Add a new Hospitalization" class="icon-wrapper">
+                            <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                        </a>
+                        <a class="icon-wrapper" title="Filter" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <i class="material-icons custom-icon">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a href="javascript:;" class="bold" ng-click="vm.hospitalizationStatusFilterSelection(0)">@L("ShowAllHospitalization")</a>
+                            </li>
+                            <li class="divider"> </li>
+                            <li ng-repeat="hospitalizationStatus in vm.hospitalizationFilterStatus">
+                                <a href="javascript:;" class="font-13-main bold" ng-click="vm.hospitalizationStatusFilterSelection(hospitalizationStatus.value)">{{hospitalizationStatus.name}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="portlet-body air-card p-0-top-bottom">
+                    <div ng-repeat="hospitalization in vm.hospitalzationList">
+
+                        <section class="air-card-hover" ng-click="vm.view(hospitalization.id)" style="padding-bottom:0px;">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 no-padding nopadding">
+                                    <div class="row margin-bottom-10">
+                                        <div class="col-md-12">
+                                            <div class="col-md-8 inline-flex-center">
+                                                <span ng-if="hospitalization.personGender.toLowerCase()=='male'" class="ps-icon-male male-icon-blue padding-right-10"></span>
+                                                <span ng-if="hospitalization.personGender.toLowerCase()=='female'" class="ps-icon-female female-icon-pink padding-right-10"></span>
+                                                <span class="caption margin-right-5 empty-gender">{{hospitalization.personName}}</span>
+                                                <span class="otherText uppercase">
+                                                    ({{hospitalization.personDocumentNumber}})
+                                                </span>
+                                            </div>
+                                            <div class="col-md-4" style="text-align:right">
+                                                <a class="no-decoration padding-right-10" title="Hospitalized" href="#" ng-if="hospitalization.isHospitalized && vm.selectedFilter != 5 && !hospitalization.isCancelled"><i class="fa fa-hospital-o" style="font-size:20px" aria-hidden="true"></i></a>
+                                                <a class="no-decoration padding-right-10" title="Pending Confirmation" href="#" ng-if="!hospitalization.isConfirmed && !hospitalization.isCancelled"><i class="fa fa-unlock" style="font-size:20px" aria-hidden="true"></i></a>
+                                                <a class="no-decoration padding-right-10" title="Confirmed" href="#" ng-if="hospitalization.isConfirmed  && !hospitalization.isCancelled"><i class="fa fa-lock" style="font-size:20px" aria-hidden="true"></i></a>
+                                                <a class="no-decoration padding-right-10" title="Cancelled" href="#" ng-if="hospitalization.isCancelled"><i class="fa fa fa-ban" style="font-size:20px" aria-hidden="true"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="well well-sm margin-12 referral-service-well margin-bottom-0 font-13-main">
+                                        <div class="row margin-bottom-10">
+                                            <div class="col-md-12">
+                                                <span>Hospitalized on {{hospitalization.from | date : "dd-MMM-y hh:mm a" }} <span ng-if="hospitalization.to">to {{hospitalization.to | date : "dd-MMM-y hh:mm a"}}</span> at {{hospitalization.hospital}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span>{{hospitalization.reasonForHospitalization}}</span>
+                                            </div>
+                                        </div>
+                                        <div ng-show="vm.hospitalisationDetailsOpen">
+                                            <div class="row margin-bottom-10" style="margin-top:10px">
+                                                <div class="col-md-12 col-sm-12 nopadding">
+                                                    <div class="col-md-4 col-sm-4">
+                                                        Is Planned &nbsp;<span class="bold">{{hospitalization.isPlanned ? "Yes":"No"}}</span>
+                                                    </div>
+                                                    <div class="col-md-8  col-sm-8">
+                                                        Event Type &nbsp;<span class="bold">{{hospitalization.eventType ? hospitalization.eventType : "-"}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12  col-sm-12">
+                                                    Ward &amp; Bed Info &nbsp;<span class="bold">{{hospitalization.wardAndBedInformation ? hospitalization.wardAndBedInformation : "-"}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="dicharge-diagonosis margin-bottom-10" ng-if="hospitalization.dichargeDiagnosis">
+                                                <hr class="divider">
+                                                <div class="row bold" style="margin-bottom:3px"><div class="col-md-12">Discharge Diagnosis</div></div>
+                                                <div class="row margin-bottom-10">
+                                                    <div class="repeating" style="padding: 5px 15px;">
+                                                        <div class="box-default font-13-main margin-bottom-10" style="padding-left: 8px;">
+                                                            <div style="padding:6px 0">
+                                                                {{hospitalization.dichargeDiagnosis}}
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <span class="divider"> </span>
+                    </div>
+                </div>
+                <simple-paginator data="vm.data" key="vm.key" on-page-changed="vm.loadResults(requestParams)"></simple-paginator>
+            </div>
+        </div>
+    </div>
+</div>

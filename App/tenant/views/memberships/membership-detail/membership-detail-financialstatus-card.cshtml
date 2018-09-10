@@ -1,0 +1,98 @@
+﻿@model MembershipDto
+
+@using Pulsesync.IngoTPCC.Application.Membership.Dto
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("FinancialStatus")</div>
+        </div>
+    </div>
+        
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @using (var f = Html.BeginSubForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        @s.FieldFor(m => m.PublicAssistanceRecipient).Attrs(new { ng_model = "vm.workingModel.publicAssistanceRecipient", ng_change = "vm.onChangePublicAssistanceRecipient()" })
+                        @s.FieldFor(m => m.PACardNumber).Attrs(new { ng_disabled = "!vm.workingModel.publicAssistanceRecipient", ng_model = "vm.workingModel.paCardNumber" })
+                        @s.FieldFor(m => m.CPFRetirementFund).Attrs(new { ng_model = "vm.workingModel.cpfRetirementFund" })
+                        @s.FieldFor(m => m.Salary).AsDropDown().Attrs(new { ng_model = "vm.workingModel.salary" , ng_change = "vm.onChangeSalary()" })
+                        @s.FieldFor(m => m.SalaryAmount).Attrs(new { ng_disabled = "!vm.workingModel.salary", ng_model = "vm.workingModel.salaryAmount" })
+                        @s.FieldFor(m => m.PersonalSavings).Attrs(new { ng_model = "vm.workingModel.personalSavings", ng_change = "vm.onChangePersonalSavings()" })
+                        @s.FieldFor(m => m.SavingsAmount).Attrs(new { ng_disabled = "!vm.workingModel.personalSavings", ng_model = "vm.workingModel.savingsAmount" })
+                        @s.FieldFor(m => m.ComCareFinancialAssistance).Attrs(new { ng_model = "vm.workingModel.comCareFinancialAssistance" })
+                        @s.FieldFor(m => m.AnnuityOrInsurance).Attrs(new { ng_model = "vm.workingModel.annuityOrInsurance" })
+                        @s.FieldFor(m => m.AllowanceFromFamilyRelativesFriends).AsDropDown().Attrs(new { ng_model = "vm.workingModel.allowanceFromFamilyRelativesFriends" })
+                        @s.FieldFor(m => m.FinancialStatusOthers).Attrs(new { ng_model = "vm.workingModel.financialStatusOthers", ng_change = "vm.initialiseFinancialStatusOthersDescription()" })
+                        <div class="form-group form-md-line-input" ng-if="vm.workingModel.financialStatusOthers">
+                            <input type="text" ng-model="vm.workingModel.financialStatusOthersDescription" class="form-control" id="othersFinancialStatusDescription" name="othersFinancialStatusDescription" placeholder="Provide Other Financial Status" ng-required="true" required-message="'@L("OthersPleaseSpecifyErrorMessage")'">
+                            <label class="control-label" for="othersFinancialStatusDescription">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                        </div>
+                        @s.FieldFor(m => m.FinancialStatusRemarks).Attrs(new { ng_model = "vm.workingModel.financialStatusRemarks" })                       
+                    }
+                }
+            </div>
+
+            <div ng-switch-default>               
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.publicAssistanceRecipient)"></div>
+                        <label class="control-label">@L("PublicAssistanceRecipient")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.paCardNumber ? vm.model.paCardNumber: '-'}}</div>
+                        <label class="control-label">@L("PACardNumber")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.cpfRetirementFund)"></div>
+                        <label class="control-label">@L("CPFRetirementFund")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.salary)"></div>
+                        <label class="control-label">@L("Salary")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.salaryAmount ? vm.model.salaryAmount: '-'}}</div>
+                        <label class="control-label">@L("SalaryAmount")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.personalSavings)"></div>
+                        <label class="control-label">@L("PersonalSavings")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.savingsAmount ? vm.model.savingsAmount: '-'}}</div>
+                        <label class="control-label">@L("SavingsAmount")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.comCareFinancialAssistance)"></div>
+                        <label class="control-label">@L("ComCareFinancialAssistance")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.annuityOrInsurance)"></div>
+                        <label class="control-label">@L("AnnuityOrInsurance")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.allowanceFromFamilyRelativesFriends)"></div>
+                        <label class="control-label">@L("AllowanceFromFamilyRelativesFriends")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.financialStatusOthers)"></div>
+                        <label class="control-label">@L("FinancialStatusOthers")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.model.financialStatusOthersDescription">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.financialStatusOthersDescription ? vm.model.financialStatusOthersDescription: '-'}}</div>
+                        <label class="control-label">@L("FinancialStatusOthersDescription")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.financialStatusRemarks ? vm.model.financialStatusRemarks: '-'}}</div>
+                        <label class="control-label">@L("FinancialStatusRemarks")</label>
+                    </div>
+                </div>           
+            </div>
+        </div>
+    </div>
+</div>
+

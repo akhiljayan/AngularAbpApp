@@ -1,0 +1,61 @@
+﻿@model MutuallyExclusiveServiceTypeDto
+
+@using Pulsesync.IngoTPCC.MutuallyExclusiveServiceType.Dto;
+
+<div class="portlet light" data-drag="true" id="serviceTypeModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("MutuallyExclusiveServceType")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        @{
+            var attributes = new Dictionary<string, object>();
+            attributes.Add("role", "form");
+            attributes.Add("id", "serviceTypeForm");
+            attributes.Add("name", "bioData.bioDataForm");
+            attributes.Add("novalidate", "");
+            attributes.Add("action", "#");
+            attributes.Add("angular-validator-submit", "vm.save()");
+            attributes.Add("angular-validator", "");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("scrollable-form-body")))
+        {
+            using (var s = f.BeginSection())
+            {
+                <div class="portlet-body" style="display: block;">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.ServiceTypeId).AsDropDown().Attrs(new { ng_model = "vm.mutuallyExclusiveServiceType.serviceTypeId", ng_disabled = "vm.action == 'edit'", name = "serviceTypeId", repeat = "vm.serviceTypes", required_message = "You must select a Service type" })
+                            </div>
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.AnotherServiceTypeId).AsDropDown().Attrs(new { ng_model = "vm.mutuallyExclusiveServiceType.anotherServiceTypeId", ng_disabled = "vm.action == 'edit'", name = "anotherServiceTypeId", repeat = "vm.serviceTypes", required_message = "You must select a Mutually Exclusive Service type" })
+
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group form-md-line-input">
+                                    @s.FieldFor(m => m.Remarks).Attrs(new { ng_model = "vm.mutuallyExclusiveServiceType.remarks" }).AddClass("animate msd-elastic: \\n;")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions noborder right">
+                    <button type="submit" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.saving"><i class="material-icons ps-btn-material">check</i>Ok</button>
+                    <button type="button" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()" ng-disabled="vm.saving"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+    });
+</script>

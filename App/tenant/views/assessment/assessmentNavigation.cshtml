@@ -1,0 +1,30 @@
+﻿<div id="AssessmentNavigation" class="view-content" ng-controller="tenant.views.assessment.assessmentNavigation as vm">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="portlet light" busy-if="vm.loading">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("SelectAssessment")</span>
+                    </div>
+                </div>
+                <div class="portlet-body air-card p-0-top-bottom">
+                    <div class="row cursor-pointer" style="padding:15px;">
+                        <div ng-repeat="group in vm.permissions | orderBy:'assessmentType'">
+                            <p>
+                                <span class="question-title" ng-if="group.assessmentType == 1">ILTC Assessments</span>
+                                <span class="question-title" ng-if="group.assessmentType == 2">Assessments</span>
+                            </p>
+                            <div ng-repeat="permission in group.data | orderBy:'moduleDescription'" style="margin-left:10px;padding-bottom:10px;">                                
+                                <a ng-click="vm.viewAssessment(permission)" class="no-decoration margin-bottom-10">
+                                    <span class="title menu-anchor ng-binding" ng-if="permission.module != 'FMA'">{{ permission.moduleDescription}} </span>
+                                    <span ng-if="permission.module == 'FMA'" popover-title="Type" uib-popover="{{vm.tootips}}" popover-trigger="'mouseenter'" class="title menu-anchor ng-binding">{{ permission.moduleDescription}} </span>
+                                </a>
+                            </div>
+                            <div class="divider" style="height:10px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

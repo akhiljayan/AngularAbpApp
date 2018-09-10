@@ -1,0 +1,225 @@
+﻿<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("IRMSReferral")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <form role="form" name="inputForm" novalidate action="#" class="form-validation horizontal-form">
+            <div class="form-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>@L("ConversionDuplicateCheckMessage", "Person")</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group form-md-checkboxes">
+                            <div class="md-checkbox-list">
+
+                                <div class="md-checkbox">
+                                    <input id="selectAll" type="checkbox" class="form-control" ng-model="vm.selectAll" ng-change="vm.select()" />
+                                    <label for="selectAll">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("SelectAll")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="gender" type="checkbox" class="form-control" ng-model="vm.person.gender" />
+                                    <label for="gender">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("Gender")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="dateOfBirth" type="checkbox" class="form-control" ng-model="vm.person.dateOfBirth" />
+                                    <label for="dateOfBirth">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("DateOfBirth")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="race" type="checkbox" class="form-control" ng-model="vm.person.race" />
+                                    <label for="race">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("Race")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="religion" type="checkbox" class="form-control" ng-model="vm.person.religion" />
+                                    <label for="religion">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("Religion")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="nationality" type="checkbox" class="form-control" ng-model="vm.person.nationality" />
+                                    <label for="nationality">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("Nationality")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="citizenship" type="checkbox" class="form-control" ng-model="vm.person.citizenship" />
+                                    <label for="citizenship">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("Citizenship")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="homePhone" type="checkbox" class="form-control" ng-model="vm.person.homePhone" />
+                                    <label for="homePhone">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("HomePhone")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="mobilePhone" type="checkbox" class="form-control" ng-model="vm.person.mobilePhone" />
+                                    <label for="mobilePhone">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("MobilePhone")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="address" type="checkbox" class="form-control" ng-model="vm.person.address" />
+                                    <label for="address">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("Address")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="liftLanding" type="checkbox" class="form-control" ng-model="vm.person.liftLanding" />
+                                    <label for="liftLanding">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("LiftLanding")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="livingArrangement" type="checkbox" class="form-control" ng-model="vm.person.livingArrangement" />
+                                    <label for="livingArrangement">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("LivingArrangement")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="currentLocation" type="checkbox" class="form-control" ng-model="vm.person.currentLocation" />
+                                    <label for="currentLocation">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("CurrentLocation")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="referralDate" type="checkbox" class="form-control" ng-model="vm.person.referralDate" />
+                                    <label for="referralDate">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("ReferralDate")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="submissionDate" type="checkbox" class="form-control" ng-model="vm.person.submissionDate" />
+                                    <label for="submissionDate">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("SubmissionDate")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="admissionDate" type="checkbox" class="form-control" ng-model="vm.person.admissionDate" />
+                                    <label for="admissionDate">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("AdmissionDate")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="dischargedDate" type="checkbox" class="form-control" ng-model="vm.person.dischargedDate" />
+                                    <label for="dischargedDate">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("DischargedDate")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="socialBackground" type="checkbox" class="form-control" ng-model="vm.person.socialBackground" />
+                                    <label for="socialBackground">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("SocialBackground")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="referralRemarks" type="checkbox" class="form-control" ng-model="vm.person.referralRemarks" />
+                                    <label for="referralRemarks">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("ReferralRemarks")
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions noborder right">
+                <button type="button" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.proceed()" ng-disabled="vm.saving"><i class="material-icons ps-btn-material">check</i>@L("Proceed")</button>
+                <button type="button" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()" ng-disabled="vm.saving"><i class="material-icons ps-btn-material">clear</i>@L("Cancel")</button>
+            </div>
+        </form>
+    </div>
+</div>

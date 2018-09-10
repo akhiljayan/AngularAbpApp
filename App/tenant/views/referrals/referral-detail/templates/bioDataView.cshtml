@@ -1,0 +1,100 @@
+﻿@model ReferralDto
+@using Pulsesync.IngoTPCC.Application.Referral.Dto;
+<div id="BioData" class="bioData portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("BioData")</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="vm.mode">
+                @*edit mode*@
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+                        @using (var f = Html.BeginSubForm())
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                @s.FieldFor(m => m.Person.RegistrationDocumentTypeId).AsDropDown().Attrs(new { ng_model = "vm.model.person.registrationDocumentTypeId", name = "RegistrationDocumentType",  ng_change = "vm.selectedDocType = $select.selected.description;", ui_select_required = "ui-select-required" })
+                                @s.FieldFor(m => m.Person.RegistrationDocumentNumber).Attrs(new { ng_model = "vm.model.person.registrationDocumentNumber", reg_doc_num_validation = "{{vm.selectedDocType}}", invalid_message = "'NRIC/Fin/Passport No. format is incorrect. Please check.'", ng_blur= "vm.checkExistingRegisterDocument();" })
+                                @*@s.FieldFor(m => m.Person.RegistrationDocumentNumber).Attrs(new { ng_model = "vm.referral.person.registrationDocumentNumber", validator = "vm.checkRegistrationDocumentNumberFormat(vm.selectedDocType)===true", invalid_message = "'NRIC/Fin/Passport No. format is incorrect. Please check.'" })*@
+                                @s.FieldFor(m => m.Person.SalutationId).AsDropDown().Attrs(new { ng_model = "vm.model.person.salutationId" })
+                                @s.FieldFor(m => m.Person.FullName).Attrs(new { ng_model = "vm.model.person.fullName" })
+                                @s.FieldFor(m => m.Person.DateOfIssue).Attrs(new { ng_model = "vm.model.person.dateOfIssue", Validate = "false", Restrict = "reject", maxdate = "0d" })
+                                @s.FieldFor(m => m.Person.DateOfBirth).Attrs(new { ng_model = "vm.model.person.dateOfBirth", Validate = "false", Restrict = "reject", maxdate = "0d" })
+                                @s.FieldFor(m => m.Person.GenderId).AsDropDown().Attrs(new { ng_model = "vm.model.person.genderId", repeat = "vm.genderMaster", name = "Gender" })
+                                @s.FieldFor(m => m.Person.MaritalStatusId).AsDropDown().Attrs(new { ng_model = "vm.model.person.maritalStatusId", repeat = "vm.maritalStatusMaster", name = "MaritalStatus" })
+                                @s.FieldFor(m => m.Person.RaceId).AsDropDown().Attrs(new { ng_model = "vm.model.person.raceId" })
+                                @s.FieldFor(m => m.Person.NationalityId).AsDropDown().Attrs(new { ng_model = "vm.model.person.nationalityId" })
+                                @s.FieldFor(m => m.Person.CitizenshipId).AsDropDown().Attrs(new { ng_model = "vm.model.person.citizenshipId" })
+                                @s.FieldFor(m => m.Person.ReligionId).AsDropDown().Attrs(new { ng_model = "vm.model.person.religionId" })
+                            }
+                        }
+                    </div>
+                </div>
+                @*view mode*@
+                <div class="view col-md-12 col-sm-12 biodata" ng-switch-default>
+                    <div class="biodata-line">
+                        <div class="bold">{{ vm.model.person.salutation.description }} {{ vm.model.person.fullName }}</div>
+                        <span class="ps-icon-male male-icon-blue" ng-if="vm.model.person.gender.description.toLowerCase() == 'male'"></span>
+                        <span class="ps-icon-female female-icon-pink" ng-if="vm.model.person.gender.description.toLowerCase() == 'female'"></span>
+                        <span><span ng-if="!vm.model.person.gender.description">&nbsp;</span>{{ vm.model.person.maritalStatus.description }}</span>
+                    </div>
+                    <div class="biodata-line">
+                        <span class="ps-icon-world grey"></span>
+                        <ul class="otherText list-inline list-inline-dot">
+                            <li uib-popover="@L("RegistrationDocumentType")" popover-placement="bottom" popover-trigger="'mouseenter'" ng-if="vm.model.person.registrationDocumentType.description">
+                                {{ vm.model.person.registrationDocumentType.description }}
+                            </li>
+                            <li uib-popover="@L("RegistrationDocumentNo")" popover-placement="bottom" popover-trigger="'mouseenter'" ng-if="vm.model.person.registrationDocumentNumber">
+                                {{ vm.model.person.registrationDocumentNumber }}
+                            </li>
+                            <li uib-popover="@L("DateOfIssue")" popover-placement="bottom" popover-trigger="'mouseenter'" ng-if="vm.model.person.dateOfIssue">
+                                {{ vm.model.person.dateOfIssue | dateFormat }}
+                            </li>
+                            <li ng-if="!vm.model.person.registrationDocumentType.description && !vm.model.person.registrationDocumentNumber && !vm.model.person.dateOfIssue">-</li>
+                        </ul>
+                    </div>
+                    <div class="biodata-line">
+                        <i class="material-icons">cake</i>
+                        <ul class="otherText list-inline list-inline-dot">
+                            <li uib-popover="@L("DateOfBirth")" popover-placement="bottom" popover-trigger="'mouseenter'" ng-if="vm.model.person.dateOfBirth">
+                                {{ vm.model.person.dateOfBirth | dateFormat }}
+                            </li>
+                            <li uib-popover="@L("Age")" popover-placement="bottom" popover-trigger="'mouseenter'" ng-if="vm.model.person.dateOfBirth">
+                                {{ vm.model.person.dateOfBirth | ageFilter }}
+                            </li>
+                            <li ng-if="!vm.model.person.dateOfBirth && !vm.model.person.dateOfBirth">-</li>
+                        </ul>
+                    </div>
+                    <div class="biodata-line">
+                        <span class="ps-icon-people grey"></span>
+                        <ul class="otherText list-inline list-inline-dot">
+                            <li uib-popover="@L("Race")" popover-placement="bottom" popover-trigger="'mouseenter'" ng-if="vm.model.person.race.description">
+                                {{ vm.model.person.race.description }}
+                            </li>
+                            <li uib-popover="@L("Nationality")" popover-placement="bottom" popover-trigger="'mouseenter'" ng-if="vm.model.person.nationality.description">
+                                {{ vm.model.person.nationality.description }}
+                            </li>
+                            <li uib-popover="@L("Citizenship")" popover-placement="bottom" popover-trigger="'mouseenter'" ng-if="vm.model.person.citizenship.description">
+                                {{ vm.model.person.citizenship.description }}
+                            </li>
+                            <li ng-if="!vm.model.person.race.description && !vm.model.person.nationality.description && !vm.model.person.citizenship.description">-</li>
+                        </ul>
+                    </div>
+                    <div class="biodata-line">
+                        <span class="ps-icon-religion grey"></span>
+                        <ul class="otherText list-inline list-inline-dot">
+                            <li uib-popover="@L("Religion")" popover-placement="bottom" popover-trigger="'mouseenter'" ng-if="vm.model.person.religion.description">
+                                {{ vm.model.person.religion.description }}
+                            </li>
+                            <li ng-if="!vm.model.person.religion.description">-</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

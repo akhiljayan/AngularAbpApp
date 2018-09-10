@@ -1,0 +1,103 @@
+﻿<div id="ReferralIndex" class="view-content" ng-controller="tenant.views.referral.index as vm">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="portlet light" busy-if="vm.loading">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("Referral") {{vm.headingAppend}}</span>
+                    </div>
+                    <div class="actions dropdown inputs">
+                        <div class="input-small-new inline-block">
+                            <form action="" class="search-form search-style-class">
+                                <div class="form-group has-feedback input-inline search-form-group">
+                                    <label for="search" class="sr-only">@L("Search")</label>
+                                    <input type="text" ng-model="vm.filter" enter-key="vm.searchValue()" class="form-control form-control-solid search-input input-circle font-13-main clearable" placeholder="search keywords...">
+                                    <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="vm.clearFilter()"></a>
+                                    <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                                </div>
+                            </form>
+                        </div>
+                        <a ng-click="vm.referralServiceOpen = !vm.referralServiceOpen" title="Show associated Service types and Status" class="icon-wrapper">
+                            <i ng-show="!vm.referralServiceOpen" class="material-icons custom-icon">menu</i>
+                            <i ng-show="vm.referralServiceOpen" class="material-icons custom-icon">view_headline</i>
+                        </a>
+                        <a ng-click="vm.create()" ng-if="vm.permissions.create" title="Add a new Referral" class="icon-wrapper">
+                            <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                        </a>
+                        <a class="icon-wrapper" title="Filter" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <i class="material-icons custom-icon">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a href="javascript:;" class="bold" ng-click="vm.getAll()">@L("AllCentres")</a>
+                            </li>
+                            <li class="divider"> </li>
+                            <li ng-repeat="referralStatus in vm.referralFilterStatus">
+                                <a href="javascript:;" class="font-13-main bold" ng-click="vm.referralStatusFilter(referralStatus.value)">{{referralStatus.name}}</a>
+                            </li>
+                            <li class="divider"> </li>
+                            <li ng-repeat="referralServiceStatus in vm.referralServiceTypeStatus">
+                                <a href="javascript:;" class="font-13-main bold" ng-click="vm.referralServiceTypeStatusFilter(referralServiceStatus.value)">{{referralServiceStatus.name}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="portlet-body air-card p-0-top-bottom">
+                    @*<div class="scroller" style="width: auto; height: 350px; overflow-x: scroll; overflow-y: scroll">*@
+                        <section class="air-card-hover" ng-repeat="referral in vm.referralList" ng-click="vm.view(referral.id)">
+                            <div class="row margin-bottom-10">
+                                <div class="col-md-12 col-sm-12 no-padding nopadding">
+                                    <div class="col-md-4 col-sm-4">
+                                        <span class="ps-icon-referralcode" uib-tooltip="@L("ReferralCode")"></span>
+                                        <span class="caption vertical-top">{{referral.referralCode}}</span>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4">
+                                        <span class="caption margin-right-5">{{referral.fullName}}</span>
+                                        <span ng-if="referral.registrationDocumentNumber" class="otherText uppercase">
+                                            ({{referral.registrationDocumentNumber}})
+                                        </span>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4">
+                                        <span class="ps-icon-referencecode" uib-tooltip="@L("ReferenceCode")"></span>
+                                        <span class="caption vertical-top">{{referral.referenceCode ? referral.referenceCode : '-'}}</span>
+                                    </div>
+                                    <div class="row margin-top-10">
+                                        <div class="col-md-4 col-sm-4">
+                                        </div>
+                                        <div class="col-md-12 col-sm-12 height-5"></div>
+                                        <div class="col-md-12 col-sm-12 margin-top-10 font-13-main">
+                                            <div class="col-md-4 col-sm-4">
+                                                <span class="bold">{{referral.referredBy}}</span> referred on <span class="bold">{{referral.referralDate | dateFormat }}</span>
+                                            </div>
+                                            <div class="col-md-4 col-sm-4">
+                                                <span>Pending Approval&nbsp;-&nbsp;</span><span class="bold">{{referral.pendingApprovals}}</span>
+                                            </div>
+                                            <div class="col-md-4 col-sm-4">
+                                                <span>Pending Admission&nbsp;-&nbsp;</span><span class="bold">{{referral.pendingAdmissions}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="well well-sm margin-12 referral-service-well font-13-main" ng-show="referral.serviceTypes.length > 0 && vm.referralServiceOpen">
+                                        <div ng-repeat="serviceType in referral.serviceTypes">
+                                            <div class="row margin-bottom-10">
+                                                <div class="col-md-4  col-sm-4">
+                                                    <span class="font-13-main bold">{{serviceType.serviceType}}</span>
+                                                </div>
+                                                <div class="col-md-8  col-sm-8">
+                                                    <span>{{serviceType.status | enumText : 'referralServiceTypeStatus' }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </section>
+                    @*</div>*@
+
+                    <simple-paginator data="vm.data" key="vm.key" on-page-changed="vm.loadResults(requestParams)"></simple-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

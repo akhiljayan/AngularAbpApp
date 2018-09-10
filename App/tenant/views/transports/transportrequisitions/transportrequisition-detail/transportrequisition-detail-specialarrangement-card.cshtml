@@ -1,0 +1,97 @@
+﻿@model CreateOrUpdateTransportRequisitionInput
+
+@using Pulsesync.IngoTPCC.Application.TransportRequisitions.Dto
+
+<style>
+    .renderedServices .panel-heading {
+        padding: 7px 15px;
+    }
+
+    .renderedServices .panel-title > a {
+        text-decoration: none;
+        color: #000;
+    }
+
+    .renderedServices p:last-child {
+        margin-bottom: 0px;
+    }
+
+    .renderedServices:last-child > div:last-child > hr {
+        display: none;
+    }
+</style>
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("SpecialArrangement")</div>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @*@{
+                    var attrs = new Dictionary<string, object>();
+                    attrs.Add("name", "vm.form");
+                }*@
+
+                @using (var f = Html.BeginSubForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <script type="text/ng-template" id="rendered-service-template">
+                            <div class="panel-heading accordion-toggle cursor-pointer" ng-click="toggleOpen()">
+                                <h4 class="panel-title font-14-main">
+                                    <a href="#" tabindex="0" uib-accordion-transclude="heading">
+                                        <span uib-accordion-header>
+                                            {{heading}}
+                                        </span>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div class="panel-collapse collapse" uib-collapse="!isOpen">
+                                <div class="panel-body" ng-transclude></div>
+                            </div>
+                        </script>
+
+                        <uib-accordion class="renderedServices" close-others="false">
+                            <div uib-accordion-group class="panel-default" is-open="category.DefaultOpen" template-url="rendered-service-template"
+                                 ng-repeat="category in vm.model.categories">
+                                <uib-accordion-heading>
+                                    <i class="glyphicon" ng-class="{'glyphicon-minus': category.DefaultOpen, 'glyphicon-plus': !category.DefaultOpen}"></i>
+                                    <span class="bold">{{ category.type | enumText: 'specialArrangementType' }}</span>
+                                </uib-accordion-heading>
+
+                                <div class="font-14-main padding-left-25" ng-repeat="subitem in category.specialArrangements">
+                                    <input type="checkbox" ng-model="subitem.isChecked" value="{{ subitem.id }}">&nbsp;{{ subitem.description }}
+                                </div>
+                            </div>
+                        </uib-accordion>
+                    }
+                }
+            </div>
+            <!-- Look Good View -->
+            <div ng-switch-default>
+                @using (var f = Html.BeginForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <div class="row renderedServices cursor-pointer" ng-if="vm.countSubItems($index)" ng-repeat="category in vm.model.categories">
+                            <div class="col-md-12">
+                                <div class="bold color-black margin-bottom-10">{{ category.type | enumText: 'specialArrangementType' }}</div>
+                                <div>
+                                    <p ng-repeat="subitem in category.specialArrangements" ng-if="subitem.isChecked">
+                                        <span>{{ subitem.description }}</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 clearfix">
+                                <hr />
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

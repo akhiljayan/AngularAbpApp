@@ -1,0 +1,80 @@
+﻿@model UpdateCareStatusInput
+
+@using PulseSync.IngoTPCC.Application.Care.CarePlans.Dto
+
+<div class="portlet light bordered">
+    @*<div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject">{{ vm.action }}</span>
+            </div>
+            <div class="tools pull-right">
+                <minimize-modal></minimize-modal>
+                <a class="remove" ng-click="vm.cancel()"></a>
+            </div>
+        </div>*@
+    <div class="portlet-body form modal-body">
+        <div class="form-wizard">
+            <div class="form-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        @{
+                            var attrs = new Dictionary<string, object>();
+                            attrs.Add("name", "vm.form");
+                            attrs.Add("novalidate", "");
+                            attrs.Add("angular-validator", "");
+                            attrs.Add("angular-validator-submit", "vm.save()");
+                        }
+                        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs).AddClass("scrollable-form-body")))
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                <div class="form-group form-md-line-input ">
+                                    <input name="Description" class="form-control" id="Description" ng-model="vm.workingModel.typeDescription" disabled>
+                                    <label class="control-label" for="Description">{{ vm.typeLabel[vm.type] }}</label>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4">
+                                        <div class="form-group form-md-line-input">
+                                            <div class="input-group date date-picker" ng-disabled="true">
+                                                <input class="form-control dateinput" data-date-picker="" id="Date" ng-model="vm.workingModel.actionDate" maxdate="0d" />
+                                                <div class="input-group-addon">
+                                                    <i class="material-icons" style="line-height: 14px;">date_range</i>
+                                                </div>
+                                                <label class="control-label" for="Date">@L("Date")</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 col-sm-4">
+                                        <div class="form-group form-md-line-input">
+                                            <input name="Action" class="form-control" id="Action" value="{{ vm.workingModel.status | enumText: 'careStatusType' }}" disabled>
+                                            <label class="control-label" for="Action">@L("Action")</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 col-sm-4">
+                                        <div class="form-group form-md-line-input">
+                                            <select class="form-control" id="ActionBy" ng-model="vm.workingModel.actionByUserId" ng-options="x.id as x.description for x in vm.peopleMaster" disabled></select>
+                                            <label class="control-label" for="ActionBy">@L("ActionBy")</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @s.FieldFor(c => c.Remarks).Attrs(new { ng_model = "vm.workingModel.remarks" }).AddClass("animate msd-elastic: \\n;").Rows(2)
+
+                                <div class="form-actions pull-right">
+                                    <button type="submit" ng-if="vm.workingModel.status == 0" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.form.$invalid"><i class="material-icons ps-btn-material">check</i>@L("Open")</button>
+                                    <button type="submit" ng-if="vm.workingModel.status == 1" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.form.$invalid"><i class="material-icons ps-btn-material">check</i>@L("Suspend")</button>
+                                    <button type="submit" ng-if="vm.workingModel.status == 3" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.form.$invalid"><i class="material-icons ps-btn-material">check</i>@L("Close")</button>
+                                    <button type="submit" ng-if="vm.workingModel.status == 2" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.form.$invalid"><i class="material-icons ps-btn-material">check</i>@L("Resolve")</button>
+                                    <button type="button" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>@L("Cancel")</button>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

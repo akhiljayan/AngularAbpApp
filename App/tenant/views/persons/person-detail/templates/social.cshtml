@@ -1,0 +1,100 @@
+﻿@model CreateOrUpdatePersonInput
+
+@using Pulsesync.IngoTPCC.Application.Person.Dto;
+
+@{
+    var autosizeClass = "animate msd-elastic: \\n;";
+}
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Social")</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="edit">
+                @using (var f = Html.BeginSubForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        @(s.FieldFor(m => m.AboutMe)
+                            .AddClass(autosizeClass)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.aboutMe"
+                            })
+                            .Rows(4))
+
+                        @(s.FieldFor(m => m.Goals)
+                            .AddClass(autosizeClass)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.goals"
+                            })
+                            .Rows(4))
+
+                        @(s.FieldFor(m => m.Personality)
+                            .AddClass(autosizeClass)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.personality"
+                            }))
+
+                        @(s.FieldFor(m => m.Likes)
+                            .AddClass(autosizeClass)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.likes"
+                            }))
+
+                        @(s.FieldFor(m => m.Dislikes)
+                            .AddClass(autosizeClass)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.dislikes"
+                            }))
+
+                        @(s.FieldFor(m => m.WhatMakesHimOrHerHappy)
+                            .AddClass(autosizeClass)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.whatMakesHimOrHerHappy"
+                            })
+                            .Rows(4))
+
+                        @(s.FieldFor(m => m.Hobbies)
+                            .AddClass(autosizeClass)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.hobbies"
+                            }))
+                    }
+                }
+            </div>
+            <div class="view" ng-switch-default>
+                <strong>@L("AboutMe")</strong>
+                <p>{{ vm.model.aboutMe || '-' }}</p>
+
+                <strong>@L("Goals")</strong>
+                <p>{{ vm.model.goals || '-' }}</p>
+
+                <strong>@L("Personality")</strong>
+                <p>{{ vm.model.personality || '-' }}</p>
+
+                <strong>@L("Likes")</strong>
+                <p>{{ vm.model.likes || '-' }}</p>
+
+                <strong>@L("Dislikes")</strong>
+                <p>{{ vm.model.dislikes || '-' }}</p>
+
+                <strong>@L("WhatMakesHimOrHerHappy")</strong>
+                <p>{{ vm.model.whatMakesHimOrHerHappy || '-' }}</p>
+
+                <strong>@L("Hobbies")</strong>
+                <p>{{ vm.model.hobbies || '-' }}</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,416 @@
+﻿<style>
+    /* RAI SCALEBAR
+    ==============================================================================*/
+    /* line 4, ../sass/_scalebar.scss */
+    .rai_scalebar {
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        -webkit-box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.1);
+        box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.1);
+        height: 12px;
+        margin: 0px;
+        padding: 0px;
+        overflow: hidden;
+        background-color: #d5d5d5;
+        background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Q1ZDVkNSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2U1ZTVlNSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==');
+        background-size: 100%;
+        background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #d5d5d5), color-stop(100%, #e5e5e5));
+        background-image: -moz-linear-gradient(top, #d5d5d5 0%, #e5e5e5 100%);
+        background-image: -webkit-linear-gradient(top, #d5d5d5 0%, #e5e5e5 100%);
+        background-image: linear-gradient(to bottom, #d5d5d5 0%, #e5e5e5 100%);
+        background-repeat: repeat-x;
+    }
+        /* line 13, ../sass/_scalebar.scss */
+        .rai_scalebar.green {
+            background-color: #DFF0D8;
+            background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2RmZjBkOCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2NmZTBjOCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==');
+            background-size: 100%;
+            background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dff0d8), color-stop(100%, #cfe0c8));
+            background-image: -moz-linear-gradient(top, #dff0d8 0%, #cfe0c8 100%);
+            background-image: -webkit-linear-gradient(top, #dff0d8 0%, #cfe0c8 100%);
+            background-image: linear-gradient(to bottom, #dff0d8 0%, #cfe0c8 100%);
+        }
+        /* line 17, ../sass/_scalebar.scss */
+        .rai_scalebar.red {
+            background-color: #F2DEDE;
+            background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2YyZGVkZSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2UyY2VjZSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==');
+            background-size: 100%;
+            background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f2dede), color-stop(100%, #e2cece));
+            background-image: -moz-linear-gradient(top, #f2dede 0%, #e2cece 100%);
+            background-image: -webkit-linear-gradient(top, #f2dede 0%, #e2cece 100%);
+            background-image: linear-gradient(to bottom, #f2dede 0%, #e2cece 100%);
+        }
+        /* line 21, ../sass/_scalebar.scss */
+        .rai_scalebar.yellow {
+            background-color: #FCF8E3;
+            background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZjZjhlMyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2VjZThkMyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==');
+            background-size: 100%;
+            background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fcf8e3), color-stop(100%, #ece8d3));
+            background-image: -moz-linear-gradient(top, #fcf8e3 0%, #ece8d3 100%);
+            background-image: -webkit-linear-gradient(top, #fcf8e3 0%, #ece8d3 100%);
+            background-image: linear-gradient(to bottom, #fcf8e3 0%, #ece8d3 100%);
+        }
+        /* line 26, ../sass/_scalebar.scss */
+        .rai_scalebar .bar {
+            border-bottom-left-radius: 5px;
+            border-top-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+            border-top-right-radius: 5px;
+            float: left;
+            width: 0;
+            height: 100%;
+            font-size: 8px;
+            color: #ffffff;
+            text-align: center;
+            text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+            background-color: #0e90d2;
+            background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzE0OWJkZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzA0ODBiZSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==');
+            background-size: 100%;
+            background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #149bdf), color-stop(100%, #0480be));
+            background-image: -moz-linear-gradient(top, #149bdf 0%, #0480be 100%);
+            background-image: -webkit-linear-gradient(top, #149bdf 0%, #0480be 100%);
+            background-image: linear-gradient(to bottom, #149bdf 0%, #0480be 100%);
+            background-repeat: repeat-x;
+            -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+            -moz-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+            box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            -webkit-transition: width 0.6s ease;
+            -moz-transition: width 0.6s ease;
+            -o-transition: width 0.6s ease;
+            transition: width 0.6s ease;
+        }
+            /* line 47, ../sass/_scalebar.scss */
+            .rai_scalebar .bar + .bar {
+                -webkit-box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+                -moz-box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+                box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+            }
+            /* line 52, ../sass/_scalebar.scss */
+            .rai_scalebar .bar.green {
+                background-color: #5cb85c;
+                background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzVjYjg1YyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzU2YWI1NiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==');
+                background-size: 100%;
+                background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #5cb85c), color-stop(100%, #56ab56));
+                background-image: -moz-linear-gradient(top, #5cb85c 0%, #56ab56 100%);
+                background-image: -webkit-linear-gradient(top, #5cb85c 0%, #56ab56 100%);
+                background-image: linear-gradient(to bottom, #5cb85c 0%, #56ab56 100%);
+            }
+            /* line 56, ../sass/_scalebar.scss */
+            .rai_scalebar .bar.red {
+                background-color: #D9534F;
+                background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Q5NTM0ZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2IwNDg0NCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==');
+                background-size: 100%;
+                background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #d9534f), color-stop(100%, #b04844));
+                background-image: -moz-linear-gradient(top, #d9534f 0%, #b04844 100%);
+                background-image: -webkit-linear-gradient(top, #d9534f 0%, #b04844 100%);
+                background-image: linear-gradient(to bottom, #d9534f 0%, #b04844 100%);
+            }
+            /* line 60, ../sass/_scalebar.scss */
+            .rai_scalebar .bar.yellow {
+                background-color: #f0ad4e;
+                background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Y0YjA0ZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2U3YTY0YyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==');
+                background-size: 100%;
+                background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f4b04f), color-stop(100%, #e7a64c));
+                background-image: -moz-linear-gradient(top, #f4b04f 0%, #e7a64c 100%);
+                background-image: -webkit-linear-gradient(top, #f4b04f 0%, #e7a64c 100%);
+                background-image: linear-gradient(to bottom, #f4b04f 0%, #e7a64c 100%);
+            }
+        /* line 65, ../sass/_scalebar.scss */
+        .rai_scalebar .marker {
+            font-size: 0.8em;
+            position: absolute;
+            white-space: nowrap;
+        }
+            /* line 69, ../sass/_scalebar.scss */
+            .rai_scalebar .marker.top {
+                top: -19px;
+            }
+            /* line 72, ../sass/_scalebar.scss */
+            .rai_scalebar .marker.bottom {
+                top: -3px;
+            }
+            /* line 75, ../sass/_scalebar.scss */
+            .rai_scalebar .marker .marker_value {
+                width: 40px;
+                margin-left: -20px;
+                text-align: center;
+            }
+            /* line 80, ../sass/_scalebar.scss */
+            .rai_scalebar .marker .marker_line {
+                width: 1px;
+                height: 26px;
+                background-color: #444;
+            }
+
+    /* line 103, ../sass/_scalebar.scss */
+    .scale_label {
+        font-size: 1.3em;
+    }
+        /* line 105, ../sass/_scalebar.scss */
+        .scale_label .scale_label_value {
+            display: inline;
+            padding: .2em .6em .3em;
+            font-size: 80%;
+            font-weight: bold;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: .25em;
+        }
+            /* line 118, ../sass/_scalebar.scss */
+            .scale_label .scale_label_value.green {
+                background-color: #5cb85c;
+                color: white;
+            }
+            /* line 122, ../sass/_scalebar.scss */
+            .scale_label .scale_label_value.red {
+                background-color: #d9534f;
+                color: white;
+            }
+            /* line 126, ../sass/_scalebar.scss */
+            .scale_label .scale_label_value.yellow {
+                background-color: #f0ad4e;
+                color: white;
+            }
+            /* line 130, ../sass/_scalebar.scss */
+            .scale_label .scale_label_value.blue {
+                background-color: #0e90d2;
+                color: white;
+            }
+
+    table.scalebar_container {
+        width: 100%;
+    }
+
+
+        table.scalebar_container td.min_value {
+            width: 3%;
+            text-align: right;
+            padding-right: 3px;
+            vertical-align: middle;
+        }
+
+
+        table.scalebar_container td.max_value {
+            width: 3%;
+            text-align: left;
+            padding-left: 3px;
+            padding-right: 0px;
+            vertical-align: middle;
+        }
+
+
+        table.scalebar_container td.content {
+            width: 94%;
+        }
+
+
+        table.scalebar_container td.max_value.dgt1,
+        table.scalebar_container td.min_value.dgt1 {
+            min-width: 11px;
+        }
+
+        table.scalebar_container td.max_value.dgt2,
+        table.scalebar_container td.min_value.dgt2 {
+            min-width: 20px;
+        }
+
+        table.scalebar_container td.max_value.dgt3,
+        table.scalebar_container td.min_value.dgt3 {
+            min-width: 26px;
+        }
+
+        table.scalebar_container td.max_value.dgt4,
+        table.scalebar_container td.min_value.dgt4 {
+            min-width: 34px;
+        }
+
+    .truncate {
+        position: relative;
+        color: black;
+        font-weight: bold;
+        /*cursor: pointer;*/
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+        .truncate > span.alergy-content {
+            font-weight: normal !important;
+            font-size: 12px;
+        }
+
+        .truncate > span.alergy-content-head {
+            font-weight: 700 !important;
+            font-size: 12px;
+        }
+
+</style>
+
+<div id="Raisoft" class="portlet light" busy-if="$ctrl.loading" ng-class="{ 'div-disabled': $ctrl.mode=='new' }">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="fontStealGreen">{{ $ctrl.maintitle }}</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <div class="inline-block" style="vertical-align: top; margin: 4px 0px; line-height: 26px;">
+                <a class="btn green-haze btn-outline btn-circle btn-sm icon-wrapper" ng-class="$ctrl.enabledActionBtn ? '' : 'disable-links disabled'" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
+                    Actions
+                    <i class="fa fa-angle-down"></i>
+                </a>
+                <ul class="dropdown-menu pull-right">
+                    <li ng-repeat="model in $ctrl.action" ng-class="model.showBtn == true ? '' : 'disabled'">
+                        <a ng-click="$ctrl.handleAction(model.action)" ng-class="model.showBtn == true ? '' : 'disable-links'">{{ $ctrl.L(model.action) }}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-if="$ctrl.raisoft">
+            <div class="row" style="padding-bottom:10px">
+                <div class="col-md-12">
+                    <span class="fa fa-sticky-note-o" style="padding-right:5px"></span>
+                    <span class="otherText">Assessment:</span>
+                    <span class="bold ng-binding">{{$ctrl.raisoftPerson.assessment.description}}</span><br />
+                    <span class="fa fa-calendar" style="padding-right:5px"></span>
+                    <span class="otherText">Assessment Date:</span>
+                    <span class="bold ng-binding">{{$ctrl.raisoftPerson.assessment.assessmentDate | dateFormat}}</span><br />
+                    <span class="fa fa-lock" style="padding-right:5px"></span>
+                    <span class="otherText">Assessment Locked Date:</span>
+                    <span class="bold ng-binding">{{$ctrl.raisoftPerson.assessment.lockDate | dateFormat}}</span><br />
+                </div>
+
+            </div>
+            <hr style="margin:15px 0" />
+            <div>
+                <a ng-click="$ctrl.scalesopen = !$ctrl.scalesopen" title="Show Scales" class="fontStealGreen">
+                    <i ng-show="!$ctrl.scalesopen"class="glyphicon glyphicon-chevron-right"></i>
+                    <i ng-show="$ctrl.scalesopen" class="glyphicon glyphicon-chevron-down"></i>
+                </a>
+                <span class="bold fontStealGreen">Scales</span>
+            </div>
+            <hr style="margin:15px 0" />
+            <div ng-if="$ctrl.scalesopen">
+                <div ng-repeat="data in $ctrl.scales">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <span class="otherText bold">{{data.name}}</span>
+                        </div>
+                        <div class="col-md-12 col-sm-12">
+                            <div class="col-md-7 col-sm-7" style="padding:0px">
+                                <span class="otherText bold">{{data.result.valuesDescription}}</span>
+                            </div>
+
+                            <div class="col-md-4 col-sm-4">
+                                <div class="otherText" uib-popover="Min: {{data.result.min}} - Max: {{data.result.max}}" popover-placement="bottom" popover-trigger="'mouseenter'">
+                                    <table class="scalebar_container" ng-if="$ctrl.calculatePercent(data.result.min,data.result.Max,data.result.value) != 'empty'">
+                                        <tr>
+                                            <td class="min_value dgt3" ng-style="{color: $ctrl.calculatePercent(data.result.min,data.result.max,data.result.value) == 'negative' ? '#bf1f1f' : '#333333' }">
+                                                {{data.result.min}}
+                                            </td>
+                                            <td>
+                                                <div class="truncate" style="width: 150px;">
+
+
+                                                    <div class="rai_scalebar none" style="height: 20px; position: relative; overflow: visible;" ng-if="$ctrl.calculatePercent(data.result.min,data.result.max,data.result.value) != 'negative'">
+                                                        <div class="bar none" ng-style="{width: $ctrl.calculatePercent(data.result.min,data.result.max,data.result.value) }">&nbsp;</div>
+                                                    </div>
+                                                    <div class="rai_scalebar none" style="height: 20px; position: relative; overflow: visible;" disabled ng-disabled="true" ng-if="$ctrl.calculatePercent(data.result.min,data.result.max,data.result.value) == 'negative'">
+                                                        <div class="bar none" ng-style="{width: $ctrl.calculatePercent(data.result.min,data.result.max,data.result.value) }">&nbsp;</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="max_value dgt3" style="text-align:left;" ng-style="{color: $ctrl.calculatePercent(data.result.min,data.result.max,data.result.value) == 'negative' ? '#bf1f1f' : '#333333' }">
+                                                {{data.result.max}}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <hr style="margin:15px 0" />
+                </div>
+            </div>
+            <div>
+                <a ng-click="$ctrl.capsopen = !$ctrl.capsopen" title="Show Caps" class="fontStealGreen">
+                    <i ng-show="!$ctrl.capsopen" class="glyphicon glyphicon-chevron-right"></i>
+                    <i ng-show="$ctrl.capsopen" class="glyphicon glyphicon-chevron-down"></i>
+                </a>
+                <span class="bold fontStealGreen">Caps</span>
+            </div>
+            <hr style="margin:15px 0" />
+            <div ng-if="$ctrl.capsopen">
+                <div ng-repeat="data in $ctrl.caps">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <span class=" fa fa-exclamation-circle text-danger"></span>
+                            <span class="otherText bold">{{data.description}}</span>
+                        </div>
+                        <div class="col-md-12 col-sm-12">
+                            <span class="otherText bold">{{data.triggered}}</span>
+                        </div>
+                    </div>
+                    <hr style="margin:15px 0" />
+                </div>
+            </div>
+
+            <div>
+                <a ng-click="$ctrl.rugopen = !$ctrl.rugopen" title="Show Rug" class="fontStealGreen">
+                    <i ng-show="!$ctrl.rugopen" class="glyphicon glyphicon-chevron-right"></i>
+                    <i ng-show="$ctrl.rugopen" class="glyphicon glyphicon-chevron-down"></i>
+                </a>
+                <span class="bold fontStealGreen">Rug</span>
+            </div>
+            <hr style="margin:15px 0" />
+            <div ng-if="$ctrl.rugopen">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <span class="otherText bold">{{$ctrl.rug.group_longname}}</span>
+                    </div>
+                    <div class="col-md-12 col-sm-12">
+                        <span class="otherText bold">{{$ctrl.rug.group}} - {{$ctrl.rug.group_desc}}</span>
+                    </div>
+                </div>
+                <hr style="margin:15px 0" />
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <span class="otherText bold">{{$ctrl.rug.cmi_longname}}</span>
+                    </div>
+                    <div class="col-md-12 col-sm-12">
+                        <span class="otherText bold">{{$ctrl.rug.cmi}}</span>
+                    </div>
+                </div>
+                <hr style="margin:15px 0" />
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <span class="otherText bold">{{$ctrl.rug.maingroup_longname}}</span>
+                    </div>
+                    <div class="col-md-12 col-sm-12">
+                        <span class="otherText bold">{{$ctrl.rug.maingroup_value}} - {{$ctrl.rug.maingroup}}</span>
+                    </div>
+                </div>
+                <hr style="margin:15px 0" />
+            </div>
+
+        </div>
+
+        <div class="row" ng-if="!$ctrl.raisoft">
+            <div class="col-md-12  col-sm-12">
+                <span ng-if="$ctrl.filter == 'active'"></span>
+                <span>No records found!</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+

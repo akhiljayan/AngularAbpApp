@@ -1,0 +1,505 @@
+﻿@model ReferralDto
+@using IRMS.Entities.Dto;
+<div ng-controller="tenant.views.irms.therapyView as therapy">
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div busy-if="vm.loading">
+            <!-- Occupational Therapy Section -->
+            <div id="OccupationalTherapy" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("OccupationalTherapy")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+
+                    <!-- Self Care/Wheelchair Mobility Sub-Section -->
+                    <div id="SelfCareWheelchairMobility">
+                        <div class="caption">
+                            <h4 class="bold">@L("SelfCareWheelchairMobility")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.otList.grooming }}</div>
+                                    <label class="control-label view-label" for="grooming">@L("PersonalGroomingHygiene")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.otList.showering }}</div>
+                                    <label class="control-label view-label" for="showering">@L("Showering")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.otList.toileting }}</div>
+                                    <label class="control-label view-label" for="toileting">@L("Toileting")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.otList.feeding }}</div>
+                                    <label class="control-label view-label" for="toileting">@L("Feeding")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.otList.ubDressing }}</div>
+                                    <label class="control-label view-label" for="ubDressing">@L("UBDressing")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.otList.lbDressing }}</div>
+                                    <label class="control-label view-label" for="lbDressing">@L("LBDressing")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.otList.wheelchairMobility }}</div>
+                                    <label class="control-label view-label" for="wheelchairMobility">@L("WheelchairMobility")</label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.otList.patientFunctioning }}</div>
+                                    <label class="control-label view-label" for="patientFunctioning">@L("PatientFunctioning")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.otList.careGiver }}</div>
+                                    <label class="control-label view-label" for="careGiver">@L("CaregiverTrainingDone")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.otList.otherRemarks }}</div>
+                                    <label class="control-label view-label" for="otherRemarks">@L("OtherRemarks")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Functional Independence Measure Sub-Section -->
+                    <div id="FunctionalIndependenceMeasure">
+                        <div class="caption">
+                            <h4 class="bold">@L("FunctionalIndependenceMeasure")</h4>
+                        </div>
+ 
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.otList.admScoreFIN }}</div>
+                                    <label class="control-label view-label" for="admScoreFIN">@L("AdmissionScore")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.otList.disScoreFIN }}</div>
+                                    <label class="control-label view-label" for="disScoreFIN">@L("DischargeScore")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modified Barthel Index Sub-Section -->
+                    <div id="ModifiedBarthelIndex">
+                        <div class="caption">
+                            <h4 class="bold">@L("ModifiedBarthelIndex")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.otList.admScoreMBI }}</div>
+                                    <label class="control-label view-label" for="admScoreMBI">@L("AdmissionScore")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.otList.dischargeScoreMBI }}</div>
+                                    <label class="control-label view-label" for="dischargeScoreMBI">@L("DischargeScore")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Physiotherapy Section -->
+            <div id="Physiotherapy" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("Physiotherapy")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+
+                    <!-- Mobility Sub-Section -->
+                    <div id="Mobility">
+                        <div class="caption">
+                            <h4 class="bold">@L("Mobility")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.bedMobilityStatus }}</div>
+                                    <label class="control-label view-label" for="bedMobilityStatus">@L("BedMobilityStatus")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.bedMobility }}</div>
+                                    <label class="control-label view-label" for="bedMobility">@L("BedMobility")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.ambulation }}</div>
+                                    <label class="control-label view-label" for="ambulation">@L("Ambulation")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.walkingAid }}</div>
+                                    <label class="control-label view-label" for="walkingAid">@L("WalkingAid")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.walkingAidOthers }}</div>
+                                    <label class="control-label view-label" for="walkingAidOthers">@L("OtherWalkingAid")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.transfer }}</div>
+                                    <label class="control-label view-label" for="transfer">@L("Transfer")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Standing Balance Sub-Section -->
+                    <div id="StandingBalance">
+                        <div class="caption">
+                            <h4 class="bold">@L("StandingBalance")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.staticStanding }}</div>
+                                    <label class="control-label view-label" for="staticStanding">@L("StaticStanding")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.dynamicStanding }}</div>
+                                    <label class="control-label view-label" for="dynamicStanding">@L("DynamicStanding")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sitting Balance Sub-Section -->
+                    <div id="SittingBalance">
+                        <div class="caption">
+                            <h4 class="bold">@L("SittingBalance")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.staticSitting }}</div>
+                                    <label class="control-label view-label" for="staticSitting">@L("StaticSitting")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.dynamicSittingDirection }}</div>
+                                    <label class="control-label view-label" for="dynamicSittingDirection">@L("DynamicSitting")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.exerciseTolerance }}</div>
+                                    <label class="control-label view-label" for="exerciseTolerance">@L("ExerciseTolerance")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Muscle Strength Sub-Section -->
+                    <div id="MuscleStrength">
+                        <div class="caption">
+                            <h4 class="bold">@L("MuscleStrength")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.rightArms }}</div>
+                                    <label class="control-label view-label" for="rightArms">@L("RightArms")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.rightLegs }}</div>
+                                    <label class="control-label view-label" for="rightLegs">@L("RightLegs")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.leftArms }}</div>
+                                    <label class="control-label view-label" for="leftArms">@L("LeftArms")</label>
+                                </div>
+
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.leftLegs }}</div>
+                                    <label class="control-label view-label" for="leftLegs">@L("LeftLegs")</label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 20%;">@L("SpecialPrecautions")</th>
+                                            <th style="width: 20%;">@L("OtherSpecialPrecautions")</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in therapy.ptSpecialPrecautionList">
+                                            <td>{{ item.specialPrecaution }}</td>
+                                            <td>{{ item.otherSpecialPrecaution }}</td>
+                                        </tr>
+                                        <tr ng-show="therapy.ptSpecialPrecautionList.length == 0">
+                                            <td colspan="2">
+                                                @L("NoRecordsFound")
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.careGiver }}</div>
+                                    <label class="control-label view-label" for="careGiver">@L("CaregiverTrainingDone")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.otherRemarks }}</div>
+                                    <label class="control-label view-label" for="otherRemarks">@L("OtherRemarks")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Functional Independence Measure Sub-Section -->
+                    <div id="FunctionalIndependenceMeasure">
+                        <div class="caption">
+                            <h4 class="bold">@L("FunctionalIndependenceMeasure")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.admissionScoreFIM }}</div>
+                                    <label class="control-label view-label" for="admissionScoreFIM">@L("AdmissionScore")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.dischargeScoreFIM }}</div>
+                                    <label class="control-label view-label" for="dischargeScoreFIM">@L("DischargeScore")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modified Barthel Index Sub-Section -->
+                    <div id="ModifiedBarthelIndex">
+                        <div class="caption">
+                            <h4 class="bold">@L("ModifiedBarthelIndex")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.admissionScoreMBI }}</div>
+                                    <label class="control-label view-label" for="admissionScoreMBI">@L("AdmissionScore")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.ptList.dischargeScoreMBI }}</div>
+                                    <label class="control-label view-label" for="dischargeScoreMBI">@L("DischargeScore")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Speech Therapy Section -->
+            <div id="SpeechTherapy" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("SpeechTherapy")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+
+                    <!-- Feeding Status Sub-Section -->
+                    <div id="FeedingStatus">
+                        <div class="caption">
+                            <h4 class="bold">@L("FeedingStatus")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 20%;">@L("FeedingStatus")</th>
+                                            <th style="width: 20%;">@L("DietTexture")</th>
+                                            <th style="width: 20%;">@L("FluidConsistency")</th>
+                                            <th style="width: 20%;">@L("OtherFluidConsistency")</th>
+                                            <th style="width: 20%;">@L("OtherCompensatory")</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in therapy.stFeedingStatusList">
+                                            <td>{{ item.feedingStatus }}</td>
+                                            <td>{{ item.dietTextureSpecify }}</td>
+                                            <td>{{ item.fluidConsistency }}</td>
+                                            <td>{{ item.otherFluidConsistency }}</td>
+                                            <td>{{ item.compensatoryOthers }}</td>
+                                        </tr>
+                                        <tr ng-show="therapy.stFeedingStatusList.length == 0">
+                                            <td colspan="5">
+                                                @L("NoRecordsFound")
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Speech and Language Function Sub-Section -->
+                    <div id="SpeechLanguageFunction">
+                        <div class="caption">
+                            <h4 class="bold">@L("SpeechLanguageFunction")</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.stList.comprehension }}</div>
+                                    <label class="control-label view-label" for="comprehension">@L("Comprehension")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.stList.verbalExpression }}</div>
+                                    <label class="control-label view-label" for="verbalExpression">@L("VerbalExpression")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.stList.speech }}</div>
+                                    <label class="control-label view-label" for="speech">@L("Speech")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.stList.voice }}</div>
+                                    <label class="control-label view-label" for="voice">@L("Voice")</label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ therapy.stList.otherRemarks }}</div>
+                                    <label class="control-label view-label" for="otherRemarks">@L("OtherRemarks")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

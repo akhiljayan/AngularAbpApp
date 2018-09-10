@@ -1,0 +1,70 @@
+﻿<div ng-if="vm.mode!='new'">
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-1">
+        <div class="profileImage">
+            <img id="ProfilePicture" alt="{{ vm.personModel.fullName }}" class="img-circle pull-right" ng-src="{{ vm.appPath }}Person/GetPersonPictureById?personPictureName={{ vm.personModel.pictureId }}&t=Clock.Now.Ticks.ToString()"
+                 style="width: 73px; height: 73px" ng-click="vm.permissions.edit && vm.changePersonProfileImage();" />
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div>
+            <span class="bodyContext bold">
+                {{ vm.personModel.fullName }}
+                <span class="bodyContext" ng-if="vm.personModel.registrationDocumentNumber">({{ vm.personModel.registrationDocumentNumber }})</span>
+            </span>
+            <span class="bodyContext" ng-if="vm.personModel.gender.description.toLowerCase()=='male'">{{ vm.personModel.gender ? ", " : "" }}M</span>
+            <span class="bodyContext" ng-if="vm.personModel.gender.description.toLowerCase()=='female'">{{ vm.personModel.gender ? ", " : "" }}F</span>
+            <span class="bodyContext" ng-if="vm.age != '-'">{{ vm.age ? ", " : "" }}{{ vm.age }}</span>
+        </div>
+        <!-- Centre Base Services / Home Based Service -->
+        <div ng-if="vm.personServiceTypeList">
+            <span class="bodyContext" ng-repeat="item in vm.personServiceTypeList.referralServiceTypes">{{ item.serviceType.code }}{{ $last ? '' : ', ' }}</span>
+        </div>
+        <div ng-if="vm.personServiceTypeList">
+            <span class="bodyContext">
+                {{ vm.personServiceTypeList.nricAddress.fullAddress }}
+                {{ vm.personServiceTypeList.nricAddress.country.description }} {{ vm.personServiceTypeList.nricAddress.postalCode }}
+            </span>
+        </div>
+        <!-- TODO: Residential ILTC services -->
+        <div ng-transclude>
+        </div>
+    </div>
+    <!-- To Be Discuss: Add Vertical Scroll Bar -->
+    <div class="col-md-6" ng-if="vm.allergies.length">
+        <div class="red" ng-if="vm.personModel.drugAllergies.length">
+            <span class="bold">@L("DrugAllergies"): </span>
+            <span class="bodyContext" ng-repeat="drug in vm.personModel.drugAllergies">{{ drug.name }}{{ $last ? '' : ', ' }}</span>
+        </div>
+        <div class="blue" ng-if="vm.personModel.adrAllergies.length">
+            <span class="bold">@L("DrugAllergiesWithADR"): </span>
+            <span class="bodyContext" ng-repeat="adr in vm.personModel.adrAllergies">{{ adr.name }}{{ $last ? '' : ', ' }}</span>
+        </div>
+        <div ng-if="vm.personModel.nonDrugAllergies.length">
+            <span class="bold">@L("NonDrugAllergies"): </span>
+            <span class="bodyContext" ng-repeat="nondrug in vm.personModel.nonDrugAllergies">{{ nondrug.name }}{{ $last ? '' : ', ' }}</span>
+        </div>
+    </div>
+</div>
+
+<div ng-if="vm.mode=='new'">
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-1">
+        <div class="profileImage">
+            <img ng-if="true" class="img-circle pull-right" ng-src="{{ vm.appPath }}Common/Images/default-profile-picture.png"
+                 style="width: 73px; height: 73px" />
+        </div>
+    </div>
+    <div class="col-md-10">
+        <span class="bodyContext">
+            Upload a person photo will help<br />
+            identify a person
+        </span>
+        @*--- Remove this will affect the design ---*@
+        <div>
+            &nbsp;
+        </div>
+    </div>
+</div>

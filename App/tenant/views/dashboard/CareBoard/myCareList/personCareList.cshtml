@@ -1,0 +1,276 @@
+﻿<style type="text/css">
+    .portlet.light.person-care-list {
+        padding: 12px 0px 15px 0px !important;
+    }
+
+    .portlet-title.main-title {
+        padding: 0px 20px 0px 20px !important;
+        margin-bottom: 0px !important;
+    }
+
+    .person-care-portlet-body {
+        padding: 0px 20px 0px 20px !important;
+    }
+
+    .portlet-title.sub-title {
+        padding: 0px 20px 0px 20px !important;
+        background-color: #f0f0f0 !important;
+        margin: 0px;
+    }
+
+    .caption-gray {
+        color: #a4a4a4 !important;
+        font-size: 16px !important;
+    }
+
+    .caption-green-sub {
+        color: #00bfb5 !important;
+        font-size: 16px !important;
+    }
+
+    .person-care-aircrd {
+        margin: -2px -20px 0px -20px !important;
+    }
+
+        .person-care-aircrd.selected-person {
+            background-color: #ccf2f0;
+            border-left: 2px solid #17c5bc;
+        }
+
+    .person-care-content {
+        padding: 15px 20px 15px 20px;
+    }
+
+    .ps-hr-full {
+        margin: 0;
+        margin-left: -8px;
+        margin-right: 0px;
+        width: 103%;
+    }
+
+    .vertical-top {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+
+    select.pagination-page-sizes {
+        padding: 0px;
+        height: 22px !important;
+    }
+
+    .selected-hosp-size{
+        font-size : 18px !important;
+    }
+</style>
+<div>
+
+    <div id="person-list" class="portlet light tasks-widget person-care-list" busy-if="vm.loading">
+        <div class="portlet-title margin-bottom-0  main-title">
+            <div class="caption">
+                <span class="caption-subject"><span ng-bind-html="vm.icon"></span> &nbsp;<span>{{vm.heading}}</span><span class="badge">{{vm.personTotal}}</span></span>
+            </div>
+            <div class="actions dropdown inputs">
+                <div class="input-small-new inline-block">
+                    <form action="" class="search-form search-style-class care-list" title="search from {{vm.heading}}">
+                        <div class="form-group has-feedback input-inline search-form-group" title="search from {{vm.heading}}">
+                            <label for="search" class="sr-only">@L("Search")</label>
+                            <input type="text" ng-model="vm.filter" title="search from {{vm.heading}}" enter-key="vm.loadData()" class="care-list form-control form-control-solid search-input input-circle font-13-main clearable" placeholder="search from {{vm.heading}}...">
+                            <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="vm.clearFilter()" title="search from {{vm.heading}}"></a>
+                            <i class="material-icons form-control-feedback searchIcon" title="search from {{vm.heading}}">@L("search")</i>
+                        </div>
+                    </form>
+                </div>
+                <a ng-click="vm.personDetailOpen = !vm.personDetailOpen" title="Show associated Service types and Status" class="icon-wrapper">
+                    <i ng-show="!vm.personDetailOpen" class="material-icons custom-icon">menu</i>
+                    <i ng-show="vm.personDetailOpen" class="material-icons custom-icon">view_headline</i>
+                </a>
+                <a ng-click="vm.create()" ng-if="vm.permissions.personCreate && vm.boardfilter == vm.Allfilters.mainFilters.AllPersons" title="Add a new Person" class="icon-wrapper">
+                    <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                </a>
+                <a class="icon-wrapper" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                    <i class="material-icons custom-icon">more_vert</i>
+                </a>
+                <ul class="dropdown-menu pull-right">
+                    <li ng-repeat="filter in vm.mainFilters.values" ng-if="filter.permission">
+                        <a href="javascript:;" class="bold" ng-click="vm.changeMainFilter(filter.id)">
+                            <span ng-bind-html="filter.icon"></span>
+                            <span>{{filter.description}}</span>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li ng-repeat="filter in vm.personFilters.values" ng-if="filter.permission">
+                        <a href="javascript:;" class="bold" ng-click="vm.changePersonView(filter.id)">
+                            <span ng-bind-html="filter.icon"></span>
+                            <span>{{filter.description}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        @*<div class="portlet-title sub-title">
+                <div class="caption">
+                    <span class="caption-green-sub">{{vm.heading}} ({{vm.personTotal}})</span>
+                </div>
+                <div class="actions dropdown inputs">
+                    <div class="input-small-new inline-block">
+                        <form action="" class="search-form search-style-class">
+                            <div class="form-group has-feedback input-inline search-form-group">
+                                <label for="search" class="sr-only">@L("Search")</label>
+                                <input type="text" ng-model="vm.filter" enter-key="vm.loadData()" class="form-control form-control-solid search-input input-circle font-13-main clearable" placeholder="search keywords...">
+                                <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="vm.clearFilter()"></a>
+                                <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                            </div>
+                        </form>
+                    </div>
+                    <a ng-click="vm.personDetailOpen = !vm.personDetailOpen" title="Show associated Service types and Status" class="icon-wrapper">
+                        <i ng-show="!vm.personDetailOpen" class="material-icons custom-icon">menu</i>
+                        <i ng-show="vm.personDetailOpen" class="material-icons custom-icon">view_headline</i>
+                    </a>
+                    <a ng-click="vm.create()" ng-if="vm.permissions.personCreate && vm.boardfilter == vm.Allfilters.mainFilters.AllPersons" title="Add a new Person" class="icon-wrapper" >
+                        <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                    </a>
+                    <a class="icon-wrapper" href="javascript:;" title="Filter" data-toggle="dropdown" data-hover="dropdown" data-close-others="true"  ng-if="vm.boardfilter == vm.Allfilters.mainFilters.AllPersons">
+                        <i class="material-icons custom-icon">more_vert</i>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                        <li>
+                            <a href="javascript:;" class="bold" ng-click="vm.changePersonView(0)">@L("All")</a>
+                        </li>
+                        <li class="divider"> </li>
+                        <li>
+                            <a href="javascript:;" class="bold" ng-click="vm.changePersonView(1)">@L("Active")</a>
+                        </li>
+                        <li>
+                            <a href="javascript:;" class="bold" ng-click="vm.changePersonView(2)">@L("Inactive")</a>
+                        </li>
+                        <li>
+                            <a href="javascript:;" class="bold" ng-click="vm.changePersonView(3)">@L("Admitted")</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>*@
+        <div class="portlet-body person-care-portlet-body">
+            <div class="mt-comments" ng-if="vm.persons.length">
+                <div class="mt-comment person-care-aircrd" ng-repeat="person in vm.persons" ng-click="vm.personSelected(person.personId) && vm.viewTimeLine(person.personId, person.fullName,person.isPatient)" ng-class="{'selected-person' : vm.selectedPerson == person.personId}">
+                    <div class="row person-care-content">
+                        <div class="col-xs-2 col-sm-2  cursor-pointer"  ng-click="vm.viewPatient(person.personId, person.isPatient)&&$event.stopPropagation()">
+                            <img class="img-responsive img-circle" ng-if="person.pictureId" ng-src="{{ vm.appPath }}Person/GetPersonPictureById?personPictureName={{ person.pictureId }}&t=Clock.Now.Ticks.ToString()" />
+                            <img class="img-responsive img-circle" ng-if="!person.pictureId" ng-src="{{vm.appPath}}Common/Images/default-profile-picture.png" />
+                        </div>
+
+
+                        <div class="col-xs-10 col-sm-10" style="padding-right:0px">
+                            <div class="col-md-12" style="padding:0px 0px 0px 0px">
+                                <div class="col-md-8 nopadding cursor-pointer">
+                                    <a class="no-decoration" ng-click="vm.viewPatient(person.personId, person.isPatient)&&$event.stopPropagation()" title="View '{{ person.fullName }}' profile"><span class="bold">{{ person.fullName }}</span>&nbsp;<span class="bodyContext" ng-if="person.registrationDocumentNumber">({{ person.registrationDocumentNumber }})</span></a>
+                                </div>
+                                <div class="col-md-4 nopadding">
+                                    <div class="person-option">
+                                        <span class="person-ismember vertical-top" style="width: 25px;text-align: center;">
+                                            <i class="fa fa-address-card" style="top: -3px; color:#00bfb5;" title="{{person.fullName}} is an active member" ng-if="person.isMember === true"></i>
+                                            <i class="fa fa-address-card" style="top: -3px;" title="Membership of {{person.fullName}} has been terminated" ng-if="person.isMember === false"></i>
+                                        </span>
+
+                                        <span class="person-carelist vertical-top" ng-if="person.isHospitalized && vm.boardfilter != vm.Allfilters.mainFilters.AllPersons" ng-click="vm.loadViewHospitalization(person.id); $event.stopPropagation();" style="cursor:pointer">
+                                            <i class="fa fa-hospital-o bold" ng-class="{'selected-hosp-size': vm.openHosp.indexOf(person.id) != -1}" style="top: -3px;" title="{{person.fullName}} is Hospitalized" ng-if="person.isHospitalized && vm.boardfilter != vm.Allfilters.mainFilters.AllPersons"></i>
+                                        </span>
+
+                                        <span class="person-ispatient" ng-if="person.isPatient">
+                                            <span ng-if="person.isPatient && !person.isAdmitted" style="font-size:17px" class="ps-icon-care"></span>
+                                            <span ng-if="person.isPatient && person.isAdmitted" style="color: #00bfb5; font-size:17px" class="ps-icon-care"></span>
+                                        </span>
+
+                                        <span class="person-carelist vertical-top" ng-if="person.isInCareList && vm.boardfilter == vm.Allfilters.mainFilters.AllPersons">
+                                            <i class="fa fa-star" style="top: -3px;" title="{{person.fullName}} is in your care list" ng-if="person.isInCareList && vm.boardfilter == vm.Allfilters.mainFilters.AllPersons"></i>
+                                        </span>
+
+                                        <span class="person-watchlist vertical-top" ng-if="person.isWatched">
+                                            <i class="fa fa-eye" style="top: -3px;" title="{{person.fullName}} is in your watch list" ng-if="person.isWatched"></i>
+                                        </span>
+
+                                        <div class="btn-group" uib-dropdown is-open="status.isopen">
+                                            <a class="person-bookmark-icon" ng-if="person.isPatient" uib-dropdown-toggle ng-click="$event.stopPropagation();" style="box-shadow: none;">
+                                                <i class="fa fa-bookmark" style="font-size:20px"></i>
+                                            </a>
+                                            <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                                                <li ng-if="person.isNotWatched"><a ng-click="vm.watch(person)"><i class="fa fa-eye"></i> Add to watch list</a></li>
+                                                <li ng-if="person.isWatched"><a ng-click="vm.unwatch(person)"><i class="fa fa-eye-slash"></i> Remove from watch list</a></li>
+                                                <li ng-if="!person.isInCareList"><a ng-click="vm.addToCareList(person)"><i class="fa fa-star"></i> Add to care list</a></li>
+                                                <li ng-if="person.isInCareList"><a ng-click="vm.removeFromCareList(person)"><i class="fa fa-star-o"></i> Remove from care list</a></li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" style="padding:10px 0px 10px 0px; cursor:pointer" ng-click="vm.viewTimeLine(person.personId, person.fullName,person.isPatient)">
+                                <div class="col-lg-4 col-md-8 col-sm-8 icon flex-center nopadding-left  cursor-pointer" ng-if="!(vm.view && vm.view == vm.Allfilters.personRelatedFilters.HospitalizationList)">
+                                    <i class="material-icons" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<div class='otherText'>Home Phone</div>" ng-popover>phone</i>
+                                    <span class="otherText" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<div class='otherText'>Home Phone</div>" ng-popover>{{person.homePhone ? person.homePhone : "-"}}</span>
+                                </div>
+                                <div class="col-lg-4 col-md-8 col-sm-8 icon flex-center no-padding-left  cursor-pointer" ng-if="!(vm.view && vm.view == vm.Allfilters.personRelatedFilters.HospitalizationList)">
+                                    <i class="material-icons" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<div class='otherText'>Mobile Phone</div>" ng-popover>phone_iphone</i>
+                                    <span class="otherText" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<div class='otherText'>Mobile Phone</div>" ng-popover>{{person.mobilePhone ? person.mobilePhone : "-"}}</span>
+                                </div>
+                                <div ng-repeat="hosp in person.latestHospitalizations" ng-if="$index == 0 && vm.view && vm.view == vm.Allfilters.personRelatedFilters.HospitalizationList">
+                                    <div class="font-13-main margin-bottom-10"> Hospitalized on {{hosp.from | date : "dd-MMM-y hh:mm a" }} at {{hosp.hospital}}</div>
+                                    <div class="font-13-main" ng-if="hosp.reasonForHospitalization">
+                                         <span ng-if="hosp.reasonForHospitalization">{{hosp.reasonForHospitalization == 'Others' || hosp.reasonForHospitalization == 'Other' ? hosp.otherReasonForHospitalization : hosp.reasonForHospitalization }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="well well-sm margin-12 referral-service-well font-13-main  cursor-pointer" ng-show="person.userServiceTypeList.length > 0 && vm.personDetailOpen" style="display: flex;flex-wrap: wrap;margin-top:0px"  ng-click="vm.viewPatient(person.personId, person.isPatient)">
+                        <div class="otherText services service bold circle" ng-class="{'fontStealGreen': service.status == vm.serviceTypeStatus.Admitted}" ng-repeat="service in person.userServiceTypeList" style="margin:5px 2px;border: 1px solid #9eacb4;">
+                            {{service.serviceTypeName}}
+                        </div>
+                    </div>
+                    <div class="well well-sm margin-12 referral-service-well font-13-main  cursor-pointer" ng-if="person.isHospitalized && vm.boardfilter != vm.Allfilters.mainFilters.AllPersons" ng-show="vm.openHosp.indexOf(person.id) != -1" style="display: flex;flex-wrap: wrap;margin-top:0px"  ng-click="vm.viewPatient(person.personId, person.isPatient)">
+                        <div call="col-md-12 nopadding" ng-repeat="hosp in person.latestHospitalizations" ng-if="$index == 0">
+                            <div class="hospital">Hosptalized at : <span class="bold">{{hosp.hospital}}</span></div>
+                            <div class="hospital-on">Hosptalized on : <span class="bold">{{hosp.from | dateTimeFormat}}</span></div>
+                            <div  ng-if="hosp.reasonForHospitalization" class="hospital-Rason">Reason : 
+                                <span class="bold" ng-if="hosp.reasonForHospitalization">{{hosp.reasonForHospitalization == 'Others' || hosp.reasonForHospitalization == 'Other' ? hosp.otherReasonForHospitalization : hosp.reasonForHospitalization }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="ps-hr-full" />
+                </div>
+            </div>
+            <div style="padding-top:30px" ng-if="!vm.persons.length && !vm.loadingData">
+                <span>No records found!</span>
+            </div>
+            <div class="seeMore clearfix text-center  margin-top-20">
+                @*<a href="javascript:;" ng-click="vm.loadMore()">@L("SeeMore")</a>*@
+                <div class="row" style="padding-top: 5px;">
+                    <div class="col-md-12">
+                        <div class="col-md-4 pull-left nopadding-left">
+                            <div class="records pull-left" style="text-align: left;width: 130%;">
+                                <span>Records: </span><select class="pagination-page-sizes" ng-model="vm.pageSize" ng-options="pageSizes as pageSizes for pageSizes in vm.pageSizes" ng-change="vm.reset()"></select> <br />
+                                <span class="pull-left" style="padding-top: 10px;text-align:left; width:130%"> Showing {{ vm.recordFrom }} to {{ vm.recordTo }} of {{ vm.personTotal }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-8 nopadding-right">
+                            <div class="pull-right no-padding nopadding">
+                                <ul uib-pagination 
+                                    class="pagination-sm" 
+                                    style="margin-top: 0px;" 
+                                    total-items="vm.personTotal" 
+                                    items-per-page="vm.pageSize" 
+                                    previous-text="&lsaquo;" 
+                                    next-text="&rsaquo;" 
+                                    boundary-link-numbers="true" 
+                                    max-size="3" 
+                                    ng-model="vm.currentPage" 
+                                    ng-change="vm.pageChanged()"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

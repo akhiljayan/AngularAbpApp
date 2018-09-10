@@ -1,0 +1,102 @@
+﻿@model CreateOrUpdateFamilyMemberInput
+
+@using Pulsesync.IngoTPCC.Application.FamilyMember.Dto
+
+<div id="General" class="bioData portlet light" ng-controller="tenant.views.familyMembers.generalView as generalData">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("General")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a class="icon-wrapper" ng-if="generalData.mode.toLowerCase()=='view' && !vm.isNew && vm.permissions.edit" ng-click="generalData.edit()">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools">
+            <a class="remove" ng-if="generalData.mode.toLowerCase()=='edit' && !vm.isNew" ng-click="generalData.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="generalData.mode">
+                @*edit mode*@
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+                        @{
+                            var attributes = new Dictionary<string, object>();
+                            attributes.Add("role", "form");
+                            attributes.Add("id", "generalData.generalDataForm");
+                            attributes.Add("name", "generalData.generalDataForm");
+                            attributes.Add("novalidate", "");
+                            attributes.Add("action", "#");
+                            attributes.Add("angular-validator-submit", "generalData.save()");
+                            attributes.Add("angular-validator", "");
+                        }
+                        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes)))
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                <person-ui-select person-id="generalData.familyMember.personId" uiselect-disabled="vm.personDisabled"></person-ui-select>
+
+                                <div class="form-group form-md-line-input">
+                                    <ui-select id="familyMemberId" ng-model="generalData.familyMember.familyMemberPersonId" theme="select2" title="Choose a Family Member"
+                                               on-select="generalData.onSelect($item, $model)">
+                                        <ui-select-match placeholder="Select Family Member">
+                                            {{$select.selected.description}}
+                                            <a class="fa fa-times" ng-click="$select.clear($event);"></a>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="m.id as m in  vm.familyMemberMaster | filter: { description: $select.search }">
+                                            <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <label for="familyMemberId" class="formlabel">@L("FamilyMemberOrCaregiver")</label>
+                                </div>
+
+                                @s.FieldFor(m => m.RelationshipId).AsDropDown().Attrs(new { ng_model = "generalData.familyMember.relationshipId" })
+
+                                @s.FieldFor(m => m.IsLegalNextOfKin).Label(@L("LegalNextOfKin")).Attrs(new { ng_model = "generalData.familyMember.isLegalNextOfKin" })
+                            }
+
+                            <div class="form-actions pull-right" ng-if="!vm.isNew">
+                                <button class="linkButton btn-small" type="submit">
+                                    <i class="material-icons font-18-main v-top">save</i> @L("Save")
+                                </button>
+                                <button class="linkButton btn-small" type="button" ng-click="generalData.close()">
+                                    <i class="material-icons font-18-main v-top">close</i> @L("Cancel")
+                                </button>
+
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @*view mode*@
+                <div ng-switch-when="view">
+                    <div class="col-md-12">
+                        <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.familyMember.referral">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{ vm.familyMember.referral.referralCode}}</div>
+                            <label class="control-label">@L("Referral")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.familyMember.person ? vm.familyMember.person.fullName : "-"}}</div>
+                            <label class="control-label">@L("Person")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.familyMember.familyMemberPerson ? vm.familyMember.familyMemberPerson.fullName : "-"}}</div>
+                            <label class="control-label">@L("FamilyMemberOrCaregiver")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.familyMember.relationship ? vm.familyMember.relationship.description : "-"}}</div>
+                            <label class="control-label">@L("Relationship")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.familyMember.isLegalNextOfKin)"></div>
+                            <label class="control-label">@L("LegalNextOfKin")</label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

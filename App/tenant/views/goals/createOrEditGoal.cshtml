@@ -1,0 +1,67 @@
+﻿@model CreateOrUpdateGoalInput
+
+@using Pulsesync.IngoTPCC.MasterLookup.Goals.Dto;
+
+<div class="portlet light" data-drag="true" id="masterDataTypeItemModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Goal")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancelGoal()"></a>
+        </div>
+    </div>
+
+    <div class="portlet-body form">
+        @{
+            var attributes = new Dictionary<string, object>();
+            attributes.Add("name", "goalFrom");
+            attributes.Add("novalidate", "");
+            attributes.Add("angular-validator-submit", "vm.save()");
+            attributes.Add("angular-validator", "");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body")))
+        {
+            using (var s = f.BeginSection())
+            {
+                <div class="portlet-body" style="display: block;">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.Code).Attrs(new { ng_model = "vm.goal.code" })
+                                @s.FieldFor(m => m.Description).Attrs(new { ng_model = "vm.goal.description" })
+
+                                <div class="form-group form-md-checkboxes">
+                                    <p class="margin-bottom-0">@L("IsStandard")</p>
+                                    <div class="md-checkbox-list">
+                                        <div class="md-checkbox">
+                                            <input id="isStandard" type="checkbox" class="form-control"
+                                                   ng-model="vm.goal.isStandard" />
+                                            <label for="isStandard">
+                                                <span class="inc"></span>
+                                                <span class="check"></span>
+                                                <span class="box"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <p class="bodyContext" ng-if="!vm.isCreateMode">
+                @Html.Raw(L("CreationInfo", "vm.goal.creatorUser.fullName", "vm.goal.creationTime | dateTimeFormat"))
+            </p>
+            <p class="bodyContext" ng-if="!vm.isCreateMode">
+                @Html.Raw(L("ModificationInfo", "vm.goal.lastModifierUser.fullName", "vm.goal.lastModificationTime | dateTimeFormat"))
+            </p>
+
+            <div class="form-actions noborder right">
+                <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="!vm.permissions.edit"><i class="material-icons ps-btn-material">check</i>Ok</button>
+                <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancelGoal()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+            </div>
+        }
+    </div>
+</div>

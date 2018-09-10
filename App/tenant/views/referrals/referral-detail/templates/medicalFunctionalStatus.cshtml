@@ -1,0 +1,97 @@
+﻿@model FunctionalStatusDto
+
+@using Pulsesync.IngoTPCC.Application.Referral.Dto;
+
+<div id="FunctionalStatus" class="functionalStatus portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("FunctionalStatus")</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="vm.mode">
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+                        @using (var f = Html.BeginSubForm())
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                @s.FieldFor(m => m.PreviousFeedingStatusId).AsDropDown().Attrs(new { ng_model = "vm.model.functionalStatus.previousFeedingStatusId", repeat = "vm.previousFeedingStatusMaster", name = "PreviousFeedingStatus" })
+                                @s.FieldFor(m => m.CurrentFeedingId).AsDropDown().Attrs(new { ng_model = "vm.model.functionalStatus.currentFeedingId", repeat = "vm.currentFeedingMaster", name = "CurrentFeeding" })
+                                @s.FieldFor(m => m.PreviousToiletingId).AsDropDown().Attrs(new { ng_model = "vm.model.functionalStatus.previousToiletingId", repeat = "vm.previousToiletingMaster", name = "PreviousToileting" })
+                                @s.FieldFor(m => m.CurrentToiletingId).AsDropDown().Attrs(new { ng_model = "vm.model.functionalStatus.currentToiletingId", repeat = "vm.currentToiletingMaster", name = "CurrentToileting" })
+                                @s.FieldFor(m => m.PreviousMobilityId).AsDropDown().Attrs(new { ng_model = "vm.model.functionalStatus.previousMobilityId", repeat = "vm.previousMobilityMaster", name = "PreviousMobility" })
+                                @s.FieldFor(m => m.CurrentMobilityId).AsDropDown().Attrs(new { ng_model = "vm.model.functionalStatus.currentMobilityId", repeat = "vm.currentMobilityMaster", name = "CurrentMobility" })
+
+                                <h5 class="fontStealGreen bold">@L("ModifiedBarthelIndex")</h5>
+                                <div class="form-group form-md-line-input margin-bottom-20">
+                                    <input type="text" ng-model="vm.model.modifiedBarthelIndex.admissionScore" class="form-control" id="designation" ng-maxlength="300">
+                                    <label class="control-label" for="designation">@L("AdmissionScore")</label>
+                                </div>
+                                <div class="form-group form-md-line-input margin-bottom-20">
+                                    <input type="text" ng-model="vm.model.modifiedBarthelIndex.dischargeScore" class="form-control" id="designation" ng-maxlength="300">
+                                    <label class="control-label" for="designation">@L("DischargeScore")</label>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+                @*view mode*@
+                <div ng-switch-default>
+                    <div class="col-md-12">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.model.functionalStatus.previousFeedingStatus.description ? vm.model.functionalStatus.previousFeedingStatus.description : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="referralCode">@L("PreviousFeedingStatus")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.model.functionalStatus.currentFeeding.description ? vm.model.functionalStatus.currentFeeding.description : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="processedBy">@L("CurrentFeeding")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.model.functionalStatus.previousToileting.description ? vm.model.functionalStatus.previousToileting.description : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="careCoordinator">@L("PreviousToileting")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.model.functionalStatus.currentToileting.description ? vm.model.functionalStatus.currentToileting.description : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="careCoordinator">@L("CurrentToileting")</label>
+                        </div>
+
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.model.functionalStatus.previousMobility.description ? vm.model.functionalStatus.previousMobility.description : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="careCoordinator">@L("PreviousMobility")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.model.functionalStatus.currentMobility.description ? vm.model.functionalStatus.currentMobility.description : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="careCoordinator">@L("CurrentMobility")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.model.modifiedBarthelIndex.admissionScore ? vm.model.modifiedBarthelIndex.admissionScore : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="careCoordinator">@L("AdmissionScore")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">
+                                {{vm.model.modifiedBarthelIndex.dischargeScore ? vm.model.modifiedBarthelIndex.dischargeScore : "-"}}
+                            </div>
+                            <label class="control-label view-label" for="careCoordinator">@L("DischargeScore")</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

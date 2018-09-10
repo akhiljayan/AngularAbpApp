@@ -1,0 +1,184 @@
+﻿@model CompleteTransportRequisitionInput
+
+@using Pulsesync.IngoTPCC.Application.TransportRequisitions.Dto;
+
+@{
+    var autosizeClass = "animate msd-elastic: \\n;";
+}
+
+<style>
+    .padding-top-0 {
+        padding-top: 0px !important;
+    }
+
+    .bs-callout {
+        margin-left: 10px !important;
+        margin-right: 10px !important;
+    }
+</style>
+
+<div class="portlet light" id="completeTransportRequisitionModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject"> @L("Complete") @L("TransportRequisition")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="form-body">
+            <div class="row">
+                <div class="bs-callout bs-callout-danger ">
+                    <h4 style="font-weight: 600;"><i class="icon fa fa-warning"></i>&nbsp; Alert!</h4>
+                    Please fill in the following required field to proceed Completion for @L("TransportRequisition")
+                </div>
+                <div class="col-md-12">
+                    @{
+                        var attrs = new Dictionary<string, object> {
+                            { "name", "vm.completeTransportRequisitionForm" },
+                            { "novalidate", "" },
+                            { "angular-validator", ""},
+                            { "angular-validator-submit", "vm.save()"}
+                        };
+                    }
+                    @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs).AddClass("scrollable-form-body")))
+                    {
+                        using (var s = f.BeginSection())
+                        {
+                            //Enum dropdownlist for PickupAbortTripReason & ReturnAbortTripReason
+                            IList<SelectListItem> list = Enum.GetValues(typeof(Pulsesync.IngoTPCC.Domain.TransportRequisitions.TransportRequisitionAbortTripReason)).Cast<Pulsesync.IngoTPCC.Domain.TransportRequisitions.TransportRequisitionAbortTripReason>().Select(x => new SelectListItem { Text = System.Text.RegularExpressions.Regex.Replace(x.ToString(), "(?<=[a-z])(?=[A-Z])", " "), Value = x.ToString() }).ToList();
+                            SelectList data = new SelectList(list, "Value", "Text");
+
+                            @(@s.FieldFor(m => m.VehicleTypeProvidedId)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.workingModel.vehicleTypeProvidedId",
+                                    repeat = "vm.vehicleTypeMaster"
+                                })
+                                .AsDropDown())
+
+                            @(@s.FieldFor(m => m.ActualVehicleNumber)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.workingModel.actualVehicleNumber"
+                                }))
+
+                            @(@s.FieldFor(m => m.PickupDriverId)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.workingModel.pickupDriverId",
+                                    repeat = "vm.staffs"
+                                })
+                                .AsDropDown())
+
+                            @(@s.FieldFor(m => m.PickupStatus)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.workingModel.pickupStatus"
+                                }))
+
+                            @(@s.FieldFor(m => m.ActualPickupDateTime)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.workingModel.actualPickupDateTime"
+                                }))
+
+                            @*@(@s.FieldFor(m => m.PickupAbortTripReason)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.workingModel.pickupAbortTripReason",
+                                    ng_disabled = "vm.workingModel.pickupStatus != 'Abort'",
+                                    ng_required = "vm.workingModel.pickupStatus == 'Abort'",
+                                    required_message = "'You must provide a value for Abort Trip Reason.'"
+                                }))*@
+
+                            <div class="form-group form-md-line-input">
+                                @Html.DropDownList("PickupAbortTripReason", data, "", new
+                               {
+                                   @class = "form-control",
+                                   @ng_model = "vm.workingModel.pickupAbortTripReason",
+                                   @ng_disabled = "vm.workingModel.pickupStatus != 'Abort'",
+                                   @ng_required = "vm.workingModel.pickupStatus == 'Abort'",
+                                   @required_message = "'You must provide a value for Abort Trip Reason.'"
+                               })
+                                <label class="control-label">@L("AbortTripReason")<span class="businessRequired" ng-if="vm.workingModel.pickupStatus == 'Abort'"> * </span></label>
+                            </div>
+
+                            @(@s.FieldFor(m => m.PickupAbortTripRemarks)
+                                .AddClass(autosizeClass)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.workingModel.pickupAbortTripRemarks",
+                                    ng_disabled = "vm.workingModel.pickupStatus != 'Abort'"
+                                })
+                                .Rows(4))
+
+                            <div ng-if="vm.workingModel.tripType == 'TwoWays' || vm.workingModel.tripType == 1">
+                                @(@s.FieldFor(m => m.ReturnDriverId)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.workingModel.returnDriverId",
+                                    repeat = "vm.staffs",
+                                    conditional_required = "vm.workingModel.tripType == 1 || vm.workingModel.tripType == 'TwoWays'"
+                                })
+                                .AsDropDown())
+
+                                @(@s.FieldFor(m => m.ReturnStatus)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.workingModel.returnStatus"
+                                }))
+
+                                @(@s.FieldFor(m => m.ReturnDateTime)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.workingModel.returnDateTime",
+                                    beforeoron = "vm.workingModel.actualPickupDateTime",
+                                    beforeoron_message = "'Return Date Time must be on or after Pickup Date Time.'"
+                                }))
+
+                                @*@(@s.FieldFor(m => m.ReturnAbortTripReason)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.workingModel.returnAbortTripReason",
+                                    ng_disabled = "vm.workingModel.returnStatus != 'Abort'",
+                                    ng_required = "vm.workingModel.returnStatus == 'Abort'",
+                                    required_message = "'You must provide a value for Abort Trip Reason.'"
+                                }))*@
+
+                                <div class="form-group form-md-line-input">
+                                   @Html.DropDownList("ReturnAbortTripReason", data, "", new
+                                   {
+                                       @class = "form-control",
+                                       @ng_model = "vm.workingModel.returnAbortTripReason",
+                                       @ng_disabled = "vm.workingModel.returnStatus != 'Abort'",
+                                       @ng_required = "vm.workingModel.returnStatus == 'Abort'",
+                                       @required_message = "'You must provide a value for Abort Trip Reason.'"
+                                   })
+                                    <label class="control-label">@L("AbortTripReason")<span class="businessRequired" ng-if="vm.workingModel.returnStatus == 'Abort'"> * </span></label>
+                                </div>
+
+
+
+                                @(@s.FieldFor(m => m.ReturnAbortTripRemarks)
+                                .AddClass(autosizeClass)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.workingModel.returnAbortTripRemarks",
+                                    ng_disabled = "vm.workingModel.returnStatus != 'Abort'"
+                                })
+                                .Rows(4))
+                            </div>
+                        }
+
+                        <div class="form-actions noborder right">
+                            <button type="submit" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-if="vm.permissions.complete" ng-disabled="vm.completeTransportRequisitionForm.$invalid"><i class="material-icons ps-btn-material">check</i>@L("Ok")</button>
+                            <button type="button" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>@L("Cancel")</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

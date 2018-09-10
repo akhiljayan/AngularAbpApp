@@ -1,0 +1,113 @@
+﻿@model CreateOrUpdateActivityInput
+
+@using Pulsesync.IngoTPCC.Application.MembershipBookings.Dto
+
+<style>
+    #Activity .form-group.form-md-line-input:first-child {
+        z-index: 12 !important;
+    }
+</style>
+<div class="portlet light" data-drag="true" id="Activity">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("ActivityMaster")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancelActivity()"></a>
+        </div>
+    </div>
+
+    <div class="portlet-body form">
+        @{
+            var attributes = new Dictionary<string, object>();
+            attributes.Add("name", "vm.activityFrom");
+            attributes.Add("novalidate", "");
+            attributes.Add("angular-validator-submit", "vm.save()");
+            attributes.Add("angular-validator", "");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body")))
+        {
+            using (var s = f.BeginSection())
+            {
+                <div class="portlet-body" style="display: block;">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @*@(s.FieldFor(m => m.StartDateTime)
+                                    .Attrs(new
+                                    {
+                                        allowfuturedate = "true",
+                                        ng_model = "vm.activity.startDateTime"
+                                    }))*@
+
+                                @*@(s.FieldFor(m => m.EndDateTime)
+                                    .Attrs(new
+                                    {
+                                        allowfuturedate = "true",
+                                        ng_model = "vm.activity.endDateTime",
+                                        validator = "vm.endDateTimeValidator(vm.activity.startDateTime, vm.activity.endDateTime) === true",
+                                        invalid_message = "vm.endDateTimeValidator(vm.activity.startDateTime, vm.activity.endDateTime)"
+                                    }))*@
+
+                                @*@(s.FieldFor(m => m.CentreId)
+                                    .Attrs(new
+                                    {
+                                        ng_model = "vm.activity.centreId",
+                                        repeat = "vm.centrelist"
+                                    })
+                                    .AsDropDown())*@
+                                <centre-ui-select centre-id="vm.activity.centreId" required="true" uiselect-disabled="false"></centre-ui-select>
+
+                                @(s.FieldFor(m => m.ActivityEventId)
+                                    .Attrs(new
+                                    {
+                                        ng_model = "vm.activity.activityEventId",
+                                        repeat = "vm.activitiesEventsList"
+                                    })
+                                    .AsDropDown())
+
+                                @(s.FieldFor(m => m.ActivityMaster)
+                                    .Attrs(new
+                                    {
+                                        ng_model = "vm.activity.activityMaster"
+                                    }))
+
+                                @(s.FieldFor(m => m.Location)
+                                    .Attrs(new
+                                    {
+                                        ng_model = "vm.activity.location"
+                                    }))
+
+                                @(s.FieldFor(m => m.LocationInMandarin)
+                                    .Attrs(new
+                                    {
+                                        ng_model = "vm.activity.locationInMandarin"
+                                    }))
+
+                                @(s.FieldFor(m => m.Remarks)
+                                    .AddClass("animate msd-elastic: \\n; ")
+                                    .Rows(4)
+                                    .Attrs(new
+                                    {
+                                        ng_model = "vm.activity.remarks"
+                                    }))
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <p class="bodyContext" ng-if="!vm.isCreateMode">
+                @Html.Raw(L("CreationInfo", "vm.activity.creatorUser.fullName", "vm.activity.creationTime | dateTimeFormat"))
+            </p>
+            <p class="bodyContext" ng-if="!vm.isCreateMode">
+                @Html.Raw(L("ModificationInfo", "vm.activity.lastModifierUser.fullName", "vm.activity.lastModificationTime | dateTimeFormat"))
+            </p>
+
+            <div class="form-actions noborder right">
+                <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="!vm.permissions.edit"><i class="material-icons ps-btn-material">check</i>Ok</button>
+                <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancelActivity()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+            </div>
+        }
+    </div>
+</div>

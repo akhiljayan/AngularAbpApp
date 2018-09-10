@@ -1,0 +1,99 @@
+﻿@model RunningNumberDto
+@using Pulsesync.IngoTPCC.Common.Dto;
+<div class="portlet light" data-drag="true" id="masterDataTypeItemModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("RunningNumber")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        @{
+            var attributes = new Dictionary<string, object>();
+            attributes.Add("role", "form");
+            attributes.Add("id", "runningNumberForm");
+            attributes.Add("name", "runningNumberForm");
+            attributes.Add("novalidate", "");
+            attributes.Add("action", "#");
+            attributes.Add("angular-validator-submit", "vm.save()");
+            attributes.Add("angular-validator", "");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body")))
+        {
+            using (var s = f.BeginSection())
+            {
+                <div class="portlet-body" style="display: block;">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group form-md-line-input" ng-if="vm.action =='create' ">
+                                    <label class="control-label" for="runningnumberref">@L("RunningNumber") @L("Reference")</label>
+                                    <ui-select id="runningnumberref" ng-model="vm.selectedReference" theme="selectize" title="Choose a Reference" ng-change="vm.runningNoRefChange()">
+                                        <ui-select-match placeholder="Select Running Number Reference">
+                                            {{$select.selected.name}}
+                                            <a class="fa fa-times" ng-click="$select.clear($event);"></a>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="m.value as m in vm.runningNumReference | filter: { name: $select.search } | orderBy:'orderId'">
+                                            <span ng-bind-html="m.name | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                @s.FieldFor(m => m.Reference).Attrs(new { ng_model = "vm.runningnumber.reference", ng_readonly = "vm.selectedReference != 'Admission'", ng_change = "vm.prefixChange()" })
+                                @{
+        var help = Html.Raw("<span class='help-block'> Eg. LS{yyyy}  stands for LS2017</span>");
+                                }
+                                @s.FieldFor(m => m.Prefix).Append(help).Attrs(new { ng_model = "vm.runningnumber.prefix" })
+                                <br />
+                                @s.FieldFor(m => m.ResetNumber).Attrs(new { ng_model = "vm.runningnumber.resetNumber" })
+                                @s.FieldFor(m => m.ResetNumberIfValueGreaterThan).Attrs(new { ng_model = "vm.runningnumber.resetNumberIfValueGreaterThan", ng_change = " vm.prefixChange()" })
+                                @s.FieldFor(m => m.Suffix).Attrs(new { ng_model = "vm.runningnumber.suffix" })
+                                <div class="form-group form-md-line-input">
+                                    <label class="control-label" for="padding">@L("Padding")</label>
+                                    <ui-select id="padding" ng-model="vm.runningnumber.padding" theme="selectize" title="Choose a Padding">
+                                        <ui-select-match placeholder="Select Padding">
+                                            {{$select.selected.name}}
+                                            <a class="fa fa-times" ng-click="$select.clear($event);"></a>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="m.value as m in vm.padding | filter: { name: $select.search } | orderBy:'orderId'">
+                                            <span ng-bind-html="m.name | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                @s.FieldFor(m => m.PaddingCharacter).Attrs(new { ng_model = "vm.runningnumber.paddingCharacter" })
+
+                                <div class="md-checkbox">
+                                    <input id="resetEveryYear" type="checkbox" class="form-control" ng-model="vm.runningnumber.resetEveryYear" ng-readonly="true" />
+                                    <label for="resetEveryYear" ng-readonly="true">
+                                        <span onclick='return false;' class="inc"></span>
+                                        <span onclick='return false;' class="check"></span>
+                                        <span onclick='return false;' class="box"></span>
+                                        @L("ResetEveryYear")
+                                    </label>
+                                </div>
+                                <div class="form-group form-md-line-input">
+                                    <label class="control-label" for="preview">@L("Preview")</label>
+                                    <div>
+                                        {{ vm.runningnumber.prefix}}{{ vm.runningnumber.padding==1?vm.runningnumber.paddingCharacter:""}}{{ vm.prefixSetup }}{{ vm.runningnumber.resetNumber}}{{ vm.runningnumber.padding==2?vm.runningnumber.paddingCharacter:""}}{{ vm.runningnumber.suffix}}
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input">
+                                    <label class="control-label" for="currentRunning">@L("CurrentNumber")</label>
+                                    <div>
+                                        {{ vm.runningnumber.currentRunning}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="form-actions noborder right">
+                <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.disableSave"><i class="material-icons  font-18-main v-top">save</i>Save</button>                                    
+                <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,67 @@
+﻿@model MembershipDto
+
+@using Pulsesync.IngoTPCC.Application.Membership.Dto;
+
+<style>
+    .padding-top-0 {
+        padding-top: 0px !important;
+    }
+
+    .bs-callout {
+        margin-left: 10px !important;
+        margin-right: 10px !important;
+    }
+</style>
+
+<div class="portlet light" id="terminateMembershipModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Terminate") @L("Membership")</span>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="form-body">
+            <div class="row">
+                <div class="bs-callout bs-callout-danger ">
+                    <h4 style="font-weight: 600;"><i class="icon fa fa-warning"></i>&nbsp; Alert!</h4>
+                    Please fill in the following required field to proceed Termination for @L("Membership")
+                </div>
+                <div class="col-md-12">
+                    @{
+                        var attrs = new Dictionary<string, object> {
+                            { "name", "vm.cancelMembershipForm" },
+                            { "novalidate", "" },
+                            { "angular-validator", ""},
+                            { "angular-validator-submit", "vm.save()"}
+                        };
+                    }
+                    @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs).AddClass("scrollable-form-body")))
+                    {
+                        using (var s = f.BeginSection())
+                        {
+                      @s.FieldFor(m => m.TerminationReasonId).AsDropDown().Attrs(new
+                         {
+                             ng_model = "vm.membership.terminationReasonId",
+                             repeat = "vm.terminationreason",
+                             name = "terminationReason",
+                             ui_select_required = "ui-select-required",
+                             required_message = "'You must provide a value for Termination Reason.'",
+                             ng_change = "vm.initialiseOtherTerminationSpecify($select.selected.description)",                 
+                         }).Label(@L("TerminationReason"))
+                    <div class="form-group form-md-line-input" ng-if="vm.showOtherTerminationSpecify">
+                        <input type="text" ng-model="vm.membership.othersTerminationReason" class="form-control" id="othersTerminationReason" name="othersTerminationReason" placeholder="Provide Other Termination Reason" ng-required="true" required-message="'@L("OthersPleaseSpecifyErrorMessage")'">
+                        <label class="control-label" for="othersTerminationReason">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                    </div>
+                      @s.FieldFor(m => m.MembershipEndDate).Attrs(new { ng_model = "vm.membership.membershipEndDate", ng_required="true", required_message = "'You must provide a value for Termination End Date.'" })
+                      }
+
+                        <div class="form-actions noborder right">
+                            <button type="submit" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ><i class="material-icons ps-btn-material">check</i>@L("Ok")</button>
+                            <button type="button" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>@L("Cancel")</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

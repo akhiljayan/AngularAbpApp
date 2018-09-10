@@ -1,0 +1,53 @@
+﻿@model MembershipDto
+
+@using Pulsesync.IngoTPCC.Application.Membership.Dto
+
+<div id="ContactInformation" class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Declaration")</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @*@{
+                    var attrs = new Dictionary<string, object>();
+                    attrs.Add("name", "vm.form");
+                    attrs.Add("novalidate", "");
+                    attrs.Add("angular-validator", "");
+                    attrs.Add("angular-validator-submit", "vm.save($event)");
+                }*@
+
+                @using (var f = Html.BeginSubForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <div class="md-checkbox margin-left-20" ng-repeat="li in vm.membershipdeclaration">
+                            <input id="{{li.id}}" class="md-check" type="checkbox" value="{{li.description}}" ng-model="li.selected" ng-change="vm.declarationonchange(li)">
+                            <label for="{{li.id}}">
+                                <span class="inc"></span>
+                                <span class="check"></span>
+                                <span class="box"></span>
+                                {{li.description}}
+                            </label>
+                        </div>
+                    }
+                }
+            </div>
+
+            <div ng-switch-default>
+                <div class="md-checkbox margin-left-20" ng-repeat="li in vm.membershipdeclaration">
+                    <input id="{{li.id}}" class="md-check" type="checkbox" value="{{li.description}}" ng-model="li.selected" ng-init="" ng-disabled=true>
+                    <label for="{{li.id}}">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span>
+                        {{li.description}}
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

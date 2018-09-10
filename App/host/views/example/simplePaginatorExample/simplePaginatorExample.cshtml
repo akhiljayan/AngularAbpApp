@@ -1,0 +1,122 @@
+﻿<style>
+    .person {
+        position: relative;
+    }
+
+    .person-image {
+        float: left;
+    }
+
+        .person-image img {
+            width: 90px;
+            height: 90px;
+        }
+
+    .person-info {
+        padding-left: 120px;
+    }
+
+        .person-info p,
+        .family-info p {
+            margin: 0 0 5px;
+        }
+
+            .person-info p strong,
+            .family-info p strong {
+                font-size: 18px;
+                font-weight: 700
+            }
+
+        .person-info .address {
+            margin-left: -3px;
+        }
+
+    .familymembers {
+        margin-top: 20px !important;
+    }
+</style>
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">Persons</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <div class="input-small-new inline-block">
+                <form action="" class="search-form">
+                    <div class="form-group has-feedback input-inline">
+                        <label for="search" class="sr-only">@L("Search")</label>
+                        <input type="text"
+                               class="form-control form-control-solid input-circle search-input font-13-main clearable"
+                               placeholder="search keywords..."
+                               enter-key="$ctrl.load()"
+                               ng-model="$ctrl.filter">
+                        <a class="form-control-feedback search-close searchIcon-close fa fa-times"
+                           ng-click="$ctrl.clearFilter()"></a>
+                        <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                    </div>
+                </form>
+            </div>
+            <a class="icon-wrapper" title="Show associated Details" ng-click="$ctrl.showDetails = !$ctrl.showDetails">
+                <i ng-show="!$ctrl.showDetails" class="material-icons custom-icon">menu</i>
+                <i ng-show="$ctrl.showDetails" class="material-icons custom-icon">view_headline</i>
+            </a>
+            <a class="icon-wrapper" ng-click="$ctrl.new()" ng-if="$ctrl.permissions.create">
+                <i class="material-icons custom-icon">add</i>
+            </a>
+            <a class="icon-wrapper" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                <i class="material-icons custom-icon">more_vert</i>
+            </a>
+            <ul class="dropdown-menu pull-right">
+                <li ng-repeat="view in $ctrl.views">
+                    <a href="javascript:;" class="bold" ng-click="$ctrl.changeView(view.value)">
+                        {{ view.localizedName }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="portlet-body p-0-top-bottom">
+
+        <div class="filter-results">
+            <ul class="filter-list">
+                <li class="filter-list-item" ng-repeat="model in $ctrl.data.items">
+                    <a class="filter-list-item-content">
+
+                        @* Content Start *@
+
+                        <div class="person">
+                            <div class="person-image">
+                                <img class="img-circle" ng-src="~/Common/Images/SampleProfilePics/sample-profile-{{ model.pictureId }}.jpg" />
+                            </div>
+                            <div class="person-info">
+                                <p><strong>{{ model.fullName }}</strong> ({{ model.registrationDocumentNo }}) <small>[{{ model.isActive ? 'Active' : 'Inactive' }}]</small></p>
+                                <p><strong>@("@"):</strong> {{ model.email }} <strong>M:</strong> {{ model.mobile }}</p>
+                                <p class="address"><i class="material-icons">location_on</i>{{ model.address }}</p>
+                            </div>
+                            <div class="familymembers well" ng-if="$ctrl.showDetails">
+                                <ul>
+                                    <li ng-repeat="fm in model.familyMembers">
+                                        <div class="person">
+                                            <div class="family-info">
+                                                <p><strong>{{ fm.fullName }}</strong> M: {{ fm.mobile }} H: {{ fm.home }}</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                        @* Content End *@
+
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <simple-paginator data="$ctrl.data" on-page-changed="$ctrl.load(requestParams)"></simple-paginator>
+
+    </div>
+</div>

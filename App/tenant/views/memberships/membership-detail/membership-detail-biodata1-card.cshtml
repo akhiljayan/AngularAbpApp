@@ -1,0 +1,227 @@
+﻿@model MembershipDto
+
+@using Pulsesync.IngoTPCC.Application.Membership.Dto;
+
+<style type="text/css">
+    .otherText {
+        display: inline-block;
+        vertical-align: top;
+    }
+</style>
+<div id="BioData" class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("BioData")</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @using (var f = Html.BeginSubForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        @s.FieldFor(m => m.Person.RegistrationDocumentTypeId).AsDropDown().Attrs(new
+                    {
+                        ng_model = "vm.model.person.registrationDocumentTypeId",
+                        name = "RegistrationDocumentType",
+                        ng_change = "vm.selectedDocType = $select.selected.description; vm.initialiseOthersRegistrationDocumentType($select.selected.description)",
+                        ui_select_required = "ui-select-required"
+                    })
+
+                        <div class="form-group form-md-line-input" ng-if="vm.showOthersRegistrationDocumentType">
+                            <input type="text" ng-model="vm.model.person.othersRegistrationDocumentType" class="form-control" id="othersRegistrationDocumentType" name="othersRegistrationDocumentType" placeholder="Provide Other Registration Document Type" ng-required="true" required-message="'@L("OthersPleaseSpecifyErrorMessage")'">
+                            <label class="control-label" for="othersRegistrationDocumentType">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                        </div>
+
+                        @s.FieldFor(m => m.Person.RegistrationDocumentNumber).Attrs(new { ng_model = "vm.model.person.registrationDocumentNumber", reg_doc_num_validation = "{{vm.selectedDocType}}", invalid_message = "'NRIC/Fin/Passport No. format is incorrect. Please check.'", ng_blur = "vm.checkExistingRegisterDocument();" })
+
+                        @(s.FieldFor(m => m.Person.SalutationId)
+                        .Attrs(new
+                        {
+                            ng_model = "vm.model.person.salutationId"
+                        })
+                        .AsDropDown())
+
+                        @(s.FieldFor(m => m.Person.FullName)
+                        .Attrs(new
+                        {
+                            ng_model = "vm.model.person.fullName"
+                        }))
+
+                        @(s.FieldFor(m => m.Person.Surname)
+                        .Attrs(new
+                        {
+                            ng_model = "vm.model.person.surname"
+                        }))
+
+                        @(s.FieldFor(m => m.Person.NameNativeLanguage)
+                        .Attrs(new
+                        {
+                            ng_model = "vm.model.person.nameNativeLanguage"
+                        }))
+
+                        @(s.FieldFor(m => m.Person.DateOfIssue)
+                        .Attrs(new
+                        {
+                            ng_model = "vm.model.person.dateOfIssue",
+                            Validate = "false",
+                            Restrict = "reject",
+                            maxdate = "0d"
+                        }))
+
+                        @(s.FieldFor(m => m.Person.DateOfBirth)
+                        .Attrs(new
+                        {
+                            ng_model = "vm.model.person.dateOfBirth",
+                            ng_model_options = "{ debounce: 1000 }",
+                            ng_change = "vm.setChineseHoroscope()",
+                            Validate = "false",
+                            Restrict = "reject",
+                            maxdate = "0d"
+                        }))
+
+                        @(s.FieldFor(m => m.Person.GenderId)
+                        .Attrs(new
+                        {
+                            ng_model = "vm.model.person.genderId"
+                        })
+                        .AsDropDown())
+
+                        @(s.FieldFor(m => m.Person.BloodGroupId)
+                        .Attrs(new
+                        {
+                            ng_model = "vm.model.person.bloodGroupId"
+                        })
+                        .AsDropDown())
+
+                        @(s.FieldFor(m => m.Person.MaritalStatusId)
+                        .Attrs(new
+                        {
+                            ng_model = "vm.model.person.maritalStatusId",
+                            ng_change = "vm.initialiseOthersMaritalStatus($select.selected.description)"
+                        })
+                        .AsDropDown())
+
+                        <div class="form-group form-md-line-input" ng-if="vm.showOthersMaritalStatus">
+                            <input type="text" ng-model="vm.model.person.othersMaritalStatus" class="form-control" id="othersMaritalStatus" name="othersMaritalStatus" placeholder="Provide Other Marital Status" ng-required="true" required-message="'@L("OthersPleaseSpecifyErrorMessage")'">
+                            <label class="control-label" for="othersMaritalStatus">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                        </div>
+
+                        @(s.FieldFor(m => m.Person.RaceId)
+                        .Attrs(new
+                        {
+                            ng_model = "vm.model.person.raceId",
+                            ng_change = "vm.initialiseOthersRace($select.selected.description)"
+                        })
+                        .AsDropDown())
+
+                        <div class="form-group form-md-line-input" ng-if="vm.showOthersRace">
+                            <input type="text" ng-model="vm.model.person.othersRace" class="form-control" id="othersRace" name="othersRace" placeholder="Provide Other Race" ng-required="true" required-message="'@L("OthersPleaseSpecifyErrorMessage")'">
+                            <label class="control-label" for="othersRace">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                        </div>
+
+                        @(s.FieldFor(m => m.Person.NationalityId)
+                        .Attrs(new
+                        {
+                            ng_model = "vm.model.person.nationalityId"
+                        })
+                        .AsDropDown())
+
+                        @(s.FieldFor(m => m.Person.CitizenshipId)
+                        .Attrs(new
+                        {
+                            ng_model = "vm.model.person.citizenshipId"
+                        })
+                        .AsDropDown())
+
+                        @(s.FieldFor(m => m.Person.ReligionId)
+                        .Attrs(new
+                        {
+                            ng_model = "vm.model.person.religionId",
+                            ng_change = "vm.initialiseOthersReligion($select.selected.description)"
+                        })
+                        .AsDropDown())
+
+                        <div class="form-group form-md-line-input" ng-if="vm.showOthersReligion">
+                            <input type="text" ng-model="vm.model.person.othersReligion" class="form-control" id="othersReligion" name="othersReligion" placeholder="Provide Other Religion" ng-required="true" required-message="'@L("OthersPleaseSpecifyErrorMessage")'">
+                            <label class="control-label" for="othersReligion">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                        </div>
+                    }
+                }
+            </div>
+
+            <div ng-switch-default>
+                <div class="row">
+                    <div class="col-md-12 icon">
+                        <div class="bold">{{ vm.model.person.salutation.description }} {{ vm.model.person.fullName }}</div>
+                        <span class="ps-icon-male male-icon-blue" ng-if="vm.model.person.gender.description.toLowerCase() == 'male'"></span>
+                        <span class="ps-icon-female female-icon-pink" ng-if="vm.model.person.gender.description.toLowerCase() == 'female'"></span>
+                        <span><span ng-if="!vm.model.person.gender.description">&nbsp;</span>{{ vm.model.person.maritalStatus.description }}</span>
+                    </div>
+                    <div class="col-md-12 icon">
+                        <span class="ps-icon-world grey"></span>
+                        <ul class="otherText">
+                            <li uib-popover="@L("RegistrationDocumentType")" popover-placement="bottom" popover-trigger="'mouseenter'"
+                                ng-if="vm.model.person.registrationDocumentType.description">
+                                {{ vm.model.person.registrationDocumentType.description }}
+                            </li>
+                            <li uib-popover="@L("RegistrationDocumentNo")" popover-placement="bottom" popover-trigger="'mouseenter'"
+                                ng-if="vm.model.person.registrationDocumentNumber">
+                                {{ vm.model.person.registrationDocumentNumber }}
+                            </li>
+                            <li uib-popover="@L("DateOfIssue")" popover-placement="bottom" popover-trigger="'mouseenter'"
+                                ng-if="vm.model.person.dateOfIssue">
+                                {{ vm.model.person.dateOfIssue | dateFormat }}
+                            </li>
+                            <li ng-if="!vm.model.person.registrationDocumentType.description && !vm.model.person.registrationDocumentNumber && !vm.model.person.dateOfIssue">-</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-12 icon">
+                        <i class="material-icons">cake</i>
+                        <ul class="otherText">
+                            <li uib-popover="@L("DateOfBirth")" popover-placement="bottom" popover-trigger="'mouseenter'"
+                                ng-if="vm.model.person.dateOfBirth">
+                                {{ vm.model.person.dateOfBirth | dateFormat }}
+                            </li>
+                            <li uib-popover="@L("Age")" popover-placement="bottom" popover-trigger="'mouseenter'"
+                                ng-if="vm.model.person.dateOfBirth">
+                                {{ vm.model.person.dateOfBirth | ageFilter }}
+                            </li>
+
+                            <li ng-if="!vm.model.person.dateOfBirth && !vm.model.person.dateOfBirth && !vm.model.person.chineseHoroscope.description">-</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-12 icon">
+                        <span class="ps-icon-people grey"></span>
+                        <ul class="otherText">
+                            <li uib-popover="@L("Race")" popover-placement="bottom" popover-trigger="'mouseenter'"
+                                ng-if="vm.model.person.race.description">
+                                {{ vm.model.person.race.description }}
+                            </li>
+                            <li uib-popover="@L("Nationality")" popover-placement="bottom" popover-trigger="'mouseenter'"
+                                ng-if="vm.model.person.nationality.description">
+                                {{ vm.model.person.nationality.description }}
+                            </li>
+                            <li uib-popover="@L("Citizenship")" popover-placement="bottom" popover-trigger="'mouseenter'"
+                                ng-if="vm.model.person.citizenship.description">
+                                {{ vm.model.person.citizenship.description }}
+                            </li>
+                            <li ng-if="!vm.model.person.race.description && !vm.model.person.nationality.description && !vm.model.person.citizenship.description">-</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-12 icon">
+                        <span class="ps-icon-religion grey"></span>
+                        <ul class="otherText">
+                            <li uib-popover="@L("Religion")" popover-placement="bottom" popover-trigger="'mouseenter'"
+                                ng-if="vm.model.person.religion.description">
+                                {{ vm.model.person.religion.description }}
+                            </li>
+                            <li ng-if="!vm.model.person.religion.description && !vm.model.person.placeOfWorship">-</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

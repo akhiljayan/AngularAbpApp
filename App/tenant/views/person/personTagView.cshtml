@@ -1,0 +1,58 @@
+﻿<style>
+    #view .bootstrap-tagsinput .tag {
+        padding: 2px 12px !important;
+    }
+
+        #view .bootstrap-tagsinput .tag [data-role="remove"] {
+            display: none;
+        }
+
+    #view .bootstrap-tagsinput input {
+        display: none;
+    }
+
+    #view .bootstrap-tagsinput {
+        border-bottom: none !important;
+    }
+</style>
+
+<div id="HashSymbolTags" class="portlet light" ng-controller="tenant.views.person.personTag as personTagCtrl">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("HashSymbolTags")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a class="icon-wrapper" ng-if="personTagCtrl.mode=='view' && !vm.isNew && vm.permissions.edit" ng-click="personTagCtrl.edit()">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools">
+            <a class="remove" ng-if="personTagCtrl.mode=='edit' && !vm.isNew" ng-click="personTagCtrl.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="personTagCtrl.mode">
+                <div ng-switch-when="view" id="view">
+                    <div class="col-md-12">
+                        <ps-tagsinput multiple ng-model="vm.person.tags" disabled></ps-tagsinput>
+                    </div>
+                </div>
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+                        <ps-tagsinput multiple ng-model="personTagCtrl.person.tags"></ps-tagsinput>
+
+                        <div class="form-actions pull-right" ng-if="!vm.isNew">
+                            <a class="linkButton btn-small" ng-click="personTagCtrl.save()">
+                                <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                            </a>
+                            <a class="linkButton btn-small" ng-click="personTagCtrl.close()">
+                                <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,85 @@
+﻿<div busy-if="vm.loading" id="Assessments" class="portlet light" ng-if="vm.isPatient" >
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Assessment")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <div class="input-small-new inline-block">
+                <form action="" class="search-form search-style-class">
+                    <div class="form-group has-feedback input-inline search-form-group">
+                        <label for="search" class="sr-only">@L("Search")</label>
+                        <input type="text" ng-model="vm.filter" enter-key="vm.searchValue()" class="form-control form-control-solid search-input input-circle font-13-main clearable" placeholder="search keywords...">
+                        <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="vm.clearFilter()"></a>
+                        <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                    </div>
+                </form>
+            </div>
+            <a ng-click="vm.addAssessment()" title="Add a new Assessment" class="icon-wrapper">
+                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+            </a>
+            <a class="icon-wrapper" title="Filter" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                <i class="material-icons custom-icon">more_vert</i>
+            </a>
+            <ul class="dropdown-menu pull-right">
+                <li>
+                    <a href="javascript:;" class="bold" ng-click=" vm.assessmentStatusFilterSelection(999)">@L("ShowAll")</a>
+                </li>
+                <li class="divider"> </li>
+                <li>
+                    <a href="javascript:;" ng-click=" vm.assessmentStatusFilterSelection(0)">@L("PendingConfirmation")</a>
+                </li>
+                <li>
+                    <a href="javascript:;" ng-click=" vm.assessmentStatusFilterSelection(1)">@L("Confirmed")</a>
+                </li>
+                <li>
+                    <a href="javascript:;" ng-click=" vm.assessmentStatusFilterSelection(2)">@L("Cancelled")</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+    <div class="portlet-body air-card p-0-top-bottom">
+        <section class="air-card-hover padding-bottom-10" ng-repeat="assessment in vm.assessmentList" ng-click="vm.view(assessment.id, assessment.assessmentName)">
+            <div class="row">
+                <div class="col-md-2 col-sm-12 center-allign">
+                    <ui-knob value="assessment.totalScore" options="vm.options[assessment.colorCode]"></ui-knob>
+                </div>
+                <div class="col-md-10 col-sm-12">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6">
+                            <span class="bold">{{assessment.assessmentName}}</span>
+                        </div>
+                        <div class="col-md-6 col-sm-6 text-right">
+                            <span class="bold" ng-if="!assessment.isConfirmed && !assessment.isCancelled">@L("PendingConfirmation")</span>
+                            <span class="bold" ng-if="assessment.isConfirmed  && !assessment.isCancelled">@L("Confirmed")</span>
+                            <span class="bold" ng-if="assessment.isCancelled">@L("Cancelled")</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10 col-sm-10">
+                            <span class="bold" ng-if="assessment.isCategoryRequired">{{assessment.category}}</span>
+
+                        </div>
+                        <div class="col-md-2 col-sm-2 text-right">
+                            <a class="no-decoration padding-right-10" title="Pending Confirmation" href="#" ng-if="!assessment.isConfirmed && !assessment.isCancelled"><i class="fa fa-unlock" style="font-size:20px" aria-hidden="true"></i></a>
+                            <a class="no-decoration padding-right-10" title="Confirmed" href="#" ng-if="assessment.isConfirmed  && !assessment.isCancelled"><i class="fa fa-lock" style="font-size:20px" aria-hidden="true"></i></a>
+                            <a class="no-decoration padding-right-10" title="Cancelled" href="#" ng-if="assessment.isCancelled"><i class="fa fa fa-ban" style="font-size:20px" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10 col-sm-10">
+                            Assessment on <span class="bold">{{assessment.assessmentDate | dateFormat }}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10 col-sm-10" ng-if="assessment.isNextReviewMonthRequired">
+                            Next Review on<span class="bold"> {{assessment.nextReviewDate | dateFormat}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+    <simple-paginator data="vm.data" key="vm.key" small-page-size="true" on-page-changed="vm.loadResults(requestParams)"></simple-paginator>
+</div>

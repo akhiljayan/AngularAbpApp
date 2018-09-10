@@ -1,0 +1,58 @@
+﻿@using Pulsesync.IngoTPCC.Authorization;
+
+<div class="row" ng-controller="tenant.views.referral.financialView as financial">
+    <div class="col-md-12 col-sm-12 col-xs-12 no-padding main-tab-contents">
+        @*<div class="col-md-2 col-sm-2 col-xs-2 padding-left-0">
+            <div class="sidebar-nav-fixed sidebar-nav-fixed-annimate affix">
+                @if (IsGranted(AppPermissions.Pages_Tenant_MeansTests))
+                {
+                    <p class="bodyContext bold side-menu-text" ng-click="vm.gotoAnchor('MeansTesting')">@L("MeansTesting")</p>
+                }
+
+                @if (IsGranted(AppPermissions.Pages_Tenant_FinancialAssistances))
+                {
+                    <p class="bodyContext bold side-menu-text" ng-click="vm.gotoAnchor('FinancialAssistance')">@L("FinancialAssistance")</p>
+                }
+
+                <br />
+                <hr class="no-margin no-padding" style="border-color: #c2cad8;" />
+
+                <p class="font-13-main margin-5-0" ng-if="!vm.isCreateMode">
+                    @Html.Raw(L("CreationInfo", "vm.referral.creatorUser.fullName", "vm.referral.creationTime | date:'d-MMM-yyyy h:mm a'"))
+                </p>
+                <p class="font-13-main margin-5-0" ng-if="!vm.isCreateMode">
+                    @Html.Raw(L("ModificationInfo", "vm.referral.lastModifierUser.fullName", "vm.referral.lastModificationTime | date:'d-MMM-yyyy h:mm a'"))
+                </p>
+                <p class="font-13-main margin-5-0" ng-if="!vm.isCreateMode">
+                    Status <span class="bold">{{vm.referral.status  == 0 ? 'Open' : 'Closed'}}</span>
+                </p>
+                <p class="font-13-main margin-5-0" ng-if="!vm.isCreateMode">
+                    Pending Approval <span class="font-13-main bold">{{vm.referral.pendingApproval ? 'Yes' : 'No'}}</span>
+                </p>
+                <p class="font-13-main margin-5-0" ng-if="!vm.isCreateMode">
+                    Pending Admission <span class="font-13-main bold">{{vm.referral.pendingAdmission ? 'Yes' : 'No'}}</span>
+                </p>
+            </div>
+        </div>*@
+
+        @*<div class="col-md-5 col-sm-5">
+                @Html.Partial("~/App/tenant/views/referral/financial/financialBackground.cshtml")
+            </div>*@
+
+        <div class="col-md-6 col-sm-12">
+            @if (IsGranted(AppPermissions.Pages_Tenant_MeansTests))
+            {
+                <div busy-if="vm.loading">
+                    <meanstests-card id="MeansTesting" title="'@L("MeansTesting")'" mode="vm.isNew ? 'new' : 'view'" template="'referral'" referral-id="vm.referral.id"></meanstests-card>
+                </div>
+            }
+
+            @if (IsGranted(AppPermissions.Pages_Tenant_FinancialAssistances))
+            {
+                <div busy-if="vm.loading">
+                    <financialassistances-card id="FinancialAssistance" title="'@L("FinancialAssistance")'" mode="vm.isNew ? 'new' : 'view'" template="'referral'" referral-id="vm.referral.id"></financialassistances-card>
+                </div>
+            }
+        </div>
+    </div>
+</div>

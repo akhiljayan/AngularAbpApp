@@ -1,0 +1,77 @@
+<style>
+.tabbable-line > .nav-tabs > li > a > i {
+margin-right: 5px;
+}
+
+.tabbable-line > .nav-tabs > li.active > a {
+color: #00bfb5;
+}
+
+.tabbable-line > .nav-tabs > li.active > a > i {
+    color: #00bfb5;
+}
+
+.tabbable-line > .nav-tabs > li > a > i {
+font-size: 16px;
+vertical-align: middle;
+}
+
+.nav-tabs > li {
+float: none;
+display: inline-block;
+zoom: 1;
+}
+
+.nav-tabs {
+text-align: center;
+}
+
+.nav-tabs > li > a {
+    font-weight: bold;
+}
+</style>
+<div class="tabbable-line" id="dashborad" ng-controller="tenant.views.dashboard.index as vm">
+    @*<button type="button" class="btn btn-secondary"  ng-click="vm.goman()" data-toggle="tooltip" data-placement="right" title="Tooltip on right">
+        Go to Specific Tab
+    </button>*@
+    <ul class="nav nav-tabs">
+        @*<li ng-class="{'active':vm.workspace}" id="workSpace">
+            <a ng-click="vm.workspaceLink()" data-toggle="tab">
+                <i class="material-icons">assignment</i>@L("WorkSpace")
+            </a>
+        </li>
+        <li ng-class="{'active':vm.careboard}">
+            <a ng-click="vm.careboardLink()" data-toggle="tab">
+                <i class="material-icons">assignment_ind</i>@L("CareBoard")
+            </a>
+        </li>
+        <li ng-class="{'active':vm.moments}">
+            <a ng-click="vm.momentsLink()" data-toggle="tab">
+                <i class="material-icons">camera_enhance</i>@L("Moments")
+            </a>
+        </li>*@
+        <li ui-sref-active="active" id="workSpace">
+            <a ui-sref="tenant.dashboard.home" data-toggle="tab">
+                <i class="material-icons">assignment</i>@L("WorkSpace")
+            </a>
+        </li>
+        <li ui-sref-active="active">
+            <a ui-sref="tenant.dashboard.careboard" data-toggle="tab">
+                <i class="material-icons">assignment_ind</i>@L("CareBoard")
+            </a>
+        </li>
+        <li ui-sref-active="active">
+            <a ui-sref="tenant.dashboard.moments" data-toggle="tab">
+                <i class="material-icons">camera_enhance</i>@L("Moments")
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="tab_15_1">
+            <div ui-view class="fade-in-up">
+                
+            </div>
+        </div>
+    </div>
+</div>
+

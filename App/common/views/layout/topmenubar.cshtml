@@ -1,0 +1,226 @@
+﻿<style type="text/css">
+    .tabmaindiv > li.active > a, tabmaindiv > li.active > a, tabmaindiv > li.active > a:focus, tabmaindiv > li.active > a:hover {
+        border: none !important;
+    }
+
+    .tabmaindiv {
+        border-bottom: none !important;
+        margin-bottom: 0px;
+        color: #757575;
+        font-size: 16px;
+        text-align: left !important;
+    }
+
+        .tabmaindiv > .menutab-list > .menutabs {
+            color: #757575;
+            font-size: 16px;
+        }
+
+    a.menutabs:hover {
+        border-left: none !important;
+        border-right: none !important;
+        border-top: 1px solid #ddd !important;
+        background-color: white !important;
+        border-bottom: 2px solid #00bfb5 !important;
+    }
+
+    .mainheadercontent {
+        -webkit-box-shadow: 0px 1px 1px #cccccc;
+        -moz-box-shadow: 0px 1px 1px #cccccc;
+        box-shadow: 0px 1px 1px #cccccc;
+    }
+
+    .menutab-list.active > a.menutabs {
+        border-bottom: 2px solid #00bfb5 !important;
+    }
+
+    .menutab-content {
+        color: #757575;
+    }
+
+    .menu-anchor {
+        color: #757575;
+    }
+
+    a.menutab-menu {
+        text-decoration: none !important;
+    }
+
+    .menutab-list.active > .menutabs {
+        color: #00bfb5;
+    }
+
+    .align-centre {
+        text-align: center;
+    }
+
+    .tab-pane {
+    }
+
+    .menu-tab-pane {
+        min-height: 430px;
+        max-height: 480px;
+        overflow-y: auto;
+    }
+
+    .menu-anchor:hover {
+        color: #00bfb5 !important;
+        font-weight: bold;
+    }
+
+    ul.dropdown-menu {
+        max-height: 237px;
+        overflow-y: auto;
+    }
+
+        ul.dropdown-menu > li.uib-typeahead-match:hover {
+            color: black !important;
+        }
+
+        ul.dropdown-menu > li.uib-typeahead-match > a:hover {
+            color: black !important;
+        }
+
+        ul.dropdown-menu > li.uib-typeahead-match > a > span:hover {
+            color: black !important;
+        }
+
+    .search-close-new {
+        right: unset !important;
+    }
+</style>
+
+<div class="col-md-12 nopadding mainheadercontent">
+    <div class="col-md-12" style="border-bottom: 1px solid #ddd; border-top: 1px solid #ddd;">
+        <div class="col-md-1 col-sm-1"></div>
+        <div class="col-md-9">
+            <div class="col-md-12 nopadding">
+                <div class="col-md-10 nopadding">
+                    <ul class="nav nav-tabs tabmaindiv">
+                        <li class="menutab-list align-centre" ng-class="{'active':$first}" ng-repeat="menuItemTab in vm.menu.items">
+                            <a data-toggle="tab" class="font-16-important bold menutabs" ng-click="vm.unsetMaxSepList()" href="#{{menuItemTab.name}}" target="_self">{{menuItemTab.displayName}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-2 nopadding pull-right">
+                    <div id="top-menu-search" class="input-inline pull-right" style="margin: 5px 0 0 0;">
+                        <div class="has-feedback menu-search input-inline">
+                            <label for="search" class="sr-only">[Search]</label>
+                            <input type="text" ng-model="vm.searchfilter" placeholder="search menu..." class="form-control form-control-solid search-input input-circle font-13-main clearable menutab-search-input" uib-typeahead="menu.displayName as menu.displayName for menu in vm.menuItems | filter:{name:$viewValue}" typeahead-on-select="vm.onSelect($item, $model, $label)" style="padding-top:0px;">
+                            <a class="form-control-feedback search-close-new searchIcon-close fa fa-times menu-open-space" ng-click="vm.clearFilter()"></a>
+                            <i class="material-icons form-control-feedback searchIcon" style="padding-top: 7px;">search</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1 col-sm-1"></div>
+    </div>
+
+    <div class="col-md-12 col-sm-12 tab-content" style="background-color:white;">
+        <div ng-repeat="menuItemTab in vm.menu.items" id="{{menuItemTab.name}}" class="row tab-pane fade in menu-tab-pane" ng-class="{'active':$first}" style="padding: 30px; padding-top:20px;">
+            <div class="col-md-1 col-sm-1 menu-open-space" style="text-align:right;padding-top: 3px;">
+                <a ng-if="vm.seplist && !vm.maxlist" class="referral-view redirect-anchor bold menu-open-space" ng-click="vm.hideSepList()" style="color:#757575">
+                    <i class="fa fa-arrow-circle-o-left menu-open-space" aria-hidden="true" style="font-size: 20px;"></i>
+                </a>
+            </div>
+            <div class="col-md-11 col-sm-11 no-padding">
+                <div id="navigation">
+                    <div class="col-md-12 col-sm-12 font-14-main nopadding">
+                        <div class="col-md-12 col-sm-12 menu-open-space" style="padding:0px" ng-repeat="tabSubItem in menuItemTab.items" ng-if="!tabSubItem.items.length && !tabSubItem.customData.showSeperate">
+                            <div class="col-md-2 col-sm-4 menu-open-space">
+                                <div ui-sref-active="active" class="menu-open-space" ng-class="{'start':$first}" style="margin-bottom:14px">
+                                    <a ng-if="tabSubItem.isVisible" class="menutab-menu" ui-sref="{{tabSubItem.url}}">
+                                        <span class="title menu-anchor">{{tabSubItem.displayName}}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-sm-12 menu-open-space" style="padding:0px" ng-if="!vm.seplist">
+                            <div class="col-md-2 col-sm-4 menu-open-space" ng-repeat="tabSubItem in menuItemTab.items" ng-if="tabSubItem.items.length" style="padding-right:0px">
+                                <div style="padding-bottom:10px" ng-if="tabSubItem.isVisible" class="menu-open-space">
+                                    <span class="bold menu-open-space">{{tabSubItem.displayName}}</span>
+                                </div>
+
+                                <div ng-if="tabSubItem.customData.showSeperate">
+                                    <div class="menu-open-space menu-col ng-scope start" ng-repeat="tabSubSubItem in tabSubItem.items" ng-if="$index == 0 && tabSubSubItem.customData.showInsideSeperateMenu" ui-sref-active="active" ng-class="{'start': $first}" ng-style="{ 'margin-bottom' : tabSubSubItem.isVisible ? '14px' : '0px' }" style="margin-bottom: 14px;">
+                                        <a class="referral-view redirect-anchor bold fontStealGreen menu-open-space" ng-click="vm.showSeperateList(tabSubItem.items, tabSubItem.displayName)">{{tabSubItem.customData.showName}}</a>
+                                    </div>
+                                    <div class="menu-open-space menu-col ng-scope start" ng-repeat="tabSubSubItem in tabSubItem.items" ng-if="$index != 0 && !tabSubSubItem.customData.showInsideSeperateMenu" ui-sref-active="active" ng-class="{'start': $first}" ng-style="{ 'margin-bottom' : tabSubSubItem.isVisible ? '14px' : '0px' }" style="margin-bottom: 14px;">
+                                        <a ng-if="tabSubSubItem.isVisible" class="menutab-menu" ui-sref="{{tabSubSubItem.url}}">
+                                            <span class="title menu-anchor">{{tabSubSubItem.displayName}}</span>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div ng-if="!tabSubItem.customData.showSeperate" class="menu-open-space">
+                                    <div class="menu-open-space menu-col" ng-repeat="tabSubSubItem in tabSubItem.items" ng-if="$index < vm.maxCount" ui-sref-active="active" ng-class="{'start': $first}" ng-style="{ 'margin-bottom' : tabSubSubItem.isVisible ? '14px' : '0px' }">
+                                        <a ng-if="tabSubSubItem.isVisible" class="menutab-menu" ui-sref="{{tabSubSubItem.url}}">
+                                            <span class="title menu-anchor">{{tabSubSubItem.displayName}}</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-12 col-sm-12 menu-open-space" ng-repeat="tabSubSubItem in tabSubItem.items" ng-if="$index == vm.maxCount && tabSubSubItem.isVisible" style="padding:10px 0px 0px 0px">
+                                        <a class="referral-view redirect-anchor bold fontStealGreen menu-open-space" ng-click="vm.showSeperateList(tabSubItem.items, tabSubItem.displayName)">See All</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row menu-open-space" ng-if="vm.seplist">
+                            <div style="padding-bottom:10px;padding-left: 13px;">
+                                <span class="bold menu-open-space">{{vm.sepHeading}}</span>
+                            </div>
+                            <div id="myCarousel" class="carousel slide" data-ride="false">
+                                <div class="carousel-inner">
+                                    <div class="item menu-open-space" ng-repeat="groups in vm.columnSubitems" ng-class="{'active': $index == 0}">
+                                        <div class="col-md-12 col-sm-12 item menu-open-space no-padding" style="padding:0px">
+                                            <div class="col-md-2 col-sm-4 menu-open-space" ng-repeat="columns in groups">
+                                                <div class="menu-open-space menu-col" ng-repeat="itms in columns"  ng-if="itms.customData.showInsideSeperateMenu" ui-sref-active="active" ng-class="{'start':$first}" style="margin-bottom:14px">
+                                                    <a ng-if="itms.isVisible" class="menutab-menu" ui-sref="{{itms.url}}">
+                                                        <span class="title menu-anchor">{{itms.displayName}}</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a ng-if="false" class="left carousel-control menu-open-space" href="#myCarousel" data-slide="prev">
+                                    <span class="glyphicon glyphicon-chevron-left menu-open-space"></span>
+                                    <span class="sr-only menu-open-space">Previous</span>
+                                </a>
+                                <a ng-if="false" class="right carousel-control menu-open-space" href="#myCarousel" data-slide="next">
+                                    <span class="glyphicon glyphicon-chevron-right menu-open-space"></span>
+                                    <span class="sr-only menu-open-space">Next</span>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>

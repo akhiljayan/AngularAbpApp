@@ -1,0 +1,58 @@
+﻿<style>
+    .order-status-count {
+    }
+    .order-status-count .display {
+        margin-bottom: 10px;
+    }
+
+    .order-status-count .display .number {
+        float: left;
+        display: inline-block;
+    }
+
+    .order-status-count .display .number h3 {
+        margin: 0 0 2px;
+        padding: 0;
+        font-size: 23px;
+        font-weight: 400;
+    }
+
+    .unchecked {
+        color: #FDCF72 !important;
+    }
+
+    .provisional {
+        color: #fcc7c7 !important;
+    }
+
+    .referral {
+        color: #0459c6 !important;
+    }
+
+    .confirmed {
+        color: #000000 !important;
+    }
+
+    .order-status-count .display .number small {
+        font-size: 13px;
+        color: #AAB5BC;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+</style>
+
+<div class="row">
+    @*<pre>Need to check first load: {{ $ctrl.orderStatusCounts |json }}</pre>*@
+    <div class="col-md-3 col-sm-6 col-xs-6" ng-repeat="model in $ctrl.output">
+        <div class="order-status-count">
+            <div class="display">
+                <div class="number">
+                    <h3>
+                        <span data-value="{{model.value}}">{{model.value}}</span>
+                    </h3>
+                    <small ng-class="model.key">{{model.key}}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

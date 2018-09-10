@@ -1,0 +1,63 @@
+﻿@model MembershipDto
+
+@using Pulsesync.IngoTPCC.Application.Membership.Dto
+
+<div class="portlet light">
+
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("InterestHobbies")</div>
+        </div>
+    </div>
+        
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @using (var f = Html.BeginSubForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        @s.FieldFor(m => m.Outings).Attrs(new { ng_model = "vm.workingModel.outings" })
+                        @s.FieldFor(m => m.ArtsCrafts).Attrs(new { ng_model = "vm.workingModel.artsCrafts" })
+                        @s.FieldFor(m => m.Singing).Attrs(new { ng_model = "vm.workingModel.singing" })
+                        @s.FieldFor(m => m.InterestHobbyOthers).Attrs(new { ng_model = "vm.workingModel.interestHobbyOthers", ng_change = "vm.initialiseInterestHobbyOthersDescription()" })
+                        <div class="form-group form-md-line-input" ng-if="vm.workingModel.interestHobbyOthers">
+                            <input type="text" ng-model="vm.workingModel.interestHobbyOthersDescription" class="form-control" id="othersInterestHobbyDescription" name="othersInterestHobbyDescription" placeholder="Provide Other Interest Hobby" ng-required="true" required-message="'@L("OthersPleaseSpecifyErrorMessage")'">
+                            <label class="control-label" for="othersInterestHobbyDescription">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                        </div>
+                        @s.FieldFor(m => m.InterestHobbyRemarks).Attrs(new { ng_model = "vm.workingModel.interestHobbyRemarks" })                       
+                    }
+                }
+            </div>
+            <div ng-switch-default>               
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.outings)"></div>
+                        <label class="control-label">@L("Outings")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.artsCrafts)"></div>
+                        <label class="control-label">@L("ArtsCrafts")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.singing)"></div>
+                        <label class="control-label">@L("Singing")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.interestHobbyOthers)"></div>
+                        <label class="control-label">@L("InterestHobbyOthers")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.model.interestHobbyOthers">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.interestHobbyOthersDescription ? vm.model.interestHobbyOthersDescription: '-'}}</div>
+                        <label class="control-label">@L("InterestHobbyOthersDescription")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.interestHobbyRemarks ? vm.model.interestHobbyRemarks: '-'}}</div>
+                        <label class="control-label">@L("InterestHobbyRemarks")</label>
+                    </div>
+                </div>                   
+            </div>
+        </div>
+    </div>
+</div>
+

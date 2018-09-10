@@ -1,0 +1,120 @@
+﻿@model ReferralDto
+@using IRMS.Entities.Dto;
+<div ng-controller="tenant.views.irms.homeHelpOthersView as homeHelpOthers">
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div busy-if="vm.loading">
+            <!-- Home Help Section -->
+            <div id="HomeHelp" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("HomeHelp")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ homeHelpOthers.homeHelpList.liftLandingDesc }}</div>
+                                <label class="control-label view-label" for="liftLandingDesc">@L("LiftLanding")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ homeHelpOthers.homeHelpList.liftLandingKerbDesc }}</div>
+                                <label class="control-label view-label" for="liftLandingKerbDesc">@L("LiftLandingKerb")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ homeHelpOthers.homeHelpList.foodAmenitiesDesc }}</div>
+                                <label class="control-label view-label" for="foodAmenitiesDesc">@L("FoodAmenities")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ homeHelpOthers.homeHelpList.commonCorridorDesc }}</div>
+                                <label class="control-label view-label" for="commonCorridorDesc">@L("CommonCorridor")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ homeHelpOthers.homeHelpList.kitchenKerbDesc }}</div>
+                                <label class="control-label view-label" for="kitchenKerbDesc">@L("KitchenKerb")</label>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ homeHelpOthers.homeHelpList.toiletKerbDesc }}</div>
+                                <label class="control-label view-label" for="toiletKerbDesc">@L("ToiletKerb")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ homeHelpOthers.homeHelpList.homeModifiedDesc }}</div>
+                                <label class="control-label view-label" for="homeModifiedDesc">@L("HomeModified")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ homeHelpOthers.homeHelpList.transportDesc }}</div>
+                                <label class="control-label view-label" for="transportDesc">@L("Transport")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ homeHelpOthers.homeHelpList.publicTransportDesc }}</div>
+                                <label class="control-label view-label" for="publicTransportDesc">@L("PublicTransport")</label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ homeHelpOthers.homeHelpList.others }}</div>
+                                <label class="control-label view-label" for="others">@L("Others")</label>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Others Data Section -->
+            <div id="Others" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("Others")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>@L("Message")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in homeHelpOthers.othersList">
+                                        <td>{{ item.message }}</td>
+                                    </tr>
+                                    <tr ng-show="!homeHelpOthers.othersList">
+                                        <td>
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

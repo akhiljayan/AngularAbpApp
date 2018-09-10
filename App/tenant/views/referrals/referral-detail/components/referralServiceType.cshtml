@@ -1,0 +1,88 @@
+﻿<style type="text/css">
+    .largeWidth {
+        width: 100% !important;
+    }
+
+    .smallWidth {
+        width: 65.667% !important;
+    }
+</style>
+<div id="ReferralServiceType" busy-if="referralServiceType.loadingRST">
+    <div class="portlet light">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject">@L("ReferralServiceType")</span>
+            </div>
+            <div class="actions dropdown inputs">
+                <a ng-click="vm.create(vm.referral)" ng-if="vm.serviceTypePermissions.create && !vm.isNew" class="icon-wrapper">
+                    <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                </a>
+            </div>
+        </div>
+        <div class="portlet-body" ng-if="vm.serviceTypePermissions.view">
+            <div ng-repeat="data in vm.referralServiceTypeList">
+                <div class="row margin-bottom-10" style="cursor:pointer" ng-click="vm.edit(data.referralServiceType.id, vm.referral, data.referralServiceType.status)">
+                    <div class="col-md-7">
+                        <span class="font-16-main bold">{{data.referralServiceType.serviceType.description}}</span>
+                        <div class="small">@L("ReferredBy"): {{data.referralServiceType.referringInstitution.description ? data.referralServiceType.referringInstitution.description : "-"}}</div>
+                        <div class="small" ng-show="vm.referral.isReferredByAIC">AIC &middot; {{data.referralServiceType.aicReferralServiceType}} &middot; {{data.referralServiceType.aicAssignmentDate | date :  "dd-MMM-y"}}</div>
+                        <div class="small" ng-show="!vm.referral.isReferredByAIC">Non AIC</div>
+                    </div>
+                    <div class="col-md-5 text-right">
+                        <span class="font-16-main bold">{{data.referralServiceType.status | enumText : "referralServiceTypeStatus" }}</span><br />
+                        <div class="small bold" ng-show="data.referralServiceType.status == 1"> @L("PendingAdmission") </div>
+                        <a class="redirect-anchor bold fontStealGreen" ng-if="data.referralServiceType.status == 5" href="#!/tenant/admission/discharged//{{data.admission.id}}">{{data.admission.name}}</a>
+                        <a class="redirect-anchor bold fontStealGreen" ng-if="data.referralServiceType.status == 2" href="#!/tenant/admission/admitted//{{data.admission.id}}">{{data.admission.name}}</a>
+                    </div>
+                </div>
+
+                <div class="row margin-bottom-10">
+                    <div class="col-md-4 nopadding-right" ng-if="data.referralServiceType.referralStatusLogs.length > 0" style="width:34.333%;">
+                        <span class="font-13-main bold fontStealGreen cursor-pointer" ng-show="data.referralServiceType.referralStatusLogs.length > 0" ng-click="vm.loadViewStatusLog(data.referralServiceType.id)">
+                            <span ng-if="vm.openLogs.indexOf(data.referralServiceType.id) != -1">@L("Hide")</span>
+                            <span ng-if="vm.openLogs.indexOf(data.referralServiceType.id) == -1">@L("View")</span>
+                            @L("StatusLog")                            
+                            <i class="glyphicon v-centre" ng-class="{'glyphicon-chevron-up': vm.openLogs.indexOf(data.referralServiceType.id) != -1, 'glyphicon-chevron-down': vm.openLogs.indexOf(data.referralServiceType.id) == -1}"></i>
+                        </span>
+                    </div>
+
+                    <div class="col-md-8 text-right nopadding-left" ng-style="vm.getWidthStyle(data.referralServiceType.referralStatusLogs.length)" style="float:right">
+                        <a class="linkButton nopadding" ng-if="data.referralServiceType.status==0 && vm.serviceTypePermissions.approve" ng-click="vm.serviceApprove(data.referralServiceType)" style="display: inline-block;">
+                            <i class="material-icons ps-btn-material-referral">check</i>
+                            @L("Approve")
+                        </a>
+                        <a class="linkButton nopadding" ng-if="data.referralServiceType.status==1 && vm.serviceTypePermissions.admit" ng-click="vm.serviceAdmit(data.referralServiceType)" style="display: inline-block;">
+                            <i class="ps-icon-admit material-icons ps-btn-custom-referral"></i>@L("Admit")
+                        </a>&nbsp;
+                        <a class="linkButton nopadding" ng-click="vm.serviceReject(data.referralServiceType)" ng-if="(data.referralServiceType.status==0 || data.referralServiceType.status==1) && vm.serviceTypePermissions.reject" style="display: inline-block;">
+                            <i class="material-icons ps-btn-material-referral">clear</i>
+                            @L("Reject")
+                        </a> &nbsp;
+                        <a class="linkButton nopadding" ng-if="(data.referralServiceType.status==0 || data.referralServiceType.status==1) && vm.serviceTypePermissions.withdraw" ng-click="vm.serviceWithdraw(data.referralServiceType)" style="display: inline-block;">
+                            <i class="ps-icon-withdraw material-icons ps-btn-custom-referral"></i>@L("Withdraw")
+                        </a>
+                    </div>
+                </div>
+                <div class="row margin-bottom-10">
+                    <div class="col-md-12">
+                        <div class="well" ng-show="vm.openLogs.indexOf(data.referralServiceType.id) != -1" style="padding: 10px;">
+                            <div ng-repeat="statusLog in data.referralServiceType.referralStatusLogs" style="padding: 5px 0;">
+                                <div class="box-default font-13-main margin-bottom-10" style="padding-left: 8px;">
+                                    <div style="padding-bottom:6px">
+                                        {{statusLog.status | enumText : 'referralServiceTypeStatus' }} By <span class="bold">{{statusLog.creatorUserFullName}}</span> On <span class="bold">{{statusLog.statusDate | date :  "dd-MMM-y h:mm a"}}</span>
+                                    </div>
+                                    <div style="padding-top:6px">
+                                        {{statusLog.reason.description}}
+                                        {{statusLog.otherReasonText}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+            </div>
+        </div>
+    </div>
+</div>
+

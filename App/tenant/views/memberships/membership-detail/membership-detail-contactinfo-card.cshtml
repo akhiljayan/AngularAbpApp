@@ -1,0 +1,352 @@
+﻿@model MembershipDto
+
+@using Pulsesync.IngoTPCC.Application.Membership.Dto;
+
+@{
+    var copyNricAddressToResidentialAddress = "vm.copyAddress(vm.model.person.nricAddress, vm.model.person.residentialAddress);";
+    var copyNricAddressToBillingAddress = "vm.copyAddress(vm.model.person.nricAddress, vm.model.person.billingAddress);";
+    var nricAddressChanged = copyNricAddressToResidentialAddress + copyNricAddressToBillingAddress;
+}
+
+<div id ="ContactInformation" class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("ContactInformation")</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @using (var f = Html.BeginSubForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        @(s.FieldFor(m => m.Person.HomePhone)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.person.homePhone"
+                            }))
+
+                        @(s.FieldFor(m => m.Person.MobilePhone)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.person.mobilePhone"
+                            }))
+
+                        @(s.FieldFor(m => m.Person.OfficePhone)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.person.officePhone"
+                            }))
+
+                        @(s.FieldFor(m => m.Person.Email)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.person.email"
+                            }))
+                    }
+                    <div>
+                        <p class="bold fontStealGreen">@L("NRICAddress")</p>
+                        @using (var s = f.BeginSection())
+                        {
+                            @(s.FieldFor(m => m.Person.NricAddress.PostalCode)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.nricAddress.postalCode",
+                                    ng_model_options = "{ updateOn: 'blur' }",
+                                    ng_change = nricAddressChanged,
+                                    ng_keyup = "vm.getAddress(vm.model.person.nricAddress,$event)"
+                                }))                                                           
+
+                            @(s.FieldFor(m => m.Person.NricAddress.BlockNo)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.nricAddress.blockNo",
+                                    ng_model_options = "{ updateOn: 'blur' }",
+                                    ng_change = nricAddressChanged
+                                }))
+
+                            @(s.FieldFor(m => m.Person.NricAddress.StreetName)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.nricAddress.streetName",
+                                    ng_model_options = "{ updateOn: 'blur' }",
+                                    ng_change = nricAddressChanged
+                                }))
+
+                            @(s.FieldFor(m => m.Person.NricAddress.BulidingName)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.nricAddress.bulidingName",
+                                    ng_model_options = "{ updateOn: 'blur' }",
+                                    ng_change = nricAddressChanged
+                                }))
+
+                            @(s.FieldFor(m => m.Person.NricAddress.UnitNo)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.nricAddress.unitNo",
+                                    ng_model_options = "{ updateOn: 'blur' }",
+                                    ng_change = nricAddressChanged
+                                }))
+
+                            @(s.FieldFor(m => m.Person.NricAddress.CountryId)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.nricAddress.countryId",
+                                    ng_change = nricAddressChanged
+                                })
+                                .AsDropDown())
+
+                            @(s.FieldFor(m => m.Person.NricAddress.OwnershipId)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.nricAddress.ownershipId",
+                                    ng_change = nricAddressChanged
+                                })
+                                .AsDropDown())
+
+                            @(s.FieldFor(m => m.Person.NricAddress.TypeOfAccommodationId)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.nricAddress.typeOfAccommodationId",
+                                    ng_change = nricAddressChanged
+                                })
+                                .AsDropDown())
+                        }
+                    </div>
+                    <div>
+                        <p class="bold fontStealGreen">@L("ResidentialAddress")</p>
+                        <div class="form-group form-md-checkboxes">
+                            <div class="md-checkbox-list">
+                                <div class="md-checkbox">
+                                    <input id="residentialSameAsNric" type="checkbox" class="form-control"
+                                           ng-model="vm.model.person.residentialAddress.isSameAsNricAddress"
+                                           ng-change="vm.copyAddress(vm.model.person.nricAddress, vm.model.person.residentialAddress, true);" />
+                                    <label for="residentialSameAsNric">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("SameAsNRICAddress")
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        @using (var s = f.BeginSection())
+                        {
+                            @(s.FieldFor(m => m.Person.ResidentialAddress.PostalCode)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.residentialAddress.postalCode",
+                                    ng_keyup = "vm.getAddress(vm.model.person.residentialAddress,$event)",
+                                    ng_disabled = "vm.model.person.residentialAddress.isSameAsNricAddress"
+                                }))
+
+                            @(s.FieldFor(m => m.Person.ResidentialAddress.BlockNo)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.residentialAddress.blockNo",
+                                    ng_disabled = "vm.model.person.residentialAddress.isSameAsNricAddress"
+                                }))
+
+                            @(s.FieldFor(m => m.Person.ResidentialAddress.StreetName)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.residentialAddress.streetName",
+                                    ng_disabled = "vm.model.person.residentialAddress.isSameAsNricAddress"
+                                }))
+
+                            @(s.FieldFor(m => m.Person.ResidentialAddress.BulidingName)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.residentialAddress.bulidingName",
+                                    ng_disabled = "vm.model.person.residentialAddress.isSameAsNricAddress"
+                                }))
+
+                            @(s.FieldFor(m => m.Person.ResidentialAddress.UnitNo)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.residentialAddress.unitNo",
+                                    ng_disabled = "vm.model.person.residentialAddress.isSameAsNricAddress"
+                                }))
+
+                            @(s.FieldFor(m => m.Person.ResidentialAddress.CountryId)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.residentialAddress.countryId",
+                                    ng_disabled = "vm.model.person.residentialAddress.isSameAsNricAddress"
+                                }).AsDropDown())
+
+                            @(s.FieldFor(m => m.Person.ResidentialAddress.OwnershipId)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.residentialAddress.ownershipId",
+                                    ng_disabled = "vm.model.person.residentialAddress.isSameAsNricAddress"
+                                })
+                                .AsDropDown())
+
+                            @(s.FieldFor(m => m.Person.ResidentialAddress.TypeOfAccommodationId)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.residentialAddress.typeOfAccommodationId",
+                                    ng_disabled = "vm.model.person.residentialAddress.isSameAsNricAddress"
+                                })
+                                .AsDropDown())
+                        }
+                    </div>
+                    <div>
+                        <p class="bold fontStealGreen">@L("BillingAddress")</p>
+                        <div class="form-group form-md-checkboxes">
+                            <div class="md-checkbox-list">
+                                <div class="md-checkbox">
+                                    <input id="billingSameAsNric" type="checkbox" class="form-control"
+                                           ng-model="vm.model.person.billingAddress.isSameAsNricAddress"
+                                           ng-change="vm.copyAddress(vm.model.person.nricAddress, vm.model.person.billingAddress, true);" />
+                                    <label for="billingSameAsNric">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("SameAsNRICAddress")
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        @using (var s = f.BeginSection())
+                        {
+                            @(s.FieldFor(m => m.Person.BillingAddress.AddressTo)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.billingAddress.addressTo"
+                                }))
+
+                            @(s.FieldFor(m => m.Person.BillingAddress.PostalCode)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.billingAddress.postalCode",
+                                    ng_keyup = "vm.getAddress(vm.model.person.billingAddress,$event)",
+                                    ng_disabled = "vm.model.person.billingAddress.isSameAsNricAddress"
+                                }))
+
+                            @(s.FieldFor(m => m.Person.BillingAddress.BlockNo)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.billingAddress.blockNo",
+                                    ng_disabled = "vm.model.person.billingAddress.isSameAsNricAddress"
+                                }))
+
+                            @(s.FieldFor(m => m.Person.BillingAddress.StreetName)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.billingAddress.streetName",
+                                    ng_disabled = "vm.model.person.billingAddress.isSameAsNricAddress"
+                                }))
+
+                            @(s.FieldFor(m => m.Person.BillingAddress.BulidingName)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.billingAddress.bulidingName",
+                                    ng_disabled = "vm.model.person.billingAddress.isSameAsNricAddress"
+                                }))
+
+                            @(s.FieldFor(m => m.Person.BillingAddress.UnitNo)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.billingAddress.unitNo",
+                                    ng_disabled = "vm.model.person.billingAddress.isSameAsNricAddress"
+                                }))
+
+                            @(s.FieldFor(m => m.Person.BillingAddress.CountryId)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.person.billingAddress.countryId",
+                                    ng_disabled = "vm.model.person.billingAddress.isSameAsNricAddress"
+                                })
+                                .AsDropDown())
+                        }
+                    </div>
+                }
+            </div>
+            <div ng-switch-default>
+                <div class="row">
+                    <div class="contact-details">
+                        <div class="icon col-md-12">
+                            <i class="material-icons" uib-popover="@L("HomePhone")" popover-placement="bottom" popover-trigger="'mouseenter'">
+                                phone
+                            </i>
+                            <span class="otherText" uib-popover="@L("HomePhone")" popover-placement="bottom" popover-trigger="'mouseenter'">
+                                {{ vm.model.person.homePhone || '-' }}
+                            </span>
+                        </div>
+                        <div class="icon col-md-12">
+                            <i class="material-icons" uib-popover="@L("MobilePhone")" popover-placement="bottom" popover-trigger="'mouseenter'">
+                                phone_iphone
+                            </i>
+                            <span class="otherText" uib-popover="@L("MobilePhone")" popover-placement="bottom" popover-trigger="'mouseenter'">
+                                {{ vm.model.person.mobilePhone || '-' }}
+                            </span>
+                        </div>
+                        <div class="icon col-md-12">
+                            <span class="ps-icon-office grey" uib-popover="@L("OfficePhone")" popover-placement="bottom" popover-trigger="'mouseenter'"></span>
+                            <span class="otherText" uib-popover="@L("OfficePhone")" popover-placement="bottom" popover-trigger="'mouseenter'">
+                                {{ vm.model.person.officePhone || '-' }}
+                            </span>
+                        </div>
+                        <div class="icon col-md-12">
+                            <i class="material-icons" uib-popover="@L("Email")" popover-placement="bottom" popover-trigger="'mouseenter'">
+                                email
+                            </i>
+                            <span class="otherText" uib-popover="@L("Email")" popover-placement="bottom" popover-trigger="'mouseenter'">
+                                {{ vm.model.person.email || '-' }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="address-details col-md-12">
+                        <h5 class="bold fontStealGreen margin-bottom-10">@L("NRICAddress")</h5>
+                        <address-view address="vm.model.person.nricAddress"></address-view>
+                        {{ vm.model.person.nricAddress.ownership.description }} {{ vm.model.person.nricAddress.typeOfAccommodation.description }}
+                    </div>
+                    <div class="address-details col-md-12">
+                        <h5 class="bold fontStealGreen margin-bottom-10">@L("ResidentialAddress")</h5>
+                        <div class="md-checkbox" ng-if="vm.model.person.residentialAddress.isSameAsNricAddress">
+                            <input type="checkbox" ng-model="vm.model.person.residentialAddress.isSameAsNricAddress" />
+                            <label for="residentialSameAsNric">
+                                <span class="inc"></span>
+                                <span class="check"></span>
+                                <span class="box"></span>
+                                @L("SameAsNRICAddress")
+                            </label>
+                        </div>
+                        <div ng-if="!vm.model.person.residentialAddress.isSameAsNricAddress">
+                            <address-view address="vm.model.person.residentialAddress"></address-view>
+                            {{ vm.model.person.residentialAddress.ownership.description }} {{ vm.model.person.residentialAddress.typeOfAccommodation.description }}
+                        </div>
+                    </div>
+                    <div class="address-details col-md-12">
+                        <h5 class="bold fontStealGreen margin-bottom-10">@L("BillingAddress")</h5>
+                        <div class="md-checkbox" ng-if="vm.model.person.billingAddress.isSameAsNricAddress">
+                            <input type="checkbox" ng-model="vm.model.person.billingAddress.isSameAsNricAddress" />
+                            <label for="billingSameAsNric">
+                                <span class="inc"></span>
+                                <span class="check"></span>
+                                <span class="box"></span>
+                                @L("SameAsNRICAddress")
+                            </label>
+                        </div>
+
+                        <div ng-if="vm.model.person.billingAddress.addressTo">
+                            <strong>@L("AddressTo")</strong>
+                            <p class="bold no-margin margin-bottom-0">
+                                {{ vm.model.person.billingAddress.addressTo }}
+                            </p>
+                        </div>
+
+                        <div ng-if="!vm.model.person.billingAddress.isSameAsNricAddress">
+                            <address-view address="vm.model.person.billingAddress"></address-view>
+                            {{ vm.model.person.billingAddress.ownership.description }} {{ vm.model.person.billingAddress.typeOfAccommodation.description }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

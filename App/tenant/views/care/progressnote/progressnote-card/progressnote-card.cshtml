@@ -1,0 +1,135 @@
+﻿<style>
+    .progressnote-list-item-content ul {
+        margin-left: 40px !important;
+    }
+</style>
+
+<div id="ProgressNote" class="portlet light" busy-if="$ctrl.loading" ng-class="{ 'div-disabled': $ctrl.mode == 'new' }">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("ProgressNotes")</span>
+        </div>
+
+        <div class="actions dropdown inputs">
+            <div class="input-small-new inline-block">
+                <form action="" class="search-form">
+                    <div class="form-group has-feedback input-inline">
+                        <label for="search" class="sr-only">@L("Search")</label>
+                        <input type="text" ng-model="$ctrl.filter" enter-key="$ctrl.load()" class="form-control form-control-solid input-circle search-input font-13-main clearable" placeholder="search keywords...">
+                        <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="$ctrl.clearFilter()"></a>
+                        <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                    </div>
+                </form>
+            </div>
+            <a ng-click="$ctrl.showDetails = !$ctrl.showDetails" title="Show associated Service types and Status" class="icon-wrapper">
+                <i ng-show="!$ctrl.showDetails" class="material-icons custom-icon">menu</i>
+                <i ng-show="$ctrl.showDetails" class="material-icons custom-icon">view_headline</i>
+            </a>
+            @*  && $ctrl.mode!='new' *@
+            <a ng-click="$ctrl.create()" ng-if="$ctrl.isPatient && $ctrl.shouldCreateProgressNoteForVisitLog && ($ctrl.permissions.createAndConfirmProgressNote || $ctrl.permissions.createDraftProgressNote || $ctrl.permissions.createConfidentialProgressNote)" class="icon-wrapper">
+                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+            </a>
+            <div class="dropdown" uib-dropdown auto-close="outsideClick" is-open="$ctrl.showFilterDropdown" style="display: inline-block;">
+                <a class="icon-wrapper" title="Filter" uib-dropdown-toggle>
+                    <i class="material-icons custom-icon">more_vert</i>
+                </a>
+                @* custom-multiselect multiselect-container *@
+                <ul class="dropdown-menu pull-right  checkbox" uib-dropdown-menu role="menu">
+                    <li class="dropdown-header">@L("ShowLast")</li>
+                    <li role="menu" ng-click="$ctrl.selectPeriod(0)"><a href="#">30 days</a></li>
+                    <li role="menu" ng-click="$ctrl.selectPeriod(1)"><a href="#">60 days</a></li>
+                    <li role="menu" ng-click="$ctrl.selectPeriod(2)"><a href="#">90 days</a></li>
+                    <li role="separator" class="divider"></li>
+
+                    <li class="dropdown-header">@L("Type")</li>
+                    <li ng-repeat="item in $ctrl.progressNoteTypes" role="menuitem">
+                        <a href="#" data-value="{{ $index }}" ng-click="$ctrl.selectProgressNoteType(item)" class="padding-left-40">
+                            <input type="checkbox" ng-checked="item.isChecked" />
+                            {{ item.description }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="portlet-body">
+
+        <div class="mt-element-list">
+            <div class="mt-list-container list-card group progressnote-ext">
+                <div ng-repeat="category in $ctrl.data.items">
+                    <div class="list-toggle-container group" data-toggle="collapse" href="#category{{ $index }}" aria-expanded="true">
+                        <div class="list-toggle">
+                            {{ category.problemDescription }}
+                        </div>
+                    </div>
+                    <div class="panel-collapse collapse in" id="category{{ $index }}" aria-expanded="true">
+                        <div class="progressnote-list">
+                            <ul>
+                                <li class="mt-list-item" ng-repeat="progressNote in category.progressNotes" ng-init="progressNote.hidden = true">
+
+                                    @* Your code starts here *@
+
+                                    <div class="progressnote-list-item" ng-class="{ 'pinned': progressNote.isPinned, 'careplan-review-item': progressNote.source == 2 }">
+                                        <div class="progressnote-list-item-header">
+                                            <i class="progressnote-pin material-icons cursor-pointer" ng-click="$ctrl.pin(progressNote)">{{ progressNote.isPinned ? 'star' : 'star_border' }}</i>
+                                            <h3 class="progressnote-subject">{{ progressNote.subject }}</h3>
+                                            <i class="material-icons cursor-pointer" ng-click="progressNote.show = !progressNote.show">{{ progressNote.show ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</i>
+
+                                            <ul class="actions list-unstyled list-inline pull-right">
+                                                <li ng-if="progressNote.isSaveAsDraft">
+                                                    <a href="#" ng-click="$ctrl.edit(progressNote);$event.stopPropagation()">@L("Edit")</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" ng-click="$ctrl.editTag(progressNote)">@L("EditTag")</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="progressnote-list-item-summary" ng-if="progressNote.show">
+                                            <div class="row">
+                                                <div class="col-sm-6" style="padding-bottom: 15px;">
+                                                    <strong>Date &amp; Time</strong>
+                                                    <p>{{ progressNote.progressNoteDateTime | dateTimeFormat }}</p>
+                                                </div>
+                                                <div class="col-sm-6" style="padding-bottom: 15px;">
+                                                    <strong>Progress Note Type</strong>
+                                                    <p>{{ progressNote.progressNoteType.description }}</p>
+                                                </div>
+                                                <div class="col-sm-6" style="padding-bottom: 15px;">
+                                                    <strong>Created By</strong>
+                                                    <p>{{ progressNote.creatorUser.fullName }}</p>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <strong>Tags</strong>
+                                                    <p class="bootstrap-tagsinput">
+                                                        <span class="tag label label-info tag-spacing" ng-repeat="tag in progressNote.tags">
+                                                            {{ tag.name }}
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="progressnote-list-item-content" ng-if="$ctrl.showDetails">
+                                            <span ng-if="progressNote.hidden" ng-bind-html="progressNote.note | limitTo: 500"></span>
+                                            <span ng-if="!progressNote.hidden" ng-bind-html="progressNote.note"></span>
+
+                                            <span class="btn-link ngTruncateToggleText" ng-click="progressNote.hidden = !progressNote.hidden" ng-if="progressNote.note.length > 500 && progressNote.hidden"> ...</span>
+                                            <span class="btn-link ngTruncateToggleText" ng-click="progressNote.hidden = !progressNote.hidden" ng-if="progressNote.note.length > 500 && !progressNote.hidden">
+                                                <i class="material-icons cursor-pointer">keyboard_arrow_up</i>
+                                            </span>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+
+                                    @* Your code ends here *@
+
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <simple-paginator data="$ctrl.data" small-page-size="true" on-page-changed="$ctrl.load(requestParams)"></simple-paginator>
+    </div>
+</div>

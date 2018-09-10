@@ -1,0 +1,126 @@
+﻿@model CreateOrUpdateProgressNoteInput
+
+@using PulseSync.IngoTPCC.Application.Care.ProgressNotes.Dto
+
+<style>
+    select[label='Existing Problem'] + div.btn-group ul {
+        width: 100%;
+    }
+</style>
+
+<div class="portlet light" busy-if="vm.saving">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject" ng-if="vm.mode == 'new'">
+                @L("CreateProgressNote")
+            </div>
+            <div class="caption-subject" ng-if="vm.mode == 'edit'">
+                @L("EditProgressNote")
+            </div>
+        </div>
+        <div class="tools pull-right">
+            <maximize-width-modal></maximize-width-modal>
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        @{
+            var attrs = new Dictionary<string, object> {
+                { "name", "vm.form" },
+                { "novalidate", "" },
+                { "angular-validator", ""}
+            };
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs).AddClass("scrollable-form-body")))
+        {
+            using (var s = f.BeginSection())
+            {
+                <div ng-class="{ 'disable-links': (!vm.model.isSaveAsDraft && vm.mode == 'edit') }">
+                    <div class="form-group form-md-line-input" style="z-index: 10056;" ng-if="!vm.visitLogId">
+                        <label class="control-label" for="@L("ExistingProblem")">@L("ExistingProblem")</label>
+                        <select id="ExistingProblem"
+                                name="ExistingProblem"
+                                label="@L("ExistingProblem")"
+                                ng-model="vm.model.personProblemId"
+                                multiple="multiple"
+                                multi-select
+                                ng-options="x.id as x.description for x in vm.personProblems"
+                                optionchange="vm.personProblems"
+                                @*ng-disabled="(!!vm.workingModel.problemCustom && !vm.workingModel.problemId) || !!item.customGoal"*@></select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            @(s.FieldFor(m => m.ProgressNoteDateTime)
+                                .Attrs(new
+                                {
+                                    ng_model = "vm.model.progressNoteDateTime",
+                                    beforeoron = "vm.minProgressNoteDateTime",
+                                    maxdate = "{{ vm.maxProgressNoteDateTime }}",
+                                    invalid_message = "'Date time must be during the visited period.'"
+                                }))
+                        </div>
+                        <div class="col-md-6">
+                            @s.FieldFor(m => m.ProgressNoteTypeId).AsDropDown().Attrs(new { ng_model = "vm.model.progressNoteTypeId", repeat = "vm.progressNoteTypes" })
+                        </div>
+                    </div>
+
+                    @s.FieldFor(m => m.Subject).Attrs(new { ng_model = "vm.model.subject" })
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <div class="form-group form-md-line-input">
+                                <label class="control-label">Add Tags</label>
+                                <ps-tagsinput ng-model="vm.model.tags"></ps-tagsinput>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <div class="form-group form-md-line-input">
+                                <label class="control-label">@L("ProgressNote")</label>
+                                <ps-ckeditor model="vm.model.note"></ps-ckeditor>
+                                @*<ng-ckeditor ng-model="vm.model.note" class="simpleEditor" ng-config="{'extraPlugins':'autogrow', 'removeButtons':'Image,About'}"> </ng-ckeditor>*@
+                            </div>
+                        </div>
+                    </div>
+
+                    @*@s.FieldFor(m => m.Note).Attrs(new { ng_model = "vm.model.note" }).AddClass("animate msd-elastic: \\n;").Rows(4)*@
+                </div>
+            }
+
+            <p class="bodyContext" ng-if="vm.mode == 'edit'">
+                @Html.Raw(L("CreationInfo", "vm.model.creatorUser.fullName", "vm.model.creationTime | dateTimeFormat"))
+            </p>
+            <p class="bodyContext" ng-if="vm.mode == 'edit'">
+                @Html.Raw(L("ModificationInfo", "vm.model.lastModifierUser.fullName", "vm.model.lastModificationTime | dateTimeFormat "))
+            </p>
+
+            <div class="row">
+                <div class="form-actions margin-top-10 pull-right">
+                    <div class="dropup inline-block" uib-dropdown>
+                        <a class="btn btn-circle light-grey-pcc btn-outline icon-wrapper" uib-dropdown-toggle>
+                            @L("Actions")
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu pull-right" uib-dropdown-menu role="menu">
+                            <li role="menu" ng-if="vm.permissions.createAndConfirmProgressNote">
+                                <a ng-click="vm.save(0)">@L("SaveAndConfirm")</a>
+                            </li>
+                            <li role="menu" ng-if="vm.permissions.createDraftProgressNote">
+                                <a ng-click="vm.save(1)">@L("SaveAsDraft")</a>
+                            </li>
+                            <li role="menu" ng-if="vm.permissions.createConfidentialProgressNote">
+                                <a ng-click="vm.save(2)">@L("SaveAsConfidential")</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()">
+                        <i class="material-icons ps-btn-material">clear</i>@L("Cancel")
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

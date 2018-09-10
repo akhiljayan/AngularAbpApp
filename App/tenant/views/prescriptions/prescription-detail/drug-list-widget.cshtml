@@ -1,0 +1,89 @@
+﻿<style>
+    .note .actions > li > a:hover {
+        color: #00bfb5;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .note .actions > li > a {
+        color: #36c6d3;
+        text-transform: none;
+        font-weight: bold;
+    }
+
+    .actions > li > a {
+        color: #00bfb5;
+        font-weight: bold;
+    }
+
+        .actions > li > a:hover {
+            color: #00bfb5;
+        }
+
+    .note .actions {
+        display: none;
+        float: right;
+    }
+
+    .note:hover .actions {
+        display: inline-block;
+    }
+</style>
+
+<div class="note row" ng-class="{ 'widget-bg-color-red': $ctrl.model.isExistedPrescription }">
+    <div class="block bold">
+        <div class="col-md-8 col-sm-8 nopadding-left">
+            {{ $ctrl.model.drugStrength }}
+        </div>
+        <div class="col-md-4 col-sm-4">
+            <ul class="actions list-unstyled list-inline" ng-if="$ctrl.step == 'first'">
+                <li>
+                    <a href="#" ng-click="$ctrl.deleteDrug($ctrl.index);$event.stopPropagation()">@L("Delete")</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <form class="form-horizontal" role="form">
+        <div class="form-body">
+            <div class="form-group margin-bottom-0">
+                <label class="col-md-5 col-sm-6">Order Start Date</label>
+                <label class="col-md-7 col-sm-6 bold">{{ $ctrl.model.orderedDate | dateFormat }}</label>
+            </div>
+            <div class="form-group margin-bottom-0" ng-if="$ctrl.showDetails">
+                <label class="col-md-5 col-sm-6">Type</label>
+                <label class="col-md-7 col-sm-6 bold">{{ $ctrl.isNumber($ctrl.model.type) ? ($ctrl.model.type | enumText: 'prescriptionType') : $ctrl.model.type }}</label>
+            </div>
+            <div class="form-group margin-bottom-0" ng-if="$ctrl.showDetails">
+                <label class="col-md-5 col-sm-6">Drug Source</label>
+                <label class="col-md-7 col-sm-6 bold">{{ $ctrl.model.drugSource.description }}</label>
+            </div>
+            <div class="form-group margin-bottom-0" ng-if="$ctrl.showDetails && ($ctrl.isNumber($ctrl.model.drug.drugType) || $ctrl.isNumber($ctrl.model.drug.drugCategory))">
+                <label class="col-md-5 col-sm-6">Drug Type (Category)</label>
+                <label class="col-md-7 col-sm-6 bold">{{ $ctrl.isNumber($ctrl.model.drug.drugType) ? ($ctrl.model.drug.drugType | enumText: 'drugType') : '-' }} ({{ $ctrl.isNumber($ctrl.model.drug.drugCategory) ?  ($ctrl.model.drug.drugCategory | enumText: 'drugCategory') : '-' }})</label>
+            </div>
+            <div class="form-group margin-bottom-0" ng-if="$ctrl.showDetails">
+                <label class="col-md-5 col-sm-6">Dose (Frequency)</label>
+                <label class="col-md-7 col-sm-6 bold">{{ $ctrl.model.dose }} ({{ $ctrl.model.drugFrequency.description }})</label>
+            </div>
+            <div class="form-group margin-bottom-0" ng-if="$ctrl.showDetails">
+                <label class="col-md-5 col-sm-6">Route</label>
+                <label class="col-md-7 col-sm-6 bold">{{ $ctrl.model.drugRoute.description }}</label>
+            </div>
+            <div class="form-group margin-bottom-0" ng-if="$ctrl.showDetails && $ctrl.model.durationQuantity">
+                <label class="col-md-5 col-sm-6">Duration/Qty</label>
+                <label class="col-md-7 col-sm-6 bold">{{ $ctrl.model.durationQuantity }}</label>
+            </div>
+            <div class="form-group margin-bottom-0" ng-if="$ctrl.showDetails">
+                <label class="col-md-5 col-sm-6">Short Term Use</label>
+                <label class="col-md-7 col-sm-6 bold">{{ $ctrl.model.isShortTermUse | yesnoFilter }}</label>
+            </div>
+            <div class="form-group margin-bottom-0" ng-if="$ctrl.showDetails">
+                <label class="col-md-12">
+                    <i>
+                        <span style="white-space: pre-line;">{{ $ctrl.model.specialInstructions }}</span>
+                    </i>
+                </label>
+            </div>
+        </div>
+    </form>
+</div>

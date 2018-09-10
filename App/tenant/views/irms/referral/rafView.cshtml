@@ -1,0 +1,126 @@
+﻿@model ReferralDto
+@using IRMS.Entities.Dto;
+<div busy-if="vm.loading">
+    <div ng-controller="tenant.views.irms.rafView as raf">
+
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div busy-if="vm.loading">
+                <!-- Resident Assessment Form Section -->
+                <div id="ResidentAssessmentForm" class="portlet light">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject">@L("RAF")</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ raf.rafList.mobility }}</div>
+                                    <label class="control-label view-label" for="mobility">@L("Mobility")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ raf.rafList.toileting }}</div>
+                                    <label class="control-label view-label" for="toileting">@L("Toileting")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ raf.rafList.feeding }}</div>
+                                    <label class="control-label view-label" for="feeding">@L("Feeding")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ raf.rafList.personalGroomingHygiene }}</div>
+                                    <label class="control-label view-label" for="personalGroomingHygiene">@L("PersonalGroomingHygiene")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ raf.rafList.socialEmotionalNeeds }}</div>
+                                    <label class="control-label view-label" for="socialEmotionalNeeds">@L("SocialEmotionalNeeds")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ raf.rafList.confusion }}</div>
+                                    <label class="control-label view-label" for="confusion">@L("Confusion")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ raf.rafList.psychiatricProblems }}</div>
+                                    <label class="control-label view-label" for="psychiatricProblems">@L("PsychiatricProblems")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ raf.rafList.behaviorProblems }}</div>
+                                    <label class="control-label view-label" for="behaviorProblems">@L("BehaviorProblems")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ raf.rafList.total }}</div>
+                                    <label class="control-label view-label" for="total">@L("TotalScore")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ raf.rafList.category }}</div>
+                                    <label class="control-label view-label" for="category">@L("Category")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ raf.rafList.latestAssessmentDate | irmsDateFormat }}</div>
+                                    <label class="control-label view-label" for="latestAssessmentDate">@L("LatestAssessmentDate")</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ raf.rafList.treatment }}</div>
+                                    <label class="control-label view-label" for="treatment">@L("Treatment")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ raf.rafList.treatmentOraltropical }}</div>
+                                    <label class="control-label view-label" for="treatmentOraltropical">@L("TreatmentOraltropical")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ raf.rafList.treatmentInjection }}</div>
+                                    <label class="control-label view-label" for="treatmentInjection">@L("TreatmentInjection")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ raf.rafList.treatmentPhysiotherapy }}</div>
+                                    <label class="control-label view-label" for="treatmentPhysiotherapy">@L("TreatmentPhysiotherapy")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ raf.rafList.treatmentSpecialProcedure }}</div>
+                                    <label class="control-label view-label" for="treatmentSpecialProcedure">@L("TreatmentSpecialProcedure")</label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ raf.rafList.treatmentSpecialProceduresMins }}</div>
+                                    <label class="control-label view-label" for="treatmentSpecialProceduresMins">@L("TreatmentSpecialProceduresMins")</label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{ raf.rafList.message }}</div>
+                                    <label class="control-label view-label" for="message">@L("Message")</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

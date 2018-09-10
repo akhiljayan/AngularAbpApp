@@ -1,0 +1,35 @@
+@using Pulsesync.IngoTPCC.Localization
+
+<div class="view-content" ng-controller="tenant.views.runningnumber.index as vm">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("RunningNumber")</span>
+                    </div>
+                    <div class="actions dropdown inputs">
+                        <a ng-click="vm.create()" title="Add Running Number" class="icon-wrapper">
+                            <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                        </a>
+                        @*<a ng-click="vm.delete()" title="Delete" class="icon-wrapper" ng-disabled="!vm.permissions.delete">
+                                <i class="material-icons custom-icon">delete</i>
+                            </a>*@
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div busy-if="vm.loading">
+                                <div ui-grid="vm.gridOptions" ui-grid-resize-columns dir=@(CultureHelper.IsRtl ? "rtl" : "")></div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <simple-paginator data="vm.data" on-page-changed="vm.loadData(requestParams)"></simple-paginator>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

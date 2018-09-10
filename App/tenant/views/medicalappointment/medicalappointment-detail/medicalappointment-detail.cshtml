@@ -1,0 +1,61 @@
+﻿@using Pulsesync.IngoTPCC.Authorization
+
+<div class="row-class" busy-if="vm.loading">
+
+    <!-- Person Header & Action buttons -->
+    <ps-uib-tabset tab-template="false" is-pinned="vm.personHeaderisPinned" style="margin-top: -10px;">
+        <ps-uib-tab-person-header>
+            <person-header person-model="vm.model.person" person-id="vm.model.personId" mode="vm.mode"></person-header>
+        </ps-uib-tab-person-header>
+
+        <ps-uib-tab-button>
+            <div class="col-md-1 col-sm-1 tabbable-line" style="text-align:left">
+                <div class="dropdown">
+                    <span class="dropdown-toggle" id="navigation-menu" type="button" data-toggle="dropdown" style="cursor:pointer;margin-top: 15px; display: inline-block;">
+                        <i class="ps-icon-section-menu" style="font-size:20px;color:#acacac;"></i>
+                    </span>
+                    <div class="dropdown-menu" aria-labelledby="navigation-menu" role="menu" style="width: 200px; background-color:#f9f9f9">
+                        <li role="presentation" ng-repeat="navigate in vm.navigationalMenu" ng-if="navigate.permission">
+                            <a role="menuitem" tabindex="-1" class="bold" href="#" ng-click="vm.gotoAnchor(navigate.key)">{{navigate.displayName}}</a>
+                        </li>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-11 col-sm-11" style="padding: 10px 0px 0px 0px;">
+                <div class="form-actions pull-right txt-align-cntr">
+
+                    <a class="linkButton btn-small inline-flex-center" master-save ng-click="vm.saveMedicalAppointment()" ng-if="vm.mode=='new'" ng-class="{'disabled-link': vm.isSavingDisabled }">
+                        <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                    </a>
+                    <a class="linkButton btn-small inline-flex-center" master-save ng-click="vm.saveMedicalAppointment(true)" ng-if="vm.mode=='new'" ng-class="{'disabled-link': vm.isSavingDisabled }">
+                        <i class="ps-icon-1x ps-icon-savenclose grey"></i> @L("SaveAndClose")
+                    </a>
+                    <a class="linkButton btn-small inline-flex-center" ng-click="vm.confirmMedicalAppointment()" ng-if="vm.mode!='new'&&(vm.permissions.confirm)&&!vm.model.isConfirmed&&!vm.model.isCancelled">
+                        <i class="material-icons  font-18-main v-top">lock</i> @L("Confirm")
+                    </a>
+                    <a class="linkButton btn-small inline-flex-center" ng-click="vm.cancelMedicalAppointment()" ng-if="vm.mode!='new'&&(vm.permissions.cancel)&&!vm.model.isCancelled">
+                        <i class="material-icons  font-18-main v-top">block</i> @L("Cancel")
+                    </a>
+                    <a class="linkButton btn-small inline-flex-center" ng-click="vm.deleteMedicalAppointment()" ng-if="vm.mode!='new' && vm.permissions.delete && !vm.model.isCancelled && !vm.model.isConfirmed">
+                        <i class="material-icons font-18-main v-top">delete_forever</i> @L("Delete")
+                    </a>
+                    <a class="linkButton btn-small inline-flex-center" ng-click="vm.close()">
+                        <i class="material-icons  font-18-main v-top">close</i> @L("Close")
+                    </a>
+                </div>
+            </div>
+        </ps-uib-tab-button>
+    </ps-uib-tabset>
+    <div class="tab-content">
+        <div id="PersonDetails" class="col-md-12 col-sm-12 col-xs-12 no-padding tab-pane fade in active">
+            <div class="col-md-6 col-sm-12">
+                <div busy-if="vm.loading">
+                    <medicalappointment-detail-general-card id="General" mode="vm.mode" model="vm.model" permissions="vm.permissions" on-update="vm.updateMedicalAppointment(event)" on-reload="vm.reloadMedicalAppointment()"></medicalappointment-detail-general-card>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <medicalappointment-detail-other-card id="Other" mode="vm.mode" model="vm.model" permissions="vm.permissions" on-update="vm.updateMedicalAppointment(event)" on-reload="vm.reloadMedicalAppointment()"></medicalappointment-detail-other-card>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,115 @@
+﻿@model MembershipDto
+
+@using Pulsesync.IngoTPCC.Application.Membership.Dto
+<div class="portlet light" ng-class="{ 'div-disabled': (vm.IsAgreed)}">
+
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("AdministrativeInfo")</div>
+        </div>
+    </div>
+
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @using (var f = Html.BeginSubForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        @s.FieldFor(m => m.ApplicationStatus).AsDropDown().Attrs(new { ng_model = "vm.workingModel.applicationStatus", repeat = "vm.applicationFilterStatus", ng_change = "vm.onChangeApplicationStatus(vm.workingModel.applicationStatus)", name = "ApplicationStatus" }).Label(@L("ApplicationStatus"))
+
+                        @s.FieldFor(m => m.IsMonitorFrailHomebound).Attrs(new { ng_model = "vm.workingModel.isMonitorFrailHomebound" })
+
+                        @(s.FieldFor(m => m.ModeOfReferenceId).Attrs(new
+                        {
+                           ng_model = "vm.workingModel.modeOfReferenceId",
+                           ng_change = "vm.initialiseOthersModeOfReference($select.selected.description)"
+                         }).Label(@L("ModeOfReference"))
+                         .AsDropDown())
+
+                        <div class="form-group form-md-line-input" ng-if="vm.showOthersModeOfReference">
+                            <input type="text" ng-model="vm.workingModel.othersModeOfReference" class="form-control" id="othersModeOfReference" name="othersModeOfReference" placeholder="Provide Other Mode Of Reference" ng-required="true" required-message="'@L("OthersPleaseSpecifyErrorMessage")'">
+                            <label class="control-label" for="othersModeOfReference">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                        </div>
+
+                        <div ng-switch="vm.model.membershipAgreementOption.code">
+                            @*edit mode*@
+                            <div ng-switch-when="Agree">
+                                @s.FieldFor(m => m.MembershipTypeId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.membershipTypeId", name = "membershipTypeId", ui_select_required = "ui-select-required", required_message = "'You must provide a value for Membership Type.'", invalid_message = "'You must provide a value for Membership Type.'" })
+                            </div>
+                            <div ng-switch-default>
+                                @s.FieldFor(m => m.MembershipTypeId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.membershipTypeId", name = "membershipTypeId" })
+                            </div>
+                        </div>
+
+                        @s.FieldFor(m => m.MembershipFeePayable).Attrs(new { ng_model = "vm.workingModel.membershipFeePayable", ng_change = "vm.onChangeMembershipFeePayable()" })
+
+                        @s.FieldFor(m => m.MembershipFee).Attrs(new
+                        {
+                           ng_disabled = "!vm.workingModel.membershipFeePayable",
+                           ng_model = "vm.workingModel.membershipFee",
+                        }).Label(@L("MembershipFee"))
+
+                        @s.FieldFor(m => m.RegisteredByUserId).AsDropDown().Attrs(new
+                        {
+                           ng_model = "vm.workingModel.registeredByUserId",
+                           repeat = "vm.userMaster",
+                           name = "RegisteredByUser"
+                        }).Label(@L("RegisteredBy"))
+
+                        @s.FieldFor(m => m.RegistrationDate).Attrs(new {ng_model = "vm.workingModel.registrationDate" })
+
+                        @s.FieldFor(m => m.EnteredByUserId).AsDropDown().Attrs(new
+                        {
+                          ng_model = "vm.workingModel.enteredByUserId",
+                          repeat = "vm.userMaster",
+                          name = "EnteredByUser"
+                        }).Label(@L("EnteredBy"))
+                   }
+                }
+            </div>
+            <div ng-switch-default>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.applicationStatus | enumText: 'applicationFilterStatus'}}</div>
+                    <label class="control-label">@L("ApplicationStatus")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.isMonitorFrailHomebound)"></div>
+                    <label class="control-label">@L("IsMonitorFrailHomebound")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.modeOfReference.description ? vm.model.modeOfReference.description: '-'}}</div>
+                    <label class="control-label">@L("ModeOfReference")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.model.modeOfReference.description=='Others'">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.othersModeOfReference ? vm.model.othersModeOfReference: '-'}}</div>
+                    <label class="control-label">@L("OthersModeOfReference")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.membershipType.description ? vm.model.membershipType.description: '-'}}</div>
+                    <label class="control-label">@L("MembershipType")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.membershipFeePayable)"></div>
+                    <label class="control-label">@L("MembershipFeePayable")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.membershipFee ? vm.model.membershipFee: '-'}}</div>
+                    <label class="control-label">@L("MembershipFee")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.registeredByUser.fullName ? vm.model.registeredByUser.fullName: '-'}}</div>
+                    <label class="control-label">@L("RegisteredBy")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.registrationDate| dateFormat}}</div>
+                    <label class="control-label">@L("RegistrationDate")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.enteredByUser.fullName ? vm.model.enteredByUser.fullName: '-'}}</div>
+                    <label class="control-label">@L("EnteredBy")</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

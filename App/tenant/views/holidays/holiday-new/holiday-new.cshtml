@@ -1,0 +1,49 @@
+﻿@using Pulsesync.IngoTPCC.Holidays.Dto;
+@model HolidayDto
+
+<div class="portlet light" data-drag="true" id="holidayModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Holiday")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        @{
+            var attributes = new Dictionary<string, object>();
+            attributes.Add("role", "form");
+            attributes.Add("id", "vm.holidayForm");
+            attributes.Add("name", "vm.holidayForm");
+            attributes.Add("novalidate", "");
+            attributes.Add("action", "#");
+            attributes.Add("angular-validator-submit", "vm.save($event)");
+            attributes.Add("angular-validator", "");
+            //attributes.Add("ng-validate", "vm.validationOptions");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form")))
+        {
+            using (var s = f.BeginSection())
+            {
+                <div class="portlet-body" style="display: block;">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.Date).Attrs(new { ng_model = "vm.holiday.date", ng_disabled = "vm.isReadOnlyMode", name = "date", required = "", required_message = "'You must provide a value for Holiday Date.'", mindate= "{{vm.todaysDate}}" })
+                            </div>
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.HolidayDescriptionId).AsDropDown().Attrs(new { ng_model = "vm.holiday.holidayDescriptionId", ng_disabled = "vm.isReadOnlyMode", name = "holidayDescription.description", required_message = "'You must provide a value for Holiday.'" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="form-actions noborder right">
+                <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.disableSave" ng-click="vm.save($event)"><i class="material-icons ps-btn-material">check</i>Ok</button>
+                <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+            </div>
+        }
+    </div>
+</div>

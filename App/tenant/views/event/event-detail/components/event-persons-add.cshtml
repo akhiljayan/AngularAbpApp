@@ -1,0 +1,263 @@
+﻿<style>
+    .person-list-grid {
+        min-height: 500px;
+    }
+
+        .person-list-grid ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            .person-list-grid ul li {
+                display: block;
+                position: relative;
+            }
+
+    .person-list-grid-item ul li {
+        width: 12%;
+        text-align: center;
+        padding: 10px;
+        margin: 10px 0 0;
+        display: inline-block;
+        min-height: 150px;
+        vertical-align: top;
+        cursor: pointer;
+    }
+
+    @@media (max-width: 976px) {
+        .person-list-grid-item ul li {
+            width: 24%;
+        }
+    }
+
+    .person-list-grid-item ul li .check-icon {
+        display: none;
+    }
+
+    .person-list-grid-item ul li .selected,
+    .person-list-grid-item ul li .attended {
+        border: 4px solid #00bfb5;
+        border-radius: 50%;
+    }
+
+        .person-list-grid-item ul li .selected .check-icon,
+        .person-list-grid-item ul li .lock-icon,
+        .person-list-grid-item ul li .cross-icon {
+            display: block;
+            position: absolute;
+            height: 27px;
+            width: 27px;
+            bottom: -10px;
+            right: 15px;
+        }
+
+            .person-list-grid-item ul li .selected .check-icon i.check:before {
+                background-color: #00bfb5;
+                border-radius: 50%;
+                padding: 6px;
+                color: #fff;
+            }
+
+    .person-list-grid-item ul li i.lock:before {
+        background-color: #00bfb5;
+        border-radius: 50%;
+        padding: 6px 10px;
+        color: #fff;
+    }
+
+    .person-list-grid-item ul li i.cross:before {
+        background-color: #ff0000;
+        border-radius: 50%;
+        padding: 6px 10px;
+        color: #fff;
+    }
+
+    .person-list-grid-item .person-list-grid-image {
+        display: block;
+        margin: 0 auto;
+        max-width: 160px;
+        max-height: 160px;
+        position: relative;
+    }
+
+        .person-list-grid-item .person-list-grid-image img {
+            display: inline-block;
+            max-width: 100%;
+            border: none;
+            width: 160px;
+        }
+
+    .person-list-grid-item .person-list-grid-details {
+        max-width: 300px;
+        min-height: 70px;
+        margin: 0 auto;
+        padding-top: 10px;
+        word-wrap: break-word;
+    }
+
+    .person-list-grid-item .person-list-grid-title {
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    .text-ellipsis {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width: 100%;
+        display: inline-block;
+    }
+
+    .selected-image:hover > img {
+        opacity: 0.5;
+    }
+
+    .selected-image:hover > .remove-selected {
+        display: block;
+    }
+
+    .remove-selected {
+        display: none;
+        position: absolute;
+        height: 27px;
+        width: 27px;
+        bottom: 1px;
+        right: 33px;
+    }
+
+    /*Slider favorire menu styles*/
+    .custom-scroll::-webkit-scrollbar {
+        width: 0.5em;
+    }
+
+    .custom-scroll::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    }
+
+    .custom-scroll::-webkit-scrollbar-thumb {
+        background-color: darkgrey;
+        outline: 1px solid slategrey;
+    }
+
+    .image-opacity{
+        opacity:0.5;
+    }
+</style>
+<div class="portlet light" busy-if="vm.saving">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">
+                Add Participants
+            </div>
+        </div>
+        <div class="tools pull-right">
+            <maximize-width-modal></maximize-width-modal>
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="form-body">
+            <div class="portlet light" style="padding:0px;">
+                <div class="portlet-title" style="padding: 0px 15px;">
+                    <div class="caption" style="width:100%">
+                        <div class="caption-subject" style="display: inline-block; vertical-align: -webkit-baseline-middle;">
+                            Persons - {{vm.heading}}
+                        </div>
+                        <div class="pull-right dropdown inputs">
+                            <div class="input-small-new inline-block">
+                                <form action="" class="search-form search-style-class">
+                                    <div class="form-group has-feedback input-inline search-form-group">
+                                        <label for="search" class="sr-only">@L("Search")</label>
+                                        <input type="text" ng-model="vm.filterText" enter-key="vm.searchValue()" class="form-control form-control-solid search-input input-circle font-13-main clearable" placeholder="search keywords...">
+                                        <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="vm.clearFilter()"></a>
+                                        <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <a ng-click="vm.selectAll()" class="icon-wrapper" title="Select All">
+                                <i class="material-icons custom-icon" style="padding-top: 0px;"><i class="fa fa-check-square"></i></i>
+                            </a>
+                            <a ng-click="vm.unSelectAll()" class="icon-wrapper" title="Unselect All Selected">
+                                <i class="material-icons custom-icon" style="padding-top: 0px;"><i class="fa fa-check-square-o"></i></i>
+                            </a>
+
+                            <a class="icon-wrapper" title="Filter" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                <i class="material-icons custom-icon">more_vert</i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="javascript:;" class="bold" ng-click="vm.getAll()">All</a>
+                                </li>
+                                <li class="divider"> </li>
+                                <li ng-repeat="grp in vm.groups">
+                                    <a href="javascript:;" class="font-13-main bold" ng-click="vm.getPersonByGroup(grp.id, grp.centreGroup)">{{grp.centreGroup}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="portlet-body custom-scroll" style="max-height:300px; overflow-y:auto">
+                    <div class="person-list-grid person-list-grid-item" busy-if="vm.personListLoading">
+                        <ul>
+                            <li ng-repeat="person in vm.persons" ng-click="vm.selectedPerson(person)">
+                                <a class="person-list-grid-image" ng-class="{'selected': person.selected, 'attended': person.isAttended }" href="#">
+                                    <img alt="{{ person.fullName }}" class="img-circle" ng-class="{'image-opacity' : vm.existingPersonList.indexOf(person.personId) > -1}" ng-src="{{ vm.appPath }}Person/GetPersonPictureById?personPictureName={{ person.pictureId }}&t=Clock.Now.Ticks.ToString()" />
+                                    <div class="check-icon" ng-if="person.selected">
+                                        <i class="check fa fa-check"></i>
+                                    </div>
+                                </a>
+                                <div class="person-list-grid-details">
+                                    <span class="person-list-grid-title">
+                                        {{ person.fullName }}
+                                        <br />
+                                        <span ng-if="person.registrationDocumentNumber">
+                                            ({{ person.registrationDocumentNumber }})
+                                        </span>
+                                    </span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-body" ng-if="vm.selectedPersonList.length || vm.existingPersonList.length">
+        <div class="portlet light" style="padding:0px;">
+            <div class="portlet-title" style="padding: 0px 15px;margin:0px">
+                <div class="caption">
+                    <div class="caption-subject" style="display: inline-block; vertical-align: -webkit-baseline-middle;">
+                        Selected Persons
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body custom-scroll" style="max-height:300px; overflow-y:auto">
+                <div class="col-md-12 col-sm-12" style="padding: 10px;">
+                    <div class="selected-persons" ng-repeat="person in vm.selectedPersonList.concat(vm.existingPersonList)" style="width:10%; display:inline-block; vertical-align:top; text-align:center;">
+                        <div class="person-list-grid-image" style="cursor:pointer; display:inline-block" title="{{(vm.allPersons | filter:{personId: person})[0].fullName}}">
+                            <div style="width:100%;position: relative;" ng-class="{'selected-image' : !(vm.existingPersonList.indexOf(person) > -1)}" ng-click="vm.removeSelectedPerson(person)" title="{{(vm.allPersons | filter:{personId: person})[0].fullName}}">
+                                <img class="img-circle" title="{{(vm.allPersons | filter:{personId: person})[0].fullName}}" ng-class="{ 'image-opacity' : (vm.existingPersonList.indexOf(person) > -1)}" style="width:50%; display:inline-block;" alt="{{ (vm.allPersons | filter:{personId: person})[0].fullName }}" ng-src="{{ vm.appPath }}Person/GetPersonPictureById?personPictureName={{ (vm.allPersons | filter:{personId: person})[0].pictureId }}&t=Clock.Now.Ticks.ToString()" /><br />
+                                <span class="remove-selected" title="{{(vm.allPersons | filter:{personId: person})[0].fullName}}">
+                                    <i class="fa fa-times-circle-o fa-3x"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <span title="{{(vm.allPersons | filter:{personId: person})[0].fullName}}" class="text-ellipsis" style="font-size:12px; display:inline-block">{{ (vm.allPersons | filter:{personId: person})[0].fullName }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="event-registration-actions" style="margin-top:20px">
+        <div class="row" style="text-align:right;margin-right:10px">
+            <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.saveRegistration()"><i class="material-icons ps-btn-material">check</i>Save</button>
+        </div>
+    </div>
+</div>

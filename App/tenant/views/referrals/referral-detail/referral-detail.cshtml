@@ -1,0 +1,253 @@
+﻿@using Pulsesync.IngoTPCC.Authorization
+
+<style type="text/css">
+    .list-inline-dot {
+        margin: 0;
+    }
+
+        .list-inline-dot li {
+            padding: 0;
+        }
+
+            .list-inline-dot li::before {
+                content: "•";
+            }
+
+            .list-inline-dot li:first-of-type::before {
+                content: none;
+            }
+
+    .biodata {
+    }
+
+        .biodata .biodata-line {
+            display: flex;
+            align-items: center;
+            margin: 3px 0px;
+        }
+
+            .biodata .biodata-line > span:first-child,
+            .biodata .biodata-line > i:first-child {
+                padding-right: 10px;
+            }
+
+        .biodata .contact,
+        .biodata .address {
+            margin-bottom: 24px;
+            display: table;
+        }
+
+    .portlet strong {
+        /*font-weight: normal;*/
+    }
+
+    .portlet p {
+        padding: 6px 0;
+        margin: 0 0 25px 0;
+    }
+
+    .portlet .view strong {
+        font-weight: normal;
+        color: #757575;
+    }
+
+    .portlet .view p {
+        color: #555555;
+    }
+
+    .portlet .view .bootstrap-tagsinput .tag {
+        padding: 2px 12px !important;
+    }
+
+        .portlet .view .bootstrap-tagsinput .tag [data-role="remove"] {
+            display: none;
+        }
+
+    .portlet.view .bootstrap-tagsinput input {
+        display: none;
+    }
+
+    .portlet .view .bootstrap-tagsinput {
+        border-bottom: none !important;
+    }
+</style>
+
+@{
+    var attrs = new Dictionary<string, object>();
+    attrs.Add("name", "vm.form");
+    attrs.Add("novalidate", "");
+    attrs.Add("angular-validator", "");
+}
+@using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs)))
+{
+    <ps-uib-tabset active="vm.activeTab" tab-template="true" is-pinned="vm.isPinned" style="margin-top: -10px;">
+        <ps-uib-tab-person-header>
+            <person-header person-id="vm.model.person.id"></person-header>
+        </ps-uib-tab-person-header>
+
+        <ps-uib-tab-navigation navigation-menu="vm.navigationalMenu" goto-anchor="vm.gotoAnchor(key)">
+        </ps-uib-tab-navigation>
+
+        <ps-uib-tab-button>
+            <div class="col-md-12 col-sm-12" style="padding: 10px 0px 0px 0px;">
+                <div class="col-md-12 col-sm-12 no-padding nopadding pull-right">
+                    <div class="btn-group pull-right">
+                        <a title="Close" class="icon-wrapper pull-right" style="cursor: pointer;" ng-if="vm.mode == 'edit' && !vm.isNewReferral" ng-click="vm.mode = '';vm.dischargeMode='';">
+                            <i class="material-icons custom-icon">close</i>
+                        </a>
+                        <a title="Close" class="icon-wrapper pull-right" style="cursor: pointer;" ng-if="vm.mode == 'view' || vm.mode == '' || vm.isNewReferral" ng-click="vm.close()">
+                            <i class="material-icons custom-icon">close</i>
+                        </a>
+                    </div>
+                    <div class="btn-group pull-right">
+                        <a class="btn green-haze btn-outline btn-circle btn-sm icon-wrapper pull-right" style="margin-top:0px !important" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
+                            Actions <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a class="linkButton btn-small inline-flex-center" style="width: 100%;" ng-if="!vm.isNewReferral && vm.mode !='edit'" ng-click="vm.mode='edit'; vm.activeTab='referralDetails';">
+                                    <i class="material-icons font-18-main v-top">edit</i> @L("Edit")
+                                </a>
+                            </li>
+                            <li>
+                                <a class="linkButton btn-small inline-flex-center" style="width: 100%;" ng-click="vm.save();">
+                                    <i class="material-icons font-18-main v-top">save</i> @L("Save")
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </ps-uib-tab-button>
+
+        <ps-uib-tab index="'referralDetails'" heading="@L("Referral")" set-navigation="vm.setReferralDetailsNavigation()">
+            <div class="col-md-6 col-sm-6 col-xs-6 no-padding">
+                @if (IsGranted(AppPermissions.Pages_Tenant_Person))
+                {
+                    @Html.Partial("~/App/tenant/views/referrals/referral-detail/templates/bioDataView.cshtml")
+
+                    @*@Html.Partial("~/App/tenant/views/person/contactInfoView.cshtml")*@
+
+                    @*@Html.Partial("~/App/tenant/views/person/otherInformationView.cshtml")*@
+                }
+
+                @Html.Partial("~/App/tenant/views/referrals/referral-detail/templates/triageInfoView.cshtml")
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-6 no-padding">
+                @Html.Partial("~/App/tenant/views/referrals/referral-detail/templates/generalView.cshtml")
+
+                <div ng-class="{ 'div-disabled': (vm.mode == 'edit') }">
+                    <referral-service-types referral="vm.model"></referral-service-types>
+                </div>
+
+                <referral-info-view referral="vm.model" mode="vm.mode" is-new="vm.isNewReferral"></referral-info-view>
+            </div>
+        </ps-uib-tab>
+
+        <ps-uib-tab index="'social'" heading="@L("Social")" set-navigation="vm.setSocialNavigation()">
+            <div class="col-md-6 col-sm-12">
+                @Html.Partial("~/App/tenant/views/referrals/referral-detail/templates/socialBackground.cshtml")
+            </div>
+            <div class="col-md-6 col-sm-12">
+                @if (IsGranted(AppPermissions.Pages_Tenant_FamilyMembers))
+                {
+                    <div ng-class="{ 'div-disabled': (vm.mode == 'edit') }">
+                        <person-detail-familymembers-card id="FamilyMember" is-new="vm.isNewReferral" person-id="vm.model.personId" referral-id="vm.model.id"></person-detail-familymembers-card>
+                    </div>
+                }
+
+                @if (IsGranted(AppPermissions.Pages_Tenant_Genogram_View))
+                {
+                    <div ng-class="{ 'div-disabled': (vm.mode == 'edit') }">
+                        <genogram-card id="Genogram" title="'@L("Genogram")'" mode="vm.isNewReferral ? 'new' : 'view'" template="'referral'" person-id="vm.model.personId" referral-id="vm.model.id"></genogram-card>
+                    </div>
+                }
+
+                <div ng-class="{ 'div-disabled': (vm.mode == 'edit') }">
+                    @Html.Partial("~/App/tenant/views/referral/social/socialReportView.cshtml")
+                </div>
+            </div>
+        </ps-uib-tab>
+
+        <ps-uib-tab index="'medical'" heading="@L("Medical")" set-navigation="vm.setMedicalNavigation()">
+            <div class="col-md-6 col-sm-12">
+                @Html.Partial("~/App/tenant/views/referrals/referral-detail/templates/medicalFunctionalStatus.cshtml")
+
+                @Html.Partial("~/App/tenant/views/referrals/referral-detail/templates/medicalRAF.cshtml")
+            </div>
+            <div class="col-md-6 col-sm-12">
+                @if (IsGranted(AppPermissions.Pages_Tenant_Allergies_View))
+                {
+                    <div ng-class="{ 'div-disabled': (vm.mode == 'edit') }">
+                        <allergies-card id="Allergies" maintitle="'@L("Allergies")'" mode="vm.isNewReferral ? 'new' : 'view'" template="'referral'" person-id="null" referral-id="vm.model.id" is-referral="true" is-patient="vm.model.person.isPatient"></allergies-card>
+                    </div>
+                }
+                @if (IsGranted(AppPermissions.Pages_Tenant_Diagnosis_View))
+                {
+                    <div ng-class="{ 'div-disabled': (vm.mode == 'edit') }">
+                        <diagnosis-card id="Diagnosis" maintitle="'@L("Diagnosis")'" mode="vm.isNewReferral ? 'new' : 'view'" template="'referral'" person-id="null" referral-id="vm.model.id" is-referral="true" is-patient="vm.model.person.isPatient"></diagnosis-card>
+                    </div>
+                }
+                @if (IsGranted(AppPermissions.Pages_Tenant_Assessment))
+                {
+                    <div ng-class="{ 'div-disabled': (vm.mode == 'edit') }">
+                        <assessment-person-index id="Assessment" maintitle="'@L("Assessment")'" mode="vm.isNewReferral ? 'new' : 'view'" template="'referral'" person-id="null" referral-id="vm.model.id" is-referral="true" is-patient="vm.model.person.isPatient"></assessment-person-index>
+                    </div>
+                }
+                @if (IsGranted(AppPermissions.Pages_Tenant_MedicalHistory_View))
+                {
+                    <div ng-class="{ 'div-disabled': (vm.mode == 'edit') }">
+                        <medical-history-card id="medicalhistories" maintitle="'@L("medicalhistory")'" mode="vm.isNewReferral ? 'new' : 'view'" template="'referral'" person-id="vm.model.person.id" referral-id="vm.model.id" is-referral="true" is-patient="vm.model.person.isPatient"></medical-history-card>
+                    </div>
+                }
+                @if (IsGranted(AppPermissions.Pages_Tenant_MedicationHistory_View))
+                {
+                    <div ng-class="{ 'div-disabled': (vm.mode == 'edit') }">
+                        <medication-history-card id="medicationhistories" maintitle="'@L("medicationhistory")'" mode="vm.isNewReferral ? 'new' : 'view'" template="'referral'" person-id="null" referral-id="vm.model.id" is-referral="true" is-patient="vm.model.person.isPatient"></medication-history-card>
+                    </div>
+                }
+                @if (IsGranted(AppPermissions.Pages_Tenant_SpecialCare_View))
+                {
+                    <div ng-class="{ 'div-disabled': (vm.mode == 'edit') }">
+                        <special-care-card-referral id="specialcares" maintitle="'@L("SpecialCare")'" mode="vm.isNewReferral ? 'new' : 'view'" template="'referral'" person-id="null" referral-id="vm.model.id" is-referral="true" is-patient="vm.model.person.isPatient"></special-care-card-referral>
+                    </div>
+                }
+                @if (IsGranted(AppPermissions.Pages_Tenant_MedicalAlert_View))
+                {
+                    <div ng-class="{ 'div-disabled': (vm.mode == 'edit') }">
+                        <medical-alert-card id="medicalalerts" maintitle="'@L("medicalAlert")'" mode="vm.isNewReferral ? 'new' : 'view'" template="'referral'" person-id="null" referral-id="vm.model.id" is-referral="true" is-patient="vm.model.person.isPatient"></medical-alert-card>
+                    </div>
+                }
+                @if (IsGranted(AppPermissions.Pages_Tenant_Investigations))
+                {
+                    <div ng-class="{ 'div-disabled': (vm.mode == 'edit') }">
+                        <investigations-card id="Investigations" mode="vm.isNew ? 'new' : 'view'" person-id="null" referral-id="vm.model.id"></investigations-card>
+                    </div>
+                }
+            </div>
+        </ps-uib-tab>
+
+        <ps-uib-tab index="'financial'" heading="@L("Financial")" set-navigation="vm.setFinancialNavigation()">
+            <div class="col-md-6 col-sm-12">
+                @if (IsGranted(AppPermissions.Pages_Tenant_MeansTests))
+                {
+                    <div busy-if="vm.loading" ng-class="{ 'div-disabled': (vm.mode == 'edit') }">
+                        <meanstests-card id="MeansTesting" title="'@L("MeansTesting")'" mode="vm.isNewReferral ? 'new' : 'view'" template="'referral'" referral-id="vm.model.id"></meanstests-card>
+                    </div>
+                }
+
+                @if (IsGranted(AppPermissions.Pages_Tenant_FinancialAssistances))
+                {
+                    <div busy-if="vm.loading" ng-class="{ 'div-disabled': (vm.mode == 'edit') }">
+                        <financialassistances-card id="FinancialAssistance" title="'@L("FinancialAssistance")'" mode="vm.isNewReferral ? 'new' : 'view'" template="'referral'" referral-id="vm.model.id"></financialassistances-card>
+                    </div>
+                }
+            </div>
+            <div class="col-md-6 col-sm-12"></div>
+        </ps-uib-tab>
+
+        <ps-uib-tab index="'attachment'" heading="@L("Attachment")" set-navigation="vm.setAttachmentNavigation()">
+            @Html.Partial("~/App/tenant/views/referrals/referral-detail/templates/attachmentView.cshtml")
+        </ps-uib-tab>
+    </ps-uib-tabset>
+}

@@ -1,0 +1,12 @@
+﻿@using Abp.Timing
+@using Pulsesync.IngoTPCC.Authorization
+<div class="row" id="Profile" ng-controller="tenant.views.person.tabs.episodeTab as episodeTab">
+    <div class="col-md-12 col-sm-12 col-xs-12 no-padding">
+        <div class="col-md-6 col-sm-12">
+            @if (IsGranted(AppPermissions.Pages_Tenant_Memberships))
+            {
+                @*<membership-card id="Memberships" person-id="vm.person.id"></membership-card>*@
+            }
+        </div>
+    </div>
+</div>

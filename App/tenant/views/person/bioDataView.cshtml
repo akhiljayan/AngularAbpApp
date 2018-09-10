@@ -1,0 +1,104 @@
+﻿@model CreateOrUpdatePersonInput
+
+@using Pulsesync.IngoTPCC.Application.Person.Dto;
+
+<div id="BioData" class="bioData portlet light" ng-controller="tenant.views.person.bioDataView as bioData">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("BioData")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a class="icon-wrapper" ng-if="bioData.mode.toLowerCase()=='view' && !vm.isNew && vm.permissions.edit" ng-click="bioData.edit()">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools">
+            <a class="remove" ng-if="bioData.mode.toLowerCase()=='edit' && !vm.isNew" ng-click="bioData.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="bioData.mode">
+                @*edit mode*@
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+                        @{
+                            var attributes = new Dictionary<string, object>();
+                            attributes.Add("role", "form");
+                            attributes.Add("name", "bioData.bioDataForm");
+                            attributes.Add("ng-validate", "bioData.validationOptions");
+                            attributes.Add("angular-validator", "");
+                        }
+                        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes)))
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                @s.FieldFor(m => m.SalutationId).AsDropDown().Attrs(new { ng_model = "bioData.person.salutationId" })
+                                @s.FieldFor(m => m.FullName).Attrs(new { ng_model = "bioData.person.fullName" })
+                                @s.FieldFor(m => m.Surname).Attrs(new { ng_model = "bioData.person.surname" })
+                                @s.FieldFor(m => m.GenderId).AsDropDown().Attrs(new { ng_model = "bioData.person.genderId" })
+                                @s.FieldFor(m => m.MaritalStatusId).AsDropDown().Attrs(new { ng_model = "bioData.person.maritalStatusId" })
+                                @s.FieldFor(m => m.RegistrationDocumentTypeId).AsDropDown().Attrs(new { ng_model = "bioData.person.registrationDocumentTypeId", ng_callbackFunc = "vm.callbackRegistrationDocument(arg)", ng_change = "bioData.registrationDocumentTypeIdOnChange()" })
+                                @s.FieldFor(m => m.RegistrationDocumentNumber).Attrs(new { ng_model = "bioData.person.registrationDocumentNumber", ng_blur = "bioData.registrationDocumentNumberOnBlur()", ng_disabled = "bioData.registrationDocumentNumberDisabled" })
+                                @s.FieldFor(m => m.DateOfIssue).Attrs(new { ng_model = "bioData.person.dateOfIssue", Validate = "false", Restrict = "reject", maxdate="0d" })
+                                @s.FieldFor(m => m.DateOfBirth).Attrs(new { ng_model = "bioData.person.dateOfBirth", ng_model_options = "{ debounce: 1000 }",  ng_change = "bioData.setChineseHoroscope()", Validate = "false", Restrict = "reject", maxdate = "0d" })
+                                @s.FieldFor(m => m.ChineseHoroscopeId).AsDropDown().Attrs(new { ng_model = "bioData.person.chineseHoroscopeId", ng_callbackFunc = "vm.callbackChineseHoroscope(arg)" })
+                                @s.FieldFor(m => m.RaceId).AsDropDown().Attrs(new { ng_model = "bioData.person.raceId" })
+                                @s.FieldFor(m => m.NationalityId).AsDropDown().Attrs(new { ng_model = "bioData.person.nationalityId" })
+                                @s.FieldFor(m => m.CitizenshipId).AsDropDown().Attrs(new { ng_model = "bioData.person.citizenshipId" })
+                                @s.FieldFor(m => m.ReligionId).AsDropDown().Attrs(new { ng_model = "bioData.person.religionId" })
+                                @s.FieldFor(m => m.PlaceOfWorship).Attrs(new { ng_model = "bioData.person.placeOfWorship" })
+
+                                <div class="form-actions pull-right" ng-if="!vm.isNew">
+                                    <a class="linkButton btn-small" ng-click="bioData.save()">
+                                        <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                                    </a>
+                                    <a class="linkButton btn-small" ng-click="bioData.close()">
+                                        <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                                    </a>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+                @*view mode*@
+                <div ng-switch-default>
+                    <div class="col-md-12 icon">
+                        <div class="bold">{{vm.person.salutation.description}} {{vm.person.fullName}}</div>
+                        <span ng-if="vm.person.gender.description.toLowerCase()=='male'" class="ps-icon-male male-icon-blue"></span>
+                        <span ng-if="vm.person.gender.description.toLowerCase()=='female'" class="ps-icon-female female-icon-pink"></span>
+                        <span><span ng-if="!vm.person.gender.description">&nbsp;</span>{{vm.person.maritalStatus.description}}</span>
+                    </div>
+                    <div class="col-md-12 icon">
+                        <span class="ps-icon-world grey"></span>
+                        <ul class="otherText">
+                            <li ng-if="bioData.line_1.length" ng-repeat="line in bioData.line_1" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<div class='otherText'>{{line.displayName}}</div>" ng-popover>{{line.placeholder}}</li>
+                            <li ng-if="!bioData.line_1.length">-</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-12 icon">
+                        <i class="material-icons">cake</i>
+                        <ul class="otherText">
+                            <li ng-if="bioData.line_2.length" ng-repeat="line in bioData.line_2" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<div class='otherText'>{{line.displayName}}</div>" ng-popover>{{line.placeholder}}</li>
+                            <li ng-if="!bioData.line_2.length">-</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-12 icon">
+                        <span class="ps-icon-people grey"></span>
+                        <ul class="otherText">
+                            <li ng-if="bioData.line_3.length" ng-repeat="line in bioData.line_3" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<div class='otherText'>{{line.displayName}}</div>" ng-popover>{{line.placeholder}}</li>
+                            <li ng-if="!bioData.line_3.length">-</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-12 icon">
+                        <span class="ps-icon-religion grey"></span>
+                        <ul class="otherText">
+                            <li ng-if="bioData.line_4.length" ng-repeat="line in bioData.line_4" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<div class='otherText'>{{line.displayName}}</div>" ng-popover>{{line.placeholder}}</li>
+                            <li ng-if="!bioData.line_4.length">-</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

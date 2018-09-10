@@ -1,0 +1,148 @@
+﻿@model CreateOrUpdateVisitLogInput
+
+@using Pulsesync.IngoTPCC.Application.VisitLogs.Dto
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("General")</div>
+        </div>
+        <div class="actions dropdown inputs" ng-if="vm.mode!='new'">
+            <a class="icon-wrapper" ng-if="vm.mode=='view' && vm.permissions.edit" ng-click="vm.mode='edit'">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools" ng-if="vm.mode!='new'">
+            <a class="remove" ng-if="vm.mode=='edit'" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @{
+                    var attrs = new Dictionary<string, object>();
+                    attrs.Add("name", "vm.form");
+                    attrs.Add("novalidate", "");
+                    attrs.Add("angular-validator", "");
+                    attrs.Add("angular-validator-submit", "vm.save($event)");
+                }
+
+                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs)))
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        @s.FieldFor(m => m.VisitLogId).Attrs(new { ng_model = "vm.workingModel.visitLogId", ng_disabled = "true" })
+                        @s.FieldFor(m => m.ContactType).Attrs(new { ng_model = "vm.workingModel.contactType", ng_change = "vm.contactTypeChanged()" })
+                        @*@s.FieldFor(m => m.OthersContactType).Attrs(new { ng_model = "vm.workingModel.othersContactType", ng_disabled = "vm.workingModel.contactType != 'Others'" })*@
+
+                        <div class="form-group form-md-line-input" ng-class="{ 'has-error': vm.form.OthersContactType.$error.required && vm.form.submitted }">
+                            <input type="text" id="OthersContactType" name="OthersContactType" class="form-control" ng-model="vm.workingModel.othersContactType" ng-disabled="vm.workingModel.contactType != 'Others'" ng-required="vm.workingModel.contactType == 'Others'" />
+                            <label for="OthersContactType" class="control-label">@L("PleaseSpecifyForOthersContactType")<span class="businessRequired" ng-if="vm.workingModel.contactType == 'Others'"> * </span></label>
+                            <p class="help-block has-error" ng-if="vm.form.OthersContactType.$error.required && vm.form.submitted">You must provide a value for Others Contact Type.</p>
+                        </div>
+
+                        <person-ui-select person-id="vm.workingModel.personId" uiselect-disabled="vm.$stateParams.person || vm.mode!='new'" on-select="vm.loadAdmissions(personId)" ng-text-change="vm.loadAdmissions(personId)"></person-ui-select>
+                        @s.FieldFor(m => m.AdmissionId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.admissionId", repeat = "vm.admissions", ng_change = "vm.populateAdmissionDate(vm.workingModel.admissionId);vm.populateServiceType(vm.workingModel.admissionId)", ng_disabled = " vm.workingModel.contactType == 'SpecialVisit'", conditional_required = "vm.workingModel.contactType !='SpecialVisit'" })
+                        @s.FieldFor(m => m.ServiceTypeId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.serviceTypeId", repeat = "vm.serviceTypeMaster", ng_disabled = "true" })
+                        @s.FieldFor(m => m.VisitTypeId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.visitTypeId", repeat = "vm.visitTypeMaster", conditional_required = "vm.workingModel.contactType !='SpecialVisit'", ng_disabled = "vm.visitTypeMaster.length == 0 || !vm.visitTypeMaster || vm.workingModel.contactType == 'SpecialVisit'" })
+                        @s.FieldFor(m => m.VisitDateTimeIn).Attrs(new { ng_model = "vm.workingModel.visitDateTimeIn", ng_change = "vm.visitDateTimeInChanged(vm.workingModel.visitDateTimeIn)", validator = "vm.visitDateTimeInValidator(vm.workingModel.visitDateTimeIn, vm.workingModel.admittedOn, vm.workingModel.dischargedOn) === true", invalid_message = "vm.visitDateTimeInValidator(vm.workingModel.visitDateTimeIn, vm.workingModel.admittedOn, vm.workingModel.dischargedOn)", ng_required = "true", required_message = "You must provide a value for Visit Date Time In" })
+                        @s.FieldFor(m => m.VisitDateTimeOut).Attrs(new { ng_model = "vm.workingModel.visitDateTimeOut", validator = "vm.visitDateTimeOutValidator(vm.workingModel.visitDateTimeIn, vm.workingModel.visitDateTimeOut, vm.workingModel.admittedOn, vm.workingModel.dischargedOn) === true", invalid_message = "vm.visitDateTimeOutValidator(vm.workingModel.visitDateTimeIn, vm.workingModel.visitDateTimeOut, vm.workingModel.admittedOn, vm.workingModel.dischargedOn)" })
+                        @s.FieldFor(m => m.NextVisitDate).Attrs(new { ng_model = "vm.workingModel.nextVisitDate", validator = "vm.nextVisitDateValidator(vm.workingModel.visitDateTimeIn, vm.workingModel.visitDateTimeOut, vm.workingModel.nextVisitDate) === true", invalid_message = "vm.nextVisitDateValidator(vm.workingModel.visitDateTimeIn, vm.workingModel.visitDateTimeOut, vm.workingModel.nextVisitDate)" })
+                        @s.FieldFor(m => m.AttendedByUserId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.attendedByUserId", repeat = "vm.users", ui_select_required = "ui-select-required" })
+                        @s.FieldFor(m => m.AccompanyStaffUserId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.accompanyStaffUserId", repeat = "vm.users", ui_custom_validator = "vm.validateAccompanyStaff()", invalid_message = "Accompany Staff and Attended By cannot be same." })
+                        @s.FieldFor(m => m.IsFutile).Label(@L("IsFutile")).Attrs(new { ng_model = "vm.workingModel.isFutile", ng_change = "vm.initialiseFutileField(vm.workingModel.isFutile)" })
+
+                        <div class="form-group form-md-line-input" ng-class="{ 'has-error': vm.form.FutileReason.$error.required && vm.form.submitted }">
+                            <input type="text" id="FutileReason" name="FutileReason" class="form-control" ng-model="vm.workingModel.futileReason" ng-disabled="!vm.workingModel.isFutile" ng-required="vm.workingModel.isFutile" />
+                            <label for="FutileReason" class="control-label">@L("FutileReason")<span class="businessRequired" ng-if="vm.workingModel.isFutile"> * </span></label>
+                            <p class="help-block has-error" ng-if="vm.form.FutileReason.$error.required && vm.form.submitted">You must provide a value for Futile Visit Reason.</p>
+                        </div>
+
+                        @s.FieldFor(m => m.Remarks).AddClass("animate msd-elastic: \\n; ").Rows(4).Attrs(new { ng_model = "vm.workingModel.remarks" })
+
+                        <visitlog-detail-renderedservices id="RenderedServices" mode="vm.mode" model="vm.model.categories" permissions="vm.permissions"></visitlog-detail-renderedservices>
+
+                        <div class="form-actions pull-right" ng-if="vm.mode!='new'">
+                            <button class="linkButton btn-small" type="submit">
+                                <i class="material-icons font-18-main v-top">save</i> @L("Save")
+                            </button>
+                            <button class="linkButton btn-small" type="button" ng-click="vm.cancel()">
+                                <i class="material-icons font-18-main v-top">close</i> @L("Cancel")
+                            </button>
+                        </div>
+                    }
+                }
+            </div>
+            <div ng-switch-default>
+                @using (var f = Html.BeginForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.visitLogId" /></div>
+                    <label class="control-label">@L("VisitLogId")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.person.fullName" /></div>
+                    <label class="control-label">@L("Person")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.admission.admissionNumber" /></div>
+                    <label class="control-label">@L("Admission")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.serviceType.description" /></div>
+                    <label class="control-label">@L("ServiceType")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.visitDateTimeIn | dateTimeFormat" /></div>
+                    <label class="control-label">@L("VisitDateTimeIn")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.visitDateTimeOut | dateTimeFormat" /></div>
+                    <label class="control-label">@L("VisitDateTimeOut")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.nextVisitDate | dateFormat" /></div>
+                    <label class="control-label">@L("NextVisitDate")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.contactTypeId | enumText: 'contactType'" /></div>
+                    <label class="control-label">@L("ContactType")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.othersContactType" /></div>
+                    <label class="control-label">@L("OthersContactType")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.visitType.description" /></div>
+                    <label class="control-label">@L("VisitType")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.attendedByUser.fullName" /></div>
+                    <label class="control-label">@L("AttendedByUser")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.accompanyStaffUser.fullName" /></div>
+                    <label class="control-label">@L("AccompanyStaffUser")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.isFutile | yesnoFilter" /></div>
+                    <label class="control-label">@L("IsFutile")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.futileReason" /></div>
+                    <label class="control-label">@L("FutileReason")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.model.remarks" /></div>
+                    <label class="control-label">@L("Remarks")</label>
+                </div>
+
+                <visitlog-detail-renderedservices id="RenderedServices" mode="vm.mode" model="vm.model.categories" permissions="vm.permissions"></visitlog-detail-renderedservices>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

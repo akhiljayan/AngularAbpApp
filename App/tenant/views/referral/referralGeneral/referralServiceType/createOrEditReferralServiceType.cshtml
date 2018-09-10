@@ -1,0 +1,116 @@
+﻿@model ReferralServiceTypeDto
+@using Pulsesync.IngoTPCC.Application.Referral.Dto.ReferralServiceType;
+
+<style type="text/css">
+    .select2-container .select2-choice {
+        padding: 0px !important;
+    }
+
+    .form-group .help-block {
+        display: none;
+    }
+
+    .form-group.has-error .help-block {
+        display: block;
+    }
+
+    .disable-icon{
+        pointer-events : none;
+        cursor: not-allowed !important;
+    }
+</style>
+<div class="portlet light" data-drag="true" id="serviceTypeModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("ReferralServiceType")</span>
+        </div>
+        <div class="tools pull-right">
+            <minimize-modal></minimize-modal>
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form modal-body">
+
+        @{
+            var attributes = new Dictionary<string, object>();
+            attributes.Add("id", "serviceTypeForm");
+            attributes.Add("name", "serviceTypeForm");
+            attributes.Add("angular-validator-submit", "vm.save()");
+            attributes.Add("angular-validator", "");
+            attributes.Add("novalidate", "");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body")))
+        {
+                using (var s = f.BeginSection())
+                {
+                <div class="portlet-body" style="display: block;">
+                    <div class="form-body padding-top-0-imp">
+                        <div class="row">
+                            <div class="col-md-12 padding-bottom-10">
+                                <div class="col-md-12">
+                                    <div class="person-name" style="padding-top:0px;">
+                                        <span class="caption-subject bold" style="color:rgba(0, 0, 0, 0.54)">{{vm.person.fullName}}</span>&nbsp;&nbsp;
+                                        <span class="caption-subject" style="color:rgba(0, 0, 0, 0.54)" ng-if="vm.person.registrationDocumentNumber">({{vm.person.registrationDocumentNumber}})</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="col-md-12">
+                                    <div class="ui-select-required">
+                                        @s.FieldFor(m => m.ServiceTypeId).AsDropDown().Attrs(new { ng_model = "vm.referralServiceType.serviceTypeId", ng_disabled = "vm.referralServiceType.status != '0'", name = "serviceTypeId", repeat = "vm.serviceTypes" })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="ui-select-required attach-lable-required" ng-if="vm.referral.referredBy.description == 'AIC'">
+                                        @s.FieldFor(m => m.ReferringInstitutionId).AsDropDown().Attrs(new { ng_model = "vm.referralServiceType.referringInstitutionId", ng_disabled= "vm.dissableEdit", name = "referringInstitutionId", repeat = "vm.institutions", ui_select_required = "ui-select-required", ui_select_validation = "ui-select-validation", required_message = "'You must provide a value for Referring Institution'" })
+                                    </div>
+                                    <div class="ui-select-not-required" ng-if="vm.referral.referredBy.description != 'AIC'">
+                                        @s.FieldFor(m => m.ReferringInstitutionId).AsDropDown().Attrs(new { ng_model = "vm.referralServiceType.referringInstitutionId", ng_disabled = "vm.dissableEdit", name = "referringInstitutionId", repeat = "vm.institutions" })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    @s.FieldFor(m => m.ReasonForReferral).Attrs(new { ng_model = "vm.referralServiceType.reasonForReferral", ng_disabled = "vm.dissableEdit" }).AddClass("form-control animate msd-elastic: \\n;  ng-valid ng-not-empty ng-valid-parse ng-touched")
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group form-md-line-input">
+                                        <input type="text" ng-model="vm.referralServiceType.aicReferralServiceType" class="form-control" id="AICReferralServiceType" ng-disabled= "vm.dissableEdit" name="AICReferralServiceType" ng-maxlength="300" ng-required="vm.referral.referredBy.code == 'AIC' || vm.referral.referredBy.description == 'AIC'" required-message="'@L("AICReferralServiceTypeRequired")'" />
+                                        <label class="formlabel" for="AICReferralServiceType">@L("AICReferralServiceType")<span class="businessRequired" ng-if="vm.referral.referredBy.code == 'AIC' || vm.referral.referredBy.description == 'AIC'"> * </span></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" id="aicdate">
+                                    <div class="form-group form-md-line-input">
+                                        <div class="input-group date date-picker">
+                                            <input name="AICAssignmentDate" data-date-picker type="text" class="form-control" maxdate="0d" ng-disabled="vm.dissableEdit" ng-model="vm.referralServiceType.aicAssignmentDate" id="AICAssignmentDate" ng-required="vm.referral.referredBy.code == 'AIC' || vm.referral.referredBy.description == 'AIC'" required-message="'@L("AICAssignmentDateRequired")'" />
+                                            <div class="input-group-addon" ng-class="{'disable-icon' : vm.dissableEdit}">
+                                                <i class="material-icons" style="line-height: 14px;"  >date_range</i>
+                                            </div>
+                                            <label class="formlabel" for="AICAssignmentDate">@L("AICAssignmentDate")<span class="businessRequired" ng-if="vm.referral.referredBy.code == 'AIC' || vm.referral.referredBy.description == 'AIC'"> * </span></label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12">
+                                    @s.FieldFor(m => m.ILTCEpisodeServiceTypeId).AsDropDown().Attrs(new { ng_model = "vm.referralServiceType.iltcEpisodeServiceTypeId", ng_disabled = "vm.dissableEdit", name = "iltcEpisodeServiceTypeId", repeat = "vm.iltcEpisodeServiceType" })
+                                </div>
+                                <div class="col-md-12">
+                                    @s.FieldFor(m => m.ReferralCode).Attrs(new { ng_model = "vm.referralServiceType.referralCode", ng_disabled = "true", disabled = "" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                }
+                <div class="form-actions noborder right modal-footer">
+                    <button type="submit" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.saving"><i class="material-icons  font-18-main v-top">save</i>Save</button>                    
+                    <button type="button" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()" ng-disabled="vm.saving"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+                </div>
+        }
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+    });
+</script>

@@ -1,0 +1,156 @@
+﻿@model CreateOrUpdateSocialReportInput
+
+@using Pulsesync.IngoTPCC.Application.SocialReports.Dto;
+
+<div id="General" class="portlet light" ng-controller="tenant.views.socialReports.generalView as generalCtrl">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("General")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a class="icon-wrapper" ng-if="generalCtrl.mode.toLowerCase()=='view' && !vm.isNew && vm.permissions.edit" ng-click="generalCtrl.edit()">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools">
+            <a class="remove" ng-if="generalCtrl.mode.toLowerCase()=='edit' && !vm.isNew" ng-click="generalCtrl.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="generalCtrl.mode">
+                @*edit mode*@
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+                        @{
+                            var attributes = new Dictionary<string, object>();
+                            attributes.Add("id", "generalCtrl.generalForm");
+                            attributes.Add("name", "generalCtrl.generalForm");
+                            attributes.Add("angular-validator-submit", "generalCtrl.save()");
+                            attributes.Add("angular-validator", "");
+                            attributes.Add("novalidate", "");
+                        }
+                        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes)))
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                @*@s.FieldFor(m => m.PersonId).AsDropDown().Attrs(new { ng_model = "generalCtrl.socialReport.personId", ng_disabled = "vm.disabled", name = "xcvx", repeat = "vm.personMaster", ui_select_required = "ui-select-required" })*@
+
+                                <person-ui-select person-id="generalCtrl.socialReport.personId" uiselect-disabled="vm.disabled" has-admission="true" on-select="vm.onChangePerson(generalCtrl.socialReport.personId)"></person-ui-select>
+
+                           
+                                <div class="form-group form-md-line-input">
+                                    <ui-select id="ReportType" ng-model="generalCtrl.socialReport.reportTypeId" theme="selectize" title="Choose a Report Type" ng-disabled="vm.disabled || vm.changePersonFlag">
+                                        <ui-select-match placeholder="Select Report Type">
+                                            {{ $select.selected.description }}
+                                            <a class="fa fa-times" ng-hide="vm.disabled || vm.changePersonFlag" ng-click="$select.clear($event);"></a>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="m.id as m in vm.reportTypeMaster | filter: { description: $select.search }">
+                                            <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <label for="ReportType" class="control-label">@L("ReportType")<span class="businessRequired"> * </span></label>
+                                </div>
+
+                                <div class="form-group form-md-line-input">
+                                    <ui-select id="ByReferral" ng-model="generalCtrl.socialReport.byReferralId" theme="select2" title="Choose a By Referral" ng-disabled="vm.disabled || vm.changePersonFlag">
+                                        <ui-select-match placeholder="Select By Referral">
+                                            {{ $select.selected.description }}
+                                            <a class="fa fa-times" ng-hide="vm.disabled || vm.changePersonFlag" ng-click="$select.clear($event);"></a>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="m.id as m in vm.byReferralMaster | filter: { description: $select.search }">
+                                            <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <label for="ByReferral" class="control-label">@L("Referral")</label>
+                                </div>
+
+                                @s.FieldFor(m => m.ReportedDate).Attrs(new { ng_model = "generalCtrl.socialReport.reportedDate", Validate = "false", Restrict = "reject", maxdate = "", maxdate_message = "'Reported Date cannot be a future date.'" })
+
+                                <div class="form-group form-md-line-input">
+                                    <ui-select id="ReportedBy" ng-model="generalCtrl.socialReport.reportedById" theme="select2" title="Choose a Reported By">
+                                        <ui-select-match placeholder="Select Reported By">
+                                            {{ $select.selected.description }}
+                                            <a class="fa fa-times" ng-click="$select.clear($event);"></a>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="m.id as m in vm.reportedByMaster | filter: { description: $select.search }">
+                                            <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <label for="ReportedBy" class="control-label">@L("ReportedBy")</label>
+                                </div>
+                                @*<user-ui-select user-id="generalCtrl.socialReport.reportedById" uiselect-disabled="false" label="'Reported By'"></user-ui-select>*@
+
+                                @s.FieldFor(m => m.Subject).Attrs(new { ng_model = "generalCtrl.socialReport.subject" })
+                                @s.FieldFor(m => m.SocialBackgroundFamilyBackground).Attrs(new { ng_model = "generalCtrl.socialReport.socialBackgroundFamilyBackground" }).AddClass("animate msd-elastic: \\n;")
+                                @s.FieldFor(m => m.PremorbidConditionADLFunctionalStatusAndCareNeed).Attrs(new { ng_model = "generalCtrl.socialReport.premorbidConditionADLFunctionalStatusAndCareNeed" }).AddClass("animate msd-elastic: \\n;")
+                                @s.FieldFor(m => m.SocialCriteriaAssessment).Attrs(new { ng_model = "generalCtrl.socialReport.socialCriteriaAssessment" }).AddClass("animate msd-elastic: \\n;")
+                                @s.FieldFor(m => m.FinancialBackgroundFinancialAssessment).Attrs(new { ng_model = "generalCtrl.socialReport.financialBackgroundFinancialAssessment" }).AddClass("animate msd-elastic: \\n;")
+                                @s.FieldFor(m => m.AdditionalAssistance).Attrs(new { ng_model = "generalCtrl.socialReport.additionalAssistance" }).AddClass("animate msd-elastic: \\n;")
+
+                                <div class="form-actions pull-right" ng-if="!vm.isNew">
+                                    <button class="linkButton btn-small" type="submit">
+                                        <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                                    </button>
+                                    <button class="linkButton btn-small" type="button" ng-click="generalCtrl.close()">
+                                        <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                                    </button>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+
+                @*view mode*@
+                <div ng-switch-default>
+                    <div class="col-md-12">
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.person.fullName" /></div>
+                            <label class="control-label">@L("Person")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.reportType.description" /></div>
+                            <label class="control-label">@L("ReportType")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><span>{{ vm.socialReport.byReferral.referralCode ? vm.socialReport.byReferral.referralCode + " (" + vm.socialReport.byReferral.person.fullName + " - " + vm.socialReport.byReferral.person.registrationDocumentNumber + ")" : "-" }}</span></div>
+                            <label class="control-label">@L("Referral")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">@*<ng-blank ng-model="vm.socialReport.reportedDate" />*@<span>{{vm.socialReport.reportedDate | dateTimeFormat}}</span></div>
+                            <label class="control-label">@L("ReportedDate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.reportedBy.fullName" /></div>
+                            <label class="control-label">@L("ReportedBy")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.subject" /></div>
+                            <label class="control-label">@L("Subject")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.socialBackgroundFamilyBackground" /></div>
+                            <label class="control-label">@L("SocialBackgroundFamilyBackground")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.premorbidConditionADLFunctionalStatusAndCareNeed" /></div>
+                            <label class="control-label">@L("PremorbidConditionADLFunctionalStatusAndCareNeed")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.socialCriteriaAssessment" /></div>
+                            <label class="control-label">@L("SocialCriteriaAssessment")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.financialBackgroundFinancialAssessment" /></div>
+                            <label class="control-label">@L("FinancialBackgroundFinancialAssessment")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.additionalAssistance" /></div>
+                            <label class="control-label">@L("AdditionalAssistance")</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

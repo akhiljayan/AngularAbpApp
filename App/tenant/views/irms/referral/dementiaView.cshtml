@@ -1,0 +1,256 @@
+﻿@model ReferralDto
+@using IRMS.Entities.Dto;
+<div ng-controller="tenant.views.irms.dementiaView as dementia">
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div busy-if="vm.loading">
+            <!-- Dementia Section -->
+            <div id="Dementia" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("Dementia")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ dementia.dementiaList.diagnoseDoctorName }}</div>
+                                <label class="control-label view-label" for="diagnoseDoctorName">@L("DiagnoseDoctorName")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ dementia.dementiaList.diagnoseDoctorDesignation }}</div>
+                                <label class="control-label view-label" for="diagnoseDoctorDesignation">@L("DiagnoseDoctorDesignation")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ dementia.dementiaList.diagnoseDoctorSpecilization }}</div>
+                                <label class="control-label view-label" for="diagnoseDoctorSpecilization">@L("DiagnoseDoctorSpecilization")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ dementia.dementiaList.dementiaFollowUp }}</div>
+                                <label class="control-label view-label" for="dementiaFollowUp">@L("DementiaFollowUp")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ dementia.dementiaList.drName }}</div>
+                                <label class="control-label view-label" for="drName">@L("FollowUpDoctorName")</label>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ dementia.dementiaList.drDesignation }}</div>
+                                <label class="control-label view-label" for="drDesignation">@L("FollowUpDoctorDesignation")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ dementia.dementiaList.drInstitution }}</div>
+                                <label class="control-label view-label" for="drInstitution">@L("FollowUpDoctorInstitution")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ dementia.dementiaList.hospital }}</div>
+                                <label class="control-label view-label" for="hospital">@L("Hospital")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ dementia.dementiaList.tcuDate | irmsDateFormat }}</div>
+                                <label class="control-label view-label" for="tcuDate">@L("TCUDate")</label>
+                            </div>
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{ dementia.dementiaList.additionalRemarks }}</div>
+                                <label class="control-label view-label" for="additionalRemarks">@L("AdditionalRemarks")</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dementia Type Section -->
+            <div id="DementiaType" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("DementiaType")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%;">@L("DementiaType")</th>
+                                        <th style="width: 70%;">@L("OtherDementiaType")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in dementia.dementiaTypeList">
+                                        <td>{{ item.dementiaType }}</td>
+                                        <td>{{ item.otherDementiaType }}</td>
+                                    </tr>
+                                    <tr ng-show="!dementia.dementiaTypeList">
+                                        <td colspan="2">
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cognitive Behaviour Section -->
+            <div id="CognitiveBehaviour" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("CognitiveBehaviour")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%;">@L("CognitiveBehaviour")</th>
+                                        <th style="width: 70%;">@L("OtherCognitiveBehaviour")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in dementia.dementiaCognitiveBehaviourList">
+                                        <td>{{ item.cognitive }}</td>
+                                        <td>{{ item.otherCognitive }}</td>
+                                    </tr>
+                                    <tr ng-show="!dementia.dementiaCognitiveBehaviourList">
+                                        <td colspan="2">
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Disturbance Section -->
+            <div id="ActivityDisturbance" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("ActivityDisturbance")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%;">@L("ActivityDisturbance")</th>
+                                        <th style="width: 70%;">@L("OtherActivity")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in dementia.dementiaActivityDisturbanceList">
+                                        <td>{{ item.activity_Disturbance }}</td>
+                                        <td>{{ item.inappropriateActivity }}</td>
+                                    </tr>
+                                    <tr ng-show="!dementia.dementiaActivityDisturbanceList">
+                                        <td colspan="2">
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aggressiveness Section -->
+            <div id="Aggressiveness" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("Aggressiveness")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>@L("Aggressiveness")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in dementia.dementiaAggressivenessList">
+                                        <td>{{ item.aggressiveness }}</td>
+                                    </tr>
+                                    <tr ng-show="!dementia.dementiaAggressivenessList">
+                                        <td>
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Affective Disturbance Section -->
+            <div id="AffectiveDisturbance" class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("AffectiveDisturbance")</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%;">@L("AffectiveDisturbance")</th>
+                                        <th style="width: 70%;">@L("OtherAffectiveDisturbance")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in dementia.dementiaAffectiveDisturbanceList">
+                                        <td>{{ item.affective_Disturbance }}</td>
+                                        <td>{{ item.otherAffectiveDisturbance }}</td>
+                                    </tr>
+                                    <tr ng-show="!dementia.dementiaAffectiveDisturbanceList">
+                                        <td colspan="2">
+                                            @L("NoRecordsFound")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

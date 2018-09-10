@@ -1,0 +1,190 @@
+﻿<style type="text/css">
+
+</style>
+<div class="portlet light" data-drag="true" id="vitalSignModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">{{vm.vitalSign.person.fullName}} &nbsp;({{vm.vitalSign.person.registrationDocumentNumber}})</span>
+
+            <div class="bold" style="font-size:12px; padding-top:10px">Taken On: {{vm.vitalSign.takenOn | dateTimeFormat}}</div>
+        </div>
+        <div class="tools pull-right">
+            <minimize-modal></minimize-modal>
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body modal-body">
+        <div class="row" style="padding:0px">
+            <div class="col-md-6">
+                @*Temprature*@
+                <div class="row padding-bottom-20">
+                    <div class="col-md-12"><span class="bold">Temperature</span></div>
+                    <div class="col-md-12">
+                        <small class="bold" ng-if="vm.vitalSign.temperature">{{vm.vitalSign.temperature}} &#8451;</small>
+                        <small class="bold" ng-if="!vm.vitalSign.temperature">-</small>
+                    </div>
+                </div>
+
+                @*Pulse Rate*@
+                <div class="row padding-bottom-20">
+                    <div class="col-md-12"><span class="bold">Pulse Rate</span></div>
+                    <div class="col-md-12">
+                        <small class="bold" ng-if="vm.vitalSign.pulseRate">{{vm.vitalSign.pulseRate}} /min</small>
+                        <small class="bold" ng-if="!vm.vitalSign.pulseRate">-</small>
+                    </div>
+                </div>
+
+                @*Respiratory Rate*@
+                <div class="row padding-bottom-20">
+                    <div class="col-md-12"><span class="bold">Respiratory Rate</span></div>
+                    <div class="col-md-12">
+                        <small class="bold" ng-if="vm.vitalSign.respiratoryRate">{{vm.vitalSign.respiratoryRate}} /min</small>
+                        <small class="bold" ng-if="!vm.vitalSign.respiratoryRate">-</small>
+                    </div>
+                </div>
+
+                @*Spo2*@
+                <div class="row padding-bottom-20">
+                    <div class="col-md-12"><span class="bold">SpO<sub>2</sub></span></div>
+                    <div class="col-md-12">
+                       <small class="bold" ng-if="vm.vitalSign.respiratoryRate">{{vm.vitalSign.respiratoryRate}} /min</small>
+                        <small class="bold" ng-if="!vm.vitalSign.respiratoryRate">-</small>
+                    </div>
+                </div>
+
+                @*SpO2 (Oxygen Supplement)*@
+                @*<div class="row padding-bottom-20">
+                    <div class="col-md-12"><span class="bold">SpO<sub>2</sub>(Oxygen Supplement)</span></div>
+                    <div class="col-md-12">
+                        <small class="bold" ng-if="vm.vitalSign.spO2OxygenSupplement">{{vm.vitalSign.spO2OxygenSupplement}}</small>
+                        <small class="bold" ng-if="!vm.vitalSign.spO2OxygenSupplement">-</small>
+                    </div>
+                </div>*@
+
+                @*Blood Glucose*@
+                <div class="row padding-bottom-20">
+                    <div class="col-md-12"><span class="bold">Respiratory Rate</span></div>
+                    <div class="col-md-12">
+                        <small class="bold">
+                            <small class="bold" style="font-size:9px">2HPP :</small>&nbsp; 
+                            <span ng-if="vm.vitalSign.bloodGlucose.twoHPP">{{vm.vitalSign.bloodGlucose.twoHPP}} mmol/L</span>
+                            <span ng-if="!vm.vitalSign.bloodGlucose.twoHPP">-</span>
+                        </small>
+                    </div>
+                    <div class="col-md-12">
+                        <small class="bold">
+                            <small class="bold" style="font-size:9px">Fast. :</small>&nbsp; 
+                            <span ng-if="vm.vitalSign.bloodGlucose.fasting">{{vm.vitalSign.bloodGlucose.fasting}} mmol/L</span>
+                            <span ng-if="!vm.vitalSign.bloodGlucose.fasting">-</span>
+                        </small>
+                    </div>
+                    <div class="col-md-12">
+                        <small class="bold">
+                            <small class="bold" style="font-size:9px">Rand. :</small>&nbsp; 
+                            <span ng-if="vm.vitalSign.bloodGlucose.random">{{vm.vitalSign.bloodGlucose.random}} mmol/L</span>
+                            <span ng-if="!vm.vitalSign.bloodGlucose.random">-</span>
+                        </small>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                @*Blood Pressure*@
+                <div class="row padding-bottom-20">
+                    <div class="col-md-12"><span class="bold">Blood Pressure (Systolic/Distolic)</span></div>
+                    <div class="col-md-12">
+                        <small class="bold">
+                            <small class="bold" style="font-size:9px">Lying :</small>&nbsp;
+                            <span ng-if="vm.vitalSign.bloodPressure.lyingSystolic">{{vm.vitalSign.bloodPressure.lyingSystolic}}/{{vm.vitalSign.bloodPressure.lyingDiastolic}} mmHg</span>
+                            <span ng-if="!vm.vitalSign.bloodPressure.lyingSystolic">-</span>
+                        </small>
+                    </div>
+                    <div class="col-md-12">
+                        <small class="bold">
+                            <small class="bold" style="font-size:9px">Sitting :</small>&nbsp;
+                            <span ng-if="vm.vitalSign.bloodPressure.sittingSystolic">{{vm.vitalSign.bloodPressure.sittingSystolic}}/{{vm.vitalSign.bloodPressure.sittingDiastolic}} mmHg</span>
+                            <span ng-if="!vm.vitalSign.bloodPressure.sittingSystolic">-</span>
+                        </small>
+                    </div>
+                    <div class="col-md-12">
+                        <small class="bold">
+                            <small class="bold" style="font-size:9px">Standing :</small>&nbsp;
+                            <span ng-if="vm.vitalSign.bloodPressure.standingSystolic">{{vm.vitalSign.bloodPressure.standingSystolic}}/{{vm.vitalSign.bloodPressure.standingDiastolic}} mmHg</span>
+                            <span ng-if="!vm.vitalSign.bloodPressure.standingSystolic">-</span>
+                        </small>
+                    </div>
+                </div>
+
+                @*Body Mass Index*@
+                <div class="row padding-bottom-20">
+                    <div class="col-md-12"><span class="bold">BMI</span></div>
+                    <div class="col-md-12">
+                        <small class="bold">{{vm.GetBmiValue(vm.vitalSign.bmi.weight , vm.vitalSign.bmi.height)}}</small>
+                    </div>
+                    <div class="col-md-12">
+                        <small class="bold">
+                            <small class="bold" style="font-size:9px">Height :</small>&nbsp;
+                            <small class="bold" ng-if="vm.vitalSign.bmi.height">{{vm.vitalSign.bmi.height}}</small>
+                            <small class="bold" ng-if="!vm.vitalSign.bmi.height">-</small>
+                        </small>
+                    </div>
+                    <div class="col-md-12">
+                        <small class="bold">
+                            <small class="bold" style="font-size:9px">Weight :</small>&nbsp;
+                            <small class="bold" ng-if="vm.vitalSign.bmi.weight">{{vm.vitalSign.bmi.weight}}</small>
+                            <small class="bold" ng-if="!vm.vitalSign.bmi.weight">-</small>
+                        </small>
+                    </div>
+                </div>
+
+
+                @*Urine*@
+                <div class="row padding-bottom-20">
+                    <div class="col-md-12"><span class="bold">Urine</span></div>
+                    <div class="col-md-12">
+                        <small class="bold">
+                            <small class="bold" style="font-size:9px">Urine Blood :</small>&nbsp;
+                            <span ng-if="vm.vitalSign.urine.blood">{{vm.vitalSign.urine.blood}}</span>
+                            <span ng-if="!vm.vitalSign.urine.blood">-</span>
+                        </small>
+                    </div>
+                    <div class="col-md-12">
+                        <small class="bold">
+                            <small class="bold" style="font-size:9px">Urine PH :</small>&nbsp;
+                            <span ng-if="vm.vitalSign.urine.ph">{{vm.vitalSign.urine.ph}}</span>
+                            <span ng-if="!vm.vitalSign.urine.ph">-</span>
+                        </small>
+                    </div>
+                    <div class="col-md-12">
+                        <small class="bold">
+                            <small class="bold" style="font-size:9px">Urine Ketone :</small>&nbsp;
+                            <span ng-if="vm.vitalSign.urine.ketone">{{vm.vitalSign.urine.ketone}}</span>
+                            <span ng-if="!vm.vitalSign.urine.ketone">-</span>
+                        </small>
+                    </div>
+                    <div class="col-md-12">
+                        <small class="bold">
+                            <small class="bold" style="font-size:9px">Urine Luekocytes :</small>&nbsp;
+                            <span ng-if="vm.vitalSign.urine.luekocytes">{{vm.vitalSign.urine.luekocytes == '1' ? 'Positive' : 'Negative'}}</span>
+                            <span ng-if="!vm.vitalSign.urine.luekocytes">-</span>
+                        </small>
+                    </div>
+                    <div class="col-md-12">
+                        <small class="bold">
+                            <small class="bold" style="font-size:9px">Urine Nitrite :</small>&nbsp;
+                            <span ng-if="vm.vitalSign.urine.nitrite">{{vm.vitalSign.urine.nitrite == '1' ? 'Positive' : 'Negative'}}</span>
+                            <span ng-if="!vm.vitalSign.urine.nitrite">-</span>
+                        </small>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+    });
+</script>

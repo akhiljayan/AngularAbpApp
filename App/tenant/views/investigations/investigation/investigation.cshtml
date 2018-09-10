@@ -1,0 +1,40 @@
+﻿<style>
+    .investigation-top {
+        padding-bottom: 5px !important;
+    }
+
+    .investigation {
+        padding-bottom: 5px !important;
+    }
+</style>
+
+<div class="investgation-group" ng-click="$ctrl.showDetails = !$ctrl.showDetails">
+    <div class="row investigation-top">
+        <div class="col-md-12 col-sm-12">
+            <div class="bold">
+                <span>{{ $ctrl.model.investigationDate | dateFormat }}, </span>
+                <span>{{ $ctrl.model.investigationType.description }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="row investigation" ng-repeat="investigation in $ctrl.model.investigations" ng-click="$ctrl.edit(investigation)" >
+        <div class="col-md-7 col-sm-7 padding-left-25">
+            <div>
+                <span>{{ investigation.subject }}</span><span ng-if="investigation.resultType"></span>
+                <span ng-if="$ctrl.showDetails"><span ng-if="investigation.resultType">, </span>{{ investigation.resultType | enumText: 'investigationResultType' }}</span>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-4">
+            <div class="pull-right text-right">
+                <strong>{{ investigation.lastRecordAction | enumText: 'lastRecordAction'}}</strong>
+            </div>
+        </div>
+        <div class="col-md-1 col-sm-1">
+            <div class="pull-right">
+                <i class="fa fa-unlock" style="font-size: 20px;" ng-if="investigation.lastRecordAction == 0" title="Pending Confirmation"></i>
+                <i class="fa fa-lock" style="font-size: 20px;" ng-if="investigation.lastRecordAction == 1" title="Confirmed"></i>
+                <i class="fa fa-ban" style="font-size: 20px;" ng-if="investigation.lastRecordAction == 2" title="Cancelled"></i>
+            </div>
+        </div>
+    </div>
+</div>

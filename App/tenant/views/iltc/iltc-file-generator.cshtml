@@ -1,0 +1,34 @@
+﻿<div class="row" busy-if="vm.loading">
+    <div class="col-md-12 col-sm-12">
+        <div style="width:50%; padding-bottom:30px;">
+            <div class="form-group form-md-line-input">
+                <label for="sel1">Institution Code | HCI Code</label>
+                <ui-select id="code" ng-model="vm.selectedInstitution" theme="select2" title="Choose an institution" ng-change="vm.onChangeInstitutionCode()">
+                    <ui-select-match placeholder="Select instituion">
+                        {{$select.selected.value}}
+                        <a class="fa fa-times" ng-click="$select.clear($event);"></a>
+                    </ui-select-match>
+                    <ui-select-choices repeat="institution in vm.institutions | orderBy:'displayOrder'">
+                        <span ng-bind-html="institution.value"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div style="width:100%;height:100%;" ng-show="!vm.hideILTCFrame && vm.url != null">
+            <iframe id="iltcframe"
+                    title="ILTCFrame"
+                    width="100%"
+                    height="500"
+                    frameborder="0"
+                    marginheight="0"
+                    marginwidth="0"
+                    src="{{vm.url}}"
+                    style="top: 100px; overflow: hidden; position: absolute;"></iframe>
+        </div>
+    </div>    
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+    });
+</script>

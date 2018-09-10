@@ -1,0 +1,34 @@
+﻿<div id="SocialBackground" class="socialBackground portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("SocialBackground")</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="vm.mode">
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+                        @using (var f = Html.BeginSubForm())
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                <div class="form-group form-md-line-input margin-bottom-20" style="padding-top: 0px;">
+                                    <textarea class="form-control animate msd-elastic: \n;" cols="200" data-val="true" id="SocialBackground" name="SocialBackground" ng-model="vm.model.socialBackground" rows="4" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 89px; margin:5px" placeholder="Description..."></textarea>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+                @*view mode*@
+                <div ng-switch-default>
+                    <div class="col-md-12">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text" style="text-indent: 20px;">{{vm.model.socialBackground}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

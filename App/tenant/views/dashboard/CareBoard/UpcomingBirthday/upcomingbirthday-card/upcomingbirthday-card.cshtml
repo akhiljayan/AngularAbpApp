@@ -1,0 +1,50 @@
+﻿
+<div id="UpcomingBirthday" class="portlet light ubBackground" busy-if="$ctrl.loading">
+    <div class="ubheader">
+        <p class="bold fontStealGreen">@L("UpcomingBirthday") <span class="badge">{{$ctrl.totalCount}}</span></p>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-if="$ctrl.totalCount <= 0 && $ctrl.model">
+                <div class="row col-md-12">
+                    <span> No upcoming birthday in this week. </span>
+                </div>
+            </div>
+
+            <div ng-if="$ctrl.totalCount > 0 && $index <$ctrl.personSize" ng-repeat="person in $ctrl.model" class="col-md-6 col-sm-6 col-xs-12">
+                <div style=" padding:5px;">
+                    <div style="float:left;">
+                        <div id="ProfileImage">
+                            <img id="ProfilePicture" class="img-circle" style="width:100%" ng-src="{{ $ctrl.appPath }}Person/GetPersonPictureById?personPictureName={{ person.pictureId }}&t=Clock.Now.Ticks.ToString()" uib-popover-html="person.popoverContent" popover-trigger="'mouseenter'" popover-placement="bottom-left"/>
+                        </div>
+                    </div>
+
+                    <div class="" style="margin-left: 90px; margin-top:5px">
+                        <a class="no-decoration bold" ng-click="$ctrl.viewPatient(person.id)">{{person.fullName}}</a>
+                        <br />
+                        <span>{{person.dateOfBirth| date:'dd-MMM' }}</span>
+                        <br />
+                        @*<span class="bold fontStealGreen" uib-popover-html="person.popoverContent" popover-trigger="'mouseenter'" popover-placement="bottom">@L("CelebrationTips")</span>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row" ng-if="!!$ctrl.seeMore && $ctrl.totalCount > $ctrl.personSize">
+            <div class="col-md-12">
+                <div class="seeMore clearfix text-center">
+                    <a ng-click="$ctrl.loadMore()">@L("ShowMore")</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" ng-if="$ctrl.seeLess">
+            <div class="col-md-12">
+                <div class="seeMore clearfix text-center">
+                    <a ng-click="$ctrl.showLess()">@L("ShowLess")</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

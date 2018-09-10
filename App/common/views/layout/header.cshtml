@@ -1,0 +1,177 @@
+@using Abp.MultiTenancy
+@using Abp.Timing
+@using Microsoft.Ajax.Utilities
+@using Pulsesync.IngoTPCC.Features
+<style>
+    .top-menu ul li a:hover {
+        background-color: transparent !important;
+    }
+
+    .navbar-collapse.collapse {
+        display: none !important;
+    }
+
+    .navbar-nav {
+        float: none !important;
+    }
+
+    .navbar-collapse.collapse.in {
+        display: block !important;
+    }
+</style>
+<div class="page-header-inner col-md-12 nopadding no-padding">
+    <div class="page-logo col-md-3 col-sm-3" style="padding-right:0px">
+        <a href="javascript:;" id="menu-hamburger" data-toggle="collapse" data-target=".navbar-collapse" style="opacity: 0.6; font-size:14px;float: left; margin: 20px 0 0 0;">
+            <i class="material-icons" style="font-size:28px;">menu</i>
+        </a>
+        <a href="@Url.Action("Index", "Home")" target="_self" style="float:left">
+            @*<img ng-if="vm.tenant && vm.tenant.logoId" ng-src="~/TenantCustomization/GetLogo?id={{vm.tenant.logoId}}" alt="logo" class="logo-default" height="33" />
+            <img ng-if="!vm.tenant || !vm.tenant.logoId" src="~/Common/Images/app-logo-on-light.png" alt="logo" class="logo-default" height="33" />*@
+            <img src="~/Common/Images/IngotLogo.png" alt="logo" class="logo-default" height="40" />
+        </a>
+        @*<div class="menu-toggler sidebar-toggler">*@<!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->@*</div>*@
+    </div>
+    <div class="breadcrumb-new col-md-5 col-sm-5 no-padding nopadding"  style="float: left;display: block;height: 75px;">
+        <div class="" ncy-breadcrumb style="margin-top: 2%;"> </div>
+    </div>
+    @*<div class="breadcrumb">
+        <ui-breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy"></ui-breadcrumbs>
+    </div>*@
+    @*<a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"></a>*@
+    <div class="page-top col-md-3 col-sm-4 no-padding nopadding">
+        <div class="top-menu pull-right">
+            <ul class="nav navbar-nav pull-right">
+                <li class="dropdown dropdown-language" ng-if="vm.languages.length > 1" ng-show="false" ng-class="{'disabled': true}">
+                    <a href="javascript:;" class="dropdown-toggle" @*data-toggle="dropdown" data-hover="dropdown" data-close-others="true"*@>
+                        <i ng-class="vm.currentLanguage.icon"></i>
+                        <span class="langname">
+                            {{vm.currentLanguage.displayName}}
+                        </span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="language in vm.languages" ng-if="vm.currentLanguage.name !== language.name">
+                            <a ng-click="vm.changeLanguage(language.name)" href="#">
+                                <i ng-class="language.icon"></i> {{language.displayName}}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- BEGIN NOTIFICATION DROPDOWN -->
+                <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                <li class="dropdown dropdown-extended dropdown-notification dropdown-dark" id="header_notification_bar" ng-show="false" ng-class="{'disabled': true}">
+                    <a href="javascript:;" class="dropdown-toggle" @*data-toggle="dropdown" data-hover="dropdown" data-close-others="true"*@>
+                        <i class="icon-bell"></i>
+                        <span class="badge badge-danger" ng-if="vm.unreadNotificationCount"> {{vm.unreadNotificationCount}} </span>
+                    </a>
+                    <ul class="dropdown-menu" id="UserNotificationDropdown">
+                        <li class="external notifications-header">
+                            <div class="text-left">
+                                <a href="" ng-click="vm.setAllNotificationsAsRead(); $event.preventDefault(); $event.stopPropagation();" ng-if="vm.unreadNotificationCount">@L("SetAllAsRead")</a>
+                                <a class="pull-right" href="" ng-click="vm.openNotificationSettingsModal()">@L("Settings")</a>
+                            </div>
+                        </li>
+                        <li>
+                            <ul ng-repeat="notification in vm.notifications" class="dropdown-menu-list">
+                                <li>
+                                    <a href="{{notification.url}}" class="user-notification-item" ng-class="{'user-notification-item-unread': notification.state=='UNREAD', 'user-notification-item-clickable': notification.url}">
+                                        <span class="details">
+                                            <i class="{{notification.icon}}"></i> {{notification.text}}
+                                        </span>
+                                        <div>
+                                            <span class="notification-time" title="{{notification.time | momentFormat:'YYYY-MM-DD HH:mm:ss'}}" am-time-ago="notification.time"></span>
+                                            <span ng-if="notification.state=='UNREAD'"> - <span class="set-as-read-text" ng-click="vm.setNotificationAsRead(notification); $event.preventDefault(); $event.stopPropagation();">@L("SetAsRead")</span></span>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="notification-empty-text" ng-if="!vm.notifications.length">
+                                @L("ThereIsNoNotification")
+                            </div>
+                        </li>
+                        <li class="external notifications-footer" ng-if="vm.notifications.length">
+                            <div class="text-center"><a ui-sref="notifications">@L("SeeAllNotifications")</a></div>
+                        </li>
+                    </ul>
+                </li>
+                <!-- END NOTIFICATION DROPDOWN -->
+                <li class="separator hide" ng-class="{'disabled': true}"> </li>
+
+                <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                <li class="dropdown dropdown-user dropdown-dark">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" title="{{vm.isImpersonatedLogin ? '@L("YouCanBackToYourAccount")' : ''}}">
+                        <span class="username username-hide-on-mobile" style="display:inline">
+                            <i ng-if="vm.isImpersonatedLogin" class="icon-action-undo font-red-sunglo"></i> {{vm.getShownUserName()}}
+                        </span>
+                        <img id="HeaderProfilePicture" alt="" class="img-circle" src="@Url.Action("GetProfilePicture", "Profile")?t=@Clock.Now.Ticks.ToString()" />
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-default">
+                        <li ng-if="vm.isImpersonatedLogin">
+                            <a href="" ng-click="vm.backToMyAccount()"><i class="icon-action-undo"></i> <strong>@L("BackToMyAccount")</strong></a>
+                        </li>
+                        <li ng-if="vm.isImpersonatedLogin" class="divider"></li>
+                        <li class="dropdown-submenu">
+                            <a class="open-left" href=""><i class="icon-link"></i> @L("LinkedAccounts")</a>
+                            <ul class="dropdown-menu" style="">
+                                <li ng-repeat="linkedUser in vm.recentlyUsedLinkedUsers">
+                                    <a href="" ng-click="vm.switchToUser(linkedUser)">
+                                        {{vm.getShownLinkedUserName(linkedUser)}}
+                                    </a>
+                                </li>
+                                <li ng-if="vm.recentlyUsedLinkedUsers.length > 0" class="divider"></li>
+                                <li>
+                                    <a href="" ng-click="vm.manageLinkedAccounts()">
+                                        <i class="icon-settings"></i> @L("ManageAccounts")
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="" ng-click="vm.changePassword()"><i class="icon-key"></i> @L("ChangePassword")</a>
+                        </li>
+                        <li>
+                            <a href="" ng-click="vm.showLoginAttempts()"><i class="icon-shield"></i> @L("LoginAttempts")</a>
+                        </li>
+                        @*<li>
+                            <a href="" ng-click="vm.changePicture()"><i class="icon-user"></i> @L("ChangeProfilePicture")</a>
+                        </li>*@
+                        <li>
+                            <a href="" ng-click="vm.changeProfile()"><i class="icon-user"></i> @L("ChangeProfile")</a>
+                        </li>
+                        <li>
+                            <a href="" ng-click="vm.editMySettings()"><i class="icon-settings"></i> @L("MySettings")</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="@Url.Action("Logout", "Account")"><i class="icon-logout"></i> @L("Logout")</a>
+                        </li>
+                    </ul>
+                </li>
+
+                @if (AbpSession.MultiTenancySide == MultiTenancySides.Host || IsFeatureEnabled(AppFeatures.ChatFeature))
+                {
+                    <!-- BEGIN QUICK SIDEBAR TOGGLER -->
+                    @*<li class="dropdown dropdown-extended quick-sidebar-toggler" ng-class="{'disabled': true}">
+                            <span class="sr-only">Toggle Quick Sidebar</span>
+                            <i class="icon-speech"></i>
+                            <span ng-if="vm.unreadChatMessageCount" class="badge badge-danger">{{vm.unreadChatMessageCount}}</span>
+                        </li>*@
+                    <!-- END QUICK SIDEBAR TOGGLER -->
+                    <!-- BEGIN QUICK SIDEBAR TOGGLER (Disable and not show sidebar) -->
+                    @*<li class="dropdown" ng-class="{'disabled': true}">
+                            <a href="javascript:;" class="dropdown-toggle" "data-toggle="dropdown" data-hover="dropdown" data-close-others="true"">
+                                <i class="icon-speech"></i>
+                                <span ng-if="vm.unreadChatMessageCount" class="badge badge-danger">{{vm.unreadChatMessageCount}}</span>
+                            </a>
+                        </li>*@
+                    <!-- END QUICK SIDEBAR TOGGLER (Disable and not show sidebar) -->
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="navbar-collapse collapse" id="top-menu-header" style="width:100%; z-index:10000; background-color:white; ">
+    <div class="nav navbar-nav">
+        <div data-ng-include="'~/App/common/views/layout/topmenubar.cshtml'" data-ng-controller="common.views.layout.topmenubar as vm" class="page-sidebar-wrapper"></div>
+    </div>
+</div>

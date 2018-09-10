@@ -1,0 +1,111 @@
+﻿@using Pulsesync.IngoTPCC.SpecialCare.Dto
+@model SpecialCareDto
+<div class="portlet light" data-drag="true" id="specialCareModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("SpecialCare")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <fieldset>
+        <div class="portlet-body" style="display:block">
+            <div class="form-body" style="padding-top:0px;">
+                @{
+                    var attributes = new Dictionary<string, object>();
+                    attributes.Add("role", "form");
+                    attributes.Add("id", "vm.specialCareForm");
+                    attributes.Add("name", "vm.specialCareForm");
+                    attributes.Add("novalidate", "");
+                    attributes.Add("action", "#");
+                    attributes.Add("angular-validator-submit", "vm.save(vm.specialcare)");
+                    attributes.Add("angular-validator", "");
+                    attributes.Add("ng-validate", "general.validationOptions");
+                }
+                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body ng-pristine ng-invalid")))
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <div class="form-body" style="padding-top: 0px;">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="person-name" style="padding-top:0px;">
+                                        <span class="caption-subject bold" style="color:rgba(0, 0, 0, 0.54)">{{vm.person.fullName}}</span>&nbsp;
+                                        <span class="caption-subject" style="color:rgba(0, 0, 0, 0.54)" ng-if="vm.person.registrationDocumentNumber">({{vm.person.registrationDocumentNumber}})</span>
+
+                                    </div>
+                                    <div class="referral-name" style="padding-top:5px;" ng-if="vm.referral">
+                                        <span class="caption-subject" style="color:rgba(0, 0, 0, 0.54)">Referral:</span>&nbsp;
+                                        <span class="referral-link"><a style="top: 18.5em;" class="referral-view redirect-anchor bold fontStealGreen" href="#!/tenant/referral/{{vm.referral.id}}">{{vm.referral.referralCode}}</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="height:20px"></div>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-12">
+                                    @s.FieldFor(sc => sc.SpecialCareItemId).AsDropDown().Attrs(new { ng_model = "vm.specialcare.specialCareItemId", name = "SpecialCareItem", ui_select_required = "ui-select-required", required_message = "You must provide a value for Description.", ng_change = "vm.changeSpecialCare($select.selected)" })
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group form-md-line-input" ng-if="vm.others">
+                                        <input type="text" ng-model="vm.specialcare.otherSpecialCare" class="form-control" id="otherReferred" name="otherSpecialCare" required required-message="'You must provide a value for Others, Please Specify.'">
+                                        <label class="control-label" for="otherSpecialCare">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-12">
+                                    @s.FieldFor(sc => sc.FrequencyId).AsDropDown().Attrs(new { ng_model = "vm.specialcare.frequencyId", ng_change = "vm.onChangeFrequencyOrLastChangeDate($select.selected)", name = "Frequency" })
+                                </div>
+                                <div class="col-md-6 col-sm-12" ng-if="vm.isOthersSelected || vm.specialcare.otherFrequency">
+                                    @s.FieldFor(sc => sc.OtherFrequency).Attrs(new { ng_model = "vm.specialcare.otherFrequency", label = "Other Frequency", name = "OtherFrequency" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-12">
+                                    @s.FieldFor(sc => sc.StartDate).Attrs(new { ng_model = "vm.specialcare.startDate", Validate = "false", Restrict = "reject", name = "StartDate", data_date_format = "dd-M-yyyy", required = "", required_message = "You must provide a value for Start Date" }).AddClass("form-control ng-pristine ng-untouched ng-valid ng-empty")
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-12" ng-if="vm.isFrequencySelected || vm.specialcare.frequencyId">
+                                    @s.FieldFor(sc => sc.LastChangeDate).Attrs(new { ng_model = "vm.specialcare.lastChangeDate", maxdate = "0d", ng_change = "vm.onChangeFrequencyOrLastChangeDate(vm.specialcare.frequency)", name = "LastChangeDate", data_date_format = "dd-M-yyyy" })
+                                </div>
+                                <div class="col-md-6 col-sm-12" ng-if="!vm.isFrequencySelected && !vm.specialcare.frequencyId">
+                                    <div class="form-group form-md-line-input">
+                                        <input id="lastChangeDate" name="LastChangeDate" type="text" disabled class="form-control"
+                                               ng-model="vm.specialcare.lastChangeDate" />
+                                        <label for="lastChangeDate" class="control-label">@L("LastChangeDate")</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    @s.FieldFor(sc => sc.NextChangeDate).Attrs(new { ng_model = "vm.specialcare.nextChangeDate", name = "NextChangeDate", data_date_format = "dd-M-yyyy" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-12">
+                                    @s.FieldFor(sc => sc.IsActive).AsDropDown().Attrs(new { ng_model = "vm.specialcare.isActive", repeat = "vm.statusList", name = "IsActive" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12">
+                                    @s.FieldFor(sc => sc.Remarks).AddClass("animate msd-elastic: \\n;").Rows(4).Attrs(new { ng_model = "vm.specialcare.remarks" })
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+                    <p class="bodyContext" ng-if="vm.editMode">
+                        @Html.Raw(L("CreationInfo", "vm.specialcare.creatorUser.fullName", "vm.specialcare.creationTime | date:'d-MMM-yyyy h:mm a'"))
+                    </p>
+                    <p class="bodyContext" ng-if="vm.editMode">
+                        @Html.Raw(L("ModificationInfo", "vm.specialcare.lastModifierUser.fullName", "vm.specialcare.lastModificationTime | date:'d-MMM-yyyy h:mm a'"))
+                    </p>
+                    <div class="form-actions margin-top-10 noborder pull-right">
+                        <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.disableSave"><i class="material-icons  font-18-main v-top">save</i>Save</button>
+                        <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </fieldset>
+</div>

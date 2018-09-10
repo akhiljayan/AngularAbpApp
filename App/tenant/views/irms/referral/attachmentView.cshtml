@@ -1,0 +1,43 @@
+﻿@model ReferralDto
+@using IRMS.Entities.Dto;
+<div busy-if="vm.loading">
+    <div ng-controller="tenant.views.irms.attachmentView as attachment">
+        <!-- Attachment Section -->
+        <div id="Attachment" class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject">@L("Attachment")</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 80%;">@L("FileName")</th>
+                                    <th style="width: 20%;">@L("ModifiedDate")</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in attachment.referralAttachmentsList | filter: { action : 'active' }">
+                                    <td>{{ item.fileName }}</td>
+                                    <td>{{ item.modifiedDate | irmsDateFormat }}</td>
+                                </tr>
+                                <tr ng-show="attachment.referralAttachmentsList.length == 0">
+                                    <td colspan="2">
+                                        @L("NoRecordsFound")
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <button ng-show="attachment.referralAttachmentsList.length != 0" type="button" class="btn btn-circle green" ng-click="attachment.download()">@L("DownloadAttachment")</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

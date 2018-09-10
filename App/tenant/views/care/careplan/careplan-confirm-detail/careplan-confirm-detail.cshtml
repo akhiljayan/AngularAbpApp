@@ -1,0 +1,112 @@
+﻿@model CreateOrUpdateCarePlanInput
+
+@using PulseSync.IngoTPCC.Application.Care.CarePlans.Dto
+
+<style>
+    .goalDetail p {
+        margin: 0;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        @{
+            var attrs = new Dictionary<string, object>();
+            attrs.Add("name", "vm.form");
+            attrs.Add("novalidate", "");
+            attrs.Add("angular-validator", "");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs).AddClass("scrollable-form-body")))
+        {
+            using (var s = f.BeginSection())
+            {
+                @*<div class="form-group form-md-line-input">
+                            <select class="form-control" id="Problem_3" ng-model="vm.workingModel.problem" disabled>
+                                <option ng-repeat="x in vm.problemMaster" value="{{ x.id }}">{{ x.description }}</option>
+                            </select>
+                            <label class="control-label" for="Problem">@L("SelectProblem")</label>
+                        </div>
+                    @s.FieldFor(c => c.PersonProblemId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.personProblemId", repeat = "vm.problemMaster", ng_disabled = "true" })*@
+
+                <div ng_hide="!!vm.workingModel.problemCustom">
+                    @s.FieldFor(c => c.ProblemId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.problemId", repeat = "vm.problemMaster", ng_disabled = "true" })
+                </div>
+                <div ng_hide="!!vm.workingModel.problemId">
+                    @s.FieldFor(c => c.ProblemCustom).Attrs(new { ng_model = "vm.workingModel.problemCustom", ng_disabled = "true" })
+                </div>
+
+                <div>
+                    @*<div class="form-group form-md-line-input ">
+                            <input class="form-control" ng-model="vm.workingModel.problemDesc" id="ProblemDesc_3" disabled>
+                            <label class="control-label">Problem Description</label>
+                        </div>*@
+                    @s.FieldFor(c => c.ProblemDescription).Attrs(new { ng_model = "vm.workingModel.problemDescription", ng_disabled = "true" })
+
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4">
+                            @*<div class="form-group form-md-line-input">
+                                    <select class="form-control" id="Priority_3" ng-model="vm.workingModel.priorityType" >
+                                        <option ng-repeat="x in vm.priorityMaster" value="{{ x.id }}">{{ x.description }}</option>
+                                    </select>
+                                    <label class="control-label" for="Priority">@L("Priority")</label>
+                                </div>*@
+                            @s.FieldFor(c => c.Priority).Attrs(new { ng_model = "vm.workingModel.priority", ng_disabled = "true" })
+                        </div>
+
+                        <div class="col-md-4 col-sm-4">
+                            @*<div class="form-group form-md-line-input">
+                                    <select class="form-control" id="CareplanType_3" ng-model="vm.workingModel.careplanTypeId" disabled>
+                                        <option ng-repeat="x in vm.careplanMaster" value="{{ x.id }}">{{ x.description }}</option>
+                                    </select>
+                                    <label class="control-label" for="Priority">@L("SelectCarePlanType")</label>
+                                </div>*@
+                            @s.FieldFor(c => c.CarePlanTypeId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.careplanTypeId", ng_disabled = "true", repeat = "vm.careplanMaster", ui_select_required = "ui-select-required" })
+                        </div>
+
+                        <div class="col-md-4 col-sm-4">
+                            @*<div class="form-group form-md-line-input">
+                                    <div class="input-group date date-picker">
+                                        <input class="form-control dateinput" data-date-picker="" id="NextReviewDate_3" ng-model="vm.workingModel.nextReviewDate" disabled />
+                                        <div class="input-group-addon">
+                                            <i class="material-icons" style="line-height: 14px;">date_range</i>
+                                        </div>
+                                        <label class="control-label" for="NextReviewDate">@L("CarePlanNextReviewDate")<span class="businessRequired"> * </span></label>
+                                    </div>
+                                </div>*@
+                            @s.FieldFor(c => c.NextReviewDate).Attrs(new { ng_model = "vm.workingModel.nextReviewDate", ng_disabled = "true" })
+                        </div>
+
+                    </div>
+
+                    <div class="form-group form-md-line-input">
+                        <label class="control-label">Tags</label>
+                        <ps-tagsinput ng-model="vm.workingModel.tags"></ps-tagsinput>
+                    </div>
+                </div>
+
+                <div class="form-group form-md-line-input goalDetail" ng-model="vm.workingModel.carePlanGoals" ng-repeat="item in vm.workingModel.carePlanGoals">
+                    <div class="well well-sm">
+                        <h5 class="bold">Goal</h5>
+                        <p>
+                            <span ng-if="item.goalId">{{ vm.getGoalDesc(item.goalId) }} </span>
+                            <span ng-if="item.customGoal">{{ item.customGoal }} </span>
+                        </p>
+                        <div>
+                            <h5 class="bold">Intervention</h5>
+                            <ul>
+                                <li ng-repeat="i in item.carePlanGoalInterventions" ng-model="item.interventions">
+                                    {{ vm.getInterventionDesc(i, item.interventionMaster) }}
+                                </li>
+                                <li ng-repeat="j in item.customInterventions track by $index" ng-model="item.customInterventions">
+                                    {{ j.interventionDescription }}
+                                </li>
+                            </ul>
+                            @*<p ng-repeat="i in item.Intervention" ng-model="item.Intervention"> {{ vm.getInterventionDesc(i)}}</p>*@
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+</div>

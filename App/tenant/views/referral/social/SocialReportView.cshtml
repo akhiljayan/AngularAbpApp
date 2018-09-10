@@ -1,0 +1,40 @@
+﻿<div id="SocialReport" class="portlet light" ng-show="socialReport.permissions.view" ng-class="{ 'div-disabled': vm.isNew }" ng-controller="tenant.views.referral.socialReportView as socialReport">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("SocialReport")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a ng-click="socialReport.create()" ng-if="socialReport.permissions.create && socialReport.hasPreAdmission" class="icon-wrapper">
+                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+            </a>
+        </div>
+    </div>
+    <div class="portlet-body p-0-top-bottom">
+
+        <div class="filter-results-card">
+            <ul class="filter-list">
+                <li class="filter-list-item" ng-repeat="sr in socialReport.data.items">
+                    <a class="filter-list-item-content" ui-sref="tenant.socialReportReferral({ socialId: sr.id, referralId: sr.byReferralId })">
+
+                        <div class="row">
+                            <div class="col-md-8 col-sm-7 margin-bottom-10 bold">
+                                <span data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<div class='otherText'>Subject</div>" ng-popover>{{ sr.subject }}</span>
+                            </div>
+                            <div class="col-md-4 col-sm-5 text-right margin-bottom-10 bold">
+                                <span data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<div class='otherText'>Report Type</div>" ng-popover>{{ sr.reportType.description }}</span>
+                            </div>
+                            <div class="col-md-8 col-sm-7">
+                                Reported by <b>{{ sr.reportedBy.fullName }}</b> on <b>{{ sr.reportedDate | date:'dd-MMM-yyyy' }}</b>
+                            </div>
+                            <div class="col-md-4 col-sm-5 text-right">
+                                <span data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<div class='otherText'>By Referral</div>" ng-popover>{{ sr.byReferral.referralCode }}</span>
+                            </div>
+                        </div>
+
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>

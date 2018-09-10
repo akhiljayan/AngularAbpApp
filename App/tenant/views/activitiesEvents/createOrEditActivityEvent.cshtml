@@ -1,0 +1,76 @@
+﻿@model CreateOrUpdateActivityEventInput
+
+@using Pulsesync.IngoTPCC.Application.MembershipBookings.Dto
+
+<div class="portlet light" data-drag="true" id="ActivityEvent">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("ActivityEvent")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancelActivityEvent()"></a>
+        </div>
+    </div>
+
+    <div class="portlet-body form">
+        @{
+            var attributes = new Dictionary<string, object>();
+            attributes.Add("name", "activityEventFrom");
+            attributes.Add("novalidate", "");
+            attributes.Add("angular-validator-submit", "vm.save()");
+            attributes.Add("angular-validator", "");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body")))
+        {
+            using (var s = f.BeginSection())
+            {
+                <div class="portlet-body" style="display: block;">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @s.FieldFor(m => m.Code).Attrs(new { ng_model = "vm.activityEvent.code" })
+                                @s.FieldFor(m => m.Description).Attrs(new { ng_model = "vm.activityEvent.description" })
+                                @s.FieldFor(m => m.DescriptionInChinese).Attrs(new { ng_model = "vm.activityEvent.descriptionInChinese" })
+                                @*@s.FieldFor(m => m.DisplayOrder).Attrs(new { ng_model = "vm.activityEvent.displayOrder" })*@
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 padding-left-0">
+                                <div class="form-group form-md-line-input">
+                                    <label class="control-label">@L("Type")</label><br />
+                                    <input bs-switch type="checkbox" ng-model="vm.activityEvent.activityEventType" switch-on-color="steelGreenBackGRound" switch-off-color="steelGreenBackGRound" switch-off-text="Activity" switch-on-text="Event">
+                                </div>
+                            </div>
+                            <div class="col-md-6 padding-right-0">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 padding-left-0">
+                                <div class="form-group form-md-line-input">
+                                    <input type="number" ng-model="vm.activityEvent.displayOrder" class="form-control">
+                                    <label class="control-label">@L("DisplayOrder")</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 padding-right-0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <p class="bodyContext" ng-if="!vm.isCreateMode">
+                @Html.Raw(L("CreationInfo", "vm.activityEvent.creatorUser.fullName", "vm.activityEvent.creationTime | dateTimeFormat"))
+            </p>
+            <p class="bodyContext" ng-if="!vm.isCreateMode">
+                @Html.Raw(L("ModificationInfo", "vm.activityEvent.lastModifierUser.fullName", "vm.activityEvent.lastModificationTime | dateTimeFormat"))
+            </p>
+
+            <div class="form-actions noborder right">
+                <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="!vm.permissions.edit"><i class="material-icons ps-btn-material">check</i>Ok</button>
+                <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancelActivityEvent()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+            </div>
+        }
+    </div>
+</div>

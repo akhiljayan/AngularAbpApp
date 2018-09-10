@@ -1,0 +1,144 @@
+﻿@using Abp.Timing
+@using Pulsesync.IngoTPCC.Authorization
+
+<div ng-controller="tenant.views.person.personView as vm">
+    <div class="row">
+        <div id="main-header-with-tab header-sticky-index" class="row main-header-with-tab" hide-on-scroll sticky offset="75" pinned="{{vm.personHeaderisPinned}}" style="z-index:1000 !important;">
+            <div class="row bg-white header-sticky-index" @*id="person-header" *@ @*sticky offset="75" *@ @*media-query="min-width: 992px" *@ style="height: 86px; padding: 6px 0px; border-bottom:0.2px solid #d8d8d8;box-shadow: 0 0 0 rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.18)">
+                <person-header person-model="vm.person" mode="vm.mode"></person-header>
+                <div class="col-xs-1 col-sm-1 text-right pull-right" style="margin-top:-15px">
+                    <span ng-if="!vm.personHeaderisPinned" class="mt-comment-date otherText" ng-click="vm.personHeaderisPinned = true">
+                        <i class="icon-pin font-default"></i>
+                    </span>
+                    <span ng-if="vm.personHeaderisPinned" class="mt-comment-date otherText" ng-click="vm.personHeaderisPinned = false">
+                        <i class="icon-pin fontStealGreen"></i>
+                    </span>
+                </div>
+            </div>
+            @* --- Navigation Tabs --- *@
+            <div class="row" id="person-tabs header-sticky-index" @*set-class-when-at-top="fix-to-top" *@ @*sticky offset="160" *@ @*media-query="min-width: 992px" *@ style="height: 45px;top:0px;background-color:#f9f9f9;margin-bottom: 10px; box-shadow: 0 0 0 rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.18)">
+                <div class="col-md-12 col-sm-12" ng-if="!vm.loading">
+                    <div class="col-md-1 col-sm-1 tabbable-line" style="text-align:left">
+                        <div class="dropdown">
+                            <span class="dropdown-toggle" id="navigation-menu" type="button" data-toggle="dropdown" style="cursor:pointer;margin-top: 15px; display: inline-block;">
+                                @*<i class="fa fa-th-list" aria-hidden="true" style="padding-top:18px; font-size:20px;color:#acacac;"></i>*@
+                                <i class="ps-icon-section-menu" style="font-size:20px;color:#acacac;"></i>
+                            </span>
+                            <div class="dropdown-menu" aria-labelledby="navigation-menu" role="menu" style="width: 200px; background-color:#f9f9f9">
+                                <li role="presentation" ng-repeat="navigate in vm.navigationalMenu" ng-if="navigate.permission">
+                                    <a role="menuitem" tabindex="-1" class="bold" href="#" ng-click="vm.gotoAnchor(navigate.key)">{{navigate.displayName}}</a>
+                                </li>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8 col-sm-6 tabbable-line" style="text-align:left">
+                        <ul class="nav nav-tabs persontabs" responsive-tabs scroll-to-top tab-navigation-hash>
+                            <li ng-class="{ 'active': vm.personTabs.personDetails }" @*ng-click="vm.setTabVisible('personDetails')"*@>
+                                <a data-toggle="tab" href="#PersonDetails" ng-click="vm.setPersonDetailsNavigation()" target="_self" class="font-16-important bold txt-align-cntr">@L("PersonDetails")</a>
+                            </li>
+                            <li ng-class="{ 'active': vm.personTabs.profile }" @*ng-click="vm.setTabVisible('status')"*@>
+                                <a data-toggle="tab" href="#Status" ng-click="vm.setStatusNavigation()" target="_self" class="font-16-important bold txt-align-cntr">@L("Profile")</a>
+                            </li>
+                            <li ng-class="{ 'active': vm.personTabs.care }" @*ng-click="vm.setTabVisible('care')"*@>
+                                <a data-toggle="tab" href="#Care" ng-click="vm.setCareNavigation()" target="_self" class="font-16-important bold txt-align-cntr">@L("Care")</a>
+                            </li>
+                            <li ng-class="{ 'active': vm.personTabs.encounter }" @*ng-click="vm.setTabVisible('encounter')"*@>
+                                <a data-toggle="tab" href="#Encounter" ng-click="vm.setEncounterNavigation()" target="_self" class="font-16-important bold txt-align-cntr">@L("Encounter")</a>
+                            </li>
+                            @*<li ng-class="{ 'active': vm.personTabs.episode }">
+                                <a data-toggle="tab" href="#Episode" ng-click="vm.setEpisodeNavigation()" target="_self" class="font-16-important bold txt-align-cntr">@L("Episode")</a>
+                            </li>*@
+                            <li ng-class="{ 'active': vm.personTabs.attachment }" @*ng-click="vm.setTabVisible('attachment')"*@ ng-if="vm.person.isPatient">
+                                <a data-toggle="tab" href="#Attachment" ng-click="vm.setAttachmentNavigation()" target="_self" class="font-16-important bold txt-align-cntr">@L("Attachment")</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="col-md-3 col-sm-5">
+                        <div class="col-md-12 col-sm-12" style="padding:10px 0px 0px 0px">
+                            <div class="col-md-12 col-sm-12 no-padding nopadding pull-right">
+                                <div class="btn-group pull-right">
+                                    <a ng-click="vm.cancel()" title="Close" class="icon-wrapper  pull-right" style="cursor:pointer">
+                                        <i class="material-icons custom-icon">close</i>
+                                    </a>
+                                </div>
+
+                                <div class="btn-group pull-right">
+                                    <a class="btn green-haze btn-outline btn-circle btn-sm icon-wrapper pull-right" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true" style="margin-top:0px !important">
+                                        Actions
+                                        <i class="fa fa-angle-down"></i>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li>
+                                            <a class="linkButton btn-small inline-flex-center" ng-if="vm.isNew" style="width:100%" ng-click="vm.prepareSave()" ng-class="{'disabled-link': vm.isSavingDisabled }">
+                                                <i class="material-icons font-18-main v-top">save</i> @L("Save")
+                                            </a>
+                                        </li>
+                                        @if (IsGranted(AppPermissions.Pages_Tenant_Person_Delete))
+                                        {
+                                            <li>
+                                                <a class="linkButton btn-small inline-flex-center" style="width:100%" ng-if="!vm.isNew" ng-click="vm.delete()">
+                                                    <i class="material-icons font-18-main v-top">delete_forever</i> @L("Delete")
+                                                </a>
+                                            </li>
+                                        }
+                                        <li ng-if="vm.person.isPatient">
+                                            <a class="linkButton btn-small inline-flex-center" style="width:100%" ng-click="vm.printPatientLabel()">
+                                                <i class="material-icons font-18-main v-top">print</i> @L("PrintLabel")
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="btn-group pull-right" style="padding-right: 5px;">
+                                    <a class="icon-wrapper pull-right" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true" style="cursor:pointer" ng-if="vm.person.isPatient">
+                                        <i class="material-icons custom-icon">bookmark</i>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li ng-if="!vm.isWatched"><a ng-click="vm.watchPerson(vm.person.id)"><i class="fa fa-eye"></i> Add to watch list</a></li>
+                                        <li ng-if="vm.isWatched"><a ng-click="vm.unWatchPerson(vm.person.id)"><i class="fa fa-eye-slash"></i> Remove from watch list</a></li>
+                                        <li ng-if="!vm.isInCareList"><a ng-click="vm.addToCareList(vm.person.id)"><i class="fa fa-star"></i> Add to care list</a></li>
+                                        <li ng-if="vm.isInCareList"><a ng-click="vm.removeFromCareList(vm.person.id)"><i class="fa fa-star-o"></i> Remove from care list</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear" style="clear:both"></div>
+        @*<pre>personDetailsViewEnabled : {{ personDetailsViewEnabled }}</pre>
+        <pre>profileViewEnabled : {{ profileViewEnabled }}</pre>
+        <pre>profileViewEnabled : {{ profileViewEnabled }}</pre>
+        <pre>careViewEnabled : {{ careViewEnabled }}</pre>
+        <pre>encounterViewEnabled : {{ encounterViewEnabled }}</pre>
+        <pre>attachmentViewEnabled : {{ attachmentViewEnabled }}</pre>*@
+
+        <div class="tab-content clearfix">
+            <div id="PersonDetails" style="margin-bottom: 200px;" class="tab-pane fade" @*ng-if="personDetailsViewEnabled || !personDetailsViewFirstLoad"*@ ng-class="{ 'in active': vm.personTabs.personDetails }">
+                @Html.Partial("~/App/tenant/views/person/tabs/detailsTab.cshtml")
+            </div>
+
+            <div id="Status" style="margin-bottom: 200px;" class="tab-pane fade" @*ng-if="profileViewEnabled || !statusViewFirstLoad"*@ ng-class="{ 'in active': vm.personTabs.profile }">
+                @Html.Partial("~/App/tenant/views/person/tabs/statusTab.cshtml")
+            </div>
+
+            <div id="Care" style="margin-bottom: 200px;" class="tab-pane fade" @*ng-if="careViewEnabled || !careViewFirstLoad"*@ ng-class="{ 'in active': vm.personTabs.care }">
+                @Html.Partial("~/App/tenant/views/person/tabs/careTab.cshtml")
+            </div>
+
+            <div id="Encounter" style="margin-bottom: 200px;" class="tab-pane fade" @*ng-if="encounterViewEnabled || !encounterViewFirstLoad"*@ ng-class="{ 'in active': vm.personTabs.encounter }">
+                @Html.Partial("~/App/tenant/views/person/tabs/encounterTab.cshtml")
+            </div>
+
+            @*<div id="Episode" style="margin-bottom: 200px;" class="tab-pane fade" ng-class="{ 'in active': vm.personTabs.episode }">
+                @Html.Partial("~/App/tenant/views/person/tabs/episodeTab.cshtml")
+            </div>*@
+
+            <div id="Attachment" style="margin-bottom: 200px;" class="tab-pane fade" @*ng-if="(attachmentViewEnabled || !attachmentViewFirstLoad)*@ && vm.person.isPatient" ng-class="{ 'in active': vm.personTabs.attachment }">
+                @Html.Partial("~/App/tenant/views/person/tabs/attachmentTab.cshtml")
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+﻿<div id="immunization" class="portlet light" busy-if="$ctrl.loading" ng-if="$ctrl.isPatient">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Immunization")</span>
+        </div>
+        <div class="actions dropdown inputs" ng-if="$ctrl.isPatient">
+            <div class="input-small-new inline-block">
+                <form action="" class="search-form search-style-class">
+                    <div class="form-group has-feedback input-inline search-form-group">
+                        <label for="search" class="sr-only">@L("Search")</label>
+                        <input type="text" ng-model="$ctrl.immunizationCard.filterText" enter-key="$ctrl.refreshGrid()" class="form-control form-control-solid search-input input-circle font-13-main clearable" placeholder="search keywords...">
+                        <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="$ctrl.clearFilter()"></a>
+                        <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                    </div>
+                </form>
+            </div>
+            <a ng-click="$ctrl.detailsOpen = !$ctrl.detailsOpen" title="Show Diagnosis Detail view" class="icon-wrapper">
+                <i ng-show="!$ctrl.detailsOpen" class="material-icons custom-icon">menu</i>
+                <i ng-show="$ctrl.detailsOpen" class="material-icons custom-icon">view_headline</i>
+            </a>        
+            <a ng-click="$ctrl.create()" ng-if="$ctrl.permissions.create" class="icon-wrapper">
+                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+            </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+
+        <!-- Summary View - only display the latest record for each immunization -->
+        <div class="medical-allert col-md-12 col-sm-12 nopadding">
+            <div class="medical-allert-details row" ng-repeat="immunization in $ctrl.immunizations.summaryImmunizationList" style="margin-bottom:10px">
+                <div class="col-md-10 col-sm-10 cursor-pointer" ng-class="{'fontRed': immunization.isExpired && $ctrl.isPersonAdmitted}" ng-click="$ctrl.edit(immunization)">
+                    <span class="bold" title="Vaccine">{{immunization.vaccine}}</span>
+                    <span ng-if="immunization.dose" title="Dose">({{immunization.dose}})</span>
+                    <span title="Effective Date">, {{immunization.effectiveDate | date : 'dd-MMM-yyyy'}}</span>
+                    <span title="Expiry Date" ng-if="immunization.expiryDate">, {{immunization.expiryDate| date : 'dd-MMM-yyyy'}}</span>
+                </div>
+                <div class="col-md-2 col-sm-2">
+                    <div class="actions list-unstyled list-inline">
+                        <a class="actions list-unstyled list-inline" ng-if="$ctrl.permissions.delete" href="#" ng-click="$ctrl.delete(immunization.id)">@L("Delete")</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail View also show the history for each immunization -->
+        <div class="medical-allert col-md-12 col-sm-12 nopadding" ng-if="$ctrl.detailsOpen">
+            <div class="medical-allert-details row" ng-repeat="immunization in $ctrl.immunizations.detailImmunizationList" style="margin-bottom:10px">
+                <div class="col-md-10 col-sm-10 cursor-pointer" ng-class="{'fontRed': immunization.isExpired && $ctrl.isPersonAdmitted}" ng-click="$ctrl.edit(immunization)">
+                    <span class="bold" title="Vaccine">{{immunization.vaccine}}</span>
+                    <span ng-if="immunization.dose" title="Dose">({{immunization.dose}})</span>
+                    <span title="Effective Date">, {{immunization.effectiveDate | date : 'dd-MMM-yyyy'}}</span>
+                    <span title="Expiry Date" ng-if="immunization.expiryDate">, {{immunization.expiryDate| date : 'dd-MMM-yyyy'}}</span>
+                </div>
+                <div class="col-md-2 col-sm-2">
+                    <div class="actions list-unstyled list-inline">
+                        <a class="actions list-unstyled list-inline" ng-if="$ctrl.permissions.delete" href="#" ng-click="$ctrl.delete(immunization.id)">@L("Delete")</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Pagination on Form Load.-->
+        <simple-paginator data="$ctrl.data" small-page-size="true" on-page-changed="$ctrl.load(requestParams)"></simple-paginator>
+    </div>    
+</div>

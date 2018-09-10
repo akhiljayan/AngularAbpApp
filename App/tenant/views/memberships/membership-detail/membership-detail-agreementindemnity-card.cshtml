@@ -1,0 +1,78 @@
+﻿@model MembershipDto
+
+@using Pulsesync.IngoTPCC.Application.Membership.Dto
+<style type="text/css">
+    .textlabel {
+       overflow:scroll;
+
+    }
+    </style>
+<div class="portlet light" ng-class="{ 'div-disabled': (vm.IsAgreed)}">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("AgreementIndemnity")</div>
+        </div>
+    </div>
+
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @using (var f = Html.BeginSubForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <textarea class="textlabel" style="width:100%; height:100%;" type="text" name="fname" ng-model="vm.agreementLabel" ng-disabled="true" rows="4" cols="70"></textarea>
+                        <div class="md-checkbox margin-left-20" ng-repeat="li in vm.membershipagreement">
+                            <input id="{{li.id}}" class="md-check" type="checkbox" value="{{li.description}}" ng-model="li.selected" ng-change="vm.onChangeAgreement(li)">
+                            <label for="{{li.id}}">
+                                <span class="inc"></span>
+                                <span class="check"></span>
+                                <span class="box"></span>
+                                {{li.description}}
+                            </label>
+                        </div>
+                        <signature-pad accept="accept" clear="clear" dataurl="vm.dataurl" , width="600" height="220"></signature-pad>
+                        <div ng-show="vm.dataurl == vm.emptyImage && vm.dataurl == null">
+                            @s.FieldFor(m => m.SignatureDate).Attrs(new { ng_disabled = "true", ng_model = "vm.workingModel.signatureDate", required_message = "'You must provide a value for Signature Date.'", invalid_message = "'You must provide a value for Signature Date.'" }).Label(@L("SignatureDate"))
+                        </div>
+                        <div ng-show="!(vm.dataurl == vm.emptyImage && vm.dataurl == null)">
+                            @s.FieldFor(m => m.SignatureDate).Attrs(new { ng_model = "vm.workingModel.signatureDate", ng_required = "vm.dataurl != vm.emptyImage && vm.dataurl != null", required_message = "'You must provide a value for Signature Date.'", invalid_message= "'You must provide a value for Signature Date.'", show_required_label="true" }).Label(@L("SignatureDate"))
+                        </div>
+
+                        <div class="form-actions pull-right">
+                            @*<button class="linkButton btn-small" type="submit" ng-click="vm.signature = accept();vm.save($event);">
+                        <i class="material-icons font-18-main v-top">save</i> @L("Save")
+                    </button>*@
+                            <button class="linkButton btn-small" ng-hide="vm.mode=='view'" type="button" ng-click="vm.signature = clear();vm.dataurl = clear();vm.clear();">
+                                <i class="material-icons font-18-main v-top">clear</i> @L("Clear")
+                            </button>
+                        </div>
+                    }
+                }
+            </div>
+
+            <div ng-switch-default>
+                <textarea class="textlabel" style="width:100%; height:100%;" type="text" name="fname" ng-model="vm.agreementLabel" ng-disabled="true" rows="4" cols="70"></textarea>
+                <div class="md-checkbox margin-left-20" ng-repeat="li in vm.membershipagreement">
+                    <input id="{{li.id}}" class="md-check" type="checkbox" value="{{li.description}}" ng-model="li.selected" ng-disabled=true>
+                    <label for="{{li.id}}">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span>
+                        {{li.description}}
+                    </label>
+                </div>
+                <div class="signatureImg" ng-show="vm.model.signatureBody">
+                    <img ng-src="{{ vm.model.signatureBody }}">
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.signatureDate | dateFormat}}</div>
+                    <label class="control-label">@L("SignatureDate")</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

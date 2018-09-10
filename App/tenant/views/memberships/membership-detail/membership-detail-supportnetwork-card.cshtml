@@ -1,0 +1,62 @@
+﻿@model MembershipDto
+
+@using Pulsesync.IngoTPCC.Application.Membership.Dto
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("SupportNetwork")</span>
+        </div>
+    </div>
+        <div class="portlet-body">
+            <div ng-switch="vm.mode">
+                <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                    @using (var f = Html.BeginSubForm())
+                    {
+                        using (var s = f.BeginSection())
+                        {
+                            @s.FieldFor(m => m.Family).Attrs(new { ng_model = "vm.workingModel.family" })
+                            @s.FieldFor(m => m.Relatives).Attrs(new { ng_model = "vm.workingModel.relatives" })
+                            @s.FieldFor(m => m.ReligiousGroup).Attrs(new { ng_model = "vm.workingModel.religiousGroup" })
+                            @s.FieldFor(m => m.SupportNetworkOthers).Attrs(new { ng_model = "vm.workingModel.supportNetworkOthers", ng_change = "vm.initialiseSupportNetworkOthersDescription()" })
+                            <div class="form-group form-md-line-input" ng-if="vm.workingModel.supportNetworkOthers">
+                                <input type="text" ng-model="vm.workingModel.supportNetworkOthersDescription" class="form-control" id="othersSupportNetworkDescription" name="othersSupportNetworkDescription" placeholder="Provide Other Support Network" ng-required="true" required-message="'@L("OthersPleaseSpecifyErrorMessage")'">
+                                <label class="control-label" for="othersSupportNetworkDescription">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                            </div>
+                            @s.FieldFor(m => m.SupportNetworkRemarks).Attrs(new { ng_model = "vm.workingModel.supportNetworkRemarks" })
+                        }
+                    }
+                </div>
+
+                <div ng-switch-default>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"  ng-bind="vm.returnBoolValue(vm.model.family)"></div>
+                            <label class="control-label">@L("Family")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"  ng-bind="vm.returnBoolValue(vm.model.relatives)"></div>
+                            <label class="control-label">@L("Relatives")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"  ng-bind="vm.returnBoolValue(vm.model.religiousGroup)"></div>
+                            <label class="control-label">@L("ReligiousGroup")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"  ng-bind="vm.returnBoolValue(vm.model.supportNetworkOthers)"></div>
+                            <label class="control-label">@L("SupportNetworkOthers")</label>
+                        </div>
+                        <div ng-if="vm.model.supportNetworkOthersDescription" class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.supportNetworkOthersDescription ? vm.model.supportNetworkOthersDescription: '-'}}</div>
+                            <label class="control-label">@L("SupportNetworkOthersDescription")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.supportNetworkRemarks ? vm.model.supportNetworkRemarks: '-'}}</div>
+                            <label class="control-label">@L("SupportNetworkRemarks")</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+

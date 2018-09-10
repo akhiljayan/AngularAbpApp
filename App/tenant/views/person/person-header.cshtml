@@ -1,0 +1,213 @@
+﻿@{
+    var NoKnownDrugAllergyText = "No Known Drug Allergy (NKDA)";
+}
+
+<div ng-if="vm.personModel.id">
+    <div class="row">
+        <div class="col-md-1 col-sm-1 col-sm-offset-1 col-md-offset-1">
+            <div class="profileImage">
+                <img id="ProfilePicture" alt="{{ vm.personModel.fullName }}" class="img-circle pull-right" ng-src="{{ vm.appPath }}Person/GetPersonPictureById?personPictureName={{ vm.personModel.pictureId }}&t=Clock.Now.Ticks.ToString()"
+                     style="width: 73px; height: 73px" ng-click="vm.permissions.edit && vm.changePersonProfileImage();" />
+            </div>
+        </div>
+        <div class="col-md-10 col-sm-10">
+            <div class="col-md-12 col-sm-12 nopadding no-padding">
+                <span class="bodyContext bold" style="cursor:pointer" ng-click="vm.navigateToPerson(vm.personModel.id)">
+                    {{ vm.personModel.fullName }}
+                    <span class="bodyContext" ng-if="vm.personModel.registrationDocumentNumber">({{ vm.personModel.registrationDocumentNumber }})</span>
+                </span>
+                <span class="bodyContext" ng-if="vm.personModel.gender.description.toLowerCase()=='male'">{{ vm.personModel.gender ? ", " : "" }}M</span>
+                <span class="bodyContext" ng-if="vm.personModel.gender.description.toLowerCase()=='female'">{{ vm.personModel.gender ? ", " : "" }}F</span>
+                <span class="bodyContext" ng-if="vm.age != '-'">{{ vm.age ? ", " : "" }}{{ vm.age }}</span>
+                <span>{{ vm.personServiceTypeList.referralServiceTypes.length ? ", " : "" }}</span>
+                <span class="otherText services service bold circle" ng-class="{'fontStealGreen': item.status == vm.serviceTypeStatus.Admitted}" ng-repeat="item in vm.personServiceTypeList.referralServiceTypes" style="margin:5px 2px;border: 1px solid #9eacb4;font-size: 12px;cursor:default" title="{{item.serviceType.description}}">
+                    {{ item.serviceType.code}}
+                </span>
+                @*<div class="bodyContext otherText services service bold circle" style="margin:5px 2px; display:inline-block" ng-if="vm.personServiceTypeList.referralServiceTypes.length">
+                    <span class="bodyContext" ng-repeat="item in vm.personServiceTypeList.referralServiceTypes">{{ item.serviceType.code }}{{ $last ? '' : ', ' }}</span>
+                </div>*@
+            </div>
+
+            <div class="col-md-11 col-sm-11 col-xs-11 red nopadding no-padding" ng-if="vm.personModel.drugAllergies.length">
+                <div class="red col-xs-12 no-padding nopadding pull-right truncate" ng-if="vm.personModel.drugAllergies.length" style="font-size: 12px;">
+                    <span class="bold red alergy-content-head">@L("DrugAllergies"): </span>
+                    <span class="bodyContext red alergy-content"
+                        ng-class="{ 'font-black-main': drug.name.toLowerCase() == '@(NoKnownDrugAllergyText.ToLower())' }"
+                        ng-repeat="drug in vm.personModel.drugAllergies">
+                    {{ drug.name.toLowerCase() == 'others' ? drug.description : drug.name }}{{ $last ? '' : ', ' }}
+                </span>
+                </div>
+            </div>
+            <div class="col-md-11 col-sm-11 col-xs-11 blue nopadding no-padding" ng-if="vm.personModel.adrAllergies.length">
+                <div class="blue col-xs-12 no-padding nopadding pull-right truncate" ng-if="vm.personModel.adrAllergies.length" style="font-size: 12px;">
+                    <span class="bold blue alergy-content-head">@L("DrugAllergiesWithADR"): </span>
+                    <span class="bodyContext blue alergy-content" ng-repeat="adr in vm.personModel.adrAllergies">{{ adr.name.toLowerCase() == 'others' ? adr.description : adr.name }}{{ $last ? '' : ', ' }}</span>
+                </div>
+            </div>
+            <div class="col-md-11 col-sm-11 col-xs-11 nopadding no-padding" ng-if="vm.personModel.nonDrugAllergies.length">
+                <div class="default-text-color col-xs-12 no-padding nopadding pull-right truncate" ng-if="vm.personModel.nonDrugAllergies.length" style="font-size: 12px;">
+                    <span class="bold default-text-color alergy-content-head">@L("NonDrugAllergies"): </span>
+                    <span class="bodyContext default-text-color alergy-content" ng-repeat="nondrug in vm.personModel.nonDrugAllergies">{{ nondrug.name }}{{ $last ? '' : ', ' }}</span>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        @*<div class="col-md-4 col-sm-4">
+            <div>
+                <span class="bodyContext bold">
+                    {{ vm.personModel.fullName }}
+                    <span class="bodyContext" ng-if="vm.personModel.registrationDocumentNumber">({{ vm.personModel.registrationDocumentNumber }})</span>
+                </span>
+                <span class="bodyContext" ng-if="vm.personModel.gender.description.toLowerCase()=='male'">{{ vm.personModel.gender ? ", " : "" }}M</span>
+                <span class="bodyContext" ng-if="vm.personModel.gender.description.toLowerCase()=='female'">{{ vm.personModel.gender ? ", " : "" }}F</span>
+                <span class="bodyContext" ng-if="vm.age != '-'">{{ vm.age ? ", " : "" }}{{ vm.age }}</span>
+            </div>
+            <!-- Centre Base Services / Home Based Service -->
+            <div ng-if="vm.personServiceTypeList">
+                <span class="bodyContext" ng-repeat="item in vm.personServiceTypeList.referralServiceTypes">{{ item.serviceType.code }}{{ $last ? '' : ', ' }}</span>
+            </div>
+            <div ng-if="vm.personServiceTypeList">
+                <span class="bodyContext">
+                    {{ vm.personServiceTypeList.nricAddress.fullAddress }}
+                    {{ vm.personServiceTypeList.nricAddress.country.description }} {{ vm.personServiceTypeList.nricAddress.postalCode }}
+                </span>
+            </div>
+            <!-- TODO: Residential ILTC services -->
+            <div ng-transclude>
+            </div>
+        </div>*@
+        <!-- To Be Discuss: Add Vertical Scroll Bar -->
+        @*<div class="col-md-6 col-sm-6" ng-if="vm.allergies.length" style="padding-right:45px">
+            <div class="red" ng-if="vm.personModel.drugAllergies.length">
+                <div class="col-xs-12 no-padding nopadding pull-right truncate" style="padding-right:10px" uib-tooltip-html="'{{vm.getDrugAllergy()}}'" tooltip-class="drugTooltipClass" tooltip-placement="bottom-left">
+                    <span class="bold red alergy-content-head pull-left">@L("DrugAllergies"): </span>&nbsp;
+                    <span class="bodyContext red alergy-content" ng-repeat="drug in vm.personModel.drugAllergies">{{ drug.name.toLowerCase() == 'others' ? drug.description :drug.name }}{{ $last ? '' : ', ' }}</span>
+                </div>
+            </div>
+            <div class="blue" ng-if="vm.personModel.adrAllergies.length">
+                <div class="col-xs-12 no-padding nopadding pull-right truncate" style="padding-right:10px" uib-tooltip-html="'{{vm.getAdrDrugAllergy()}}'" tooltip-class="adrdrugTooltipClass" tooltip-placement="bottom-left">
+                    <span class="bold blue pull-left alergy-content-head">@L("DrugAllergiesWithADR"): </span>&nbsp;
+                    <span class="bodyContext blue alergy-content" ng-repeat="adr in vm.personModel.adrAllergies">{{ adr.name.toLowerCase() == 'others' ? adr.description :adr.name }}{{ $last ? '' : ', ' }}</span>
+                </div>
+            </div>
+            <div ng-if="vm.personModel.nonDrugAllergies.length">
+                <div class="col-xs-12 no-padding nopadding pull-right truncate" style="padding-right:10px" uib-tooltip-html="'{{vm.getNonDrugAllergy()}}'" tooltip-class="nondrugTooltipClass" tooltip-placement="bottom-left">
+                    <span class="bold default-text-color alergy-content-head pull-left">@L("NonDrugAllergies"): </span>&nbsp;
+                    <span class="bodyContext default-text-color alergy-content" ng-repeat="nondrug in vm.personModel.nonDrugAllergies">{{ nondrug.name }}{{ $last ? '' : ', ' }}</span>
+                </div>
+            </div>
+        </div>*@
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<div ng-if="vm.mode!='new'">
+        <div class="row">
+
+            <div class="col-md-1 col-sm-1 col-sm-offset-1 col-md-offset-1">
+                <div class="profileImage">
+                    <img id="ProfilePicture" alt="{{ vm.personModel.fullName }}" class="img-circle pull-right" ng-src="{{ vm.appPath }}Person/GetPersonPictureById?personPictureName={{ vm.personModel.pictureId }}&t=Clock.Now.Ticks.ToString()"
+                         style="width: 73px; height: 73px" ng-click="vm.permissions.edit && vm.changePersonProfileImage();" />
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-4">
+                <div>
+                    <span class="bodyContext bold">
+                        {{ vm.personModel.fullName }}
+                        <span class="bodyContext" ng-if="vm.personModel.registrationDocumentNumber">({{ vm.personModel.registrationDocumentNumber }})</span>
+                    </span>
+                    <span class="bodyContext" ng-if="vm.personModel.gender.description.toLowerCase()=='male'">{{ vm.personModel.gender ? ", " : "" }}M</span>
+                    <span class="bodyContext" ng-if="vm.personModel.gender.description.toLowerCase()=='female'">{{ vm.personModel.gender ? ", " : "" }}F</span>
+                    <span class="bodyContext" ng-if="vm.age != '-'">{{ vm.age ? ", " : "" }}{{ vm.age }}</span>
+                </div>
+                <!-- Centre Base Services / Home Based Service -->
+                <div ng-if="vm.personServiceTypeList">
+                    <span class="bodyContext" ng-repeat="item in vm.personServiceTypeList.referralServiceTypes">{{ item.serviceType.code }}{{ $last ? '' : ', ' }}</span>
+                </div>
+                <div ng-if="vm.personServiceTypeList">
+                    <span class="bodyContext">
+                        {{ vm.personServiceTypeList.nricAddress.fullAddress }}
+                        {{ vm.personServiceTypeList.nricAddress.country.description }} {{ vm.personServiceTypeList.nricAddress.postalCode }}
+                    </span>
+                </div>
+                <!-- TODO: Residential ILTC services -->
+                <div ng-transclude>
+                </div>
+            </div>
+            <!-- To Be Discuss: Add Vertical Scroll Bar -->
+            <div class="col-md-6 col-sm-6" ng-if="vm.allergies.length" style="padding-right:45px">
+                <div class="red" ng-if="vm.personModel.drugAllergies.length">
+                    <div class="col-xs-12 no-padding nopadding pull-right truncate" style="padding-right:10px" uib-tooltip-html="'{{vm.getDrugAllergy()}}'" tooltip-class="drugTooltipClass" tooltip-placement="bottom-left">
+                        <span class="bold red alergy-content-head pull-left">@L("DrugAllergies"): </span>&nbsp;
+                        <span class="bodyContext red alergy-content" ng-repeat="drug in vm.personModel.drugAllergies">{{ drug.name.toLowerCase() == 'others' ? drug.description :drug.name }}{{ $last ? '' : ', ' }}</span>
+                    </div>
+                </div>
+                <div class="blue" ng-if="vm.personModel.adrAllergies.length">
+                    <div class="col-xs-12 no-padding nopadding pull-right truncate" style="padding-right:10px" uib-tooltip-html="'{{vm.getAdrDrugAllergy()}}'" tooltip-class="adrdrugTooltipClass" tooltip-placement="bottom-left">
+                        <span class="bold blue pull-left alergy-content-head">@L("DrugAllergiesWithADR"): </span>&nbsp;
+                        <span class="bodyContext blue alergy-content" ng-repeat="adr in vm.personModel.adrAllergies">{{ adr.name.toLowerCase() == 'others' ? adr.description :adr.name }}{{ $last ? '' : ', ' }}</span>
+                    </div>
+                </div>
+                <div ng-if="vm.personModel.nonDrugAllergies.length">
+                    <div class="col-xs-12 no-padding nopadding pull-right truncate" style="padding-right:10px" uib-tooltip-html="'{{vm.getNonDrugAllergy()}}'" tooltip-class="nondrugTooltipClass" tooltip-placement="bottom-left">
+                        <span class="bold default-text-color alergy-content-head pull-left">@L("NonDrugAllergies"): </span>&nbsp;
+                        <span class="bodyContext default-text-color alergy-content" ng-repeat="nondrug in vm.personModel.nonDrugAllergies">{{ nondrug.name }}{{ $last ? '' : ', ' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+@*<div ng-if="vm.mode=='new'">*@
+<div ng-if="!vm.personModel.id">
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-1">
+        <div class="profileImage">
+            <img ng-if="true" class="img-circle pull-right" ng-src="{{ vm.appPath }}Common/Images/default-profile-picture.png"
+                 style="width: 73px; height: 73px" />
+        </div>
+    </div>
+    <div class="col-md-10">
+        <span class="bodyContext">
+            Upload a person photo will help<br />
+            identify a person
+        </span>
+        @*--- Remove this will affect the design ---*@
+        <div>
+            &nbsp;
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,67 @@
+﻿@using Pulsesync.IngoTPCC.MedicalAppointment
+@model MedicalAppointmentDto
+<style type="text/css">
+    .has-error {
+        color: red;
+    }
+</style>
+
+<div class="portlet light" data-drag="true" id="medicalAppointmentValidationForConfirmCancel">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject" ng-if="vm.action == 'confirm'">@L("Confirm")</span>
+            <span class="caption-subject" ng-if="vm.action == 'cancel'">@L("Cancel")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        @{
+            var attributes = new Dictionary<string, object>();
+            attributes.Add("role", "form");
+            attributes.Add("id", "medicalAppointmentValidationForConfirmCancel");
+            attributes.Add("name", "medicalAppointmentValidationForConfirmCancel");
+            attributes.Add("novalidate", "");
+            attributes.Add("action", "#");
+            attributes.Add("angular-validator-submit", "vm.save()");
+            attributes.Add("angular-validator", "");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form")))
+            {
+                using (var s = f.BeginSection())
+                {
+                <div class="portlet-body" style="display: block;">
+                    <div class="form-body padding-top-0-imp" style="min-height:100px">
+                        <div class="bs-callout bs-callout-danger">
+                            <h4 style="font-weight: 600;"><i class="icon fa fa-warning"></i>&nbsp; Alert!</h4>                            
+                            <span ng-if="vm.action == 'cancel'">
+                                You must provide a reason for cancellation inorder to cancel the record.
+                            </span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 padding-bottom-10">
+                                <div ng-if="vm.action == 'cancel'">
+                                    <div class="form-group form-md-line-input">
+                                        <textarea ng-model="vm.medicalAppointment.cancellationReason" class="form-control animate msd-elastic: \n;  ng-valid ng-not-empty ng-dirty ng-valid-parse" cols="20" data-val="true" data-val-length="The field Remarks must be a string with a maximum length of 2000." required required-message="'You must provide a value if reason selected is others'" data-val-length-max="2000" id="ReasonForReferral" name="ReasonForReferralOthers" rows="4" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 50px;" ng-required="true"></textarea>
+                                        <label class="control-label" for="remarks">@L("CancellationReasonNew")<span class="required">*</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="form-actions noborder right">                
+                <button type="submit" button-busy="vm.saving" ng-if="vm.action == 'cancel'" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.saving"><i class="material-icons ps-btn-material">check</i>@L("Ok")</button>
+                <button type="button" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()" ng-disabled="vm.saving"><i class="material-icons ps-btn-material">clear</i>Close</button>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+    });
+</script>

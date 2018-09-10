@@ -1,0 +1,71 @@
+﻿@using Pulsesync.IngoTPCC.MedicalHistory.Dto
+@model MedicalHistoryDto
+<div class="portlet light" data-drag="true" id="serviceTypeModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("MedicalHistory")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <fieldset>
+        <div class="portlet-body" style="display:block">
+            <div class="form-body" style="padding-top:0px;">
+                @{
+                    var attributes = new Dictionary<string, object>();
+                    attributes.Add("role", "form");
+                    attributes.Add("id", "medicalhistoryForm");
+                    attributes.Add("name", "medicalhistoryForm");
+                    attributes.Add("novalidate", "");
+                    attributes.Add("action", "#");
+                    attributes.Add("angular-validator-submit", "vm.save(vm.medicalhistory)");
+                    attributes.Add("angular-validator", "");
+                    attributes.Add("ng-validate", "general.validationOptions");
+                }
+                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body ng-pristine ng-invalid")))
+            {
+                using (var s = f.BeginSection())
+                {
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5 class="fontStealGreen bold">General</h5>
+                                <div class="col-md-12">
+                                    <div class="person-name" style="padding-top:0px;">
+                                        <span class="caption-subject bold" style="color:rgba(0, 0, 0, 0.54)">{{vm.person.fullName}}</span>&nbsp;&nbsp;
+                                        <span class="caption-subject" style="color:rgba(0, 0, 0, 0.54)" ng-if="vm.person.registrationDocumentNumber">({{vm.person.registrationDocumentNumber}})</span>
+
+                                    </div>
+                                    <div class="referral-name" style="padding-top:5px;" ng-if="vm.referral">
+                                        <span class="caption-subject" style="color:rgba(0, 0, 0, 0.54)">Referral: </span>&nbsp;&nbsp;
+                                        <span class="referral-link"><a style="top: 18.5em;" class="referral-view redirect-anchor bold fontStealGreen" href="#!/tenant/referral/{{vm.referral.id}}">{{vm.referral.referralCode}}</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12" style="height:20px"></div>
+                            <div class="col-md-6">
+                                @s.FieldFor(m => m.HistoryDate).Attrs(new { ng_model = "vm.medicalhistory.historyDate", maxdate = "0d", Validate = "false", mindate = "{{vm.minAdmitedOnDate}}", Restrict = "reject", name = "HistoryDate", data_date_format = "dd-M-yyyy", required = "", required_message = "You must provide a value for HistoryDate" }).AddClass("form-control ng-pristine ng-untouched ng-valid ng-empty")
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                            <div class="col-md-12">
+                                <ps-ckeditor id="medical-history-editor-{{vm.medicalhistory.id}}" name="medical-history-name-{{vm.medicalhistory.id}}" model="vm.medicalhistory.history"></ps-ckeditor>
+                                @*<ng-ckeditor ng-model = "vm.medicalhistory.history"  class="simpleEditor" ng-config="{'extraPlugins':'autogrow', 'removeButtons':'Image,About'}"> </ng-ckeditor>*@
+                            </div>
+                        </div>
+                    }
+                <p class="bodyContext" ng-if="vm.editMode">
+                    @Html.Raw(L("CreationInfo", "vm.medicalhistory.createdUserFullName", "vm.medicalhistory.creationTime | date:'d-MMM-yyyy h:mm a'"))
+                </p>
+                <p class="bodyContext" ng-if="vm.editMode">
+                    @Html.Raw(L("ModificationInfo", "vm.medicalhistory.lastUpdatedUserFullName", "vm.medicalhistory.lastModificationTime | date:'d-MMM-yyyy h:mm a'"))
+                </p>
+                <div class="form-actions margin-top-10 noborder pull-right">
+                    <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.disableSave"><i class="material-icons  font-18-main v-top">save</i>Save</button>                    
+                    <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+                </div>
+                }
+            </div>
+        </div>
+    </fieldset>
+</div>

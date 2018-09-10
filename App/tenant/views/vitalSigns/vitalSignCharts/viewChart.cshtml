@@ -1,0 +1,165 @@
+﻿<style type="text/css">
+    #chartjs-tooltip {
+        z-index: 999999999999999 !important;
+    }
+    .mt-radio, .mt-checkbox {
+        padding-left: 24px !important;
+    }
+</style>
+<div class="portlet light" data-drag="true" id="vitalSignCharts" ng-controller="tenant.views.vitalSigns.vitalSignsChart.viewCharts as vm">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">Vital Sign Charts{{vm.headingAppend}}</span>
+        </div>
+        <div class="tools pull-right">
+            <span class="chart-filter-link">
+                @*<a class="chart-filter-view redirect-anchor bold fontStealGreen" ng-click="vm.print('vitalSignCharts')" title="Print Charts">
+                    <i class="fa fa-print" aria-hidden="true" style="font-size:20px"></i>
+                </a>*@
+                <a ng-click="vm.print('vitalSignCharts')" class="icon-wrapper" title="Print Charts">
+                    <i class="material-icons custom-icon">print</i>
+                </a>
+                <a ng-click="vm.closePage()" title="Close" class="icon-wrapper" style="cursor:pointer">
+                    <i class="material-icons custom-icon">close</i>
+                </a>
+            </span>
+
+        </div>
+    </div>
+    <div class="portlet-body form modal-body">
+        <div id="General" class="portlet light" style="padding-bottom:20px">
+            <div class="portlet-body" style="padding-top:2px">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="person-name" style="padding-bottom:3px;">
+                            <span class="caption-subject bold" style="color:rgba(0, 0, 0, 0.54)">{{vm.person.fullName}}</span>&nbsp;
+                            <span class="caption-subject" style="color:rgba(0, 0, 0, 0.54)" ng-if="vm.person.registrationDocumentNumber">({{vm.person.registrationDocumentNumber}})</span>
+                        </div>
+                        <div class="filter-a">
+                            @*<span class="chart-filter-link"><a style="top: 18.5em;" class="chart-filter-view redirect-anchor bold fontStealGreen" ng-click="vm.filterClick('')">View Latest 12</a></span>
+                            <i style="font-size: 5px;" class="fa fa-circle"></i>*@
+                            @*<span class="chart-filter-link"><a style="top: 18.5em;" class="chart-filter-view redirect-anchor bold fontStealGreen" ng-click="vm.filterClick('oneWeek')">1 Week</a></span>
+                            <i style="font-size: 5px;" class="fa fa-circle"></i>
+                            <span class="chart-filter-link"><a style="top: 18.5em;" class="chart-filter-view redirect-anchor bold fontStealGreen" ng-click="vm.filterClick('twoWeek')">2 Weeks</a></span>
+                            <i style="font-size: 5px;" class="fa fa-circle"></i>
+                            <span class="chart-filter-link"><a style="top: 18.5em;" class="chart-filter-view redirect-anchor bold fontStealGreen" ng-click="vm.filterClick('oneMonth')">1 Month</a></span>
+                            <i style="font-size: 5px;" class="fa fa-circle"></i>
+                            <span class="chart-filter-link"><a style="top: 18.5em;" class="chart-filter-view redirect-anchor bold fontStealGreen" ng-click="vm.filterClick('twoMonth')">2 Months</a></span>*@
+                            <div class="form-group" style="margin:0px">
+                                <div class="col-md-12" style="padding:0px">
+                                    <div class="mt-radio-inline" style="padding:0px">
+                                        <label class="mt-radio">
+                                            <input type="radio" name="one-week" id="one-week" value="oneWeek" ng-checked="vm.filterStr == 'oneWeek'" ng-click="vm.filterClick('oneWeek')"> 1 Week
+                                            <span></span>
+                                        </label>
+                                        <label class="mt-radio">
+                                            <input type="radio" name="two-week" id="two-week" value="twoWeek" ng-checked="vm.filterStr == 'twoWeek'" ng-click="vm.filterClick('twoWeek')"> 2 Weeks
+                                            <span></span>
+                                        </label>
+                                        <label class="mt-radio">
+                                            <input type="radio" name="one-month" id="one-month" value="oneMonth" ng-checked="vm.filterStr == 'oneMonth'" ng-click="vm.filterClick('oneMonth')"> 1 Month
+                                            <span></span>
+                                        </label>
+                                        <label class="mt-radio">
+                                            <input type="radio" name="two-month" id="two-month" value="twoMonth" ng-checked="vm.filterStr == 'twoMonth'" ng-click="vm.filterClick('twoMonth')"> 2 Months
+                                            <span></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7" style="padding-top:10px">
+                        <div class="col-md-12" style="padding:0px">
+                            <div class="col-md-4">
+                                <div class="form-group form-md-line-input" style="padding:0px; margin:0px !important">
+                                    <div class="input-group date date-picker">
+                                        <input type="text" data-date-picker="" ng-model="vm.startDate" class="form-control" id="filterStartDate" Validate="false" placeholder="Start Date" Restrict="reject">
+                                        <span class="input-group-addon"><i class="material-icons" style="line-height: 14px;">date_range</i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1" style="padding-top: 8px;padding-right:0px; padding-left:0px;text-align:center">
+                                <span>To</span>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group form-md-line-input" style="padding:0px; margin:0px !important">
+                                    <div class="input-group date date-picker">
+                                        <input type="text" data-date-picker="" ng-model="vm.endDate" class="form-control" id="filterEndDate" Validate="false" placeholder="End Date" Restrict="reject">
+                                        <span class="input-group-addon"><i class="material-icons" style="line-height: 14px;">date_range</i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="padding-top: 8px;">
+                                <span class="chart-filter-link"><button class="btn btn-secondary chart-filter-view redirect-anchor bold fontStealGreen" ng-click="vm.dateRange(vm.startDate,vm.endDate)">Generate</button></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="text-align:right">
+                    <small style="color:red"><i>* Maximum of 1000 latest data points will be displayed on each chart</i></small>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="portlet-body" style="display: block;">
+            <div class="row padding-bottom-30" ng-if="vm.tempratureVals.data.length">
+                <div class="col-md-12" style="padding:0px">
+                    <div class="bold center-allign">Temperature (℃)</div>
+                    <canvas tc-chartjs-line chart-data="vm.tempratureChart.data" chart-options="vm.tempratureChart.options"></canvas>
+                </div>
+            </div>
+            <div class="row padding-bottom-30" ng-if="vm.pulseRateVals.data.length">
+                <div class="col-md-12" style="padding:0px">
+                    <div class="bold center-allign">Pulse Rate (/min)</div>
+                    <canvas tc-chartjs-line chart-data="vm.pulseRateChart.data" chart-options="vm.pulseRateChart.options"></canvas>
+                </div>
+            </div>
+            <div class="row padding-bottom-30" ng-if="vm.respiratoryRateVals.data.length">
+                <div class="col-md-12" style="padding:0px">
+                    <div class="bold center-allign">Respiratory Rate (/min)</div>
+                    <canvas tc-chartjs-line chart-data="vm.respiratoryRateChart.data" chart-options="vm.respiratoryRateChart.options"></canvas>
+                </div>
+            </div>
+            <div ng-show="vm.bloodPressureVals.labels.length">
+                <div class="row padding-bottom-30">
+                    <div class="col-md-12" style="padding:0px">
+                        <div class="bold center-allign">Blood Pressure (mmHg)</div>
+                        <canvas range-bar-chart rangedata="vm.vitalSign" id="blood-pressure"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row padding-bottom-30" ng-if="vm.spo2RateVals.data.length">
+                <div class="col-md-12" style="padding:0px">
+                    <div class="bold center-allign">SpO<sub>2</sub> (%)</div>
+                    <canvas tc-chartjs-line chart-data="vm.spo2Chart.data" chart-options="vm.spo2Chart.options"></canvas>
+                </div>
+            </div>
+            <div class="row padding-bottom-30" ng-if="vm.bgFastingVals.data.length || vm.bgTwoHPPVals.data.length || vm.bgRandomVals.data.length">
+                <div class="col-md-12" style="padding:0px">
+                    <div class="bold center-allign">Blood Glucose (mmol/L)</div>
+                    <canvas tc-chartjs-line chart-data="vm.bgChart.data" chart-options="vm.bgChart.options"></canvas>
+                </div>
+            </div>
+            <div class="row padding-bottom-30" ng-if="vm.weightVals.data.length">
+                <div class="col-md-12" style="padding:0px">
+                    <div class="bold center-allign">Weight (kg)</div>
+                    <canvas tc-chartjs-line chart-data="vm.weightChart.data" chart-options="vm.weightChart.options"></canvas>
+                </div>
+            </div>
+
+
+            <div class="row padding-bottom-30" ng-if="!vm.tempratureVals.data.length && !vm.pulseRateVals.data.length && !vm.respiratoryRateVals.data.length && !vm.bloodPressureVals.labels.length && !vm.spo2RateVals.data.length && !(vm.bgFastingVals.data.length || vm.bgTwoHPPVals.data.length || vm.bgRandomVals.data.length) && !vm.weightVals.data.length">
+                <div class="col-md-12" style="padding:0px">
+                    <span class="center-allign" style="display: inherit;">No vital sign added</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+    });
+</script>

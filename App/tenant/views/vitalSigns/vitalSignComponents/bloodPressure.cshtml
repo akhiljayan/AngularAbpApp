@@ -1,0 +1,80 @@
+﻿@model VitalSignDto
+@using Pulsesync.IngoTPCC.Application.VitalSign.Dto;
+
+@{
+    var attributes = new Dictionary<string, object>();
+    attributes.Add("role", "form");
+    attributes.Add("id", "bloodPressureVitalSignsForm");
+    attributes.Add("name", "bloodPressureVitalSignsForm");
+    attributes.Add("novalidate", "");
+    attributes.Add("action", "#");
+    attributes.Add("angular-validator-submit", "$ctrl.parentScope.save($ctrl.vitalSign)");
+    attributes.Add("angular-validator", "");
+    attributes.Add("error-focus", "");
+}
+@using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body")))
+{
+    using (var s = f.BeginSection())
+    {
+        <div id="Blood-Pressure-card" class="portlet light" style="padding-bottom:0px;padding-top:0px">
+            <div class="portlet-body" style="padding-top:2px">
+                <div class="row">
+                    <h5 class="fontStealGreen bold col-md-12">Blood Pressure</h5>
+                    <div class="col-md-4">
+
+                        <div blood-pressure-validations class="form-group form-md-line-input blood-preasure-control" style="padding-top: 0px;" ng-class="{'has-error': $ctrl.parentScope.vitalSignForm['lyingSystolic'].errorMessage || $ctrl.parentScope.vitalSignForm['lyingDiastolic'].errorMessage}">
+                            <label class="control-label" for="Lying">Lying Systolic / Diastolic (mmHg)</label>
+                            <div class="row">
+                                <div class="col-md-5 col-sm-5 col-xs-5 no-padding-right">
+                                    <input type="number" style="text-align: right;" class="form-control" ng-model="$ctrl.vitalSign.bloodPressure.lyingSystolic" bp="systolic" name="lyingSystolic" max="{{$ctrl.vitalSign.bloodPressure.bpRange.systolicMax}}" min="{{$ctrl.vitalSign.bloodPressure.bpRange.systolicMin}}" ng-keydown="$ctrl.parentScope.preventUnwantedChars($event)" ng-required="$ctrl.vitalSign.bloodPressure.lyingDiastolic != null"/>
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-1" style="padding:0px;width:5%; text-align:center; font-size: 25px;">/</div>
+                                <div class="col-md-5 col-sm-5 col-xs-5 no-padding-left">
+                                    <input type="number" class="form-control" ng-model="$ctrl.vitalSign.bloodPressure.lyingDiastolic" bp="diastolic" name="lyingDiastolic" max="{{$ctrl.vitalSign.bloodPressure.bpRange.diastolicMax}}" min="{{$ctrl.vitalSign.bloodPressure.bpRange.diastolicMin}}" ng-blur="$ctrl.parentScope.preventUnwantedChars($event)" ng-required="$ctrl.vitalSign.bloodPressure.lyingSystolic != null" />
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-1" style="padding:0px; text-align:center; padding-top:15px"></div>
+                            </div>
+                            <p class="help-block has-error" style="color:#e73d4a" ng-if="!$ctrl.parentScope.vitalSignForm['lyingSystolic'].$valid || !$ctrl.parentScope.vitalSignForm['lyingDiastolic'].$valid">{{$ctrl.parentScope.vitalSignForm['lyingSystolic'].errorMessage ? $ctrl.parentScope.vitalSignForm['lyingSystolic'].errorMessage : $ctrl.parentScope.vitalSignForm['lyingDiastolic'].errorMessage}}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div blood-pressure-validations class="form-group form-md-line-input blood-preasure-control" style="padding-top: 0px;" ng-class="{'has-error': $ctrl.parentScope.vitalSignForm['sittingSystolic'].errorMessage || $ctrl.parentScope.vitalSignForm['sittingDiastolic'].errorMessage}">
+                            <label class="control-label" for="Sitting">Sitting Systolic / Diastolic (mmHg)</label>
+                            <div class="row">
+                                <div class="col-md-5 col-sm-5 col-xs-5 no-padding-right">
+                                    <input type="number" style="text-align: right;" class="form-control" ng-model = "$ctrl.vitalSign.bloodPressure.sittingSystolic" bp="systolic" name= "sittingSystolic"  max="{{$ctrl.vitalSign.bloodPressure.bpRange.systolicMax}}" min="{{$ctrl.vitalSign.bloodPressure.bpRange.systolicMin}}" ng-keydown = "$ctrl.parentScope.preventUnwantedChars($event)" ng-required= "$ctrl.vitalSign.bloodPressure.sittingDiastolic != null"/>
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-1" style="padding:0px;width:5%; text-align:center; font-size: 25px;">/</div>
+                                <div class="col-md-5 col-sm-5 col-xs-5 no-padding-left">
+                                    <input type="number" class="form-control" ng-model="$ctrl.vitalSign.bloodPressure.sittingDiastolic" bp="diastolic" name="sittingDiastolic"   max="{{$ctrl.vitalSign.bloodPressure.bpRange.diastolicMax}}" min="{{$ctrl.vitalSign.bloodPressure.bpRange.diastolicMin}}" ng-keydown = "$ctrl.parentScope.preventUnwantedChars($event)" ng-required="$ctrl.vitalSign.bloodPressure.sittingSystolic != null"/>
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-1" style="padding:0px; text-align:center; padding-top:15px"></div>
+                            </div>
+                            <p class="help-block has-error" style="color:#e73d4a" ng-if="!$ctrl.parentScope.vitalSignForm['sittingSystolic'].$valid || !$ctrl.parentScope.vitalSignForm['sittingDiastolic'].$valid">{{$ctrl.parentScope.vitalSignForm['sittingSystolic'].errorMessage ? $ctrl.parentScope.vitalSignForm['sittingSystolic'].errorMessage : $ctrl.parentScope.vitalSignForm['sittingDiastolic'].errorMessage}}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+
+                        <div blood-pressure-validations class="form-group form-md-line-input blood-preasure-control" style="padding-top: 0px;" ng-class="{'has-error': $ctrl.parentScope.vitalSignForm['standingSystolic'].errorMessage || $ctrl.parentScope.vitalSignForm['standingDiastolic'].errorMessage}">
+                            <label class="control-label" for="Standing">Standing Systolic / Diastolic (mmHg)</label>
+                            <div class="row">
+                                <div class="col-md-5 col-sm-5 col-xs-5 no-padding-right">
+                                    <input type="number" style="text-align: right;" class="form-control" ng-model="$ctrl.vitalSign.bloodPressure.standingSystolic" bp="systolic" name="standingSystolic" max="{{$ctrl.vitalSign.bloodPressure.bpRange.systolicMax}}" min="{{$ctrl.vitalSign.bloodPressure.bpRange.systolicMin}}" ng-keydown = "$ctrl.parentScope.preventUnwantedChars($event)" ng-required="$ctrl.vitalSign.bloodPressure.standingDiastolic != null" />
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-1" style="padding:0px;width:5%; text-align:center; font-size: 25px;">/</div>
+                                <div class="col-md-5 col-sm-5 col-xs-5 no-padding-left">
+                                    <input type="number" class="form-control" ng-model="$ctrl.vitalSign.bloodPressure.standingDiastolic" bp="diastolic" name="standingDiastolic" max="{{$ctrl.vitalSign.bloodPressure.bpRange.diastolicMax}}" min="{{$ctrl.vitalSign.bloodPressure.bpRange.diastolicMin}}" ng-keydown = "$ctrl.parentScope.preventUnwantedChars($event)" ng-required="$ctrl.vitalSign.bloodPressure.standingSystolic != null" />
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-1" style="padding:0px; text-align:center; padding-top:15px"></div>
+                            </div>
+                            <p class="help-block has-error" style="color:#e73d4a" ng-if="!$ctrl.parentScope.vitalSignForm['standingSystolic'].$valid || !$ctrl.parentScope.vitalSignForm['standingDiastolic'].$valid">{{$ctrl.parentScope.vitalSignForm['standingSystolic'].errorMessage ? $ctrl.parentScope.vitalSignForm['standingSystolic'].errorMessage : $ctrl.parentScope.vitalSignForm['standingDiastolic'].errorMessage}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
+

@@ -1,0 +1,78 @@
+﻿<div id="diagnosis" class="portlet light" busy-if="$ctrl.loading" ng-if="$ctrl.isPatient || $ctrl.isReferral">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Diagnosis"){{$ctrl.headingAppend}}</span>
+        </div>
+        <div class="actions dropdown inputs" ng-if="$ctrl.isPatient || $ctrl.isReferral">
+            <div class="input-small-new inline-block">
+                <form action="" class="search-form search-style-class">
+                    <div class="form-group has-feedback input-inline search-form-group">
+                        <label for="search" class="sr-only">@L("Search")</label>
+                        <input type="text" ng-model="$ctrl.diagnosisCard.filterText" enter-key="$ctrl.refreshGrid()" class="form-control form-control-solid search-input input-circle font-13-main clearable" placeholder="search keywords...">
+                        <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="$ctrl.clearFilter()"></a>
+                        <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                    </div>
+                </form>
+            </div>
+            <a ng-click="$ctrl.create()" ng-if="$ctrl.permissions.create" class="icon-wrapper">
+                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+            </a>
+            <a ng-click="$ctrl.diagnosisDetailsOpen = !$ctrl.diagnosisDetailsOpen" title="Show Diagnosis Detail view" class="icon-wrapper">
+                <i ng-show="!$ctrl.diagnosisDetailsOpen" class="material-icons custom-icon">menu</i>
+                <i ng-show="$ctrl.diagnosisDetailsOpen" class="material-icons custom-icon">view_headline</i>
+            </a>
+            <a class="icon-wrapper" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                <i class="material-icons custom-icon">more_vert</i>
+            </a>
+            <ul class="dropdown-menu pull-right">
+                <li>
+                    <a href="javascript:;" class="bold" ng-click="$ctrl.getAllActive()">@L("Active")</a>
+                </li>
+                <li class="divider"> </li>
+                <li>
+                    <a href="javascript:;" class="bold" ng-click="$ctrl.getAllInactive()">@L("Inactive")</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="medical-allert col-md-12 col-sm-12 nopadding" ng-repeat="group in $ctrl.diagnosisList">
+            <div class="medical-allert-description">
+                <span class="fontStealGreen bold">{{group.diagnosisType | enumText: 'diagnosisType'}} Diagnosis</span>
+            </div>
+            <div ng-repeat="diagnosis in group.diagnosisList | orderBy:'-lastModificationTime'">
+                <div class="medical-allert-details row" style="margin-bottom:10px">
+                    <div class="col-md-12 col-sm-12 nopadding no-padding">
+                        <div class="col-md-10 col-sm-10" ng-click="$ctrl.edit(diagnosis)">
+                            <span class="bold">
+                                <span class="otherText" ng-if="diagnosis.name">{{diagnosis.name}}</span>
+                                <span class="otherText" ng-if="diagnosis.otherDiagnosis">{{diagnosis.otherDiagnosis}}</span>
+                            </span>
+                        </div>
+                        <div class="col-md-2 col-sm-2" ng-if="$ctrl.diagnosisDetailsOpen">
+                            <div class="actions list-unstyled list-inline">
+                                <a class="actions list-unstyled list-inline" ng-if="$ctrl.permissions.delete" href="#" ng-click="$ctrl.delete(diagnosis.id)">@L("Delete")</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12 nopadding no-padding" ng-if="$ctrl.diagnosisDetailsOpen" ng-click="$ctrl.edit(diagnosis)">
+                        <div class="col-md-12 col-sm-12">
+                            <span class="otherText">{{diagnosis.state | enumText: 'diagnosisState'}}</span>
+                        </div>
+                        <div class="col-md-12 col-sm-12"" ng-if="diagnosis.resolvedDate">
+                            <span class="otherText">Resolved Date: {{diagnosis.resolvedDate | date : 'dd-MMM-y'}}</span>
+                        </div>
+                        <div class="col-md-12 col-sm-12"" ng-if="diagnosis.onSetDate">
+                            <span class="otherText">Onset Date: {{diagnosis.onSetDate | date : 'dd-MMM-y'}}</span>
+                        </div>
+                        <div class="col-md-12 col-sm-12"">
+                            <span class="otherText">{{diagnosis.sourceOfDiagnosis}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr style="margin:15px 0"/>
+        </div>
+        <simple-paginator data="$ctrl.data" small-page-size="true" on-page-changed="$ctrl.load(requestParams)"></simple-paginator>
+    </div>
+</div>

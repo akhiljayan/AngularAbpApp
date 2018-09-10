@@ -1,0 +1,88 @@
+﻿@model CreatePersonProblemInput
+
+@using PulseSync.IngoTPCC.Application.Care.PersonProblems.Dto;
+
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <a class="caption-subject" ng-if="vm.mode == 'new'">@L("Create") @L("Problem")</a>
+            <a class="caption-subject" ng-if="vm.mode == 'edit'">@L("Edit") @L("Problem")</a>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div>
+            @{
+                var attrs = new Dictionary<string, object>();
+                attrs.Add("name", "vm.form");
+                attrs.Add("novalidate", "");
+                attrs.Add("angular-validator", "");
+                attrs.Add("angular-validator-submit", "vm.save()");
+            }
+
+            @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs)))
+            {
+                using (var s = f.BeginSection())
+                {
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6">
+                            @s.FieldFor(m => m.Priority).Attrs(new { ng_model = "vm.workingModel.priority" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <div class="form-group form-md-line-input ">
+                                <input name="SelectProblem" class="form-control" id="SelectProblem" ng-model="vm.workingModel.problemCustom"
+                                       uib-typeahead="problem.description for problem in vm.problemMaster | filter: {description:$viewValue} | limitTo:5"
+                                       required required-message="'You must provide a value for Select Problem.'"
+                                       validate-on="dirty"
+                                       typeahead-on-select="vm.loadProblemDetails($item)"
+                                       ng-disabled="vm.mode == 'edit'">
+                                <label class="control-label" for="SelectProblem">@L("SelectProblem")<span class="businessRequired"> * </span></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            @s.FieldFor(m => m.ProblemDescription).Attrs(new { ng_model = "vm.workingModel.problemDescription" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            @s.FieldFor(m => m.OnsetDate).Attrs(new { maxdate = "0d", ng_model = "vm.workingModel.onsetDate", required = "", required_message = "'You must provide a value for Onset Date.'" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <div class="form-group form-md-line-input">
+                                <label class="control-label">Add Tags</label>
+                                <ps-tagsinput ng-model="vm.workingModel.tags"></ps-tagsinput>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="bodyContext" ng-if="vm.mode == 'edit'">
+                        @Html.Raw(L("CreationInfo", "vm.workingModel.creatorUser.fullName", "vm.workingModel.creationTime | date:'d-MMM-yyyy h:mm a'"))
+                    </p>
+                    <p class="bodyContext" ng-if="vm.mode == 'edit'">
+                        @Html.Raw(L("ModificationInfo", "vm.workingModel.lastModifierUser.fullName", "vm.workingModel.lastModificationTime | date:'d-MMM-yyyy h:mm a'"))
+                    </p>
+
+                    <div class="row">
+                        <div class="form-actions pull-right">
+                            <button type="submit" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" @*ng-disabled="vm.form.$invalid"*@><i class="material-icons ps-btn-material">check</i>@L("Save")</button>
+                            <button type="button" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>@L("Cancel")</button>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

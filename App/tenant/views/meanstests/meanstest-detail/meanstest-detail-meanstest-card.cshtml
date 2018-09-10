@@ -1,0 +1,250 @@
+﻿@model CreateOrUpdateMeansTestInput
+
+@using Pulsesync.IngoTPCC.Application.MeansTests.Dto
+
+<style>
+    .form-group .input-group.required .control-label:after {
+        content: "*";
+        color: red;
+    }
+</style>
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("MeansTest")</div>
+        </div>
+        <div class="actions dropdown inputs" ng-if="vm.mode!='new'">
+            <a class="icon-wrapper" ng-if="vm.mode=='view' && vm.permissions.edit" ng-click="vm.mode='edit'">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools" ng-if="vm.mode!='new'">
+            <a class="remove" ng-if="vm.mode=='edit'" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @{
+                    var attrs = new Dictionary<string, object>();
+                    attrs.Add("name", "vm.form");
+                    attrs.Add("novalidate", "");
+                    attrs.Add("angular-validator", "");
+                    attrs.Add("angular-validator-submit", "vm.save($event)");
+                }
+                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs)))
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        @s.FieldFor(m => m.MeansTestType).Attrs(new { ng_model = "vm.workingModel.meansTestType", ng_change = "vm.initialiseOtherMeansTestType(vm.workingModel.meansTestType)" })
+                        @*@s.FieldFor(m => m.OthersMeansTestType).Attrs(new { ng_model = "vm.workingModel.othersMeansTestType", ng_disabled = "vm.workingModel.meansTestType != 'Others'", ng_required = "vm.workingModel.meansTestType == 'Others'" })*@
+                        <div class="form-group form-md-line-input" ng-class="{ 'has-error': vm.form.OthersMeansTestType.$error.required && vm.form.submitted }">
+                            <input type="text" id="OthersMeansTestType" name="OthersMeansTestType" class="form-control" ng-model="vm.workingModel.othersMeansTestType" ng-disabled="vm.workingModel.meansTestType != 'Others'" ng-required="vm.workingModel.meansTestType == 'Others'" />
+                            <label for="OthersMeansTestType" class="control-label">@L("IfOthersPleaseSpecify")<span class="businessRequired" ng-if="vm.workingModel.meansTestType == 'Others'"> * </span></label>
+                            <p class="help-block" ng-if="vm.form.OthersMeansTestType.$error.required && vm.form.submitted">You must provide a value for Others Means Test Type.</p>
+                        </div>
+
+                        @s.FieldFor(m => m.MeansTestDate).DatePickerOptions(new { data_date_end_date = "0d" }).Attrs(new { ng_model = "vm.workingModel.meansTestDate", ng_required = "true", ng_change = "vm.generateExpiryDate()", validator = "vm.validateMeansTestDate(vm.workingModel.meansTestDate, vm.workingModel.effectiveDate)", invalid_message = "'Means Test Date must be on or earlier than Effective Date.'" })
+                        @s.FieldFor(m => m.EffectiveDate).Attrs(new { ng_model = "vm.workingModel.effectiveDate", Validate = "false", Restrict = "reject", ng_required = "true", beforeoron = "vm.workingModel.meansTestDate", beforeoron_message = "'Effective Date must be on or after Means Test Date.'", ng_change = "vm.generateExpiryDate()", dateFormat = "" })
+                        @s.FieldFor(m => m.ExpiryDate).Attrs(new { ng_model = "vm.workingModel.expiryDate", Validate = "false", Restrict = "reject", validator = "vm.validateValidExpiryDate(vm.workingModel.expiryDate) === true", invalid_message = "vm.validateValidExpiryDate(vm.workingModel.expiryDate)" })
+                        @s.FieldFor(m => m.SubsidyRateId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.subsidyRateId", repeat = "vm.subsidyRateMaster", ng_change = "vm.generateFinalSubsidyRate(vm.workingModel.subsidyRateId);vm.generatePatientBand(vm.workingModel.subsidyRateId)", ui_select_required = "ui-select-required" })
+                        @s.FieldFor(m => m.HasFinancialAssistance).Label(@L("FinancialAssistance")).Attrs(new { ng_model = "vm.workingModel.hasFinancialAssistance", ng_change = "vm.initialiseFinancialAssistanceFields(vm.workingModel.hasFinancialAssistance)" })
+                        @*@s.FieldFor(m => m.FinancialAssistanceEffectiveDate).Attrs(new { ng_model = "vm.workingModel.financialAssistanceEffectiveDate", ng_disabled = "!vm.workingModel.hasFinancialAssistance", ng_required = "vm.workingModel.hasFinancialAssistance", ng_change = "vm.generateFinancialAssistanceExpiryDate(vm.workingModel.financialAssistanceEffectiveDate)", mask = "39-@@@-9999", Validate = "false", Restrict = "reject" })*@
+                        @*For hasFinancialAssistance is False*@
+                        <div class="form-group form-md-line-input" ng-if="!vm.workingModel.hasFinancialAssistance">
+                            <div class="input-group date date-picker">
+                                <input id="financialAssistanceEffectiveDate" name="FinancialAssistanceEffectiveDate" type="text" ng-disabled="!vm.workingModel.hasFinancialAssistance" class="form-control"
+                                       data-date-picker="" ng-model="vm.workingModel.financialAssistanceEffectiveDate" />
+                                <div class="input-group-addon" ng-class="{ 'date-picker-disabled': !vm.workingModel.hasFinancialAssistance }">
+                                    <i class="material-icons" style="line-height: 14px">date_range</i>
+                                </div>
+                                <label for="FinancialAssistanceEffectiveDate" class="control-label">@L("FinancialAssistanceEffectiveDate")</label>
+                            </div>
+                        </div>
+
+                        @*For hasFinancialAssistance is True*@
+                        <div class="form-group form-md-line-input" ng-if="vm.workingModel.hasFinancialAssistance" ng-class="{ 'has-error': vm.form.FinancialAssistanceEffectiveDate.$error.required && vm.form.submitted }">
+                            <div class="input-group date date-picker">
+                                <input id="financialAssistanceEffectiveDate" name="FinancialAssistanceEffectiveDate" type="text" data-date-picker=""
+                                       required required-message="'You must provide a value for Financial Assistance Effective Date.'" validate-on="dirty" class="form-control"
+                                       ng-model="vm.workingModel.financialAssistanceEffectiveDate" ng_change="vm.generateFinancialAssistanceExpiryDate(vm.workingModel.financialAssistanceEffectiveDate)"
+                                       Validate="false" Restrict="reject" />
+                                <span class="help-block validationMessage" ng-if="vm.form.FinancialAssistanceEffectiveDate.$error.required && vm.form.submitted">You must provide a value for Financial Assistance Effective Date.</span>
+                                <div class="input-group-addon">
+                                    <i class="material-icons" style="line-height: 14px">date_range</i>
+                                </div>
+                                <label for="FinancialAssistanceEffectiveDate" class="control-label">@L("FinancialAssistanceEffectiveDate")<span class="businessRequired" ng-if="vm.workingModel.hasFinancialAssistance"> * </span></label>
+                            </div>
+                        </div>
+
+                        @*@s.FieldFor(m => m.FinancialAssistanceExpiryDate).Attrs(new { ng_model = "vm.workingModel.financialAssistanceExpiryDate", ng_disabled = "!vm.workingModel.hasFinancialAssistance", ng_required = "vm.workingModel.hasFinancialAssistance", mask = "39-@@@-9999", Validate = "false", Restrict = "reject", beforeoron = "vm.workingModel.financialAssistanceEffectiveDate", beforeoron_message = "'Financial Assistance Expiry Date must be on or after Financial Assistance Effective Date.'" })*@
+                        @*For hasFinancialAssistance is False*@
+                        <div class="form-group form-md-line-input" ng-if="!vm.workingModel.hasFinancialAssistance">
+                            <div class="input-group date date-picker">
+                                <input id="financialAssistanceExpiryDate" name="FinancialAssistanceExpiryDate" type="text" ng-disabled="!vm.workingModel.hasFinancialAssistance" class="form-control"
+                                       data-date-picker="" ng-model="vm.workingModel.financialAssistanceExpiryDate" />
+                                <div class="input-group-addon" ng-class="{ 'date-picker-disabled': !vm.workingModel.hasFinancialAssistance }">
+                                    <i class="material-icons" style="line-height: 14px">date_range</i>
+                                </div>
+                                <label for="FinancialAssistanceExpiryDate" class="control-label">@L("FinancialAssistanceExpiryDate")</label>
+                            </div>
+                        </div>
+
+                        @*For hasFinancialAssistance is True*@
+                        <div class="form-group form-md-line-input" ng-if="vm.workingModel.hasFinancialAssistance" ng-class="{ 'has-error': vm.form.FinancialAssistanceExpiryDate.$error.required && vm.form.submitted }">
+                            <div class="input-group date date-picker">
+                                <input id="financialAssistanceExpiryDate" data-date-picker="" name="FinancialAssistanceExpiryDate" type="text" class="form-control"
+                                       required required-message="'You must provide a value for Financial Assistance Expiry Date.'" validate-on="dirty"
+                                       beforeoron="vm.workingModel.financialAssistanceEffectiveDate" beforeoron-message="Financial Assistance Expiry Date must be on or after Financial Assistance Effective Date."
+                                       ng-model="vm.workingModel.financialAssistanceExpiryDate" Validate="false" Restrict="reject"
+                                       dateformat="DD-MMM-YYYY" />  @*validator = "vm.validateExpiryDate()===true" invalid-message = "vm.validateExpiryDate();"*@
+                                    <span class="help-block validationMessage" ng-if="vm.form.FinancialAssistanceExpiryDate.$error.required && vm.form.submitted">You must provide a value for Financial Assistance Expiry Date.</span>
+                                    <div class="input-group-addon">
+                                        <i class="material-icons" style="line-height: 14px">date_range</i>
+                                    </div>
+                                    <label for="FinancialAssistanceExpiryDate" class="control-label">@L("FinancialAssistanceExpiryDate")<span class="businessRequired" ng-if="vm.workingModel.hasFinancialAssistance"> * </span></label>
+                                </div>
+                            </div>
+
+                            @s.FieldFor(m => m.IsDeviated).Label(@L("IsDeviated")).Attrs(new { ng_model = "vm.workingModel.isDeviated", ng_change = "vm.initialiseDeviationFields(vm.workingModel.isDeviated)" })
+                            @s.FieldFor(m => m.FinalSubsidyRateId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.finalSubsidyRateId", ng_disabled = "!vm.workingModel.isDeviated", repeat = "vm.subsidyRateMaster", ui_select_required = "ui-select-required", ng_change = "vm.validateFinalSubsidyRate()", ui_custom_validator = "vm.validateSubsidy", invalid_message = "Final Subsidy Rate must be higher than Subsidy Rate." })
+                            @s.FieldFor(m => m.DeviationReasonId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.deviationReasonId", conditional_required = "vm.workingModel.isDeviated", ng_disabled = "!vm.workingModel.isDeviated", ng_change = "vm.getDeviationReason(vm.workingModel.deviationReasonId)", })
+
+                            <div class="form-group form-md-line-input" ng-class="{ 'has-error': vm.form.OthersDeviationReason.$error.required && vm.form.submitted }">
+                                <input type="text" id="OthersDeviationReason" name="OthersDeviationReason" class="form-control" ng-model="vm.workingModel.othersDeviationReason" ng-disabled="vm.workingModel.deviationReasonDescription != 'Others'" ng-required="vm.workingModel.deviationReasonDescription == 'Others'" />
+                                <label for="OthersDeviationReason" class="control-label">@L("IfOthersPleaseSpecify")<span class="businessRequired" ng-if="vm.workingModel.isDeviated && vm.workingModel.deviationReasonDescription == 'Others'"> * </span></label>
+                                <p class="help-block" ng-if="vm.form.OthersDeviationReason.$error.required && vm.form.submitted">You must provide a value for Others Deviation Reason.</p>
+                            </div>
+
+                            @*For isDeviated is False*@
+                            @*<div class="form-group form-md-line-input" ng-if="vm.workingModel.deviationReasonDescription != 'Others'">
+                                    <input type="text" name="OthersDeviationReason" class="form-control" ng-model="vm.workingModel.othersDeviationReason" ng-disabled="vm.workingModel.deviationReasonDescription != 'Others'" />
+                                    <label for="OthersDeviationReason" class="control-label">@L("IfOthersPleaseSpecify")</label>
+                                </div>*@
+
+                            @*For isDeviated is True*@
+                            @*<div class="form-group form-md-line-input" ng-if="vm.workingModel.deviationReasonDescription == 'Others'">
+                                    <input type="text" name="OthersDeviationReason" class="form-control" ng-model="vm.workingModel.othersDeviationReason" required required-message="'You must provide a value for Others Deviation Reason.'" validate-on="dirty" />
+                                    <label for="OthersDeviationReason" class="control-label">@L("IfOthersPleaseSpecify")<span class="businessRequired"> * </span></label>
+                                    <span id="OthersDeviationReason-error" class="help-block help-block-validation-error">This field is required.</span>
+                                </div>*@
+
+                            @*@s.FieldFor(m => m.DeviationApprovalDate).Attrs(new { ng_model = "vm.workingModel.deviationApprovalDate", ng_disabled = "!vm.workingModel.isDeviated", ng_required = "vm.workingModel.isDeviated" })*@
+                            @*For isDeviated is False*@
+                            <div class="form-group form-md-line-input" ng-if="!vm.workingModel.isDeviated">
+                                <div class="input-group date date-picker">
+                                    <input id="deviationApprovalDate" name="DeviationApprovalDate" type="text" ng-disabled="!vm.workingModel.isDeviated" class="form-control"
+                                           data-date-picker="" ng-model="vm.workingModel.deviationApprovalDate" />
+                                    <div class="input-group-addon" ng-class="{ 'date-picker-disabled': !vm.workingModel.isDeviated }">
+                                        <i class="material-icons" style="line-height: 14px">date_range</i>
+                                    </div>
+                                    <label for="DeviationApprovalDate" class="control-label">@L("DeviationApprovalDate")</label>
+                                </div>
+                            </div>
+
+                            @*For isDeviated is True*@
+                            <div class="form-group form-md-line-input" ng-if="vm.workingModel.isDeviated" ng-class="{ 'has-error': vm.form.DeviationApprovalDate.$error.required && vm.form.submitted }">
+                                <div class="input-group date date-picker">
+                                    <input data-date-picker="" id="deviationApprovalDate" name="DeviationApprovalDate" type="text" class="form-control"
+                                           required required-message="'You must provide a value for Deviation Approval Date.'" validate-on="dirty"
+                                           ng-model="vm.workingModel.deviationApprovalDate" Validate="false" Restrict="reject" />
+                                    <span class="help-block validationMessage" ng-if="vm.form.DeviationApprovalDate.$error.required && vm.form.submitted">You must provide a value for Deviation Approval Date.</span>
+                                    <div class="input-group-addon">
+                                        <i class="material-icons" style="line-height: 14px">date_range</i>
+                                    </div>
+                                    <label for="DeviationApprovalDate" class="control-label">@L("DeviationApprovalDate")<span class="businessRequired" ng-if="vm.workingModel.isDeviated"> * </span></label>
+                                </div>
+                            </div>
+
+                            @s.FieldFor(m => m.DeviatedSubsidyApprovedById).AsDropDown().Attrs(new { ng_model = "vm.workingModel.deviatedSubsidyApprovedById", conditional_required = "vm.workingModel.isDeviated", ng_disabled = "!vm.workingModel.isDeviated", repeat = "vm.deviatedSubsidyApprovedByMaster", })
+
+                            <div class="form-actions pull-right" ng-if="vm.mode!='new'">
+                                <button class="linkButton btn-small" type="submit" ng-click="vm.save($event)">
+                                    <i class="material-icons font-18-main v-top">save</i> @L("Save")
+                                </button>
+                                <button class="linkButton btn-small" type="button" ng-click="vm.cancel()">
+                                    <i class="material-icons font-18-main v-top">close</i> @L("Cancel")
+                                </button>
+                            </div>
+                    }
+                    @*using (var s = f.BeginNavigation())
+                        {
+                            <div class="pull-right" ng-if="vm.mode!='new'">
+                                @s.Button(L("Save"))
+                                @s.Button(L("Cancel")).Attrs(new { ng_click = "vm.cancel()" })
+                            </div>
+                        }*@
+                }
+            </div>
+            <div ng-switch-default>
+                @using (var f = Html.BeginForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.meansTestType | enumText: 'meansTestType'}}</div>
+                            <label class="control-label">@L("MeansTestType")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.othersMeansTestType}}</div>
+                            <label class="control-label">@L("IfOthersPleaseSpecify")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.meansTestDate | dateFormat}}</div>
+                            <label class="control-label">@L("MeansTestDate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.effectiveDate | dateFormat}}</div>
+                            <label class="control-label">@L("EffectiveDate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.expiryDate | dateFormat}}</div>
+                            <label class="control-label">@L("ExpiryDate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.subsidyRate.description}}</div>
+                            <label class="control-label">@L("SubsidyRate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.hasFinancialAssistance | yesnoFilter}}</div>
+                            <label class="control-label">@L("FinancialAssistance")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.financialAssistanceEffectiveDate | dateFormat}}</div>
+                            <label class="control-label">@L("FinancialAssistanceEffectiveDate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.financialAssistanceExpiryDate | dateFormat}}</div>
+                            <label class="control-label">@L("FinancialAssistanceExpiryDate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.isDeviated | yesnoFilter}}</div>
+                            <label class="control-label">@L("IsDeviated")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.finalSubsidyRate.description}}</div>
+                            <label class="control-label">@L("FinalSubsidyRate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.deviationReason.description}}</div>
+                            <label class="control-label">@L("DeviationReason")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.othersDeviationReason}}</div>
+                            <label class="control-label">@L("IfOthersPleaseSpecify")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.deviationApprovalDate | dateFormat}}</div>
+                            <label class="control-label">@L("DeviationApprovalDate")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.deviatedSubsidyApprovedBy.description}}</div>
+                            <label class="control-label">@L("DeviatedSubsidyApprovedBy")</label>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

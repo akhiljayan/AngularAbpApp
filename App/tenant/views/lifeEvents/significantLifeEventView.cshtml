@@ -1,0 +1,125 @@
+﻿@model LifeEventDto
+
+@using Pulsesync.IngoTPCC.Application.LifeEvents.Dto;
+
+<style>
+    .life-events {
+        margin: 0;
+    }
+
+        .life-events .life-event {
+            padding: 0px 0px 5px 0px;
+            margin-left: 0px !important;
+            margin-top: 0px !important;
+            margin-bottom: 20px !important;
+        }
+
+    .life-event {
+        cursor: pointer;
+    }
+
+        .life-event .life-event-period {
+            padding-top: 5px;
+        }
+
+            .life-event .life-event-period p {
+                margin: 0px;
+            }
+
+        .life-event .life-event-details {
+            padding-top: 5px;
+            font-weight: bold;
+        }
+
+            .life-event .life-event-details p {
+                margin: 0px;
+            }
+
+    .dot-separated-item {
+        font-size: 14px;
+    }
+
+        .dot-separated-item::after {
+            content: "-";
+            margin: 0 2px;
+        }
+
+        .dot-separated-item:last-of-type::after {
+            content: "";
+            margin: 0 2px;
+        }
+
+    .life-events .life-event .life-event-details .actions > li > a:hover {
+        color: #00bfb5;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .life-events .life-event .life-event-details .actions > li > a {
+        color: #36c6d3;
+        text-transform: none;
+        font-weight: bold;
+    }
+
+    .life-event:hover .actions {
+        display: inline-block;
+    }
+</style>
+<div busy-if="vm.loadData">
+    <div id="LifeEvent" class="portlet light" ng-class="{ 'div-disabled': vm.isNew }" ng-controller="tenant.views.lifeEvents.significantLifeEventView as lifeEvent">
+        <div class="portlet-title">
+            @*<div class="caption" data-toggle="collapse" href="#LifeEventBody">
+                <span class="caption-subject">@L("SignificantLifeEvents")</span>
+            </div>*@
+            <div class="caption" data-toggle="collapse" href="#LifeEventBody">
+                <span class="caption-subject">@L("SignificantLifeEvents")</span>
+            </div>
+            <div class="actions dropdown inputs">
+                @*<a href="javascript:;" class="collapse" data-original-title="" title=""> </a>*@
+                <a class="icon-wrapper" ng-if="lifeEvent.permissions.createLifeEvent" ng-click="lifeEvent.createLifeEvent()">
+                    <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                </a>
+            </div>
+        </div>
+        <div id="LifeEventBody" class="portlet-body collapse in">
+            <div ng-if="lifeEvent.resultCount <= 0">
+                <div class="row col-md-12">
+                    <span> Add Significant Life Events</span>
+                </div>
+            </div>
+            <div class="life-events row">
+                <div class="life-event" ng-repeat="event in lifeEvent.lifeEvents" ng-click="lifeEvent.editLifeEvent(event.id)">
+                    <div class="life-event-period">
+                        <p>
+                            <span class="dot-separated-item" ng-if="event.from">{{ event.from | date: 'MMM yyyy' }}</span>
+                            <span class="dot-separated-item" ng-if="event.to">{{ event.to  | date: 'MMM yyyy' }}</span>
+                        </p>
+                    </div>
+                    <div class="life-event-details">
+                        <span ng-if="event.description">{{ event.description }}</span>
+                        <ul class="actions list-unstyled list-inline">
+                            <li>
+                                <a ng-if="lifeEvent.permissions.deleteLifeEvent" href="#" ng-click="lifeEvent.deleteLifeEvent(event.id);$event.stopPropagation()">@L("Delete")</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+
+            </div>
+            @*<div class="row" ng-if="lifeEvent.resultCount > lifeEvent.pageSize && lifeEvent.lifeEvents.length < lifeEvent.resultCount">
+                <div class="col-md-12">
+                    <hr />
+                </div>
+            </div>
+            <div class="row" ng-if="lifeEvent.resultCount > lifeEvent.pageSize && lifeEvent.lifeEvents.length < lifeEvent.resultCount">
+                <div class="col-md-12">
+                    <div class="seeMore clearfix text-center">
+                        <a ng-click="lifeEvent.loadMore()">@L("SeeMore")</a>
+                    </div>
+                </div>
+            </div>*@
+        </div>
+        <simple-paginator data="lifeEvent.data" small-page-size="true" on-page-changed="lifeEvent.load(requestParams)"></simple-paginator>
+    </div>
+</div>

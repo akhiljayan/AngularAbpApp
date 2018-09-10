@@ -1,0 +1,110 @@
+﻿@using Pulsesync.IngoTPCC.Diagnosis.Dto
+@model DiagnosisDto
+<style type="text/css">
+    p.help-block {
+        display: inline-block;
+    }
+</style>
+<div class="portlet light" data-drag="true" id="diagnosisModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Diagnosis")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <fieldset>
+        <div class="portlet-body" style="display:block">
+            <div class="form-body" style="padding-top:0px;">
+                @{
+                    var attributes = new Dictionary<string, object>();
+                    attributes.Add("role", "form");
+                    attributes.Add("id", "diagnosisForm");
+                    attributes.Add("name", "diagnosisForm");
+                    attributes.Add("novalidate", "");
+                    attributes.Add("action", "#");
+                    attributes.Add("angular-validator-submit", "vm.save(vm.diagnosis)");
+                    attributes.Add("angular-validator", "");
+                    attributes.Add("ng-validate", "general.validationOptions");
+                }
+                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body ng-pristine ng-invalid")))
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <div class="form-body" style="padding-top: 0px;">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h5 class="fontStealGreen bold">General</h5>
+                                    <div class="person-name" style="padding-top:0px;">
+                                        <span class="caption-subject bold" style="color:rgba(0, 0, 0, 0.54)">{{vm.person.fullName}}</span>
+                                        <span class="caption-subject" style="color:rgba(0, 0, 0, 0.54)" ng-if="vm.person.registrationDocumentNumber">({{vm.person.registrationDocumentNumber}})</span>
+
+                                    </div>
+                                    <div class="referral-name" style="padding-top:5px;" ng-if="vm.referral">
+                                        <span class="caption-subject" style="color:rgba(0, 0, 0, 0.54)">Referral:</span>
+                                        <span class="referral-link"><a style="top: 18.5em;" class="referral-view redirect-anchor bold fontStealGreen" href="#!/tenant/referral/{{vm.referral.id}}">{{vm.referral.referralCode}}</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="height:20px"></div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    @s.FieldFor(da => da.DiagnosisCodeType).AsDropDown().Attrs(new { ng_model = "vm.diagnosis.diagnosisCodeType", repeat = "vm.diagnosisCodeTypeList", ng_change = "vm.onChangeDiagnosisCodeType($select.selected)", ui_select_required = "ui-select-required", required_message = "You must provide a value for Code Type", name = "DiagnosisCodeType" })
+                                </div>
+                                <div class="col-md-4">
+                                    @s.FieldFor(da => da.DiagnosisType).AsDropDown().Attrs(new { ng_model = "vm.diagnosis.diagnosisType", repeat = "vm.diagnosisTypeList", ui_select_required = "ui-select-required", required_message = "You must provide a value for DiagnosisType", name = "DiagnosisType" })
+                                </div>
+                                <div class="col-md-4">
+                                    @s.FieldFor(da => da.State).AsDropDown().Attrs(new { ng_model = "vm.diagnosis.state", repeat = "vm.diagnosisStateList", name = "State" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    @s.FieldFor(da => da.DiagnosisCodeId).AsDropDown().Attrs(new { ng_model = "vm.diagnosis.diagnosisCodeId", repeat = "vm.diagnosisCodesLookup", ng_disabled = "vm.disableDiagnosisCode", name = "DiagnosisCode", refresh = "vm.refreshDiagnosisCode($select, $event,false);", load_more = "vm.refreshDiagnosisCode($select,$event,true);", maxcount = "vm.diagnosisCodeCount" }).Label(@L("DiagnosisCode"))
+                                </div>
+                                <div class="col-md-4">
+                                    @s.FieldFor(da => da.SourceOfDiagnosisId).AsDropDown().Attrs(new { ng_model = "vm.diagnosis.sourceOfDiagnosisId", name = "SourceOfDiagnosis" })
+                                </div>
+                                <div class="col-md-4">
+                                    @s.FieldFor(da => da.IsActive).AsDropDown().Attrs(new { ng_model = "vm.diagnosis.isActive", repeat = "vm.statusList", name = "Status" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    @s.FieldFor(da => da.OtherDiagnosis).Attrs(new { ng_model = "vm.diagnosis.otherDiagnosis", ng_disabled = "vm.disableOthersDiagnosis", name = "OtherDiagnosis" })
+                                </div>
+                                <div class="col-md-4">
+                                    @s.FieldFor(da => da.OnSetDate).Attrs(new { ng_model = "vm.diagnosis.onSetDate", name = "OnSetDate", maxdate = "0d", Validate = "false", Restrict = "reject", data_date_format = "dd-M-yyyy" })
+                                </div>
+                                <div class="col-md-4">
+                                    @s.FieldFor(da => da.ResolvedDate).Attrs(new { ng_model = "vm.diagnosis.resolvedDate", name = "ResolvedDate", maxdate = "0d", Validate = "false", Restrict = "reject", beforeoron = "vm.diagnosis.onSetDate", beforeoron_message = "'Resolved date must be on or after OnSet Date.'", invalid_message = "'Invalid Date Format'", data_date_format = "dd-M-yyyy" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    @s.FieldFor(da => da.Remarks).AddClass("animate msd-elastic: \\n;").Rows(4).Attrs(new { ng_model = "vm.diagnosis.remarks" })
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <p class="bodyContext" ng-if="vm.editMode">
+                        @Html.Raw(L("CreationInfo", "vm.diagnosis.creatorUser.fullName", "vm.diagnosis.creationTime | date:'d-MMM-yyyy h:mm a'"))
+                    </p>
+                    <p class="bodyContext" ng-if="vm.editMode">
+                        @Html.Raw(L("ModificationInfo", "vm.diagnosis.lastModifierUser.fullName", "vm.diagnosis.lastModificationTime | date:'d-MMM-yyyy h:mm a'"))
+                    </p>
+                    <div class="form-actions margin-top-10 noborder pull-right">
+                        <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.disableSave"><i class="material-icons  font-18-main v-top">save</i>Save</button>
+                        <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </fieldset>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+</script>

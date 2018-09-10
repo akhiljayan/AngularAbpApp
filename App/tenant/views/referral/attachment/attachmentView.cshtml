@@ -1,0 +1,6 @@
+﻿@using Abp.Timing
+@using Pulsesync.IngoTPCC.Authorization
+
+<div class="col-md-12 col-sm-12 col-xs-12 no-padding main-tab-contents" ng-controller="tenant.views.referral.attachmentView as attachment">
+    <document-card module="'Referral'" mode="vm.isNew ? 'new' : 'view'" record-id="vm.referral.id" person-id="vm.referral.personId" upload="true" delete="true"></document-card>
+</div>

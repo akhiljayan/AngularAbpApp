@@ -1,0 +1,164 @@
+﻿@using Pulsesync.IngoTPCC.Application.MembershipBookings.Dto
+@model EventDto
+<style type="text/css">
+    div.popover > div.arrow {
+        float:left !important;
+        left:15px !important;
+    }
+</style>
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("General")</div>
+        </div>
+        <div class="tools pull-right" style="padding-top:0px;">
+
+            <button type="submit" class="linkButton icon-wrapper" ng-if="vm.mode=='edit'" title="Save">
+                <i class="material-icons custom-icon">save</i>
+            </button>
+
+            <button class="linkButton icon-wrapper" ng-click="vm.mode='edit'; vm.showExistingPicOnEdit = true" ng-if="vm.mode=='' && !vm.isNewRecord && vm.permissions.edit" ng-disabled="vm.model.eventStatus == vm.eventStatus.Completed" title="Edit">
+                <i class="material-icons custom-icon">edit</i>
+            </button>
+
+            <a ng-click="vm.deleteEvent(vm.model.id)" ng-if="vm.showDelete && vm.mode=='' && vm.permissions.delete" ng-disabled="vm.model.eventStatus == vm.eventStatus.Completed" title="Delete Event" class="icon-wrapper" style="cursor:pointer;height: 25px;">
+                <i class="material-icons custom-icon">delete</i>
+            </a>
+
+            <button class="linkButton icon-wrapper" ng-click="vm.ticketsPrint(vm.model.id)" ng-if="!vm.isNewRecord && vm.mode != 'edit'" title="Print Event Tickets">
+                <i class="material-icons custom-icon">print</i>
+            </button>
+
+
+            <button class="linkButton icon-wrapper" ng-click="vm.close()" ng-if="vm.mode=='' && !vm.isNewRecord" title="Close"> <i class="material-icons custom-icon">close</i> </button>
+            <button class="linkButton icon-wrapper" ng-click="vm.mode = ''" ng-if="vm.mode=='edit' && !vm.isNewRecord" title="Close"> <i class="material-icons custom-icon">close</i> </button>
+            <button class="linkButton icon-wrapper" ng-click="vm.close()" ng-if="vm.mode=='edit' && vm.isNewRecord" title="Close"> <i class="material-icons custom-icon">close</i> </button>
+
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            @*edit mode*@
+            <div ng-switch-when="edit">
+
+                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes()))
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <div class="row">
+                            <div class="col-md-3">
+                                @*@s.FieldFor(m => m.CentreId).AsDropDown().Attrs(new { ng_model = "vm.model.centreId", repeat = "vm.centrelist" })*@
+                                <centre-ui-select centre-id="vm.model.centreId" required="true" uiselect-disabled="false"></centre-ui-select>
+                            </div>
+                            <div class="col-md-3">
+                                @s.FieldFor(m => m.ActivityEventId).AsDropDown().Attrs(new { ng_model = "vm.model.activityEventId", repeat = "vm.eventList", ng_change = "vm.eventSelected(vm.model.activityEventId)" })
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group form-md-line-input">
+                                    <input class="form-control" disabled id="eventInChineese" name="eventInChineese" ng-model="vm.eventInChinese" type="text">
+                                    <label class="control-label" for="EventVenue">Event In Chinese</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                @s.FieldFor(m => m.EventTime).Attrs(new { ng_model = "vm.model.eventTime", allowfuturedate = "true", datetimepicker_required = "", ng_required = "true", required_message = "You must provide a value for Event Date" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                @s.FieldFor(m => m.EventVenue).Attrs(new { ng_model = "vm.model.eventVenue" })
+                            </div>
+                            <div class="col-md-3">
+                                @s.FieldFor(m => m.EventVenueInChinese).Attrs(new { ng_model = "vm.model.eventVenueInChinese" })
+                            </div>
+                            <div class="col-md-3">
+                                @s.FieldFor(m => m.MaxCapacity).Attrs(new { ng_model = "vm.model.maxCapacity", type = "number", ng_keydown = "vm.preventUnwantedChars($event)" })
+                            </div>
+                            <div class="col-md-3"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <button ng-if="vm.eventImageName != 'null' && !vm.isNewRecord && vm.showExistingPicOnEdit" class="linkButton hover-underline" style="color:#337ab7;font-weight:unset" ng-click="$event.stopPropagation(); $event.preventDefault();" popover-placement="{{vm.popover.placement}}" uib-popover-template="vm.popover.templateUrl">
+                                        <img class="img-responsive" ng-src="{{ vm.appPath }}File/GetPictureById?pictureName={{ vm.model.pictureId }}&t=Clock.Now.Ticks.ToString()" style="height:40px; border-radius:10px" />
+                                    </button>
+                                    <input type="file" nv-file-select uploader="vm.uploader" style="width: 200px" />
+                                    <span class="help-block m-b-none">@L("ProfilePicture_File_Type")</span>
+                                </div>
+                                <img id="PictureResize" src="" ng-show="vm.uploadedFileName" style="height: 200px; width: 200px;" />
+                            </div>
+                        </div>
+                    }
+                }
+
+
+            </div>
+            @*view mode*@
+            <div ng-switch-default>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.model.centre.name}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("Centre")<span class="required">*</span></label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.model.activityEvent.description}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("Event")<span class="required">*</span></label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.model.activityEvent.descriptionInChinese ? vm.model.activityEvent.descriptionInChinese : '-'}}</div>
+                            <label class="control-label" for="EventVenue">Event In Chinese</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.model.eventTime | dateTimeFormat}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("EventDate")<span class="required">*</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.model.eventVenue}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("EventVenue")<span class="required">*</span></label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.model.eventVenueInChinese ? vm.model.eventVenueInChinese : '-'}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("EventVenueInChinese")</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.model.maxCapacity ? vm.model.maxCapacity : '-'}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("MaxCapacity")</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-md-line-input" style="padding-top:0px">
+                            @*<label class="control-label view-label" for="referralCode">Uploaded Image</label>*@
+                            <div class="form-control remove-border auto-height view-text popoverimage" ng-if="vm.eventImageName != 'null'">
+                                <button class="linkButton hover-underline" style="color:#337ab7;font-weight:unset" ng-click="$event.stopPropagation(); $event.preventDefault();" uib-popover-template="vm.popover.templateUrl" popover-placement="{{vm.popover.placement}}" >
+                                    <img class="img-responsive pop-over-image" ng-src="{{ vm.appPath }}File/GetPictureById?pictureName={{ vm.model.pictureId }}&t=Clock.Now.Ticks.ToString()" style="height:40px; border-radius:10px" />
+                                </button>
+                            </div>
+                            <div class="form-control remove-border auto-height view-text" ng-if="vm.eventImageName == 'null'">
+                                No image uploaded !!
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,81 @@
+﻿@model CreateOrUpdatePersonInput
+
+@using Pulsesync.IngoTPCC.Application.Person.Dto;
+
+<div id="OtherInformation" class="portlet light" ng-controller="tenant.views.person.otherInformationView as otherInformation">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("OtherInformation")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a class="icon-wrapper" ng-if="otherInformation.mode.toLowerCase()=='view' && !vm.isNew && vm.permissions.edit" ng-click="otherInformation.edit()">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools">
+            <a class="remove" ng-if="otherInformation.mode.toLowerCase()=='edit' && !vm.isNew" ng-click="otherInformation.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="otherInformation.mode">
+                @*edit mode*@
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+                        @{
+                            var attributes = new Dictionary<string, object>();
+                            attributes.Add("role", "form");
+                            attributes.Add("name", "otherInformation.otherInformationForm");
+                        }
+                        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes)))
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                @s.FieldFor(m => m.HighestEducationId).AsDropDown().Attrs(new { ng_model = "otherInformation.person.highestEducationId", name = "HigestEducation" })
+                                @s.FieldFor(m => m.LastOccupationId).AsDropDown().Attrs(new { ng_model = "otherInformation.person.lastOccupationId", name = "LastOccupation" })
+                                @s.FieldFor(m => m.LiftLandingId).AsDropDown().Attrs(new { ng_model = "otherInformation.person.liftLandingId", name = "LiftLanding" })
+                                @s.FieldFor(m => m.LivingArrangementId).AsDropDown().Attrs(new { ng_model = "otherInformation.person.livingArrangementId", name = "LivingArrangement" })
+                                @s.FieldFor(m => m.Remarks).AddClass("animate msd-elastic: \\n; ").Rows(4).Attrs(new { ng_model = "otherInformation.person.remarks" })
+
+                                <div class="form-actions pull-right" ng-if="!vm.isNew">
+                                    <a class="linkButton btn-small" card-button-busy="vm.isSaving" ng-click="otherInformation.save()">
+                                        <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                                    </a>
+                                    <a class="linkButton btn-small" card-button-busy="vm.isSaving" ng-click="otherInformation.close()">
+                                        <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                                    </a>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+
+                @*view mode*@
+                <div ng-switch-default>
+                    <div class="col-md-12">
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height"><ng-blank ng-model="vm.person.highestEducation.description" /></div>
+                            <label class="control-label view-label">@L("HighestEducation")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height"><ng-blank ng-model="vm.person.lastOccupation.description" /></div>
+                            <label class="control-label view-label">@L("LastOccupation")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height"><ng-blank ng-model="vm.person.liftLanding.description" /></div>
+                            <label class="control-label view-label">@L("LiftLanding")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height"><ng-blank ng-model="vm.person.livingArrangement.description" /></div>
+                            <label class="control-label view-label">@L("LivingArrangement")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.person.remarks" /></div>
+                            <label class="control-label view-label">@L("Remarks")</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

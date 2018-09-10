@@ -1,0 +1,113 @@
+﻿<div class="portlet light" data-drag="true" id="masterDataTypeItemModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("MasterLookupItem")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <form role="form" id="masterDataForm" name="masterDataForm" novalidate action="#" class="form-validation horizontal-form scrollable-form-body">
+            <div class="portlet-body" style="display: block;">
+                <div class="form-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group form-md-line-input">
+                                <input type="text" ng-disabled="true" ng-model="vm.masterData" class="form-control" id="subject" ng-maxlength="500" required>
+                                <label class="control-label" for="subject">@L("MasterLookup")</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group form-md-line-input">
+                                <input type="text" ng-disabled="vm.masterDataTypeItem.disabled" ng-model="vm.masterDataTypeItem.code" class="form-control" id="code" ng-maxlength="500" placeholder='@L("Provide") @L("Code")' required>
+                                <label class="control-label" for="message">@L("Code")<span class="required">*</span></label>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group form-md-line-input">
+                                <textarea name="Message" type="text" ng-model="vm.masterDataTypeItem.description" ng-disabled="vm.masterDataTypeItem.disabled" class="form-control" placeholder='@L("Provide") @L("Description")' ng-maxlength="3000" id="message" required />
+                                <label class="control-label" for="message">@L("Description")<span class="required">*</span></label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group form-md-line-input">
+                                <input type="number" ng-disabled="vm.masterDataTypeItem.disabled" ng-model="vm.masterDataTypeItem.displayOrder" class="form-control" id="code" ng-maxlength="500" placeholder='@L("Provide") @L("DisplayOrder")' required>
+                                <label class="control-label" for="message">@L("DisplayOrder")</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions noborder right">
+                <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.save()" ng-disabled="vm.disableSave"><i class="material-icons ps-btn-material">check</i>Ok</button>
+                <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#endDateDiv .input-group.date').datepicker({
+            autoclose: true
+        }).on('changeDate', function (selected) {
+            var endDate = new Date(selected.date.valueOf());
+            $('#startDateDiv .input-group.date').datepicker('setEndDate', endDate);
+        })
+            .on('clearDate', function (selected) {
+                $('#startDateDiv .input-group.date').datepicker('setEndDate', null);
+            });
+
+        $('#startDateDiv .input-group.date').datepicker({
+            autoclose: true
+        })
+            .on('changeDate', function (selected) {
+                var startDate = new Date(selected.date.valueOf());
+                $('#endDateDiv .input-group.date').datepicker('setStartDate', startDate);
+            })
+            .on('clearDate', function (selected) {
+                $('#endDateDiv .input-group.date').datepicker('setStartDate', null);
+            });
+
+
+        $('#startDateDiv .input-group.date').on("dp.change",
+            function (e) {
+                var submitDateString = '';
+                if (e.Date) {
+                    submitDateString = e.Date.format("yyyy/mm/dd");
+                }
+                $("#bulletinStartDateHidden").val(submitDateString);
+            });
+
+        $('#endDateDiv .input-group.date').on("dp.change",
+            function (e) {
+                var submitDateString = '';
+                if (e.Date) {
+                    submitDateString = e.Date.format("yyyy/mm/dd");
+                }
+                $("#bulletinEndDateHidden").val(submitDateString);
+            });
+
+        $("#pinBulletin i:first").click(function () {
+            $(this).toggleClass('font-green');
+        });
+
+        $('#bulletinForm').ValidateControls({
+            rules: {
+                StartDate: {
+                    required: true
+                },
+                Subject: {
+                    required: true
+                },
+                Message: {
+                    required: true
+                }
+            }
+        });
+    });
+
+
+</script>

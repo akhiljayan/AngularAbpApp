@@ -1,0 +1,26 @@
+﻿@model CreateOrUpdateCentrePersonGroupInput
+
+@using Pulsesync.IngoTPCC.Application.MembershipBookings.Dto
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("General")</div>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div>
+            @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes()))
+            {
+                using (var s = f.BeginSection())
+                {
+                    <div class="row">
+                        <div class="col-md-6">
+                            @s.FieldFor(m => m.GroupDescription).Attrs(new { ng_model = "vm.model.groupDescription" })
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

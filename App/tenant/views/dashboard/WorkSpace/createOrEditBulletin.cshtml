@@ -1,0 +1,105 @@
+﻿@using Pulsesync.IngoTPCC.Application
+@model BulletinInput
+
+<style type="text/css">
+    .portlet.bulletinform {
+        box-shadow: none;
+    }
+
+        .portlet.bulletinform > .portlet-title {
+            border: none;
+            margin-bottom: 0px;
+            font-weight: bold;
+        }
+
+            .portlet.bulletinform > .portlet-title > .caption {
+                float: none;
+                color: #999999;
+                font-size: 16.5px;
+            }
+
+            .portlet.bulletinform > .portlet-title > .tools {
+                float: left;
+                margin-right: 10px;
+            }
+</style>
+<div class="portlet light" data-drag="true" id="bulletinModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("BulletinForm")</span>
+        </div>
+        <div class="tools pull-right">
+            <minimize-modal></minimize-modal>
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                @{
+                    var attributes = new Dictionary<string, object>();
+                    attributes.Add("role", "form");
+                    attributes.Add("id", "vm.bulletinForm");
+                    attributes.Add("name", "vm.bulletinForm");
+                    attributes.Add("novalidate", "");
+                    attributes.Add("action", "#");
+                    attributes.Add("angular-validator-submit", "vm.save()");
+                    attributes.Add("angular-validator", "");
+                }
+                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("form-validation horizontal-form scrollable-form-body")))
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                @s.FieldFor(m => m.EffectiveDate).DatePickerOptions(new { data_date_end_date = "0d" }).Attrs(new { ng_model = "vm.bulletin.effectiveDate", ng_disabled = "true", Validate = "false", Restrict = "reject" })
+                            </div>
+                            <div class="col-md-6">
+                                @s.FieldFor(m => m.EndDate).DatePickerOptions(new { data_date_end_date = "0d" }).Attrs(new { ng_model = "vm.bulletin.endDate", ng_disabled = "vm.bulletin.disabled", Validate = "false", Restrict = "reject" })
+                            </div>
+                        </div>
+                        @s.FieldFor(m => m.Subject).Attrs(new { ng_model = "vm.bulletin.subject", ng_disabled = "vm.bulletin.disabled", name = "subject" })
+                        @s.FieldFor(m => m.CategoryId).AsDropDown().Attrs(new { ng_model = "vm.bulletin.categoryId", name = "categoryId" }).AddClass("lookup-required")
+
+                        <div id="pinBulletin" class="pull-right inline-block" ng-click="vm.bulletin.isPinned = !vm.bulletin.isPinned">
+                            <i ng-if="!vm.bulletin.isPinned && vm.permissions.pin" class="icon-pin font-default"></i>
+                            <i ng-if="vm.bulletin.isPinned && vm.permissions.unpin" class="icon-pin font-green"></i>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            @*<textarea name="message" type="text" ng-model="vm.bulletin.message" ng-disabled="vm.bulletin.disabled" class="form-control animate msd-elastic" ng-maxlength="3000" id="message" placeholder="Provide message" required required-message="'You must provide a value for Message'" />*@
+                            <label class="control-label" for="message">Message<span class="required">*</span></label>
+                            @*<ng-ckeditor ng-model="vm.bulletin.message" class="simpleEditor" id="bulletin-text-{{vm.bulletin.id}}" ng-init="vm.test()" name="bulletin-text-name-{{vm.bulletin.id}}" ng-config="{'extraPlugins':'wordcount', 'removeButtons':'Image,About', 'wordcount' : { 'showWordCount': true, 'showCharCount': true, 'showParagraphs': false, 'maxCharCount': '1000' }}"> </ng-ckeditor>*@
+                            <ps-ckeditor id="bulletin-text-{{vm.medicalhistory.id}}" name="bulletin-text-name-{{vm.medicalhistory.id}}" ng-click="vm.test($event);" model="vm.bulletin.message" max-char-count="1000"></ps-ckeditor>
+                        </div>
+
+                        <div class="portlet bulletinform" ng-show="!isEmptyGuid(vm.bulletin.id)">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    @L("Administration")
+                                </div>
+                                <div class="tools">
+                                    <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+                                </div>
+                            </div>
+                            <div class="portlet-body" style="display: block;">
+                                <div class="form-body">
+                                    @L("CreatedBy") <label class="control-label bold" ng-bind="vm.bulletin.createdUserName"></label> on <label class="control-label bold">{{vm.bulletin.creationTime | dateTimeFormat}}</label><br />
+                                    @L("ModifiedBy") <label class="control-label bold" ng-bind="vm.bulletin.modifiedUserName"></label> on <label class="control-label bold">{{vm.bulletin.lastModificationTime | dateTimeFormat}}</label><br />
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="form-actions noborder right">
+                        <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.bulletin.disabled"><i class="material-icons  font-18-main v-top">save</i>Save</button>
+                        <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+                    </div>
+                }
+
+            </div>
+        </div>
+
+    </div>
+</div>

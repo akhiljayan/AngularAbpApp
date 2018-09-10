@@ -1,0 +1,82 @@
+﻿@model MembershipDto
+
+@using Pulsesync.IngoTPCC.Application.Membership.Dto
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("MedicalInformation")</div>
+        </div>
+    </div>
+        
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @using (var f = Html.BeginSubForm())
+                {
+                    using (var s = f.BeginSection())
+                    {                       
+                        <div class="form-group form-md-line-input margin-bottom-10">
+                            <label class="control-label">@L("PhysicalDisability")</label>
+                        </div>
+                        <div class="md-checkbox margin-left-20 padding-bottom-10" ng-repeat="li in vm.physicalDisability">
+                            <input id="{{li.id}}" class="md-check" type="checkbox" value="{{li.description}}" ng-model="li.selected" ng-change="vm.onChangePhysicalDisability(li)">
+                            <label for="{{li.id}}">
+                                <span class="inc"></span>
+                                <span class="check"></span>
+                                <span class="box"></span>
+                                {{li.description}}
+                            </label>
+                        </div>
+                        <p></p>
+
+                        <div class="form-group form-md-line-input" ng-if="vm.workingModel.othersMembershipPhysicalDisability || vm.showOthersMembershipPhysicalDisability">
+                            <input type="text" ng-model="vm.workingModel.othersMembershipPhysicalDisability" class="form-control" id="othersMembershipPhysicalDisability" name="othersMembershipPhysicalDisability" placeholder="Provide Other Physical Disability" ng-required="true" required-message="'@L("OthersPleaseSpecifyErrorMessage")'">
+                            <label class="control-label" for="othersMembershipPhysicalDisability">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                        </div>
+                        
+                        @(s.FieldFor(m => m.SpeechId)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.workingModel.speechId"
+                            })
+                            .AsDropDown())
+
+                        @s.FieldFor(m => m.MedicalRemarks).Attrs(new { ng_model = "vm.workingModel.medicalRemarks" })
+                    }
+                }
+            </div>
+            <div ng-switch-default>              
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-group form-md-line-input margin-bottom-10">
+                        <label class="control-label">@L("PhysicalDisability")</label>
+                    </div>
+                    <div class="md-checkbox margin-left-20 padding-bottom-10" ng-repeat="li in vm.physicalDisability">
+                        <input id="{{li.id}}" class="md-check" type="checkbox" value="{{li.description}}" ng-model="li.selected" ng-disabled=true>
+                        <label for="{{li.id}}">
+                            <span class="inc"></span>
+                            <span class="check"></span>
+                            <span class="box"></span>
+                            {{li.description}}
+                        </label>
+                    </div>
+                    <div ng-if="vm.model.othersMembershipPhysicalDisability" class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.othersMembershipPhysicalDisability ? vm.model.othersMembershipPhysicalDisability: '-'}}</div>
+                        <label class="control-label">@L("OthersMembershipPhysicalDisability")</label>
+                    </div>
+                    <div ng-if="!vm.model.othersMembershipPhysicalDisability" class="form-group form-md-line-input margin-bottom-20">
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.speech.description ? vm.model.speech.description: '-'}}</div>
+                        <label class="control-label">@L("Speech")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.medicalRemarks ? vm.model.medicalRemarks: '-'}}</div>
+                        <label class="control-label">@L("MedicalRemarks")</label>
+                    </div>                           
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,30 @@
+﻿@using Abp.Timing
+@using Pulsesync.IngoTPCC.Authorization
+<div class="row" id="Profile" ng-controller="tenant.views.person.tabs.encounterTab as encounterTab">
+    <div class="col-md-12 col-sm-12 col-xs-12 no-padding">
+        <div class="col-md-6 col-sm-12">
+            @if (IsGranted(AppPermissions.Pages_Tenant_VisitLogs))
+            {
+                <visitlogs-card id="VisitLogs" mode="vm.isNew ? 'new' : 'view'" person-id="vm.person.id" ng-if="vm.person.isPatient"></visitlogs-card>
+            }
+        </div>
+        <div class="col-md-6 col-sm-12">
+            @if (IsGranted(AppPermissions.Pages_Tenant_Hospitalization_View))
+            {
+                <div ng-if="vm.person.isPatient">
+                @Html.Partial("~/App/tenant/views/hospitalization/cardListing.cshtml")
+                </div>
+            }
+            @if (IsGranted(AppPermissions.Pages_Tenant_MedicalAppointment))
+            {
+                <medicalappointment-card id="MedicalAppointmentCard" 
+                                         mode="vm.isNew ? 'new' : 'view'" 
+                                         person-id="vm.person.id" 
+                                         ng-if="vm.person.isPatient">
+                </medicalappointment-card>
+            }
+        </div>
+       
+    </div>
+
+</div>

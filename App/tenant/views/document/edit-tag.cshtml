@@ -1,0 +1,41 @@
+﻿<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("EditTag")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="form-group form-md-line-input">
+                        <label class="control-label">Add Tags</label>
+                        <ps-tagsinput ng-model="$ctrl.tags"></ps-tagsinput>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="form-actions margin-top-10 pull-right">
+                        <button type="button"
+                                class="btn btn-circle light-grey-pcc btn-outline btn-small"
+                                button-busy="$ctrl.saving"
+                                ng-click="$ctrl.save()">
+                            <i class="material-icons ps-btn-material">check</i>@L("Save")
+                        </button>
+                        <button type="button"
+                                class="btn btn-circle light-grey-pcc btn-outline btn-small"
+                                button-busy="$ctrl.saving"
+                                ng-click="$ctrl.cancel()">
+                            <i class="material-icons ps-btn-material">clear</i>@L("Cancel")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

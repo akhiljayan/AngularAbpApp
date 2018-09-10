@@ -1,0 +1,661 @@
+﻿@model CreateOrUpdatePersonInput
+
+@using Pulsesync.IngoTPCC.Application.Person.Dto;
+
+<style>
+    .bodyContext {
+        color: #757575;
+    }
+
+    .highlightContent {
+        color: #00bfb5;
+    }
+
+    .service {
+        background-color: #eaeaea;
+        padding: 0px 10px;
+        margin-right: 5px;
+    }
+
+    .drugAllergies {
+        color: red;
+    }
+
+    .drugAllergiesWithAdr {
+        color: blue;
+    }
+
+    .businessRequired {
+        color: #e50000;
+    }
+
+    .businessRecommended {
+        color: #35a8e0;
+    }
+
+    .tabbable-line > .nav-tabs > li > a > i {
+        margin-right: 5px;
+    }
+
+    .tabbable-line > .nav-tabs > li.active > a {
+        color: #36c6d3;
+    }
+
+        .tabbable-line > .nav-tabs > li.active > a > i {
+            color: #36c6d3;
+        }
+
+    .nav-tabs > li {
+        float: none;
+        display: inline-block;
+        zoom: 1;
+    }
+
+    .nav-tabs {
+        text-align: center;
+    }
+
+        .nav-tabs > li > a {
+            font-weight: bold;
+        }
+</style>
+
+@using (var f = Html.BeginForm(htmlAttributes: Html.Attrs().Id("personFrom")))
+{
+    <div ng-controller="tenant.views.person.personProfile as vm">
+        @*<div busy-if="vm.loading">*@
+        <div class="row right bg-white" style="padding-top: 10px;">
+            <div class="span6 pull-left">
+                <span style="margin-left: 10px;" class="caption-subject fontStealGreen bold"
+                      ng-if="vm.isCreateMode">@L("CreateNewPerson")</span>
+                </div>
+                <div class="span6 pull-right">
+                    <button type="button" class="btn btn-circle green-steel-pcc btn-outline"
+                            ng-click="vm.save(true)" ng-disabled="vm.isReadOnlyMode" ng-if="vm.isCreateMode">
+                        @L("SaveAndBackToList")
+                    </button>
+                    <button type="button" class="btn btn-circle green-steel-pcc btn-outline" style="margin-right: 10px;"
+                            ng-click="vm.save()" ng-disabled="vm.isReadOnlyMode">
+                        @L("Save")
+                    </button>
+                </div>
+            </div>
+            <div class="row bg-white" style="padding: 20px 0px;" ng-if="!vm.isCreateMode">
+                <div class="col-md-1">
+                    <div style="width: 60px">
+                        <img ng-if="false" ng-src="{{vm.appPath}}Profile/GetProfilePictureById?id={{bulletin.createdUserProfilePictureId}}"
+                             style="width: 63px; height: 63px" />
+                        <img ng-if="true" ng-src="{{vm.appPath}}Common/Images/default-profile-picture.png"
+                             style="width: 63px; height: 63px" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div>
+                        <span class="bodyContext bold">{{vm.person.fullName}}</span>
+                        <span class="bodyContext" ng-if="vm.person.documentNumber"> ({{vm.person.documentNumber}})</span>
+                    </div>
+                    <div>
+                        <span class="bodyContext" ng-if="vm.person.gender==0">Male, </span>
+                        <span class="bodyContext" ng-if="vm.person.gender==1">Female, </span>
+                        <span class="bodyContext">{{vm.age}} Yrs</span>
+                    </div>
+                    <div>
+                        <span class="bodyContext">NH (Long Stay) - Hope, Rm 01, B01</span>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div>
+                        <span class="drugAllergies">@L("DrugAllergies"): </span>
+                        <span class="bodyContext">No Known Drug Allergy (NKDA)</span>
+                    </div>
+                    <div>
+                        <span class="drugAllergiesWithAdr">@L("DrugAllergiesWithADR"): </span>
+                        <span class="bodyContext">-</span>
+                    </div>
+                    <div>
+                        <span class="bodyContext">@L("NonDrugAllergies"): </span>
+                        <span class="bodyContext">-</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row bg-white" style="padding: 20px 0px;" ng-if="vm.isCreateMode">
+                <div class="col-md-1">
+                    <div style="width: 60px">
+                        <img ng-if="false" ng-src="{{vm.appPath}}Profile/GetProfilePictureById?id={{bulletin.createdUserProfilePictureId}}"
+                             style="width:63px;height:63px" />
+                        <img ng-if="true" ng-src="{{vm.appPath}}Common/Images/default-profile-picture.png"
+                             style="width: 63px; height: 63px" />
+                    </div>
+                </div>
+                <div class="col-md-11">
+                    <span class="bodyContext">
+                        Upload a person photo will help<br />
+                        colleagues to recognize person
+                    </span>
+                </div>
+            </div>
+            <div class="tabbable-line margin-bottom-10">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" href="#profile">
+                            <i class="glyphicon glyphicon-user fontStealGreen" style="font-size:16px;vertical-align: middle;"></i>@L("Profile")
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content">
+                <div id="profile" class="tab-pane active">
+                    <div ui-view class="fade-in-up">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <p class="bodyContext bold" style="cursor: pointer;" ng-click="vm.gotoAnchor('BioData')">@L("BioData")</p>
+                                <p class="bodyContext bold" style="cursor: pointer;" ng-click="vm.gotoAnchor('ContactInformation')">@L("ContactInformation")</p>
+                                <p class="bodyContext bold" style="cursor: pointer;" ng-click="vm.gotoAnchor('OtherInformation')">@L("OtherInformation")</p>
+                                <p class="bodyContext bold" style="cursor: pointer;" ng-click="vm.gotoAnchor('EmergencyContacts')">@L("EmergencyContacts")</p>
+                                <p class="bodyContext bold" style="cursor: pointer;" ng-click="vm.gotoAnchor('AboutMe')" p>@L("AboutMe")</p>
+                                <p class="bodyContext bold" style="cursor: pointer;" ng-click="vm.gotoAnchor('LifeLongLearning')">@L("LifeLongLearning")</p>
+                                <p class="bodyContext bold" style="cursor: pointer;" ng-click="vm.gotoAnchor('HashSymbolTags')">@L("HashSymbolTags")</p>
+
+                                <br />
+                                <hr style="border-color: #c2cad8;" />
+
+                                <p class="bodyContext" ng-if="!vm.isCreateMode">
+                                    Created by <span class="bold">{{vm.creatorName}}</span> on <span class="bold">{{vm.person.creationTime | date:'d-MMM-yyyy h:mm a'}}</span>
+                                </p>
+                                <p class="bodyContext" ng-if="!vm.isCreateMode">
+                                    Modified by <span class="bold">{{vm.modifierName}}</span> on <span class="bold">{{vm.person.lastModificationTime | date:'d-MMM-yyyy h:mm a'}}</span>
+                                </p>
+                                <p class="bodyContext" ng-if="!vm.isCreateMode">
+                                    Status <span class="bold">{{vm.person.isActive ? 'Active' : 'Inactive'}}</span>
+                                </p>
+                            </div>
+                            <div class="col-md-5">
+                                <div id="BioData" class="portlet light">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <span class="caption-subject fontStealGreen bold">@L("BioData")</span>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        @using (var s = f.BeginSection())
+                                        {
+                                            <input id="personId" name="personId" type="hidden" ng-model="vm.person.id" ng-bind="vm.person.id" />
+                                            <input id="registrationDocumentTypeId" name="registrationDocumentTypeId" type="hidden" ng-model="vm.person.documentTypeId" ng-bind="vm.person.documentTypeId" />
+                                            <div class="form-group form-md-line-input">
+                                                <label for="salutation" class="formlabel">@L("Salutation")</label>
+                                                <ui-select id="salutation" ng-model="vm.person.salutationId" theme="selectize" title="Choose a Salutation" ng-disabled="vm.isReadOnlyMode">
+                                                    <ui-select-match placeholder="Select Salutation">{{$select.selected.description}}
+                                                        <a class="fa fa-times"  ng-hide="vm.isReadOnlyMode" ng-click="$select.clear($event);"></a>
+                                                    </ui-select-match>
+                                                    <ui-select-choices repeat="salutation.id as salutation  in  vm.salutationMaster | filter: $select.search" value="{{salutation.id}}">
+                                                        <span ng-bind-html="salutation.description | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                            @s.FieldFor(m => m.FullName).Attr("ng-model", "vm.person.fullName").Attr("ng-disabled", "vm.isReadOnlyMode")
+                                            @s.FieldFor(m => m.Surname).Attr("ng-model", "vm.person.surName").Attr("ng-disabled", "vm.isReadOnlyMode")
+
+                                            <span> TESTING</span>
+                                            @s.FieldFor(m => m.SalutationId).AsDropDown().Attrs(new { id = "salutationId", ng_model = "vm.person.salutationId", ng_disabled = "vm.isReadOnlyMode", repeat = "vm.salutationMaster" })
+                                            @s.FieldFor(m => m.GenderId).AsDropDown().Attr("ng-model", "vm.person.genderId").Attr("ng-disabled", "vm.isReadOnlyMode").Attr("repeat", "vm.genderMaster")
+                                            @s.FieldFor(m => m.MaritalStatusId).AsDropDown().Attr("ng-model", "vm.person.maritalStatusId").Attr("ng-disabled", "vm.isReadOnlyMode").Attr("repeat", "vm.maritalStatusMaster")
+                                            @s.FieldFor(m => m.RegistrationDocumentTypeId).AsDropDown().Attr("ng-model", "vm.person.documentTypeId").Attr("ng-disabled", "vm.isReadOnlyMode").Attr("repeat", "vm.registrationDocumentMaster")
+                                            <span> END TESTING</span>
+
+                                            <div class="form-group form-md-line-input">
+                                                <label for="gender" class="formlabel">@L("Gender") <span class="businessRecommended bold">+</span></label>
+                                                <ui-select id="gender" ng-model="vm.person.genderId" theme="selectize" title="Choose a Gender" ng-disabled="vm.isReadOnlyMode">
+                                                    <ui-select-match placeholder="Select Gender">{{$select.selected.description}}</ui-select-match>
+                                                    <ui-select-choices  repeat="gender.id as gender in  vm.genderMaster | filter: $select.search">
+                                                        <span ng-bind-html="gender.description | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                            <div class="form-group form-md-line-input">
+                                                <label for="maritalStatus" class="formlabel">@L("MaritalStatus")</label>
+                                                <ui-select id="maritalStatus" ng-model="vm.person.maritalStatusId" theme="selectize" title="Choose a Marital Status">
+                                                    <ui-select-match placeholder="Select Marial Status">{{$select.selected.description}}
+                                                        <a class="fa fa-times"  ng-hide="vm.isReadOnlyMode" ng-click="$select.clear($event);"></a>
+                                                    </ui-select-match>
+                                                    <ui-select-choices repeat="maritalStatus.id as maritalStatus  in  vm.maritalStatusMaster | filter: $select.search">
+                                                        <span ng-bind-html="maritalStatus.description | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                            <div class="form-group form-md-line-input">
+                                                <label for="registrationDocumentType" class="formlabel">@L("RegistrationDocumentType") <span class="businessRecommended bold">+</span></label>
+                                                <ui-select id="registrationDocumentType" ng-model="vm.person.documentTypeId" theme="selectize" title="Choose a Registration Document" ng-disabled="vm.isReadOnlyMode">
+                                                    <ui-select-match placeholder="Select Registration Document">{{$select.selected.description}}
+                                                        <a class="fa fa-times"  ng-hide="vm.isReadOnlyMode" ng-click="$select.clear($event);"></a>
+                                                    </ui-select-match>
+                                                    <ui-select-choices repeat="registrationDocument.id as registrationDocument in  vm.registrationDocumentMaster | filter: $select.search">
+                                                        <span ng-bind-html="registrationDocument.description | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                            @s.FieldFor(m => m.RegistrationDocumentNumber).Attr("ng-model", "vm.person.documentNumber").Attr("ng-disabled", "vm.isReadOnlyMode").AddClass("nric")
+                                            <div class="form-group form-md-line-input">
+                                                <div class="input-group date date-picker" ng-disabled="vm.isReadOnlyMode">
+                                                    <input id="dateOfIssue"  data-date-picker="" type="text" class="form-control"
+                                                           ng-model="vm.person.dateOfIssue" ng-disabled="vm.isReadOnlyMode" />
+                                                    <div class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                    </div>
+                                                    <label for="dateOfIssue">@L("DateOfIssue") <span class="businessRecommended bold">+</span></label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-md-line-input">
+                                                <div class="input-group date date-picker" ng-disabled="vm.isReadOnlyMode">
+                                                    <input id="dateOfBirth"  data-date-picker="" type="text" class="form-control"
+                                                           ng-model="vm.person.dateOfBirth" ng-disabled="vm.isReadOnlyMode" />
+                                                    <div class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                    </div>
+                                                    <label for="dateOfBirth">@L("DateOfBirth") <span class="businessRecommended bold">+</span></label>
+                                                </div>
+                                            </div>
+                                            @s.FieldFor(m => m.ChineseHoroscopeId).Attr("ng-model", "vm.person.chineseHoroscope").Attr("ng-disabled", "vm.isReadOnlyMode")
+                                            <div class="form-group form-md-line-input">
+                                                <label for="race" class="formlabel">@L("Race") <span class="businessRecommended bold">+</span></label>
+                                                <ui-select id="race" ng-model="vm.person.raceId" theme="selectize" title="Choose Race" ng-disabled="vm.isReadOnlyMode">
+                                                    <ui-select-match placeholder="Select Race">{{$select.selected.description}}
+                                                        <a class="fa fa-times"  ng-hide="vm.isReadOnlyMode" ng-click="$select.clear($event);"></a>
+                                                    </ui-select-match>
+                                                    <ui-select-choices repeat="race.id as race in  vm.raceMaster | filter: $select.search">
+                                                        <span ng-bind-html="race.description | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                            <div class="form-group form-md-line-input">
+                                                <label for="nationality" class="formlabel">@L("Nationality") <span class="businessRecommended bold">+</span></label>
+                                                <ui-select id="nationality" ng-model="vm.person.nationalityId" theme="selectize" title="Choose a Nationality" ng-disabled="vm.isReadOnlyMode">
+                                                    <ui-select-match placeholder="Select Nationality">{{$select.selected.description}}
+                                                        <a class="fa fa-times"  ng-hide="vm.isReadOnlyMode" ng-click="$select.clear($event);"></a>
+                                                    </ui-select-match>
+                                                    <ui-select-choices repeat="m.id as m in  vm.nationalityMaster | filter: $select.search">
+                                                        <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                            <div class="form-group form-md-line-input">
+                                                <label for="nationality" class="formlabel">@L("Citizenship") <span class="businessRecommended bold">+</span></label>
+                                                <ui-select id="nationality" ng-model="vm.person.citizenshipId" theme="selectize" title="Choose a Citizenship" ng-disabled="vm.isReadOnlyMode">
+                                                    <ui-select-match placeholder="Select Citizenship">{{$select.selected.description}}
+                                                        <a class="fa fa-times"  ng-hide="vm.isReadOnlyMode" ng-click="$select.clear($event);"></a>
+                                                    </ui-select-match>
+                                                    <ui-select-choices repeat="m.id as m in  vm.citizenshipMaster | filter: $select.search">
+                                                        <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                            <div class="form-group form-md-line-input">
+                                                <label for="religion" class="formlabel">@L("Religion") <span class="businessRecommended bold">+</span></label>
+                                                <ui-select id="religion" ng-model="vm.person.religionId" theme="selectize" title="Choose a Religion" ng-disabled="vm.isReadOnlyMode">
+                                                    <ui-select-match placeholder="Select Religion">{{$select.selected.description}}
+                                                        <a class="fa fa-times"  ng-hide="vm.isReadOnlyMode" ng-click="$select.clear($event);"></a>
+                                                    </ui-select-match>
+                                                    <ui-select-choices repeat="m.id as m in  vm.religionMaster | filter: $select.search">
+                                                        <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                            @s.FieldFor(m => m.PlaceOfWorship).Attr("ng-model", "vm.person.placeOfWorship").Attr("ng-disabled", "vm.isReadOnlyMode")
+                                        }
+                                    </div>
+                                </div>
+                                <div id="ContactInformation" class="portlet light">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <span class="caption-subject fontStealGreen bold">@L("ContactInformation")</span>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        @using (var s = f.BeginSection())
+                                        {
+                                            @s.FieldFor(m => m.HomePhone).Attr("ng-model", "vm.person.homePhone").Attr("ng-disabled", "vm.isReadOnlyMode")
+                                            @s.FieldFor(m => m.MobilePhone).Attr("ng-model", "vm.person.mobilePhone").Attr("ng-disabled", "vm.isReadOnlyMode")
+                                            @s.FieldFor(m => m.OfficePhone).Attr("ng-model", "vm.person.officePhone").Attr("ng-disabled", "vm.isReadOnlyMode")
+                                            @s.FieldFor(m => m.Email).Attr("ng-model", "vm.person.email").Attr("ng-disabled", "vm.isReadOnlyMode").AddClass("validateEmail")
+                                        }
+                                        <div>
+                                            <p class="bold fontStealGreen">@L("NRICAddress")</p>
+                                            @using (var s = f.BeginSection())
+                                            {
+                                                @s.FieldFor(m => m.NricAddress.PostalCode).Attr("ng-model", "vm.person.addresses[vm.nricAddressIndex].postalCode").Attr("ng-disabled", "vm.isReadOnlyMode")
+                                                @s.FieldFor(m => m.NricAddress.BlockNo).Attr("ng-model", "vm.person.addresses[vm.nricAddressIndex].block").Attr("ng-disabled", "vm.isReadOnlyMode")
+                                                @s.FieldFor(m => m.NricAddress.StreetName).Attr("ng-model", "vm.person.addresses[vm.nricAddressIndex].streetName").Attr("ng-disabled", "vm.isReadOnlyMode")
+                                                @s.FieldFor(m => m.NricAddress.BulidingName).Attr("ng-model", "vm.person.addresses[vm.nricAddressIndex].bulidingName").Attr("ng-disabled", "vm.isReadOnlyMode")
+                                                @s.FieldFor(m => m.NricAddress.UnitNo).Attr("ng-model", "vm.person.addresses[vm.nricAddressIndex].unitNumber").Attr("ng-disabled", "vm.isReadOnlyMode")
+                                                <div class="form-group form-md-line-input">
+                                                    <label for="nricCountry" class="formlabel">@L("Country")</label>
+                                                    <ui-select id="nricCountry" ng-model="vm.person.addresses[vm.nricAddressIndex].countryId" theme="selectize" title="Choose a Country" ng-disabled="vm.isReadOnlyMode">
+                                                        <ui-select-match placeholder="Select Country">{{$select.selected.description}}
+                                                            <a class="fa fa-times"  ng-hide="vm.isReadOnlyMode" ng-click="$select.clear($event);"></a>
+                                                        </ui-select-match>
+                                                        <ui-select-choices repeat="m.id as m in  vm.countryMaster | filter: $select.search">
+                                                            <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                                <div class="form-group form-md-line-input">
+                                                    <label for="nricOwnership" class="formlabel">@L("Ownership")</label>
+                                                    <ui-select id="nricOwnership" ng-model="vm.person.addresses[vm.nricAddressIndex].ownerShipId" theme="selectize" title="Choose Ownership" ng-disabled="vm.isReadOnlyMode">
+                                                        <ui-select-match placeholder="Select OwnerShip">{{$select.selected.description}}<a class="fa fa-times"  ng-hide="vm.isReadOnlyMode" ng-click="$select.clear($event);"></a></ui-select-match>
+                                                        <ui-select-choices repeat="m.id as m in  vm.ownershipMaster | filter: $select.search">
+                                                            <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                                <div class="form-group form-md-line-input">
+                                                    <label for="nricTypeOfAccommodation" class="formlabel">@L("TypeOfAccommodation")</label>
+                                                    <ui-select id="nricTypeOfAccommodation" ng-model="vm.person.addresses[vm.nricAddressIndex].typeOfAccomodationId" theme="selectize" title="Choose a Type Of Accommodation" ng-disabled="vm.isReadOnlyMode">
+                                                        <ui-select-match placeholder="Select Type Of Accommodation">{{$select.selected.description}}<a class="fa fa-times"  ng-hide="vm.isReadOnlyMode" ng-click="$select.clear($event);"></a></ui-select-match>
+                                                        <ui-select-choices repeat="m.id as m in  vm.typesOfAccommodationMaster | filter: $select.search">
+                                                            <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div>
+                                            <p class="bold fontStealGreen">@L("ResidentialAddress")</p>
+                                            <div class="form-group form-md-checkboxes">
+                                                <label>@L("SameAsNRICAddress")</label>
+                                                <div class="md-checkbox-list">
+                                                    <div class="md-checkbox">
+                                                        <input id="residentialSameAsNric" type="checkbox" class="form-control"
+                                                               ng-model="vm.person.residentialAddressSameAsNricAddress" ng-disabled="vm.isReadOnlyMode"
+                                                               ng-change="vm.sameAsNricAddressChange(1)" />
+                                                        <label for="residentialSameAsNric">
+                                                            <span class="inc"></span>
+                                                            <span class="check"></span>
+                                                            <span class="box"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @using (var s = f.BeginSection())
+                                            {
+                                                @s.FieldFor(m => m.ResidentialAddress.PostalCode).Attr("ng-model", "vm.person.addresses[vm.residentialAddressIndex].postalCode").Attr("ng-disabled", "vm.isReadOnlyMode||vm.person.residentialAddressSameAsNricAddress")
+                                                @s.FieldFor(m => m.ResidentialAddress.BlockNo).Attr("ng-model", "vm.person.addresses[vm.residentialAddressIndex].block").Attr("ng-disabled", "vm.isReadOnlyMode||vm.person.residentialAddressSameAsNricAddress")
+                                                @s.FieldFor(m => m.ResidentialAddress.StreetName).Attr("ng-model", "vm.person.addresses[vm.residentialAddressIndex].streetName").Attr("ng-disabled", "vm.isReadOnlyMode||vm.person.residentialAddressSameAsNricAddress")
+                                                @s.FieldFor(m => m.ResidentialAddress.BulidingName).Attr("ng-model", "vm.person.addresses[vm.residentialAddressIndex].bulidingName").Attr("ng-disabled", "vm.isReadOnlyMode||vm.person.residentialAddressSameAsNricAddress")
+                                                @s.FieldFor(m => m.ResidentialAddress.UnitNo).Attr("ng-model", "vm.person.addresses[vm.residentialAddressIndex].unitNumber").Attr("ng-disabled", "vm.isReadOnlyMode||vm.person.residentialAddressSameAsNricAddress")
+                                                <div class="form-group form-md-line-input">
+                                                    <label for="residentialCountry" class="formlabel">@L("Country")</label>
+                                                    <ui-select id="residentialCountry" ng-model="vm.person.addresses[vm.residentialAddressIndex].countryId" theme="selectize" title="Choose a Country" ng-disabled="vm.isReadOnlyMode||vm.person.residentialAddressSameAsNricAddress">
+                                                        <ui-select-match placeholder="Select Country">{{$select.selected.description}}<a class="fa fa-times" ng-hide="vm.isReadOnlyMode||vm.person.residentialAddressSameAsNricAddress"  ng-click="$select.clear($event);"></a></ui-select-match>
+                                                        <ui-select-choices repeat="m.id as m in  vm.countryMaster | filter: $select.search">
+                                                            <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                                <div class="form-group form-md-line-input">
+                                                    <label for="residentialOwnership" class="formlabel">@L("Ownership")</label>
+                                                    <ui-select id="residentialOwnership" ng-model="vm.person.addresses[vm.residentialAddressIndex].ownerShipId" theme="selectize" title="Choose Ownership" ng-disabled="vm.isReadOnlyMode||vm.person.residentialAddressSameAsNricAddress">
+                                                        <ui-select-match placeholder="Select OwnerShip">{{$select.selected.description}} <a class="fa fa-times" ng-hide="vm.isReadOnlyMode||vm.person.residentialAddressSameAsNricAddress" ng-click="$select.clear($event);"></a></ui-select-match>
+                                                        <ui-select-choices repeat="m.id as m in  vm.ownershipMaster | filter: $select.search">
+                                                            <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                                <div class="form-group form-md-line-input">
+                                                    <label for="residentialTypeOfAccommodation" class="formlabel">@L("TypeOfAccommodation")</label>
+                                                    <ui-select id="residentialTypeOfAccommodation" ng-model="vm.person.addresses[vm.residentialAddressIndex].typeOfAccomodationId" theme="selectize" title="Choose a Type Of Accommodation" ng-disabled="vm.isReadOnlyMode||vm.person.residentialAddressSameAsNricAddress">
+                                                        <ui-select-match placeholder="Select Type Of Accommodation">{{$select.selected.description}}<a class="fa fa-times" ng-hide="vm.isReadOnlyMode||vm.person.residentialAddressSameAsNricAddress" ng-click="$select.clear($event);"></a></ui-select-match>
+                                                        <ui-select-choices repeat="m.id as m in  vm.typesOfAccommodationMaster | filter: $select.search">
+                                                            <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div>
+                                            <p class="bold fontStealGreen">@L("BillingAddress")</p>
+                                            <div class="form-group form-md-checkboxes">
+                                                <label>@L("SameAsNRICAddress")</label>
+                                                <div class="md-checkbox-list">
+                                                    <div class="md-checkbox">
+                                                        <input id="billingSameAsNric" type="checkbox" class="form-control"
+                                                               ng-model="vm.person.billingAddressSameAsNricAddress" ng-disabled="vm.isReadOnlyMode"
+                                                               ng-change="vm.sameAsNricAddressChange(2)" />
+                                                        <label for="billingSameAsNric">
+                                                            <span class="inc"></span>
+                                                            <span class="check"></span>
+                                                            <span class="box"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @using (var s = f.BeginSection())
+                                            {
+                                                @s.FieldFor(m => m.BillingAddress.PostalCode).Attr("ng-model", "vm.person.addresses[vm.billingAddressIndex].postalCode").Attr("ng-disabled", "vm.isReadOnlyMode||vm.person.billingAddressSameAsNricAddress")
+                                                @s.FieldFor(m => m.BillingAddress.BlockNo).Attr("ng-model", "vm.person.addresses[vm.billingAddressIndex].block").Attr("ng-disabled", "vm.isReadOnlyMode||vm.person.billingAddressSameAsNricAddress")
+                                                @s.FieldFor(m => m.BillingAddress.StreetName).Attr("ng-model", "vm.person.addresses[vm.billingAddressIndex].streetName").Attr("ng-disabled", "vm.isReadOnlyMode||vm.person.billingAddressSameAsNricAddress")
+                                                @s.FieldFor(m => m.BillingAddress.BulidingName).Attr("ng-model", "vm.person.addresses[vm.billingAddressIndex].bulidingName").Attr("ng-disabled", "vm.isReadOnlyMode||vm.person.billingAddressSameAsNricAddress")
+                                                @s.FieldFor(m => m.BillingAddress.UnitNo).Attr("ng-model", "vm.person.addresses[vm.billingAddressIndex].unitNumber").Attr("ng-disabled", "vm.isReadOnlyMode||vm.person.billingAddressSameAsNricAddress")
+                                                <div class="form-group form-md-line-input">
+                                                    <label for="billingCountry" class="formlabel">@L("Country")</label>
+                                                    <ui-select id="billingCountry" ng-model="vm.person.addresses[vm.billingAddressIndex].countryId" theme="selectize" title="Choose a Country" ng-disabled="vm.isReadOnlyMode||vm.person.billingAddressSameAsNricAddress">
+                                                        <ui-select-match placeholder="Select Country">{{$select.selected.description}}<a class="fa fa-times" ng-hide="vm.isReadOnlyMode||vm.person.billingAddressSameAsNricAddress" ng-click="$select.clear($event);" ></a></ui-select-match>
+                                                        <ui-select-choices repeat="m.id as m in  vm.countryMaster | filter: $select.search">
+                                                            <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                                <div class="form-group form-md-line-input">
+                                                    <label for="billingOwnership" class="formlabel">@L("Ownership")</label>
+                                                    <ui-select id="billingOwnership" ng-model="vm.person.addresses[vm.billingAddressIndex].ownerShipId" theme="selectize" title="Choose a Ownership" ng-disabled="vm.isReadOnlyMode||vm.person.billingAddressSameAsNricAddress">
+                                                        <ui-select-match placeholder="Select Ownership">{{$select.selected.description}}<a class="fa fa-times" ng-hide="vm.isReadOnlyMode||vm.person.billingAddressSameAsNricAddress" ng-click="$select.clear($event);"></a></ui-select-match>
+                                                        <ui-select-choices repeat="m.id as m in  vm.ownershipMaster | filter: $select.search">
+                                                            <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                                <div class="form-group form-md-line-input">
+                                                    <label for="billingTypeOfAccommodation" class="formlabel">@L("TypeOfAccommodation")</label>
+                                                    <ui-select id="billingTypeOfAccommodation" ng-model="vm.person.addresses[vm.billingAddressIndex].typeOfAccomodationId" theme="selectize" title="Choose a Type Of Accommodation" ng-disabled="vm.isReadOnlyMode||vm.person.billingAddressSameAsNricAddress">
+                                                        <ui-select-match placeholder="Select Type Of Accommodation">{{$select.selected.description}}<a class="fa fa-times" ng-hide="vm.isReadOnlyMode||vm.person.billingAddressSameAsNricAddress" ng-click="$select.clear($event);"></a></ui-select-match>
+                                                        <ui-select-choices repeat="m.id as m in  vm.typesOfAccommodationMaster | filter: $select.search">
+                                                            <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="OtherInformation" class="portlet light">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <span class="caption-subject fontStealGreen bold">@L("OtherInformation")</span>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        @using (var s = f.BeginSection())
+                                        {
+                                            <div class="form-group form-md-line-input">
+                                                <label for="highestEducation" class="formlabel">@L("HighestEducation")<span class="businessRecommended bold">+</span></label>
+                                                <ui-select id="highestEducation" ng-model="vm.person.highestEducationId" theme="selectize" title="Choose a Highest Education" ng-disabled="vm.isReadOnlyMode">
+                                                    <ui-select-match placeholder="Select Highest Education">{{$select.selected.description}}<a class="fa fa-times" ng-click="$select.clear($event);"></a></ui-select-match>
+                                                    <ui-select-choices repeat="m.id as m in  vm.highestEducationMaster | filter: $select.search">
+                                                        <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                            <div class="form-group form-md-line-input">
+                                                <label for="lastOccupation" class="formlabel">@L("LastOccupation")<span class="businessRecommended bold">+</span></label>
+                                                <ui-select id="lastOccupation" ng-model="vm.person.lastOccupationId" theme="selectize" title="Choose a Last Occupation" ng-disabled="vm.isReadOnlyMode">
+                                                    <ui-select-match placeholder="Select Last Occupation">{{$select.selected.description}}<a class="fa fa-times" ng-click="$select.clear($event);"></a></ui-select-match>
+                                                    <ui-select-choices repeat="m.id as m in  vm.occupationMaster | filter: $select.search">
+                                                        <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                            <div class="form-group form-md-line-input">
+                                                <label for="liftLanding" class="formlabel">@L("LiftLanding")</label>
+                                                <ui-select id="liftLanding" ng-model="vm.person.liftLandingId" theme="selectize" title="Choose Lift Landing" ng-disabled="vm.isReadOnlyMode">
+                                                    <ui-select-match placeholder="Select Lift Landing">{{$select.selected.description}}<a class="fa fa-times" ng-click="$select.clear($event);"></a></ui-select-match>
+                                                    <ui-select-choices repeat="liftLanding.id as liftLanding in  vm.liftLandingMaster | filter: $select.search">
+                                                        <span ng-bind-html="liftLanding.description | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                            <div class="form-group form-md-line-input">
+                                                <label for="livingArrangement" class="formlabel">@L("LivingArrangement")</label>
+                                                <ui-select id="livingArrangement" ng-model="vm.person.livingArrangementId" theme="selectize" title="Choose Living Arrangement" ng-disabled="vm.isReadOnlyMode">
+                                                    <ui-select-match placeholder="Select Living Arrangement">{{$select.selected.description}}<a class="fa fa-times" ng-click="$select.clear($event);" ></a></ui-select-match>
+                                                    <ui-select-choices repeat="livingArrangement.id as livingArrangement in  vm.livingArrangementMaster | filter: $select.search">
+                                                        <span ng-bind-html="livingArrangement.description | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                            @s.FieldFor(m => m.Remarks).Rows(4).Attr("ng-model", "vm.person.remarks").Attr("ng-disabled", "vm.isReadOnlyMode")
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div id="EmergencyContacts" class="portlet light">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <span class="caption-subject fontStealGreen bold">@L("EmergencyContacts")</span>
+                                        </div>
+                                        <div class="actions">
+                                            <a class="icon-wrapper" ng-click="">
+                                                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                    </div>
+                                </div>
+                                <div id="AboutMe" class="portlet light">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <span class="caption-subject fontStealGreen bold">@L("AboutMe")</span>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        @using (var s = f.BeginSection())
+                                        {
+                                            @s.FieldFor(m => m.AboutMe).Attr("ng-model", "vm.person.aboutMe").Attr("ng-disabled", "vm.isReadOnlyMode").Rows(4)
+                                            @s.FieldFor(m => m.Goals).Attr("ng-model", "vm.person.goals").Attr("ng-disabled", "vm.isReadOnlyMode").Rows(4)
+                                            @s.FieldFor(m => m.Personality).Attr("ng-model", "vm.person.social.personality").Attr("ng-disabled", "vm.isReadOnlyMode")
+                                            @s.FieldFor(m => m.Likes).Attr("ng-model", "vm.person.social.likes").Attr("ng-disabled", "vm.isReadOnlyMode")
+                                            @s.FieldFor(m => m.Dislikes).Attr("ng-model", "vm.person.social.disLikes").Attr("ng-disabled", "vm.isReadOnlyMode")
+                                            @s.FieldFor(m => m.WhatMakesHimOrHerHappy).Attr("ng-model", "vm.person.wmhp").Attr("ng-disabled", "vm.isReadOnlyMode").Rows(4)
+                                            @s.FieldFor(m => m.Hobbies).Attr("ng-model", "vm.person.social.hobbies").Attr("ng-disabled", "vm.isReadOnlyMode")
+                                        }
+                                    </div>
+                                </div>
+                                <div id="LifeLongLearning" class="portlet light">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <span class="caption-subject fontStealGreen bold">@L("LifeLongLearning")</span>
+                                        </div>
+                                        <div class="actions">
+                                            <a ng-click="vm.openCreateOrEditModal()" class="icon-wrapper"
+                                               ng-disabled="vm.isReadOnlyMode">
+                                                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="form-group" ng-repeat="ll in vm.person.lifeLearnings" ng-click="!vm.isReadOnlyMode && vm.openCreateOrEditModal(ll.id)">
+                                            <label class="bodyContext">
+                                                <span>{{vm.monthNames[ll.fromMonth]}}</span>
+                                                <span>{{ll.fromYear}}</span>
+                                            </label>
+                                            <span ng-if="(ll.fromMonth || ll.fromYear) && (ll.toMonth || ll.toYear)">-</span>
+                                            <label class="bodyContext">
+                                                <span>{{vm.monthNames[ll.toMonth]}}</span>
+                                                <span>{{ll.toYear}}</span>
+                                            </label>
+                                            <br />
+                                            <label>{{ll.courseOrSkill}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="HashSymbolTags" class="portlet light">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <span class="caption-subject fontStealGreen bold">@L("HashSymbolTags")</span>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="form-group form-md-line-input">
+                                            <input id="hashtags" type="text" class="form-control"
+                                                   ng-model="vm.person.tags"
+                                                   ng-disabled="vm.isReadOnlyMode" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*</div>*@
+        </div>
+}
+<script>
+    function triggerValidation()
+    {
+        $("#personFrom").validate().element("#DocumentNumber");
+    }
+
+    jQuery.validator.addMethod("nric", function (value, element) {
+        return validateRegistrationNo(value);
+    }, abp.localization.localize("InvalidIDFormat"));
+    
+
+    function validateRegistrationNo(value) {
+        var regDocumentType = $('#registrationDocumentTypeId').text();
+
+        if (regDocumentType != null && regDocumentType != regDocumentTypes.notApplicable) {
+            if (value == null) {
+                return false;
+            } else {
+                if (regDocumentType == regDocumentTypes.nricBlue ||
+                    regDocumentType == regDocumentTypes.nricPink ||
+                    regDocumentType == regDocumentTypes.fin) {
+                    return isValidNric(value)
+                }
+            }
+        }
+
+        return true;
+    }
+
+    function isValidNric(regdocumentno) {
+        if (regdocumentno == null || regdocumentno.length != 9) {
+            return false;
+        }
+
+        var st = ['J', 'Z', 'I', 'H', 'G', 'F', 'E', 'D', 'C', 'B', 'A'];
+        var fg = ['X', 'W', 'U', 'T', 'R', 'Q', 'P', 'N', 'M', 'L', 'K'];
+        var weights = [2, 7, 6, 5, 4, 3, 2,];
+
+        var data = regdocumentno.toUpperCase();
+        var prefix = data[0];
+        var suffix = data[8];
+        var weightedSum = 0;
+
+        for (var i = 1; i <= 7; i++) {
+            weightedSum += (parseInt(data[i], 10) * weights[i - 1]);
+        }
+
+        var offset = (prefix == 'T' || prefix == 'G') ? 4 : 0;
+        var index = (weightedSum + offset) % 11;
+        var checksum = null;
+
+        if (prefix == 'S' || prefix == 'T') {
+            checksum = st[index];
+        } else if (prefix = 'F' || prefix == 'G') {
+            checksum = fg[index];
+        }
+
+        return suffix === checksum;
+    }
+</script>

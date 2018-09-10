@@ -1,0 +1,191 @@
+﻿
+@model  MembershipDto
+@using Pulsesync.IngoTPCC.Application.Membership.Dto
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">@L("Health")</div>
+        </div>
+    </div>
+
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @using (var f = Html.BeginSubForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <div class="form-group form-md-line-input margin-bottom-10">
+                            <label class="control-label">@L("LevelOfCare")</label>
+                        </div>
+                        <div class="md-checkbox margin-left-20 padding-bottom-10" ng-repeat="li in vm.levelOfCare">
+                            <input id="{{li.id}}" class="md-check" type="checkbox" value="{{li.description}}" ng-model="li.selected" ng-change="vm.onChangeLevelOfCare(li)">
+                            <label for="{{li.id}}">
+                                <span class="inc"></span>
+                                <span class="check"></span>
+                                <span class="box"></span>
+                                {{li.description}}
+                            </label>
+                        </div>
+                        <p></p>
+                        <h5 class="fontStealGreen bold">@L("MobilityStatus")</h5> 
+
+                        @s.FieldFor(m => m.Ambulant).Attrs(new { ng_model = "vm.workingModel.ambulant", ng_change = "vm.onChangeAmbulant()" })
+
+                        @(s.FieldFor(m => m.AmbulatesWithId)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.workingModel.ambulatesWithId",
+                                ng_change = "vm.initialiseOtherAmbulatesWith($select.selected.description)",
+                                ng_disabled = "!vm.workingModel.ambulant",
+                                ng_required = "vm.workingModel.ambulant",
+                            }).Label(@L("AmbulatesWithId"))
+                            .AsDropDown())
+
+                        <div class="form-group form-md-line-input" ng-if="vm.showOtherAmbulatesWith">
+                            <input type="text" ng-model="vm.workingModel.otherAmbulatesWith" class="form-control" id="othersAmbulatesWith" name="othersAmbulatesWith" placeholder="Provide Other Ambulates With" ng-required="true" required-message="'@L("OthersPleaseSpecifyErrorMessage")'">
+                            <label class="control-label" for="othersAmbulatesWith">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                        </div>
+                        
+                        @s.FieldFor(m => m.NonAmbulant).Attrs(new { ng_model = "vm.workingModel.nonAmbulant", ng_change = "vm.onChangeNonAmbulant()" })
+
+                        @(s.FieldFor(m => m.NonAmbulantSpecifyId)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.workingModel.nonAmbulantSpecifyId",
+                                ng_change = "vm.initialiseOtherNonAmbulantSpecify($select.selected.description)",
+                                ng_disabled = "!vm.workingModel.nonAmbulant",
+                                ng_required = "vm.workingModel.nonAmbulant"
+                            }).Label(@L("NonAmbulantSpecify"))
+                            .AsDropDown())
+
+                        <div class="form-group form-md-line-input" ng-if="vm.showOtherNonAmbulantSpecify">
+                            <input type="text" ng-model="vm.workingModel.otherNonAmbulantSpecify" class="form-control" id="othersNonAmbulantSpecify" name="othersNonAmbulantSpecify" placeholder="Provide Other Non-Ambulant, Please Specify" ng-required="true" required-message="'@L("OthersPleaseSpecifyErrorMessage")'">
+                            <label class="control-label" for="othersAmbulatesWith">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                        </div>
+
+                        <h5 class="fontStealGreen bold">@L("Hearing")</h5>
+
+                        @(s.FieldFor(m => m.HearingId)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.workingModel.hearingId"
+                            })
+                            .AsDropDown())
+
+                        @s.FieldFor(m => m.HardOfHearingLeftEar).Attrs(new { ng_model = "vm.workingModel.hardOfHearingLeftEar" })
+                        @s.FieldFor(m => m.HardOfHearingRightEar).Attrs(new { ng_model = "vm.workingModel.hardOfHearingRightEar" })
+                        @s.FieldFor(m => m.Deaf).Attrs(new { ng_model = "vm.workingModel.deaf" })
+                        @s.FieldFor(m => m.UseHearingAid).Attrs(new { ng_model = "vm.workingModel.useHearingAid" })
+
+                        <h5 class="fontStealGreen bold">@L("EyeSight")</h5>
+
+                        @(s.FieldFor(m => m.EyeSightId)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.workingModel.eyeSightId"
+                            })
+                            .AsDropDown())
+
+                        @s.FieldFor(m => m.ShortSighted).Attrs(new { ng_model = "vm.workingModel.shortSighted" })
+                        @s.FieldFor(m => m.LongSighted).Attrs(new { ng_model = "vm.workingModel.longSighted" })
+                        @s.FieldFor(m => m.Cataract).Attrs(new { ng_model = "vm.workingModel.cataract" })
+                        @s.FieldFor(m => m.Blind).Attrs(new { ng_model = "vm.workingModel.blind" })
+                        @s.FieldFor(m => m.HealthRemarks).Attrs(new { ng_model = "vm.workingModel.healthRemarks" })
+                    }
+                }
+            </div>
+
+            <div ng-switch-default>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-group form-md-line-input margin-bottom-10">
+                        <label class="control-label">@L("LevelOfCare")</label>
+                    </div>
+                    <div class="md-checkbox margin-left-20 padding-bottom-10" ng-repeat="li in vm.levelOfCare">
+                        <input id="{{li.id}}" class="md-check" type="checkbox" value="{{li.description}}" ng-model="li.selected" ng-disabled=true>
+                        <label for="{{li.id}}">
+                            <span class="inc"></span>
+                            <span class="check"></span>
+                            <span class="box"></span>
+                            {{li.description}}
+                        </label>
+                    </div>
+                    <p></p>
+                    <h5 class="fontStealGreen bold">@L("MobilityStatus")</h5> 
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.ambulant)"></div>
+                        <label class="control-label">@L("Ambulant")</label>
+                    </div>                    
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" >{{vm.model.ambulatesWith.description ? vm.model.ambulatesWith.description: '-'}}</div>
+                        <label class="control-label">@L("AmbulatesWith")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.model.ambulatesWith.description=='Others'">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.otherAmbulatesWith ? vm.model.otherAmbulatesWith: '-'}}</div>
+                        <label class="control-label">@L("OtherAmbulatesWith")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.nonAmbulant)"></div>
+                        <label class="control-label">@L("NonAmbulant")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.nonAmbulantSpecify.description ? vm.model.nonAmbulantSpecify.description: '-'}}</div>
+                        <label class="control-label">@L("NonAmbulantSpecify")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.model.nonAmbulantSpecify.description=='Others'">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.otherNonAmbulantSpecify ? vm.model.otherNonAmbulantSpecify: '-'}}</div>
+                        <label class="control-label">@L("OtherNonAmbulantSpecify")</label>
+                    </div>
+                    <h5 class="fontStealGreen bold">@L("Hearing")</h5>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.hearing.description ? vm.model.hearing.description: '-'}}</div>
+                        <label class="control-label">@L("Hearing")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.hardOfHearingLeftEar)"></div>
+                        <label class="control-label">@L("HardOfHearingLeftEar")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.hardOfHearingRightEar)"></div>
+                        <label class="control-label">@L("HardOfHearingRightEar")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.deaf)"></div>
+                        <label class="control-label">@L("Deaf")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.useHearingAid)"></div>
+                        <label class="control-label">@L("UseHearingAid")</label>
+                    </div>
+                    <h5 class="fontStealGreen bold">@L("EyeSight")</h5>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.eyeSight.description ? vm.model.eyeSight.description: '-'}}</div>
+                        <label class="control-label">@L("EyeSight")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.shortSighted)"></div>
+                        <label class="control-label">@L("ShortSighted")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.longSighted)"></div>
+                        <label class="control-label">@L("LongSighted")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.cataract)"></div>
+                        <label class="control-label">@L("Cataract")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.blind)"></div>
+                        <label class="control-label">@L("Blind")</label>
+                    </div>
+                    <div class="form-group form-md-line-input margin-bottom-20">
+                        <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.healthRemarks ? vm.model.healthRemarks: '-'}}</div>
+                        <label class="control-label">@L("HealthRemarks")</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

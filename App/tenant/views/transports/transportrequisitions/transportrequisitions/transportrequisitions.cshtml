@@ -1,0 +1,60 @@
+﻿<div id="TransportRequisitions" class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="portlet light" busy-if="$ctrl.loading">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject">@L("TransportRequisitions")</span>
+                </div>
+                <div class="actions dropdown inputs">
+                    <div class="input-small-new inline-block">
+                        <form action="" class="search-form">
+                            <div class="form-group has-feedback input-inline">
+                                <label for="search" class="sr-only">@L("Search")</label>
+                                <input type="text"
+                                       class="form-control form-control-solid input-circle search-input font-13-main clearable"
+                                       placeholder="search keywords..."
+                                       enter-key="$ctrl.load()"
+                                       ng-model="$ctrl.filter">
+                                <a class="form-control-feedback search-close searchIcon-close fa fa-times"
+                                   ng-click="$ctrl.clearFilter()"></a>
+                                <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                            </div>
+                        </form>
+                    </div>
+                    <a class="icon-wrapper" title="Show associated Details" ng-click="$ctrl.showDetails = !$ctrl.showDetails">
+                        <i ng-show="!$ctrl.showDetails" class="material-icons custom-icon">menu</i>
+                        <i ng-show="$ctrl.showDetails" class="material-icons custom-icon">view_headline</i>
+                    </a>
+                    <a class="icon-wrapper" ui-sref="tenant.transportrequisitionsNew" ng-if="$ctrl.permissions.create">
+                        <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                    </a>
+                    <a class="icon-wrapper" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                        <i class="material-icons custom-icon">more_vert</i>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                        <li ng-repeat="view in $ctrl.views">
+                            <a href="javascript:;" class="bold" ng-click="$ctrl.changeView(view.value)">
+                                {{ $ctrl.L(view.localizedName) }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="portlet-body p-0-top-bottom">
+
+                <div class="filter-results">
+                    <ul class="filter-list">
+                        <li class="filter-list-item" ng-repeat="model in $ctrl.data.items">
+                            <div class="filter-list-item-content">
+                                <a ui-sref="tenant.transportrequisitionsEdit({ id: model.transportRequisition.id })">
+                                    <transportrequisition model="model" show-details="$ctrl.showDetails"></transportrequisition>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <simple-paginator data="$ctrl.data" key="$ctrl.key" on-page-changed="$ctrl.load(requestParams)"></simple-paginator>
+            </div>
+        </div>
+    </div>
+</div>

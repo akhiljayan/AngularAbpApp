@@ -1,0 +1,85 @@
+@using Pulsesync.IngoTPCC.Localization
+
+<style>
+    .ui-grid-cell, .ui-grid-row {
+        height: auto !important;
+    }
+
+    .icon-wrapper.disabled, .icon-wrapper[disabled] {
+        cursor: not-allowed;
+        opacity: .65;
+        filter: alpha(opacity=65);
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+</style>
+<div class="view-content" ng-controller="tenant.views.visitTypes.index as vm">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("VisitTypes")</span>
+                    </div>
+                    <div class="actions dropdown inputs">
+                        <div class="input-small-new inline-block">
+                            <form action="" class="search-form">
+                                <div class="form-group has-feedback input-inline">
+                                    <label for="search" class="sr-only">@L("Search")</label>
+                                    <input type="text"
+                                           class="form-control form-control-solid input-circle search-input font-13-main clearable"
+                                           placeholder="search keywords..."
+                                           enter-key="vm.getVisitTypes()"
+                                           ng-model="vm.filterText">
+                                    <a class="form-control-feedback search-close searchIcon-close fa fa-times"
+                                       ng-click="vm.clearFilter()"></a>
+                                    <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                                </div>
+                            </form>
+                        </div>
+                        <a ng-click="vm.activateSelectedVisitType()" title="Activate" class="icon-wrapper" ng-if="vm.permissions.activate" ng-disabled="!vm.activateFilter">
+                            <span class="ps-icon-1x ps-icon-activate custom-icon grey"></span>
+                        </a>
+                        <a ng-click="vm.deactivateSelectedVisitType()" title="Deactivate" class="icon-wrapper" ng-if="vm.permissions.deactivate" ng-disabled="!vm.deactivateFilter">
+                            <span class="ps-icon-1x ps-icon-deactivate custom-icon grey"></span>
+                        </a>
+                        <a ng-click="vm.createVisitType()" title="Add" class="icon-wrapper" ng-if="vm.permissions.create">
+                            <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                        </a>
+                        <a ng-click="vm.deleteSelectedVisitType()" title="Delete" class="icon-wrapper" ng-if="vm.permissions.delete">
+                            <i class="material-icons custom-icon">delete</i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="portlet-body">
+                    @*<div class="row margin-bottom-10">
+                            <div class="col-md-12">
+                                <div class="inputs inputs-full-width">
+                                    <div class="portlet-input">
+                                        <div class="input-group">
+                                            <input ng-model="vm.filterText" enter-key="vm.getVisitTypes()" auto-focus class="form-control" placeholder="@L("SearchWithThreeDot")" type="text">
+                                            <span class="input-group-btn">
+                                                <button ng-click="vm.getVisitTypes()" class="btn default" type="submit"><i class="icon-magnifier"></i></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div busy-if="vm.loading">
+                                <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-resize-columns dir=@(CultureHelper.IsRtl ? "rtl" : "")></div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <simple-paginator data="vm.data" on-page-changed="vm.loadData(requestParams)"></simple-paginator>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

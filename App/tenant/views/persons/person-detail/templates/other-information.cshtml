@@ -1,0 +1,78 @@
+﻿@model CreateOrUpdatePersonInput
+
+@using Pulsesync.IngoTPCC.Application.Person.Dto;
+
+@{
+    var autosizeClass = "animate msd-elastic: \\n;";
+}
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("OtherInformation")</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="edit">
+                @using (var f = Html.BeginSubForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        @(s.FieldFor(m => m.HighestEducationId)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.highestEducationId"
+                            })
+                            .AsDropDown())
+
+                        @(s.FieldFor(m => m.LastOccupationId)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.lastOccupationId"
+                            })
+                            .AsDropDown())
+
+                        @(s.FieldFor(m => m.LiftLandingId)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.liftLandingId"
+                            })
+                            .AsDropDown())
+
+                        @(s.FieldFor(m => m.LivingArrangementId)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.livingArrangementId"
+                            })
+                            .AsDropDown())
+
+                        @(s.FieldFor(m => m.Remarks)
+                            .AddClass(autosizeClass)
+                            .Attrs(new
+                            {
+                                ng_model = "vm.model.remarks"
+                            })
+                            .Rows(4))
+                    }
+                }
+            </div>
+            <div class="view" ng-switch-default>
+                <strong>@L("HighestEducation")</strong>
+                <p>{{ vm.model.highestEducation.description || '-' }}</p>
+
+                <strong>@L("LastOccupation")</strong>
+                <p>{{ vm.model.lastOccupation.description || '-' }}</p>
+
+                <strong>@L("LiftLanding")</strong>
+                <p>{{ vm.model.liftLanding.description || '-' }}</p>
+
+                <strong>@L("LivingArrangement")</strong>
+                <p>{{ vm.model.livingArrangement.description || '-' }}</p>
+
+                <strong>@L("Remarks")</strong>
+                <p>{{ vm.model.remarks || '-' }}</p>
+            </div>
+        </div>
+    </div>
+</div>

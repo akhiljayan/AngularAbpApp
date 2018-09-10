@@ -1,0 +1,165 @@
+﻿@using Pulsesync.IngoTPCC.Application.Admission
+@model AdmissionDto
+<style type="text/css">
+    .record-status {
+        height: auto;
+        width: auto;
+    }
+
+    .record-status-image {
+        max-width: 100%;
+    }
+
+    .record-status-content {
+        position: absolute;
+        height: auto;
+        width: auto;
+        top: 50%;
+        left: 50%;
+        width: auto;
+        /*font-size:24px;*/
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+        word-wrap: break-word;
+        font-weight: 700;
+        text-align: center;
+    }
+</style>
+<div id="General" class="general portlet light" ng-controller="tenant.views.admission.generalCardView as general">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("General")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a class="icon-wrapper" ng-if="general.mode.toLowerCase()=='view' && !vm.isNew && vm.permissions.editAdmission" ng-click="general.edit()">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+            <a ng-click="general.print()" class="icon-wrapper" ng-if="general.mode.toLowerCase()=='view' && !vm.isNew && vm.permissions.print">
+                <i class="material-icons custom-icon">print</i>
+            </a>
+        </div>
+        <div class="tools">
+            <a class="remove" ng-if="general.mode.toLowerCase()=='edit' && !vm.isNew" ng-click="general.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="general.mode">
+                @*edit mode*@
+                <div ng-switch-when="edit">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <div class="col-md-8 col-sm-8 col-xs-8">
+                                @{
+                                    var attributes = new Dictionary<string, object>();
+                                    attributes.Add("role", "form");
+                                    attributes.Add("id", "admissionGeneralForm");
+                                    attributes.Add("name", "general.admissionGeneralForm");
+                                    attributes.Add("novalidate", "");
+                                    attributes.Add("action", "#");
+                                    attributes.Add("angular-validator-submit", "general.save(general.admission)");
+                                    attributes.Add("angular-validator", "");
+                                    attributes.Add("ng-validate", "general.validationOptions");
+                                }
+                                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("form-validation horizontal-form")))
+                                {
+                                    using (var s = f.BeginSection())
+                                    {
+                                        <div class="form-group form-md-line-input" ng-if="general.mode.toLowerCase()=='edit' && !vm.isNew">
+                                            <input type="text" ng-disabled="true" disabled ng-model="vm.admission.admissionNumber" class="form-control" id="processedBy" ng-maxlength="300" required>
+                                            <label class="control-label" for="processedBy">@L("AdmissionNumber")<span class="required">*</span></label>
+                                        </div>
+                                        @s.FieldFor(m => m.Centre).AsDropDown().Attrs(new {ng_model = "vm.admission.centre.id", name = "AdmissionCentre", repeat = "general.centreLookup", ui_select_required = "ui-select-required", required_message = ""})
+                                        <div class="form-group form-md-line-input">
+                                            <input type="text" ng-disabled="true" disabled ng-model="vm.referralServiceType.serviceType.description" class="form-control" id="processedBy" ng-maxlength="300" required>
+                                            <label class="control-label" for="processedBy">@L("ReferralServiceType")<span class="required">*</span></label>
+                                        </div>
+                                        @s.FieldFor(m => m.ILTCEpisodeServiceType).AsDropDown().Attrs(new {ng_model = "vm.referralServiceType.iltcEpisodeServiceTypeId", ng_disabled = "vm.isReadOnlyMode", name = "centre"})
+                                        @s.FieldFor(m => m.AdmittedOn).Attrs(new {ng_model = "vm.admission.admittedOn", validator = "general.validateAdmissionDate()", invalid_message = "'Admission Date must be later than Approval Date.'", name = "admission.admittedOn", data_date_format = "DD-MMM-YYYY hh:mm A", ng_required = "true", required_message = "You must provide a value for Admission Date"}).AddClass("admitted-on-admission")
+                                        @s.FieldFor(m => m.PlannedDischargeDate).DatePickerOptions(new {data_date_end_date = "0d"}).Attrs(new {ng_model = "vm.admission.plannedDischargeDate", validator = "general.validateDischargeDate()", invalid_message = "'Planned Discharge Date must be later than Admission Date.'", Validate = "false"})
+                                        @s.FieldFor(m => m.Remarks).Attrs(new {ng_model = "vm.admission.remarks", name = "admission-remarks", ng_disabled = "vm.isReadOnlyMode", ng_maxlength = "4000"}).AddClass("form-control animate msd-elastic: \\n;  ng-valid ng-not-empty ng-dirty ng-valid-parse")
+                                    }
+
+                                    <div class="form-actions pull-right" ng-if="!vm.isNew">
+                                        <button type="submit" card-button-busy="vm.isSaving" class="linkButton btn-small">
+                                            <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                                        </button>
+                                        <a class="linkButton btn-small" card-button-busy="vm.isSaving" ng-click="general.close()">
+                                            <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-4" style="text-align: center; padding-top: 50px;">
+                                <div class="record-status">
+                                    <img class="record-status-image" src='{{general.statusimageencoded}}'/>
+                                    <div class="record-status-content">
+                                        <h3 ng-if="vm.admission.status == 0" class="bold respose-text">Admitted <br/>{{vm.admission.lengthOfStay}} {{vm.admission.lengthOfStay == '1' ? 'Day' : 'Days'}}<br/><small class="font-14-main">({{vm.admission.lengthOfStay == '1' ? 'Day of Admission' : 'Days of Admission'}})</small></h3>
+                                        <h3 ng-if="vm.admission.status == 1" class="bold respose-text">Discharged <br/> {{vm.admission.lengthOfStay}} <br/><small class="font-14-main">({{vm.admission.lengthOfStay == '1' ? 'Number of Day' : 'Number of Days'}})</small></h3>
+                                    </div>
+                                </div>
+                                <span style="top: 17em;" class="referral-view font-14-main bold">View Referral</span><br/>
+                                <span class="referral-link"><a style="top: 18.5em;" class="referral-view redirect-anchor bold fontStealGreen" href="#!/tenant/referral/{{vm.referralServiceType.referral.id}}">{{vm.referralServiceType.referral.referralCode}}</a></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @*view mode*@
+                <div ng-switch-default>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <div class="col-md-8 col-sm-8 col-xs-8">
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{vm.admission.admissionNumber}}</div>
+                                    <label class="control-label view-label" for="referralCode">@L("AdmissionNumber")<span class="required">*</span></label>
+                                </div>
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{vm.admission.centre.name}}</div>
+                                    <label class="control-label view-label" for="referralCode">@L("Centre")<span class="required">*</span></label>
+                                </div>
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{vm.referralServiceType.serviceType.description}}</div>
+                                    <label class="control-label view-label" for="referralCode">@L("ReferralServiceType")<span class="required">*</span></label>
+                                </div>
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{vm.referralServiceType.iltcEpisodeServiceTypeId ? general.getMasterDataDescription(vm.referralServiceType.iltcEpisodeServiceTypeId, general.iltcEpisodeServiceType) : "-"}}</div>
+                                    <label class="control-label view-label" for="referralCode">@L("IltcServiceType")</label>
+                                </div>
+                                <div class="form-group form-md-line-input">
+                                    <div ng-if="vm.admission.admittedOn" class="form-control remove-border auto-height view-text">{{vm.admission.admittedOn | date : "dd-MMM-y hh:mm a" }}</div>
+                                    <label class="control-label view-label" for="referralCode">@L("AdmittedOn")</label>
+                                </div>
+                                <div class="form-group form-md-line-input">
+                                    <div ng-if="vm.admission.plannedDischargeDate" class="form-control remove-border auto-height view-text">{{vm.admission.plannedDischargeDate | date : "dd-MMM-y" }}</div>
+                                    <div ng-if="!vm.admission.plannedDischargeDate" class="form-control remove-border auto-height view-text">-</div>
+                                    <label class="control-label view-label" for="referralCode">@L("PlannedDischargeDate")</label>
+                                </div>
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{vm.admission.remarks ? vm.admission.remarks : "-"}}</div>
+                                    <label class="control-label view-label" for="referralCode">@L("Remarks")</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-4" style="text-align: center; padding-top: 50px;">
+                                <div class="record-status">
+                                    <img class="record-status-image" src='{{general.statusimageencoded}}' />
+                                    <div class="record-status-content">
+                                        <span ng-if="vm.admission.status == 0" class="bold respose-text">Admitted <br />{{vm.admission.lengthOfStay}} {{vm.admission.lengthOfStay == '1' ? 'Day' : 'Days'}}<br /><small class="font-14-main">({{vm.admission.lengthOfStay == '1' ? 'Day of Admission' : 'Days of Admission'}})</small></span>
+                                        <span ng-if="vm.admission.status == 1" class="bold respose-text">Discharged <br /> {{vm.admission.lengthOfStay}} <br /><small class="font-14-main">({{vm.admission.lengthOfStay == '1' ? 'Number of Day' : 'Number of Days'}})</small></span>
+                                    </div>
+                                </div>
+                                <span style="top: 17em;" class="referral-view font-14-main bold">View Referral</span><br />
+                                <span class="referral-link"><a style="top: 18.5em;" class="referral-view redirect-anchor bold fontStealGreen" href="#!/tenant/referral/{{vm.referralServiceType.referral.id}}">{{vm.referralServiceType.referral.referralCode}}</a></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+</script>

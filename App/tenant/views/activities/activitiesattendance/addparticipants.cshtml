@@ -1,0 +1,35 @@
+﻿@model GetParticipantsInput
+
+@using Pulsesync.IngoTPCC.Application.MembershipBookings.Dto
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <div class="caption-subject">
+                @L("AddParticipants")
+            </div>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <add-participant-with-select-list selected-person-list="$ctrl.selectedParticipants"
+                                                  activity-id="$ctrl.activityId"
+                                                  event-id="$ctrl.eventId"
+                                                  person-group-id="$ctrl.centrePersonGroupId"
+                                                  attendance-date="$ctrl.attendanceDate"></add-participant-with-select-list>
+
+                <div class="form-actions margin-top-10 noborder pull-right">
+                    <button type="button" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small"
+                            ng-click="$ctrl.submit();">
+                        <i class="material-icons ps-btn-material">check</i>Save
+                    </button>
+                    <button type="button" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small"
+                            ng-click="$ctrl.cancel()">
+                        <i class="material-icons ps-btn-material">clear</i>Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

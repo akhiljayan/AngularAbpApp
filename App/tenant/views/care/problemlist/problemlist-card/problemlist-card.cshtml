@@ -1,0 +1,18 @@
+﻿<div class="filter-results-card problem-list">
+    <ul class="filter-list">
+        <li class="filter-list-item" ng-repeat="model in $ctrl.data.items">
+            <div class="filter-list-item-content">
+
+                <problemlist-item model="model"
+                                  permissions="$ctrl.permissions"
+                                  show-details="$ctrl.showDetails"
+                                  on-edit="$ctrl.edit(event)"
+                                  on-select="$ctrl.selectForProgressNote(event)"
+                                  on-change-status="$ctrl.changeStatus(event)"></problemlist-item>
+
+            </div>
+        </li>
+    </ul>
+</div>
+
+<simple-paginator data="$ctrl.data" key="$ctrl.key" small-page-size="true" on-page-changed="$ctrl.load(requestParams)"></simple-paginator>

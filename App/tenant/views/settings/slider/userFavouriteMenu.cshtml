@@ -1,0 +1,68 @@
+﻿<div class="view-content" ng-controller="tenant.views.settings.slider.userFavouriteMenu as vm">
+    <div class="portlet light margin-top-10 margin-bottom-10">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject">@L("UserFavouriteMenu")</span>
+            </div>
+            <div class="actions dropdown inputs">
+
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-12">
+                        <div class="portlet-body" style="display:block">
+
+                            @{
+                                var attributes = new Dictionary<string, object>();
+                                attributes.Add("role", "form");
+                                attributes.Add("id", "userFavouriteMenuForm");
+                                attributes.Add("name", "userFavouriteMenuForm");
+                                attributes.Add("novalidate", "");
+                                attributes.Add("action", "#");
+                                attributes.Add("angular-validator-submit", "vm.save()");
+                                attributes.Add("angular-validator", "");
+                            }
+                            @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("form-validation horizontal-form")))
+                            {
+                                using (var s = f.BeginSection())
+                                {
+                                    <div class="form-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span>@L("UserFavouriteMenuInfo")</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            &nbsp;
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <select ps-Multiselect multiple="multiple" id="favouriteMenuList" name="favouriteMenuList[]" repeat="vm.entityMenuList"
+                                                        ms-keep-sort-order="true"
+                                                        ms-sortable="true"
+                                                        ms-source-title="@L("MultiselectLeftListBox")" 
+                                                        ms-destination-title="@L("MultiselectRightListBox")"
+                                                        ms-selection-limit=10
+                                                        ms-selection-limit-message="@L("UserFavouriteMenuLimitSelection")"
+                                                        ng-model="vm.userFavouriteMenuList"></select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                }
+
+                                <div class="form-actions margin-top-10 noborder pull-right">
+                                    <button type="submit" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.isSavingDisabled" ng-class="{'disabled-link': vm.isSavingDisabled }"><i class="material-icons ps-btn-material">check</i>Save</button>
+                                    <button type="button" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.isSavingDisabled"  ng-class="{'disabled-link': vm.isSavingDisabled }" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+                                </div>
+                            }
+
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

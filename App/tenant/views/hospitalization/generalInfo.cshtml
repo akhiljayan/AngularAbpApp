@@ -1,0 +1,81 @@
+﻿@using Pulsesync.IngoTPCC.Hospitalization
+@model HospitalizationDto
+<style type="text/css">
+    #generalForm > .help-block {
+        position: inherit !important;
+    }
+
+    #hospitalisationInfoForm > .help-block {
+        position: inherit !important;
+    }
+</style>
+<div id="General" class="general portlet light" ng-controller="tenant.views.hospitalization.generalInfo as gvm">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("General")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a class="icon-wrapper" ng-if="gvm.mode.toLowerCase()=='view' && !vm.isNew && vm.permissions.edit && vm.hospitalization.isCancelled" ng-click="gvm.edit()">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools">
+            <a class="remove" ng-if="gvm.mode.toLowerCase()=='edit' && !vm.isNew" ng-click="gvm.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="gvm.mode">
+                <!--edit mode-->
+                <div ng-switch-when="edit">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        @{
+                            var attributes = new Dictionary<string, object>();
+                            attributes.Add("role", "form");
+                            attributes.Add("id", "generalForm");
+                            attributes.Add("name", "gvm.hospitalizationGeneralForm");
+                            attributes.Add("novalidate", "");
+                            attributes.Add("action", "#");
+                            attributes.Add("angular-validator-submit", "gvm.save(vm.hospitalization)");
+                            attributes.Add("angular-validator", "");
+                            attributes.Add("ng-validate", "gvm.validationOptions");
+                        }
+                        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("form-validation horizontal-form")))
+                        {
+
+                            <person-ui-select person-id="vm.hospitalization.person.id" uiselect-disabled="vm.personDisabled"></person-ui-select>
+
+                                <div class="form-actions pull-right" ng-if="!vm.isNew">
+                                    <button type="submit" card-button-busy="vm.isSaving" class="linkButton btn-small">
+                                        <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                                    </button>
+                                    <a class="linkButton btn-small" card-button-busy="vm.isSaving" ng-click="gvm.close()">
+                                        <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                                    </a>
+                                </div>
+                        }
+                    </div>
+                </div>
+
+                <!--view mode-->
+                <div ng-switch-default>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.hospitalization.person.name}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("Person")<span class="required">*</span></label>
+                        </div>
+                        <div class="form-group form-md-line-input" ng-if="vm.hospitalization.isCancelled">
+                            <div class="form-control remove-border auto-height view-text">{{vm.hospitalization.cancellationReason}}</div>
+                            <label class="control-label view-label" for="referralCode">@L("CancellationReasonNew")<span class="required">*</span></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+</script>

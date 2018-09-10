@@ -1,0 +1,94 @@
+﻿<div busy-if="vm.loading">
+    <div id="General" class="portlet light" ng-controller="tenant.views.referral.generalView as generalReferral">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject">@L("General")</span>
+            </div>
+            <div class="actions dropdown inputs">
+                <a class="icon-wrapper" ng-if="generalReferral.mode.toLowerCase()=='view' && !vm.isNew && vm.permissions.edit" ng-click="generalReferral.edit()">
+                    <i class="material-icons custom-icon">edit</i>
+                </a>
+            </div>
+            <div class="tools">
+                <a class="remove" ng-if="generalReferral.mode.toLowerCase()=='edit' && !vm.isNew" ng-click="generalReferral.close()"></a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div ng-switch="generalReferral.mode">
+                    @*edit mode*@
+                    <div ng-switch-when="edit">
+                        <form role="form" id="generalViewForm" name="generalViewForm" novalidate action="#" class="form-validation horizontal-form" angular-validator-submit="generalReferral.save(generalReferral.referral)" angular-validator>
+                            <div class="col-md-12">
+                                <div class="form-group form-md-line-input">
+                                    <input type="text" ng-disabled="true" ng-if="!vm.isNew" disabled ng-model="generalReferral.referral.referralCode" @*ng-model="vm.referral.referralCode"*@ class="form-control" id="referralCode" ng-maxlength="300" required>
+                                    <label class="control-label" for="referralCode">@L("ReferralCode")<span class="required">*</span></label>
+                                </div>
+                                <div class="form-group form-md-line-input">
+                                    <input type="text" ng-disabled="true" disabled ng-model="generalReferral.referral.processedByUserName" @*ng-model="vm.referral.processedByUserName"*@ class="form-control" id="processedBy" ng-maxlength="300" required>
+                                    <label class="control-label" for="processedBy">@L("ProcessedBy")<span class="required">*</span></label>
+                                </div>
+                                <div class="form-group form-md-line-input">
+                                    <ui-select name="CareCoordinator" id="CareCoordinator" ui-select-required ui-select-validation ng-model="generalReferral.referral.careCoordinatorId" theme="select2" title="Choose a By Person">
+                                        <ui-select-match placeholder="Select Care Coordinator">
+                                            {{$select.selected.description}}
+                                            <a class="fa fa-times" ng-click="$select.clear($event);"></a>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="m.id as m in vm.careCoordinatorByMaster | filter: { description: $select.search }">
+                                            <span ng-bind-html="m.description | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <label for="caregiverTrainedBy" class="control-label">@L("CareCoordinator")<span class="required">*</span></label>
+                                </div>
+                                @*<user-ui-select user-id="generalReferral.referral.careCoordinatorId" uiselect-disabled="false" label="'Care Coordinator'"></user-ui-select>*@
+
+                                <div class="form-group form-md-line-input">
+                                    <textarea ng-disabled="vm.referral.disabled" class="form-control animate msd-elastic: \n;  ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched" cols="20" data-val="true" data-val-length="The field Remarks must be a string with a maximum length of 4000." data-val-length-max="4000" id="Remarks" name="Remarks" ng-model="generalReferral.referral.referralRemarks" @*ng-model="vm.referral.referralRemarks"*@ rows="4" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 89px;"></textarea>
+                                    <label class="control-label" for="remarks">@L("Remarks")</label>
+                                </div>
+
+                                <div class="form-actions pull-right" ng-if="!vm.isNew">
+                                    <button type="submit" card-button-busy="vm.isSaving" class="linkButton btn-small">
+                                        <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                                    </button>
+                                    <a class="linkButton btn-small" card-button-busy="vm.isSaving" ng-click="generalReferral.close()">
+                                        <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                                    </a>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+
+                    @*view mode*@
+                    <div ng-switch-default>
+                        <div class="col-md-12">
+
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{vm.referral.referralCode ? vm.referral.referralCode : "-"}}</div>
+                                <label class="control-label view-label" for="referralCode">@L("ReferralCode")<span class="required">*</span></label>
+                            </div>
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{vm.referral.processedByUserName ? vm.referral.processedByUserName : "-"}}</div>
+                                <label class="control-label view-label" for="processedBy">@L("ProcessedBy")</label>
+                            </div>
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{vm.referral.careCoordinatorUserName ? vm.referral.careCoordinatorUserName : "-"}}</div>
+                                <label class="control-label view-label" for="careCoordinator">@L("CareCoordinator")</label>
+                            </div>
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text" style="white-space: pre-wrap;">{{vm.referral.referralRemarks ? vm.referral.referralRemarks : "-"}}</div>
+                                <label class="control-label view-label" for="remarks">@L("Remarks")</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+</script>

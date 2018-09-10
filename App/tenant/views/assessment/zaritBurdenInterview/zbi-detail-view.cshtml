@@ -1,0 +1,104 @@
+﻿@using Pulsesync.IngoTPCC.Authorization
+@using Pulsesync.IngoTPCC.Application.Assessment.ZaritBurdenInterviews.Dto
+@model ZaritBurdenInterviewDto
+
+<div id="ZaritBurdenInterview" class="row-class">
+
+    <!-- Person Header & Action buttons -->
+    <ps-uib-tabset tab-template="false" is-pinned="vm.personHeaderisPinned" style="margin-top: -10px;">
+        <ps-uib-tab-person-header>
+            <person-header person-id="vm.model.actualAssessment.personId" referral-id="vm.model.actualAssessment.referralId"></person-header>
+        </ps-uib-tab-person-header>
+
+        <ps-uib-tab-button>
+            <div class="col-md-12 col-sm-12" style="padding: 10px 0px 0px 0px;">
+                <div class="form-actions pull-right txt-align-cntr">
+
+                    <a class="linkButton btn-small no-right-left-padding" ng-click="vm.save()" ng-if="vm.permissions.edit && !vm.model.isConfirmed && !vm.model.isCancelled" ng-class="{'disabled-link': vm.isSavingDisabled }">
+                        <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                    </a>
+                    <a class="linkButton btn-small no-right-left-padding" ng-click="vm.save(true)" ng-if="vm.permissions.edit && !vm.model.isConfirmed && !vm.model.isCancelled">
+                        <i class="ps-icon-1x ps-icon-savenclose grey"></i> @L("SaveAndClose")
+                    </a>
+                    <a class="linkButton btn-small no-right-left-padding" ng-click="vm.clone()" ng-if="vm.permissions.copyExisting && !vm.isNew && !vm.model.isCancelled">
+                        <i class="material-icons  font-18-main v-top">content_copy</i> @L("Copy")
+                    </a>
+                    <a class="linkButton btn-small no-right-left-padding" ng-click="vm.confirm()" ng-if="vm.permissions.confirm && !vm.isNew && !vm.model.isConfirmed && !vm.model.isCancelled">
+                        <i class="material-icons  font-18-main v-top">lock</i> @L("Confirm")
+                    </a>
+                    <a class="linkButton btn-small no-right-left-padding" ng-click="vm.cancel()" ng-if="vm.permissions.cancel && !vm.isNew && !vm.model.isCancelled">
+                        <i class="material-icons  font-18-main v-top">block</i> @L("Cancel")
+                    </a>
+                    <a class="linkButton btn-small no-right-left-padding" ng-click="vm.delete()" ng-if="!vm.isNew && vm.permissions.delete && !vm.model.isConfirmed && !vm.model.isCancelled">
+                        <i class="material-icons  font-18-main v-top">delete_forever</i> @L("Delete")
+                    </a>
+                    <a class="linkButton btn-small no-right-left-padding" ng-click="vm.close()" ng-if="!vm.loading">
+                        <i class="material-icons  font-18-main v-top">close</i> @L("Close")
+                    </a>
+                </div>
+            </div>
+        </ps-uib-tab-button>
+    </ps-uib-tabset>
+
+    <div class="tab-content">
+        <div id="AssessmentDetails" class="tab-pane fade in active">
+            <div class="col-md-12 col-sm-12">
+                <form action="" angular-validator="" angular-validator-submit="vm.save($event)" dirty-check="" method="post" name="vm.form" novalidate="" class="ng-valid-maxdate ng-valid-angular-validator ng-valid-required ng-dirty ng-valid-parse ng-valid ng-valid-ui-select-required">
+
+                    <assessment-general-view id="General" mode="vm.mode" model="vm.model" permissions="vm.permissions"></assessment-general-view>
+                    <!-- ZaritBurdenInterview Supporting Info-->
+                    <div class="row">
+                        <div class="col-md-10 col-sm-12 col-md-offset-1">
+                            <div class="portlet light">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <span class="caption-subject">Zarit Burden Interview Info</span>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    @{
+                                        var attributes = new Dictionary<string, object>();
+                                        attributes.Add("role", "form");
+                                        attributes.Add("id", "residentAssessmentForm");
+                                        attributes.Add("name", "residentAssessmentForm");
+                                        attributes.Add("novalidate", "");
+                                        attributes.Add("action", "#");
+                                        attributes.Add("angular-validator", "");
+                                    }
+                                    @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body ng-pristine ng-invalid")))
+                                    {
+                                        using (var s = f.BeginSection())
+                                        {
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    @s.FieldFor(sm => sm.FamilyMemberCaregiverId).AsDropDown().Attrs(new { ng_model = "vm.model.actualAssessment.familyMemberCaregiverId", repeat = "vm.model.familyMemberCaregiverMaster", ng_disabled = "vm.model.disabled", name = "familyMemeberCaregiverId", ng_change = "vm.OnChangeFamilyMember($select.selected)" })
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    @s.FieldFor(sm => sm.NameOfCaregiver).Attrs(new { ng_model = "vm.model.actualAssessment.nameOfCaregiver", ng_disabled = "vm.model.disabled || vm.disabledNameOfCaregiver", ng_required = "true", required_message = "You must provide a value for Name of Caregiver." })
+                                                </div>
+                                                <div class="col-md-6">
+                                                    @s.FieldFor(sm => sm.RelationshipId).AsDropDown().Attrs(new { ng_model = "vm.model.actualAssessment.relationshipId", ng_disabled = "vm.model.disabled || vm.disabledRelationship", ui_select_required = "ui-select-required", required_message = "You must provide a value for Relationship." })
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    @s.FieldFor(sm => sm.NameOfAssessorId).AsDropDown().Attrs(new { ng_model = "vm.model.actualAssessment.nameOfAssessorId", repeat = "vm.model.userMaster", name = "nameOfAssessorId", ng_disabled = "vm.model.disabled", ui_select_required = "ui-select-required", required_message = "You must provide a value for Name of Assessor." })
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <assessment-question-view id="AssessmentQuestion" mode="vm.mode" model="vm.model" permissions="vm.permissions"></assessment-question-view>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+﻿<div id="SimpleListPaginatorPanel">
+    <div class="row" style="padding-top: 15px;">
+        <div class="col-md-12">
+            <div>
+                <select class="pagination-page-sizes"
+                        ng-model="$ctrl.pageSize"
+                        ng-options="pageSizes as pageSizes for pageSizes in $ctrl.pageSizes"
+                        ng-change="$ctrl.reset()"></select> records
+                <span style="padding-left: 20px;">
+                    Showing {{ $ctrl.recordFrom }} to {{ $ctrl.recordTo }}
+                    of {{ $ctrl.data.totalCount }} entries
+                </span>
+                <div class="pull-right">
+                    <ul uib-pagination
+                        class="pagination-sm"
+                        style="margin-top: 0px;"
+                        total-items="$ctrl.data.totalCount"
+                        items-per-page="$ctrl.pageSize"
+                        previous-text="&lsaquo;"
+                        next-text="&rsaquo;"
+                        boundary-link-numbers="true"
+                        max-size="5"
+                        ng-model="$ctrl.currentPage"
+                        ng-change="$ctrl.pageChanged()"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

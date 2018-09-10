@@ -1,0 +1,72 @@
+﻿<div class="row">
+    <div class="col-md-10">
+        <div class="row margin-bottom-10">
+            <div class="col-md-12 flex-center">                
+                <span class="caption margin-right-5">{{ $ctrl.model.personName }}</span>
+                <span ng-if="$ctrl.model.personRegistrationDocumentNumber" class="otherText uppercase">
+                    ({{ $ctrl.model.personRegistrationDocumentNumber }})
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="pull-right margin-top-5">
+            <i class="fa fa-unlock" style="font-size: 20px;" title="Pending Confirmation" ng-if="!$ctrl.model.isConfirmed && !$ctrl.model.isCancelled"></i>
+            <i class="fa fa-lock" style="font-size: 20px;" title="Confirmed" ng-if="$ctrl.model.isConfirmed  && !$ctrl.model.isCancelled"></i>
+            <i class="fa fa-ban" style="font-size: 20px;" title="Cancelled" ng-if="$ctrl.model.isCancelled"></i>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <div class="row margin-bottom-10">
+            <div class="col-md-12 flex-center">
+                <span class="otherText" ng-if="$ctrl.model.appointmentDateTime">
+                    Appointment on {{$ctrl.model.appointmentDateTime | date : 'dd-MMM-y hh:mm a'}}
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="pull-right">
+            <span class="otherText" ng-if="$ctrl.model.transportArrangementRequired || $ctrl.model.nurseCompanionOrEscortRequired">
+                Require: <span class="otherText bold" ng-if="$ctrl.model.transportArrangementRequired">Transport</span>&nbsp;
+                <span class="otherText bold" ng-if="$ctrl.model.transportArrangementRequired && $ctrl.model.nurseCompanionOrEscortRequired">&</span>&nbsp;
+                <span class="otherText bold" ng-if="$ctrl.model.nurseCompanionOrEscortRequired">Escort</span>
+            </span>
+        </div>
+    </div>
+</div>
+<div class="row" ng-if="$ctrl.showDetails">
+    <div class="col-md-8">
+        <div class="row margin-bottom-10">
+            <div class="col-md-12 flex-center">
+                <span class="otherText" ng-if="$ctrl.model.appointmentLocation">
+                    Appointment at <span class="otherText bold">{{$ctrl.model.appointmentLocation}}</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="pull-right">
+            <span class="otherText">
+                Status:
+                <span class="otherText bold">{{$ctrl.model.status | enumText: 'medicalAppointmentStatusType'}}</span>
+            </span>
+        </div>
+    </div>
+</div>
+<div class="row" ng-if="$ctrl.showDetails">
+    <div class="col-md-12">
+        <div class="row margin-bottom-10">
+            <div class="col-md-12 flex-center">
+                <span ng-if="$ctrl.model.appointmentTypeId">
+                    Appointment Type: <span class="otherText bold">{{$ctrl.model.appointmentType.description}}</span>
+                </span>
+                <span ng-if="$ctrl.model.specialistOutpatientClinicId">
+                    ({{$ctrl.model.specialistOutpatientClinic.description}})
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

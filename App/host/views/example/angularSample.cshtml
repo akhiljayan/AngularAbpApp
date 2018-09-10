@@ -1,0 +1,172 @@
+﻿<style>
+    div i {
+        color: rgba(0, 0, 0, 0.54);
+        vertical-align: middle;
+    }
+
+    .caption-helper {
+        padding: 0;
+        margin: 0;
+        line-height: 13px;
+        color: #90949c;
+        font-size: 13px;
+        font-weight: 400;
+    }
+</style>
+
+<div class="row" ng-controller="tenant.views.example.angularSample as vm">
+    <div class="col-md-6 col-sm-6">
+
+        <simple-paginator-example></simple-paginator-example>
+
+        <div class="portlet light">
+            <div class="portlet-title removeBorder">
+                <div class="caption">
+                    <span class="caption-subject">Share a sample</span>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <h3>Lookup</h3>
+                <p>Selected: {{person.selected}}</p>
+                <ui-select ng-model="person.selected" theme="select2" style="min-width: 305px;" title="Choose a person">
+                    <ui-select-match placeholder="Select a person in the list or search his name/age...">{{$select.selected.name}}</ui-select-match> <button type="button">Click Me!</button>
+                    <ui-select-choices repeat="person in people | filter:  $select.search">
+                        <div ng-bind-html="person.name | highlight: $select.search"></div>
+                        <small>
+                            email: {{person.email}}
+                            age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>
+                        </small>
+                    </ui-select-choices>
+                </ui-select>
+
+
+                <h3>Drop Down List</h3>
+                <p>Selected: {{ctrl.country.selected}}</p>
+                <ui-select ng-model="ctrl.country.selected" theme="selectize" title="Choose a country">
+                    <ui-select-match placeholder="Select or search a country in the list...">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="country in countries | filter: $select.search">
+                        <span ng-bind-html="country.name | highlight: $select.search"></span>
+                        (<small ng-bind-html="country.code | highlight: $select.search"></small>)
+                    </ui-select-choices>
+                </ui-select>
+
+                <h3>Drop Down List Filtering</h3>
+                <p>Selected: {{ctrl.dropdown.selected}}</p>
+                <ui-select ng-model="test" theme="selectize" title="Choose a thing">
+                    <ui-select-match placeholder="Select or search a thing in the list...">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices group-by="someGroupFn" repeat="m in dropdowntest | filter: $select.search">
+                        <span ng-bind-html="m.name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+
+                <h3>Date Picker</h3>
+                <div id="StartDate" class="form-group form-md-line-input">
+                    <div class="input-group date date-picker" data-provide="datepicker" data-date-format="dd M yyyy">
+                        <input type="text" class="form-control" placeholder="DD MMM YYYY" ng-model="dateFormat" mask="@("39 @@@ 9999 ")" Validate="false" Restrict="reject">
+                        <input type="text" id="bulletinStartDateHidden" hidden>
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        <label class="control-label" for="bulletinStartDate">@*DD MMM YYYY*@</label>
+                    </div>
+                    <span class="help-block"> Select date </span>
+                </div>
+
+
+                <div id="EndDate" class="form-group form-md-line-input">
+                    <div class="input-group date date-picker" data-provide="datepicker" data-date-format="M yyyy">
+                        <input type="text" class="form-control" placeholder="MMM YYYY" ng-model="monthOnly" mask="@("@@@ 9999 ")" Validate="false" Restrict="reject">
+                        <input type="text" id="bulletinEndDateHidden" hidden>
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        <label class="control-label" for="bulletinEndDate">@*MMM YYYY*@</label>
+                    </div>
+                    <span class="help-block"> Select date </span>
+                </div>
+
+
+                <h3>Date Time Picker</h3>
+                <div class="form-group form-md-line-input">
+                    <div class='input-group date' id='datetimepicker1'>
+                        <input type='text' class="form-control" placeholder="DD MMM YYYY hh:mm A" ng-model="dateTimePicker" mask="@("39 @@@ 9999 99:99 @@")" Validate="false" Restrict="reject" />
+                        <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </span>
+                        <label class="control-label" for="datetimepicker1">@*DD MMM YYYY hh:mm A*@</label>
+                    </div>
+                </div>
+
+
+                <h3>Masking</h3>
+                <div class="form-group form-md-line-input">
+                    <div>
+                        <input type="text" class="form-control" mask="(99) 999-9999" ng-model="phoneNo" placeholder="Phone Number" Validate="true" Restrict="reject">
+                    </div>
+                </div>
+
+
+                @*<div class="form-group form-md-line-input">
+                        <div class='input-group date' id='datetimepicker2'>
+                            <input type='text' class="form-control" />
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                            <label class="control-label" for="datetimepicker2">DD MMM YYYY</label>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group form-md-line-input">
+                        <div class='input-group date' id='datetimepicker3'>
+                            <input type='text' class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                            <label class="control-label" for="datetimepicker3">MMM YYYY</label>
+                        </div>
+                    </div>*@
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+        <div class="portlet light">
+            <div class="portlet-title removeBorder">
+                <div class="caption">
+                    <span class="caption-subject">Share a Modal</span>
+                </div>
+                <div class="actions dropdown inputs">
+                    <button uib-popover-template="dynamicPopover.templateUrl" popover-class="popOver-Ingot" popover-placement="bottom-right" popover-title="Testing Sampple" type="button" class="btn btn-circle btn-icon-only btn-default"><i class="material-icons">add</i></button>
+                </div>
+            </div>
+            <div class="portlet-body form">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#StartDate .input-group.date').datepicker({
+            autoclose: true
+        });
+
+        $('#EndDate .input-group.date').datepicker({
+            autoclose: true
+        });
+
+        $('#datetimepicker1').datetimepicker({
+            format: 'DD MMM YYYY hh:mm A'
+        });
+
+        $('#datetimepicker1 input').click(function (event) {
+            $('#datetimepicker1').data("DateTimePicker").show();
+        });
+
+        //$('#datetimepicker2').datetimepicker({
+        //    format: 'DD MMM YYYY'
+        //});
+
+        //$('#datetimepicker3').datetimepicker({
+        //    format: 'MM/YYYY'
+        //});
+    });
+</script>

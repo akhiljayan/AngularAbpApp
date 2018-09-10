@@ -1,0 +1,102 @@
+﻿@model CreateOrUpdateSocialReportInput
+
+@using Pulsesync.IngoTPCC.Application.SocialReports.Dto;
+
+<div id="AboutMe" class="portlet light" ng-controller="tenant.views.socialReports.aboutMeView as aboutMeCtrl">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("AboutMe")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a class="icon-wrapper" ng-if="aboutMeCtrl.mode.toLowerCase()=='view' && !vm.isNew && vm.permissions.edit" ng-click="aboutMeCtrl.edit()">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools">
+            <a class="remove" ng-if="aboutMeCtrl.mode.toLowerCase()=='edit' && !vm.isNew" ng-click="aboutMeCtrl.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="aboutMeCtrl.mode">
+                @*edit mode*@
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+                        @{
+                            var attributes = new Dictionary<string, object>();
+                            attributes.Add("role", "form");
+                            attributes.Add("id", "aboutMeCtrl.aboutMeCtrlForm");
+                            attributes.Add("name", "aboutMeCtrl.aboutMeCtrlForm");
+                        }
+                        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes)))
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                @s.FieldFor(m => m.Goals).Attrs(new { ng_model = "aboutMeCtrl.socialReport.goals" }).Rows(4).AddClass("animate msd-elastic: \\n;")
+                                @s.FieldFor(m => m.Personality).Attrs(new { ng_model = "aboutMeCtrl.socialReport.personality" }).AddClass("animate msd-elastic: \\n;")
+                                @s.FieldFor(m => m.Likes).Attrs(new { ng_model = "aboutMeCtrl.socialReport.likes" }).AddClass("animate msd-elastic: \\n;")
+                                @s.FieldFor(m => m.Dislikes).Attrs(new { ng_model = "aboutMeCtrl.socialReport.dislikes" }).AddClass("animate msd-elastic: \\n;")
+                                @s.FieldFor(m => m.WhatMakesHimOrHerHappy).Attrs(new { ng_model = "aboutMeCtrl.socialReport.whatMakesHimOrHerHappy" }).AddClass("animate msd-elastic: \\n;").Rows(4)
+                                @s.FieldFor(m => m.Hobbies).Attrs(new { ng_model = "aboutMeCtrl.socialReport.hobbies" }).AddClass("animate msd-elastic: \\n;")
+                                @s.FieldFor(m => m.FamilyHopeAndExpectation).Attrs(new { ng_model = "aboutMeCtrl.socialReport.familyHopeAndExpectation" }).AddClass("animate msd-elastic: \\n;")
+                                @s.FieldFor(m => m.CommunicationPlanWithFamily).Attrs(new { ng_model = "aboutMeCtrl.socialReport.communicationPlanWithFamily" }).AddClass("animate msd-elastic: \\n;")
+                                @s.FieldFor(m => m.Recommendation).Attrs(new { ng_model = "aboutMeCtrl.socialReport.recommendation" }).AddClass("animate msd-elastic: \\n;")
+
+                                <div class="form-actions pull-right" ng-if="!vm.isNew">
+                                    <a class="linkButton btn-small" ng-click="aboutMeCtrl.save()">
+                                        <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                                    </a>
+                                    <a class="linkButton btn-small" ng-click="aboutMeCtrl.close()">
+                                        <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                                    </a>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+
+                @*view mode*@
+                <div ng-switch-default>
+                    <div class="col-md-12">
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.goals" /></div>
+                            <label class="control-label">@L("Goals")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.personality" /></div>
+                            <label class="control-label">@L("Personality")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.likes" /></div>
+                            <label class="control-label">@L("Likes")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.dislikes" /></div>
+                            <label class="control-label">@L("Dislikes")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.whatMakesHimOrHerHappy" /></div>
+                            <label class="control-label">@L("WhatMakesHimOrHerHappy")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.hobbies" /></div>
+                            <label class="control-label">@L("Hobbies")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.familyHopeAndExpectation" /></div>
+                            <label class="control-label">@L("FamilyHopeAndExpectation")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.communicationPlanWithFamily" /></div>
+                            <label class="control-label">@L("CommunicationPlanWithFamily")</label>
+                        </div>
+                        <div class="form-group form-md-line-input margin-bottom-20">
+                            <div class="form-control remove-border auto-height" style="white-space: pre-wrap;"><ng-blank ng-model="vm.socialReport.recommendation" /></div>
+                            <label class="control-label">@L("Recommendation")</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

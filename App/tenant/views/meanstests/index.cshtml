@@ -1,0 +1,108 @@
+﻿@using Pulsesync.IngoTPCC.Authorization;
+
+<div busy-if="vm.loading">
+    <div id="meansTestIndex" ng-controller="tenant.views.meanstests.index as vm">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="portlet light" busy-if="vm.loading">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject">@L("MeansTest")</span>
+                        </div>
+                        <div class="actions dropdown inputs">
+                            <div class="input-small-new inline-block">
+                                <form action="" class="search-form">
+                                    <div class="form-group has-feedback input-inline">
+                                        <label for="search" class="sr-only">@L("Search")</label>
+                                        <input type="text" ng-model="vm.filter" enter-key="vm.load()" class="form-control form-control-solid input-circle search-input font-13-main clearable" placeholder="search keywords...">
+                                        <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="vm.clearFilter()"></a>
+                                        <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="input-small-new inline-block">
+                                <select class="action-form sort-form" ng-change="vm.searchValue()" ng-model="vm.selectedSort" ng-options="x.value as x.name for x in vm.sortingList"></select>
+                            </div>
+                            <a ng-click="vm.isDetailView = !vm.isDetailView" title="Show associated Service types and Status" class="icon-wrapper">
+                                <i ng-show="!vm.isDetailView" class="material-icons custom-icon">menu</i>
+                                <i ng-show="vm.isDetailView" class="material-icons custom-icon">view_headline</i>
+                            </a>
+                            @if (IsGranted(AppPermissions.Pages_Tenant_MeansTests_Create))
+                            {
+                                <a ng-click="vm.new()" ng-if="vm.mode!='new'" class="icon-wrapper">
+                                    <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                    <div class="portlet-body p-0-top-bottom">
+
+                        <div class="filter-results">
+                            <ul class="filter-list">
+                                <li class="filter-list-item" ng-repeat="model in vm.data.items">
+                                    <div class="filter-list-item-content">
+
+                                        <a ui-sref="tenant.meansTestsEdit({ id: model.id })">
+                                            <div class="row">
+                                                <div class="col-md-7 font-13-main">
+                                                    <div class="margin-bottom-5 font-14-main" ng-click="vm.viewPerson(model.personId)">
+                                                        <span class="caption cursor-pointer" style="margin-right: 2px">{{ model.person.fullName }}</span>
+                                                        <span ng-if="model.person.registrationDocumentNumber" class="otherText uppercase">
+                                                            ({{ model.person.registrationDocumentNumber }})
+                                                        </span>
+                                                    </div>
+                                                    @*<div ng-if="model.referralServiceType"><strong>{{ model.referralServiceType.serviceType.description }}</strong></div>*@
+                                                    @*<div ng-if="model.admission"><strong>{{ model.admission.admissionNumber }}</strong></div>*@
+                                                    <div>
+                                                        <span class="badge custom-badge margin-right-10">{{ model.finalSubsidyRate.description }}</span>
+                                                        <span>from {{ model.effectiveDate | date: 'dd-MMM-yyyy' }}</span>
+                                                        <span ng-if="model.expiryDate">to {{ model.expiryDate | date: 'dd-MMM-yyyy' }}</span>
+                                                    </div>
+                                                    <div ng-if="vm.isDetailView">
+                                                        <span ng-if="model.isDeviated"><strong>Deviated from</strong><span class="badge custom-badge margin-left-5 color-black">{{ model.subsidyRate.description }}</span></span>
+                                                        <span ng-if="!model.isDeviated"><strong>No Deviation</strong></span>
+                                                    </div>
+                                                    <div ng-if="vm.isDetailView&&!model.hasFinancialAssistance">No Financial Assistance</div>
+                                                    <div ng-if="vm.isDetailView&&model.hasFinancialAssistance">
+                                                        <span>Financial Assistance</span>
+                                                        <span>from {{ model.financialAssistanceEffectiveDate | date: 'dd-MMM-yyyy' }}</span>
+                                                        <span ng-if="model.financialAssistanceExpiryDate">to {{ model.financialAssistanceExpiryDate | date: 'dd-MMM-yyyy' }}</span>
+                                                    </div>
+                                                    <div ng-if="vm.isDetailView">Means Test Date {{ model.meansTestDate | date: 'dd-MMM-yyyy' }}</div>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <div ng-if="model.admission"><strong>{{ model.admission.admissionNumber }}</strong></div>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="pull-right text-right">
+                                                        <strong>{{ model.lastRecordAction | enumText: 'lastRecordAction'}}</strong>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                    <div class="pull-right margin-top-5">
+                                                        <i class="fa fa-unlock" style="font-size: 20px; display: inline;" ng-if="model.lastRecordAction == 0"></i>
+                                                        <i class="fa fa-lock" style="font-size: 20px; display: inline;" ng-if="model.lastRecordAction == 1"></i>
+                                                        <i class="fa fa-ban" style="font-size: 20px; display: inline;" ng-if="model.lastRecordAction == 2"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                    </div>
+                                </li>
+                            </ul>
+                            <div ng-if="!vm.data.items.length">
+                                <span ng-if="vm.mode!='new'">Add Means Tests.</span>
+                                <span ng-if="vm.mode=='new'">Means Tests can be added once this record is saved.</span>
+                            </div>
+                        </div>
+
+                        <simple-paginator data="vm.data" key="vm.key" on-page-changed="vm.load(requestParams)"></simple-paginator>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

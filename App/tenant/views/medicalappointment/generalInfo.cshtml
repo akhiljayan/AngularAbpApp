@@ -1,0 +1,103 @@
+﻿@using Pulsesync.IngoTPCC.MedicalAppointment
+@model MedicalAppointmentDto
+<style type="text/css">
+    #generalForm > .help-block {
+        position: inherit !important;
+    }
+</style>
+<div id="General" class="general portlet light" ng-controller="tenant.views.medicalappointment.generalInfo as gvm">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("General")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a class="icon-wrapper" ng-if="gvm.mode.toLowerCase()=='view' && !vm.isNew && vm.permissions.edit && !vm.medicalAppointment.isConfirmed && !vm.medicalAppointment.isCancelled" ng-click="gvm.edit()">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools">
+            <a class="remove" ng-if="gvm.mode.toLowerCase()=='edit' && !vm.isNew" ng-click="gvm.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="gvm.mode">
+                <!--edit mode-->
+                <div ng-switch-when="edit">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        @{
+                            var attributes = new Dictionary<string, object>();
+                            attributes.Add("role", "form");
+                            attributes.Add("id", "generalForm");
+                            attributes.Add("name", "gvm.medicalAppointmentGeneralForm");
+                            attributes.Add("novalidate", "");
+                            attributes.Add("action", "#");
+                            attributes.Add("angular-validator-submit", "gvm.save(vm.medicalAppointment)");
+                            attributes.Add("angular-validator", "");
+                        }
+                        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("form-validation horizontal-form")))
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                <person-ui-select person-id="vm.medicalAppointment.personId" uiselect-disabled="vm.personDisabled"></person-ui-select>
+                                @s.FieldFor(m => m.AppointmentDateTime).Attrs(new { ng_model = "vm.medicalAppointment.appointmentDateTime", allowfuturedate = "true", name = "AppointmentDateTime", data_date_format = "DD-MMM-YYYY hh:mm A", ng_required = "true", required_message = "'You must provide a value for Appointment Date Time'" })
+                                @s.FieldFor(m => m.AppointmentTypeId).AsDropDown().Attrs(new { ng_model = "vm.medicalAppointment.appointmentTypeId", ng_change = "gvm.OnChangeAppointmentType($select.selected)",  name = "AppointmentType" })
+                                @s.FieldFor(m => m.SpecialistOutpatientClinicId).AsDropDown().Attrs(new { ng_model = "vm.medicalAppointment.specialistOutpatientClinicId", ng_disabled = "!vm.isAppointmentTypeSOC", name = "SpecialistOutpatientClinic" })                                
+                                @s.FieldFor(m => m.AppointmentLocation).Attrs(new { ng_model = "vm.medicalAppointment.appointmentLocation", name = "AppointmentLocation", ng_maxlength = "4000" }).AddClass("form-control animate msd-elastic: \\n;  ng-valid ng-not-empty ng-dirty ng-valid-parse")
+                                @s.FieldFor(m => m.Doctor).Attrs(new { ng_model = "vm.medicalAppointment.doctor", name = "Doctor" })
+                           }
+
+                            <div class="form-actions pull-right" ng-if="!vm.isNew">
+                                <button type="submit" card-button-busy="vm.isSaving" class="linkButton btn-small">
+                                    <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                                </button>
+                                <a class="linkButton btn-small" card-button-busy="vm.isSaving" ng-click="gvm.close()">
+                                    <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!--view mode-->
+                <div ng-switch-default>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.medicalAppointment.personFullName}}</div>
+                            <label class="control-label view-label" for="personId">@L("Person")<span class="required">*</span></label>
+                        </div>
+                        <div class="form-group form-md-line-input" ng-if="vm.medicalAppointment.isCancelled">
+                            <div class="form-control remove-border auto-height view-text">{{vm.medicalAppointment.cancellationReason}}</div>
+                            <label class="control-label view-label" for="cancellationReason">@L("CancellationReasonNew")<span class="required">*</span></label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.medicalAppointment.appointmentDateTime | date : 'dd-MMM-y hh:mm a'}}</div>
+                            <label class="control-label view-label" for="appointmentDateTime">@L("AppointmentDateTime")<span class="required">*</span></label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.medicalAppointment.appointmentType.description}}</div>
+                            <label class="control-label view-label" for="appointmentTypeId">@L("AppointmentType")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.medicalAppointment.specialistOutpatientClinic.description}}</div>
+                            <label class="control-label view-label" for="specialistOutpatientClinicId">@L("SpecialistOutpatientClinic")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.medicalAppointment.appointmentLocation}}</div>
+                            <label class="control-label view-label" for="appointmentLocation">@L("AppointmentLocation")<span class="required">*</span></label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.medicalAppointment.doctor}}</div>
+                            <label class="control-label view-label" for="doctor">@L("Doctor")</label>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+</script>

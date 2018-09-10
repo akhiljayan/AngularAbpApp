@@ -1,0 +1,81 @@
+﻿@using Pulsesync.IngoTPCC.Application.Referral.Dto
+@model TriageInformationDto
+<div id="TrigeInfo" class="portlet light" ng-controller="tenant.views.referral.triageInfoView as triage">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("TrigeInfo")</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a class="icon-wrapper" ng-if="triage.mode.toLowerCase()=='view' && !vm.isNew && vm.permissions.edit" ng-click="triage.edit()">
+                <i class="material-icons custom-icon">edit</i>
+            </a>
+        </div>
+        <div class="tools">
+            <a class="remove" ng-if="triage.mode.toLowerCase()=='edit' && !vm.isNew" ng-click="triage.close()"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div ng-switch="triage.mode">
+                @*edit mode*@
+                <div ng-switch-when="edit">
+                    <div class="col-md-12">
+
+                        @{
+                            var attributes = new Dictionary<string, object>();
+                            attributes.Add("role", "form");
+                            attributes.Add("id", "triageForm");
+                            attributes.Add("name", "triageForm");
+                            attributes.Add("novalidate", "");
+                            attributes.Add("action", "#");
+                            attributes.Add("angular-validator-submit", "triage.save(vm.referral)");
+                            attributes.Add("angular-validator", "");
+                            //attributes.Add("ng-validate", "triage.validationReferalInfoOptions");
+                        }
+                        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("form-validation horizontal-form")))
+                        {
+                            using (var s = f.BeginSection())
+                            {
+                                @s.FieldFor(m => m.VisitDateTime).Attrs(new { ng_model = "vm.referral.triageInformation.visitDateTime", Validate = "false", Restrict = "reject", name = "triageInformation.visitDateTime", data_date_format = "DD-MMM-YYYY hh:mm A" })
+                                @s.FieldFor(m => m.PatientAcuityId).AsDropDown().Attrs(new { ng_model = "vm.referral.triageInformation.patientAcuityId", ng_disabled = "vm.isReadOnlyMode", name = "PatientAcuity" })
+                                @s.FieldFor(m => m.Remarks).Attrs(new { ng_model = "vm.referral.triageInformation.remarks", name = "triage-remarks", ng_disabled = "vm.isReadOnlyMode", ng_maxlength = "4000" }).AddClass("form-control animate msd-elastic: \\n;  ng-valid ng-not-empty ng-dirty ng-valid-parse")
+                            }
+
+                            <div class="form-actions pull-right" ng-if="!vm.isNew">
+                                <button type="submit" card-button-busy="vm.isSaving" class="linkButton btn-small">
+                                    <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                                </button>
+                                <a class="linkButton btn-small" card-button-busy="vm.isSaving" ng-click="triage.close()">
+                                    <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @*view mode*@
+                <div ng-switch-default>
+                    <div class="col-md-12">
+                        <div class="form-group form-md-line-input">
+                            <div ng-if="vm.referral.triageInformation.visitDateTime" class="form-control remove-border auto-height view-text">{{vm.referral.triageInformation.visitDateTime  | date :  "dd-MMM-y hh:mm a" }}</div>
+                            <div ng-if="!vm.referral.triageInformation.visitDateTime" class="form-control remove-border auto-height view-text">-</div>
+                            <label class="control-label view-label" for="referralCode">@L("VisitDateTime")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text">{{vm.referral.triageInformation.patientAcuityId ? vm.getMasterDataDescription(vm.referral.triageInformation.patientAcuityId,vm.patientAcuityMaster) : "-"}}</div>
+                            <label class="control-label view-label" for="careCoordinator">@L("PatientAcuity")</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control remove-border auto-height view-text" style="white-space: pre-wrap;">{{vm.referral.triageInformation.remarks ? vm.referral.triageInformation.remarks : "-"}}</div>
+                            <label class="control-label view-label" for="remarks">@L("Remarks")</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+    });
+</script>

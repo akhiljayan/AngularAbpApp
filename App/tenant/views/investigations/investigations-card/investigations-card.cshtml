@@ -1,0 +1,40 @@
+﻿<div id="Investigations" class="portlet light" busy-if="$ctrl.loading" ng-class="{ 'div-disabled': $ctrl.mode=='new' }">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="fontStealGreen">{{ $ctrl.title }}</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <div class="input-small-new inline-block">
+                <form action="" class="search-form">
+                    <div class="form-group has-feedback input-inline">
+                        <label for="search" class="sr-only">@L("Search")</label>
+                        <input type="text" ng-model="$ctrl.filter" enter-key="$ctrl.load()" class="form-control form-control-solid input-circle search-input font-13-main clearable" placeholder="search keywords...">
+                        <a class="form-control-feedback search-close searchIcon-close fa fa-times" ng-click="$ctrl.filter=''"></a>
+                        <i class="material-icons form-control-feedback searchIcon">@L("search")</i>
+                    </div>
+                </form>
+            </div>
+            <a ng-click="$ctrl.showDetails = !$ctrl.showDetails" title="Show associated Details" class="icon-wrapper">
+                <i ng-show="!$ctrl.showDetails" class="material-icons custom-icon">menu</i>
+                <i ng-show="$ctrl.showDetails" class="material-icons custom-icon">view_headline</i>
+            </a>
+            <a ng-click="$ctrl.create()" ng-if="$ctrl.permissions.create" class="icon-wrapper">
+                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+            </a>
+        </div>
+    </div>
+    <div class="portlet-body p-0-top-bottom">
+        <div class="filter-results-card">
+            <ul class="filter-list">
+                <li class="filter-list-item" ng-repeat="model in $ctrl.data.items">
+                    <div class="filter-list-item-content">
+                        <a>
+                            <investigation model="model" show-details="$ctrl.showDetails"></investigation>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <simple-paginator data="$ctrl.data" key="$ctrl.key" small-page-size="true" on-page-changed="$ctrl.load(requestParams)"></simple-paginator>
+    </div>
+</div>

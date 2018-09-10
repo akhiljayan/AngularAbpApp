@@ -1,0 +1,144 @@
+﻿@using Pulsesync.IngoTPCC.Application.Admission.Dto
+@model DischargeDto
+<style type="text/css">
+    .help-block.help-block-validation-error {
+        color: #e73d4a !important
+</style>
+<div class="loading" busy-if="vm.loading">
+    <div  class="general-discharge portlet light" ng-controller="tenant.views.admission.discharge.generalDischargeView as dis">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject">@L("DischargeInfo")</span>
+            </div>
+            <div class="actions dropdown inputs">
+                <a class="icon-wrapper" ng-if="dis.mode.toLowerCase()=='view' && !dis.isNew && vm.permissions.editDischarge" ng-click="dis.edit()">
+                    <i class="material-icons custom-icon">edit</i>
+                </a>
+            </div>
+            <div class="tools">
+                <a class="remove" ng-if="dis.mode.toLowerCase()=='edit' && !dis.isNew" ng-click="dis.close()"></a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div ng-switch="dis.mode">
+                    @*edit mode*@
+                    <div ng-switch-when="edit">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            @{
+                                var attributes = new Dictionary<string, object>();
+                                attributes.Add("role", "form");
+                                attributes.Add("id", "dischargeGeneralForm");
+                                attributes.Add("name", "generalDischargeForm");
+                                attributes.Add("novalidate", "");
+                                attributes.Add("action", "#");
+                                attributes.Add("angular-validator-submit", "dis.save(dis.discharge, dis.isNew)");
+                                attributes.Add("angular-validator", "");
+                                attributes.Add("ng-validate", "dis.validationOptions");
+                            }
+                            @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("form-validation horizontal-form")))
+                            {
+                                using (var s = f.BeginSection())
+                                {
+                                    @s.FieldFor(m => m.DischargedOn).DatePickerOptions(new { data_date_end_date = "0d" }).Attrs(new { ng_model = "dis.discharge.dischargedOn", Validate = "false", Restrict = "reject", name = "DischargedOn", mindate = "{{dis.admission.admittedOn}}", isnew = "{{dis.isNew}}", data_date_format = "DD-MMM-YYYY hh:mm A", ng_change = "dis.dischargedOnChange(dis.dischargedDate)", ng_required = "true", required_message = "You must provide a value for Discharge Date" })
+                                    @s.FieldFor(m => m.DischargeType).AsDropDown().Attrs(new { ng_model = "dis.discharge.dischargeType.id", name = "DischargeType", ui_select_required = "ui-select-required", required_message = "", ng_change = "dis.checkIfDeath($select.selected.description)" })
+                                    @s.FieldFor(m => m.DischargeReason).AsDropDown().Attrs(new { ng_model = "dis.discharge.dischargeReason.id", name = "DischargeReason", ui_select_required = "ui-select-required", required_message = "", ng_change = "dis.checkForOtherDischargeReason($select.selected.description)" })
+                                    <div class="form-group form-md-line-input" ng-if="dis.otherDischargeReason || dis.discharge.dischargeReasonOthers">
+                                        <input type="text" ng-model="dis.discharge.dischargeReasonOthers" class="form-control" id="DischargeReasonOthers" name="DischargeReasonOthers" placeholder="Provide Other Discharge reason" ng-required="true" required-message="'You must provide a value for Other Discharge reason'">
+                                        <label class="control-label" for="otherCurrentLivingArrangement">@L("DischargeReasonOthers")<span class="required">*</span></label>
+                                    </div>
+                                    @s.FieldFor(m => m.DischargeDestination).AsDropDown().Attrs(new { ng_model = "dis.discharge.dischargeDestination.id", name = "DischargeDestination", ng_change = "dis.checkForOtherDischargeDestination($select.selected.description)" })
+                                    <div class="form-group form-md-line-input" ng-if="dis.otherDischargeDestination || dis.discharge.dischargeDestinationOthers">
+                                        <input type="text" ng-model="dis.discharge.dischargeDestinationOthers" class="form-control" id="DischargeDestinationOthers" name="DischargeDestinationOthers" placeholder="Provide Other Discharge Destination" ng-required="true" required-message="'You must provide Other Discharge Destination'">
+                                        <label class="control-label" for="otherCurrentLivingArrangement">@L("DischargeDestinationOthers")<span class="required">*</span></label>
+                                    </div>
+                                    @s.FieldFor(m => m.StaffInChargeId).AsDropDown().Attrs(new { ng_model = "dis.discharge.staffInChargeId", name = "StaffInCharge", repeat = "dis.stafIncharge", ui_select_required = "ui-select-required", required_message = "" })
+                                    @*<user-ui-select user-id="dis.discharge.staffInChargeId" uiselect-disabled="false" label="'Staff In Charge'"></user-ui-select>*@
+                                }
+
+                                using (var s = f.BeginSection())
+                                {
+                                    <div class="DeceasedInfo" ng-if="dis.deseasedSection">
+                                        <h5 class="fontStealGreen bold">@L("DeceasedInfo")</h5>
+                                        @s.FieldFor(m => m.DeceasedOn).DatePickerOptions(new { data_date_end_date = "0d" }).Attrs(new { ng_model = "dis.discharge.deceasedOn", Validate = "false", Restrict = "reject", mindate = "{{dis.admission.admittedOn}}", name = "admission.admittedOn", data_date_format = "DD-MMM-YYYY hh:mm A", required = "", required_message = "You must provide a value for Discharge Date" }).AddClass("currentdate")
+                                        @s.FieldFor(m => m.DeceasedReason).AsDropDown().Attrs(new { ng_model = "dis.discharge.deceasedReason.id", name = "DeceasedReason" })
+                                        <div class="form-group form-md-line-input" ng-if="dis.otherDeceasedReason || dis.discharge.deceasedOthers">
+                                            <input type="text" ng-model="dis.discharge.deceasedOthers" class="form-control" id="DeceasedReasonOthers" name="DeceasedReasonOthers" placeholder="Provide Other Deceased Reason" ng-required="true" required-message="'You must provide a value for Other Deceased Reason'">
+                                            <label class="control-label" for="otherCurrentLivingArrangement">@L("DeceasedOthers")<span class="required">*</span></label>
+                                        </div>
+                                        @s.FieldFor(m => m.DeceasedPlace).AsDropDown().Attrs(new { ng_model = "dis.discharge.deceasedPlace.id", name = "DeceasedPlace", repeat = "dis.deceasedPlace" })
+                                    </div>
+                                }
+
+                                <div class="form-actions pull-right">
+                                    <button type="submit" card-button-busy="dis.isSaving" class="linkButton btn-small">
+                                        <i class="material-icons  font-18-main v-top">save</i> @L("Save")
+                                    </button>
+                                    <a class="linkButton btn-small" card-button-busy="dis.isSaving" ng-if="dis.isNew" ng-click="dis.closeDischarge()">
+                                        <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                                    </a>
+                                    <a class="linkButton btn-small" card-button-busy="dis.isSaving" ng-if="!dis.isNew" ng-click="dis.close()">
+                                        <i class="material-icons  font-18-main v-top">close</i> @L("Cancel")
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    @*view mode*@
+                    <div ng-switch-default>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{dis.discharge.dischargedOn | date :  "dd-MMM-y hh:mm a"}}</div>
+                                <label class="control-label view-label" for="referralCode">@L("DischargedOn")<span class="required">*</span></label>
+                            </div>
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{dis.discharge.dischargeType.name}}</div>
+                                <label class="control-label view-label" for="referralCode">@L("DischargeType")<span class="required">*</span></label>
+                            </div>
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{dis.discharge.dischargeReason.name}}</div>
+                                <label class="control-label view-label" for="referralCode">@L("DischargeReason")<span class="required">*</span></label>
+                            </div>
+                            <div class="form-group form-md-line-input" ng-if="dis.discharge.dischargeReasonOthers">
+                                <div class="form-control remove-border auto-height view-text">{{dis.discharge.dischargeReasonOthers}}</div>
+                                <label class="control-label view-label" for="referralCode">@L("DischargeReasonOthers")</label>
+                            </div>
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{dis.discharge.dischargeDestination.name}}</div>
+                                <label class="control-label view-label" for="referralCode">@L("DischargeDestination")</label>
+                            </div>
+                            <div class="form-group form-md-line-input" ng-if="dis.discharge.dischargeDestinationOthers">
+                                <div class="form-control remove-border auto-height view-text">{{dis.discharge.dischargeDestinationOthers}}</div>
+                                <label class="control-label view-label" for="referralCode">@L("DischargeDestinationOthers")</label>
+                            </div>
+                            <div class="form-group form-md-line-input">
+                                <div class="form-control remove-border auto-height view-text">{{dis.discharge.staffInCharge.fullName}}</div>
+                                <label class="control-label view-label" for="referralCode">@L("StaffInCharge")</label>
+                            </div>
+                            <div class="DeceasedInfo" ng-if="dis.discharge.dischargeType.name == 'Death'">
+                                <h5 class="fontStealGreen bold">@L("DeceasedInfo")</h5>
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{dis.discharge.deceasedOn | date :  "dd-MMM-y hh:mm a"}}</div>
+                                    <label class="control-label view-label" for="referralCode">@L("DeceasedOn")</label>
+                                </div>
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{dis.discharge.deceasedReason.name}}</div>
+                                    <label class="control-label view-label" for="referralCode">@L("DeceasedReason")</label>
+                                </div>
+                                <div class="form-group form-md-line-input" ng-if="dis.discharge.deceasedOthers">
+                                    <div class="form-control remove-border auto-height view-text">{{dis.discharge.deceasedOthers}}</div>
+                                    <label class="control-label view-label" for="referralCode">@L("DeceasedOthers")</label>
+                                </div>
+                                <div class="form-group form-md-line-input">
+                                    <div class="form-control remove-border auto-height view-text">{{dis.discharge.deceasedPlace.name ? dis.discharge.deceasedPlace.name : '-'}}</div>
+                                    <label class="control-label view-label" for="referralCode">@L("DeceasedPlace")</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+﻿<div class="row">
+
+    <div id="main-header-with-tab header-sticky-index" hide-on-scroll class="row main-header-with-tab" sticky offset="75" pinned="{{vm.personHeaderisPinned}}" style="z-index:1000 !important;">
+        <div class="row bg-white header-sticky-index" @*id="person-header"*@ @*sticky offset="75"*@ @*media-query="min-width: 992px"*@ style="height: 86px; padding: 6px 0px; border-bottom:0.2px solid #d8d8d8;box-shadow: 0 0 0 rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.18)">
+            <person-header person-model="vm.model.person" person-id="vm.model.personId" referral-id="vm.model.referralId" mode="vm.mode"></person-header>
+            <div class="col-xs-1 col-sm-1 text-right pull-right" style="margin-top:-15px">
+                <span ng-if="!vm.personHeaderisPinned" class="mt-comment-date otherText" ng-click="vm.personHeaderisPinned = true">
+                    <i class="icon-pin font-default"></i>
+                </span>
+                <span ng-if="vm.personHeaderisPinned" class="mt-comment-date otherText" ng-click="vm.personHeaderisPinned = false">
+                    <i class="icon-pin fontStealGreen"></i>
+                </span>
+            </div>
+        </div>
+        @* --- Navigation Tabs --- *@
+        <div class="row" id="person-tabs" @*set-class-when-at-top="fix-to-top"*@ @*sticky offset="160"*@ @*media-query="min-width: 992px"*@ style="top:0px;background-color:#f9f9f9;margin-bottom: 10px; box-shadow: 0 0 0 rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.18)">
+            <div class="col-md-12 col-sm-12">
+                <div class="col-md-1 col-sm-1 tabbable-line" style="text-align:left">
+                    <div class="dropdown">
+                        <span class="dropdown-toggle" id="navigation-menu" type="button" data-toggle="dropdown" style="cursor:pointer;margin-top: 15px; display: inline-block;">
+                            @*<i class="fa fa-th-list" aria-hidden="true" style="padding-top:18px; font-size:20px;color:#acacac;"></i>*@
+                            <i class="ps-icon-section-menu" style="font-size:20px;color:#acacac;"></i>
+                        </span>
+                        <div class="dropdown-menu" aria-labelledby="navigation-menu" role="menu" style="width: 200px; background-color:#f9f9f9">
+                            <li role="presentation" ng-repeat="navigate in vm.navigationalMenu" ng-if="navigate.permission">
+                                <a role="menuitem" tabindex="-1" class="bold" href="#" ng-click="vm.gotoAnchor(navigate.key)">{{navigate.displayName}}</a>
+                            </li>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-11 col-sm-11 tabbable-line" style="text-align:left">
+                    <div class="form-actions pull-right">
+                        <a class="linkButton btn-small inline-flex-center" master-save ng-click="vm.saveFinancialAssistance()" ng-if="vm.mode=='new'" ng-class="{'disabled-link': vm.isSavingDisabled }">
+                            <i class="material-icons font-18-main v-top">save</i> @L("Save")
+                        </a>
+                        <a class="linkButton btn-small inline-flex-center" master-save ng-click="vm.saveFinancialAssistance(true)" ng-if="vm.mode=='new'" ng-class="{'disabled-link': vm.isSavingDisabled }">
+                            <i class="ps-icon-1x ps-icon-savenclose grey"></i> @L("SaveAndClose")
+                        </a>
+                        <a class="linkButton btn-small inline-flex-center" ng-click="vm.confirmFinancialAssistance()" ng-if="vm.mode!='new' && vm.permissions.confirm && !vm.model.isConfirmed && !vm.model.isCancelled">
+                            <i class="material-icons font-18-main v-top">lock</i> @L("Confirm")
+                        </a>
+                        <a class="linkButton btn-small inline-flex-center" ng-click="vm.cancelFinancialAssistance()" ng-if="vm.mode!='new' && vm.permissions.cancel && !vm.model.isCancelled">
+                            <i class="material-icons font-18-main v-top">block</i> @L("Cancel")
+                        </a>
+                        <a class="linkButton btn-small inline-flex-center" ng-click="vm.close()">
+                            <i class="material-icons font-18-main v-top">close</i> @L("Close")
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="tab-content">
+    <div id="PersonDetails" class="tab-pane fade in active">
+        <div class="col-md-12 col-sm-12">
+            @*---SubNavigation----*@
+            @*<div class="col-md-2 col-sm-2 nopadding">
+                    <div class="sidebar-nav-fixed affix">
+                        <p class="bodyContext bold" style="cursor: pointer;" ng-click="vm.gotoAnchor('General')">@L("General")</p>
+                        <p class="bodyContext bold" style="cursor: pointer;" ng-click="vm.gotoAnchor('FinancialAssistance')">@L("FinancialAssistance")</p>
+
+                        <br />
+                        <hr style="border-color: #c2cad8;" />
+
+                        <p class="bodyContext" ng-if="vm.mode!='new'">
+                            @Html.Raw(L("CreationInfo", "vm.model.creatorUser.fullName", "vm.model.creationTime | dateTimeFormat"))
+                        </p>
+                        <p class="bodyContext" ng-if="vm.mode!='new'">
+                            @Html.Raw(L("ModificationInfo", "vm.model.lastModifierUser.fullName", "vm.model.lastModificationTime | dateTimeFormat"))
+                        </p>
+                        <p class="bodyContext" ng-if="vm.model.isConfirmed">
+                            @Html.Raw(L("ConfirmationInfo", "vm.model.confirmedByUser.fullName", "vm.model.confirmationDate | dateTimeFormat"))
+                        </p>
+                        <p class="bodyContext" ng-if="vm.model.isCancelled">
+                            @Html.Raw(L("CancellationInfo", "vm.model.cancelledByUser.fullName", "vm.model.cancellationDate | dateTimeFormat"))
+                        </p>
+                    </div>
+                </div>*@
+            <div class="col-md-2 col-sm-2"></div>
+            <div class="col-md-8 col-sm-8">
+                <div busy-if="vm.loading">
+                    <financialassistance-detail-general-card id="General" mode="vm.mode" model="vm.model" permissions="vm.permissions" on-update="vm.updateFinancialAssistance(event)"></financialassistance-detail-general-card>
+                </div>
+                <div busy-if="vm.loading">
+                    <financialassistance-detail-financialassistance-card id="FinancialAssistance" mode="vm.mode" model="vm.model" permissions="vm.permissions" on-update="vm.updateFinancialAssistance(event)"></financialassistance-detail-financialassistance-card>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-2"></div>
+        </div>
+    </div>
+</div>

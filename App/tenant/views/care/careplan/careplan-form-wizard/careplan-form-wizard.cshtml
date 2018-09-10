@@ -1,0 +1,99 @@
+﻿<style>
+    .disable-links {
+        pointer-events: none;
+    }
+</style>
+
+<div class="portlet light bordered" id="form_wizard_1">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">{{ vm.action }}</span>
+        </div>
+        <div class="tools pull-right">
+            @*<minimize-modal></minimize-modal>*@
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form modal-body">
+        <div class="form-wizard" id="carePlanForm">
+            <div class="form-body">
+                <ul class="nav nav-pills nav-justified steps" ng-if="vm.mode!='edit'">
+                    <li ng-repeat="tab in vm.tabs" ng-class="tab.number == vm.defaultTab ? 'active' : ''">
+                        <a href="{{tab.target}}" data-toggle="tab" data-step="{{tab.number}}" target="_self" class="step disable-links">
+                            <span class="number"> {{tab.number}} </span>
+                            <span class="desc">
+                                <i class="fa fa-check"></i> {{tab.title}}
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+                <div id="bar" class="progress progress-striped" role="progressbar" ng-if="vm.mode!='edit'">
+                    <div class="progress-bar progress-bar-success" ng-style="{ 'width' : vm.percent }"> </div>
+                </div>
+                <div class="tab-content" ng-if="vm.mode=='new'">
+                    <div class="tab-pane active" id="step1">
+                        <careplan-type-detail mode="vm.mode"
+                                              model="vm.model"
+                                              person-problems="vm.personProblems"
+                                              problem-master="vm.problemMaster"
+                                              @*priority-master="vm.priorityMaster"*@
+                                              careplan-master="vm.careplanMaster"
+                                              @*goal-master="vm.goalMaster"*@
+                                              @*intervention-master="vm.interventionMaster"*@
+                                              on-problem-selected="vm.onProblemSelected(event)"></careplan-type-detail>
+                    </div>
+                    <div class="tab-pane" id="step2">
+                        <careplan-goal-intervention-detail mode="vm.mode"
+                                                           model="vm.model"
+                                                           problem-master="vm.problemMaster"
+                                                           priority-master="vm.priorityMaster"
+                                                           careplan-master="vm.careplanMaster"
+                                                           goal-master="vm.goalMaster"
+                                                           intervention-master="vm.interventionMaster"></careplan-goal-intervention-detail>
+                    </div>
+                    <div class="tab-pane" id="step3">
+                        <careplan-confirm-detail mode="vm.mode"
+                                                 model="vm.model"
+                                                 problem-master="vm.problemMaster"
+                                                 priority-master="vm.priorityMaster"
+                                                 careplan-master="vm.careplanMaster"
+                                                 goal-master="vm.goalMaster"
+                                                 intervention-master="vm.interventionMaster"></careplan-confirm-detail>
+                    </div>
+                </div>
+                <div class="tab-content" ng-if="vm.mode=='addGoal'">
+                    <div class="tab-pane active" id="step1">
+                        <careplan-goal-intervention-detail mode="vm.mode" model="vm.model" problem-master="vm.problemMaster" priority-master="vm.priorityMaster" careplan-master="vm.careplanMaster" goal-master="vm.goalMaster" intervention-master="vm.interventionMaster" careplan-items="vm.careplanItems"></careplan-goal-intervention-detail>
+                    </div>
+                    <div class="tab-pane" id="step2">
+                        <careplan-confirm-detail mode="vm.mode" model="vm.model" problem-master="vm.problemMaster" priority-master="vm.priorityMaster" careplan-master="vm.careplanMaster" goal-master="vm.goalMaster" intervention-master="vm.interventionMaster" careplan-items="vm.careplanItems"></careplan-confirm-detail>
+                    </div>
+                </div>
+                <div class="tab-content" ng-if="vm.mode=='edit'">
+                    <div class="tab-pane active" id="step1">
+                        <careplan-type-detail mode="vm.mode" model="vm.model" problem-master="vm.problemMaster" priority-master="vm.priorityMaster" careplan-master="vm.careplanMaster" goal-master="vm.goalMaster" intervention-master="vm.interventionMaster" careplan-items="vm.careplanItems"></careplan-type-detail>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions noborder right modal-footer" ng-if="vm.mode=='new'">
+            <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-if="vm.currentPage ==2? true:false" ng-click="vm.addGoalBtn()"><i class="material-icons ps-btn-material">add</i> Add Goal</button>
+            <button type="button" busy-if="vm.isSavingDisabled" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-if="vm.currentPage >1? true:false" ng-click="vm.goBack()"> <i class="fa fa-angle-double-left"></i> Back </button>
+            <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-if="vm.currentPage <3? true:false" ng-click="vm.goNext()"> Continue <i class="fa fa-angle-double-right"></i></button>
+            <button type="button" busy-if="vm.isSavingDisabled" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-if="vm.currentPage ==3? true:false" ng-click="vm.onSave()"> Save <i class="fa fa-check"></i></button>
+        </div>
+
+        <div class="form-actions noborder right modal-footer" ng-if="vm.mode=='addGoal'">
+            <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-if="vm.currentPage ==1? true:false" ng-click="vm.addGoalBtn()"><i class="material-icons ps-btn-material">add</i> Add Goal</button>
+            <button type="button" busy-if="vm.isSavingDisabled" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-if="vm.currentPage >1? true:false" ng-click="vm.goBack()"> <i class="fa fa-angle-double-left"></i> Back </button>
+            <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-if="vm.currentPage <2? true:false" ng-click="vm.goNext()"> Continue <i class="fa fa-angle-double-right"></i></button>
+            <button type="button" busy-if="vm.isSavingDisabled" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-if="vm.currentPage ==2? true:false" ng-click="vm.onSave()"> Save <i class="fa fa-check"></i></button>
+        </div>
+
+        <div class="form-actions noborder right modal-footer" ng-if="vm.mode=='edit'">
+            <button type="button" busy-if="vm.isSavingDisabled" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.onSave()"> Save <i class="fa fa-check"></i></button>
+            <button type="button" busy-if="vm.isSavingDisabled" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>@L("Cancel")</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+﻿<div busy-if="vm.loading" id="assessment" class="portlet light" ng-if="vm.isPatient || vm.isReferral">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Assessment") {{vm.headingAppend}}</span>
+        </div>
+        <div class="actions dropdown inputs">
+            <a ng-click="vm.addAssessment()" title="Add a new Assessment" class="icon-wrapper">
+                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+            </a>
+            <a class="icon-wrapper" title="Filter" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                <i class="material-icons custom-icon">more_vert</i>
+            </a>
+            <ul class="dropdown-menu pull-right">
+                <li>
+                    <a href="javascript:;" class="bold" ng-click=" vm.assessmentStatusFilterSelection(999)">@L("ShowAll")</a>
+                </li>
+                <li class="divider"> </li>
+                <li>
+                    <a href="javascript:;" ng-click=" vm.assessmentStatusFilterSelection(0)">@L("PendingConfirmation")</a>
+                </li>
+                <li>
+                    <a href="javascript:;" ng-click=" vm.assessmentStatusFilterSelection(1)">@L("Confirmed")</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="row padding-left-25"><span class="bold">Period</span></div>
+                <div class="row assesment-filter-control padding-left-15">
+                    <select id="selectPeriod" ng-model="vm.selectedPeriod" label="@L("Period")" multiple="multiple" multi-select ng-options="year for year in vm.years" optionchange="vm.years" ng-change="vm.searchValue()"></select>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="row padding-left-25"><span class="bold">Assessment</span></div>
+                <div class="row assesment-filter-control padding-left-15">
+                    <select id="selectAssessment" ng-model="vm.selectedModules" label="@L("Assessment")" multiple="multiple" multi-select ng-options="x.module as x.moduleDescription for x in vm.viewPermissions" optionchange="vm.permissions" ng-change="vm.searchValue()"></select>
+                </div>
+            </div>
+        </div>
+        <!-- Timeline -->
+        <div class="timeline-box">
+            <ul id="timline-list">
+                <li class="cursor-pointer" ng-repeat="event in vm.assessmentList" style="margin-top:0px; padding-top:0px;" ng-click="vm.view(event.id, event.assessmentCode, event.assessmentDescription)">
+                    <span class="none {{vm.categoryColorCodes.values[event.colorCode].name.toLowerCase()}}"></span>
+                    <div class="title">                        
+                        {{event.assessmentDescription}}
+                        <span ng-if="vm.selectedFilter != 1 && vm.selectedFilter != 0">
+                            <a class="no-decoration padding-right-10" title="Pending Confirmation" href="#" ng-if="event.status == 0"><i class="fa fa-unlock" style="font-size:20px" aria-hidden="true"></i></a>
+                            <a class="no-decoration padding-right-10" title="Confirmed" href="#" ng-if="event.status == 1"><i class="fa fa-lock" style="font-size:20px" aria-hidden="true"></i></a>
+                            <a class="no-decoration padding-right-10" title="Cancelled" href="#" ng-if="event.status == 2"><i class="fa fa fa-ban" style="font-size:20px" aria-hidden="true"></i></a>
+                        </span>
+                    </div>
+                    <div class="info">
+                        <span ng-if="event.totalScore">Score - {{event.totalScore}}</span>
+                        <span ng-if="event.category">, {{event.category}}</span>
+                    </div>
+                    <div class="time">
+                        <span style="display: block;padding-top: 15px;">{{event.assessmentDate | dateFormat }}</span>
+                        <span></span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <hr style="margin:15px 0" />
+    </div>
+    <simple-paginator data="vm.data" key="vm.key" small-page-size="true" on-page-changed="vm.loadResults(requestParams)"></simple-paginator>
+    
+</div>

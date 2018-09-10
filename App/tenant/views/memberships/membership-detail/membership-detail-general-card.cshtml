@@ -1,0 +1,98 @@
+﻿@model MembershipDto
+
+@using Pulsesync.IngoTPCC.Application.Membership.Dto
+
+<div class="portlet light" ng-class="{ 'div-disabled': (vm.IsAgreed)}">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("General")</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-switch="vm.mode">
+            <div ng-switch-when="new,edit" ng-switch-when-separator=",">
+                @using (var f = Html.BeginSubForm())
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        @s.FieldFor(m => m.ApplicationDate).Attrs(new { ng_model = "vm.workingModel.applicationDate", ng_required = "true", maxdate = "0d", Restrict = "reject", required_message = "You must provide a value for Application Date." })
+
+                        @*@s.FieldFor(m => m.Centre).AsDropDown().Attrs(new { ui_select_required = "true", ng_model = "vm.model.centre.id", name = "Centre", repeat = "vm.centreLookup", invalid_message = "'You must provide a value for Centre.'" })*@
+                        <centre-ui-select centre-id="vm.model.centre.id" required="true" uiselect-disabled="false" repeat="vm.centreLookup"></centre-ui-select>
+
+                        @s.FieldFor(m => m.ServiceType).AsDropDown().Attrs(new { ng_disabled = "true", ng_model = "vm.servicetypeLookup", name = "Servicetype", repeat = "servicetypeLookup", ui_select_required = "ui-select-required", required_message = "" }).Label(@L("ServiceType"))
+                        @s.FieldFor(m => m.MembershipApplicationNo).Attrs(new { ng_disabled = "true", ng_model = "vm.workingModel.membershipApplicationNo" })
+
+                        @s.FieldFor(m => m.MembershipStartDate).Attrs(new { ng_model = "vm.workingModel.membershipStartDate", ng_required = "vm.model.membershipAgreementOption.code=='Agree'", invalid_message = "'You must provide a value for Membership Start Date.'", ng_change = "vm.generateMembershipEndDate(vm.workingModel.membershipStartDate)" })
+                        @s.FieldFor(m => m.MembershipEndDate).Attrs(new { ng_model = "vm.workingModel.membershipEndDate" })
+
+                        //@s.FieldFor(m => m.MembershipStatus).AsDropDown().Attrs(new { ng_model = "vm.workingModel.membershipStatus", repeat = "vm.membershipFilterStatus", name = "MembershipStatus", ng_required = "true", ng_disabled = "true" }).Label(@L("MembershipStatus"))
+                        <div class="form-group form-md-line-input">
+                            <input class="form-control" id="membershipStatus" ng-disabled="true" disabled name="membershipStatus" ng-model="vm.membershipStatus" type="text" validate-on="dirty">
+                            <label class="control-label" for="Person_FullName">@L("MembershipStatus")<span class="businessRequired"> * </span></label>
+                        </div>
+
+
+                        @s.FieldFor(m => m.IsCloned).Attrs(new { ng_disabled = "true", ng_model = "vm.model.isCloned" })
+                        <div ng-if="vm.workingModel.terminationReason.id">
+                            @s.FieldFor(m => m.TerminationReason).AsDropDown().Attrs(new { ng_disabled = "true", ng_model = "vm.workingModel.terminationReason.id", repeat = "vm.terminationReasonMaster" })
+                        </div>
+                        <div ng-if="vm.workingModel.terminationReason.id">
+                            @s.FieldFor(m => m.OthersTerminationReason).Attrs(new { ng_disabled = "true", ng_show = "vm.workingModel.membershipStatus == 2", ng_model = "vm.workingModel.othersTerminationReason" })
+                        </div>
+                        @s.FieldFor(m => m.Remarks).Attrs(new { ng_model = "vm.workingModel.remarks" }).AddClass("form-control animate msd-elastic: \\n;  ng-valid ng-not-empty ng-dirty ng-valid-parse")
+                    }
+                }
+            </div>
+
+            <div ng-switch-default>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.applicationDate| dateFormat}}</div>
+                    <label class="control-label">@L("ApplicationDate")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.centre.name ? vm.model.centre.name: '-'}}</div>
+                    <label class="control-label">@L("Centre")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.serviceType.name ? vm.model.serviceType.name: '-'}}</div>
+                    <label class="control-label">@L("ServiceType")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.membershipApplicationNo ? vm.model.membershipApplicationNo: '-'}}</div>
+                    <label class="control-label">@L("MembershipApplicationNo")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.membershipStartDate | dateFormat}}</div>
+                    <label class="control-label">@L("MembershipStartDate")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.membershipEndDate | dateFormat}}</div>
+                    <label class="control-label">@L("MembershipEndDate")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.membershipStatus | enumText: 'membershipFilterStatus'}}</div>
+                    <label class="control-label">@L("MembershipStatus")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;" ng-bind="vm.returnBoolValue(vm.model.isCloned)"></div>
+                    <label class="control-label">@L("IsCloned")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.model.membershipStatus == 2" ,>
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.terminationReason.description ? vm.model.terminationReason.description: '-'}}</div>
+                    <label class="control-label">@L("TerminationReason")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20" ng-if="vm.model.membershipStatus==2 && vm.model.terminationReason.description =='Others'" ,>
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.othersTerminationReason ? vm.model.othersTerminationReason: '-'}}</div>
+                    <label class="control-label">@L("OthersTerminationReason")</label>
+                </div>
+                <div class="form-group form-md-line-input margin-bottom-20">
+                    <div class="form-control remove-border auto-height" style="white-space: pre-wrap;">{{vm.model.remarks ? vm.model.remarks: '-'}}</div>
+                    <label class="control-label">@L("Remarks")</label>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

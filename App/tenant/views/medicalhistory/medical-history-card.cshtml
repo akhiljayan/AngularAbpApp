@@ -1,0 +1,52 @@
+﻿<div id="medicalhistories" class="portlet light" busy-if="$ctrl.loading" ng-if="$ctrl.isPatient || $ctrl.isReferral">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("MedicalHistory")</span>
+        </div>
+        
+        <div class="actions dropdown inputs" ng-if="$ctrl.isPatient || $ctrl.isReferral">
+            <a ng-click="$ctrl.create()" ng-if="$ctrl.permissions.create" class="icon-wrapper">
+                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+            </a>
+            <a ng-click="$ctrl.selectAll()" ng-if="$ctrl.permissions.create && !$ctrl.checkedAll" class="icon-wrapper" title="Select All">
+                <i class="material-icons custom-icon" style="padding-top: 0px;"><i class="fa fa-check-square"></i></i>
+            </a>
+            <a ng-click="$ctrl.unSelectAll()" ng-if="$ctrl.permissions.create && $ctrl.checkedAll" class="icon-wrapper" title="Unselect All">
+                <i class="material-icons custom-icon" style="padding-top: 0px;"><i class="fa fa-check-square-o"></i></i>
+            </a>
+            <a ng-click="$ctrl.swap()" ng-if="!$ctrl.onSwap && !$ctrl.isReferral" class="icon-wrapper">
+                <i class="material-icons custom-icon">swap_vert</i>
+            </a>
+            <a ng-click="$ctrl.save()" ng-if="$ctrl.onSwap" class="icon-wrapper">
+                <i class="material-icons custom-icon">check</i>
+            </a>
+            <a ng-click="$ctrl.cancel()" ng-if="$ctrl.onSwap" class="icon-wrapper">
+                <i class="material-icons custom-icon">clear</i>
+            </a>
+            <a ng-click="$ctrl.print()" class="icon-wrapper" ng-if="$ctrl.permissions.print">
+                <i class="material-icons custom-icon">print</i>
+            </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+       
+        <div ng-if="$ctrl.medicalhistories.length==0">@L("NoRecordsFound")</div>
+        <uib-accordion close-others="false">
+            <div uib-accordion-group class="panel-default" is-disabled="true" is-open="$ctrl.mhOpen[mh.id]" ng-repeat="mh in $ctrl.medicalhistories | orderBy:'orderId'">
+                <uib-accordion-heading>
+                    <input type="checkbox"  ng-model="$ctrl.printMedicalHistory[mh.id]"  ng-click="$event.stopPropagation();"/>
+                    <span ng-click="$ctrl.mhOpen[mh.id] =!$ctrl.mhOpen[mh.id]">{{mh.historyDate|date:'dd-MMM-yyyy'}}</span>
+                    <i class="material-icons" style="vertical-align: middle;" ng-click="$ctrl.mhOpen[mh.id] =true" ng-if="!$ctrl.mhOpen[mh.id]">keyboard_arrow_right</i>
+                    <i class="material-icons" style="vertical-align: middle;" ng-click="$ctrl.mhOpen[mh.id] =false" ng-if="$ctrl.mhOpen[mh.id]">keyboard_arrow_down</i>
+                    <div class="pull-right">
+                        <a class="font-11-main" ng-if="$ctrl.permissions.edit && $ctrl.onSwap" ng-click="$ctrl.moveup(id,mh.orderId)"><i class="material-icons">arrow_upward</i></a>
+                        <a class="font-11-main" ng-if="$ctrl.permissions.edit && $ctrl.onSwap" ng-click="$ctrl.movedown(id, mh.orderId)"><i class="material-icons">arrow_downward</i></a>
+                        <a class="font-11-main" ng-if="$ctrl.permissions.deactivate && !$ctrl.onSwap" ng-click="$ctrl.deleteMedicalHistory(mh.id)"><i class="material-icons">delete_forever</i></a>
+                    </div>
+                </uib-accordion-heading>
+                <span style="display: block; width: auto; word-wrap: break-word" ng-bind-html="mh.history" ng-click="$ctrl.editMedicalhistory(mh)">
+                </span>
+            </div>
+        </uib-accordion>
+    </div>
+</div>

@@ -1,0 +1,59 @@
+﻿@using Pulsesync.IngoTPCC.MedicalAppointment
+@model MedicalAppointmentDto
+
+<style>
+    .padding-top-0 {
+        padding-top: 0px !important;
+    }
+
+    .bs-callout {
+        margin-left: 10px !important;
+        margin-right: 10px !important;
+    }
+</style>
+
+<div class="portlet light" id="cancelVisitLogModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject"> @L("Cancel") @L("MedicalAppointment")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vmx.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="form-body">
+            <div class="row">
+                <div class="bs-callout bs-callout-danger ">
+                    <h4 style="font-weight: 600;"><i class="icon fa fa-warning"></i>&nbsp; Alert!</h4>
+                    Please fill in the following required field to proceed Cancellation for @L("MedicalAppointment")
+                </div>
+                <div class="col-md-12">
+                    @{
+                        var attrs = new Dictionary<string, object> {
+                                                    { "name", "vmx.cancelMedicalAppointmentForm" },
+                                                    { "novalidate", "" },
+                                                    { "angular-validator", ""},
+                                                    { "angular-validator-submit", "vmx.save()"}
+                                                };
+                    }
+                    @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs).AddClass("scrollable-form-body")))
+                    {
+                        using (var s = f.BeginSection())
+                        {
+                            <div class="form-group form-md-line-input">
+                                        <textarea ng-model="vmx.medicalAppointment.cancellationReason" class="form-control animate msd-elastic: \n;  ng-valid ng-not-empty ng-dirty ng-valid-parse" cols="20" data-val="true" data-val-length="The field Remarks must be a string with a maximum length of 2000." required required-message="'You must provide a value for Reason for Cancellation.'" data-val-length-max="2000" id="ReasonForReferral" name="ReasonForReferralOthers" rows="4" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 50px;" ng-required="true"></textarea>
+                                        <label class="control-label" for="remarks">@L("CancellationReasonNew")<span class="required">*</span></label>
+                                    </div>
+                        }
+
+                        <div class="form-actions noborder right">
+                            <button type="submit" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-if="vmx.permissions.cancel" ng-disabled="cancelMedicalAppointmentForm.$invalid"><i class="material-icons ps-btn-material">check</i>@L("Ok")</button>
+                            <button type="button" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vmx.cancel()"><i class="material-icons ps-btn-material">clear</i>@L("Cancel")</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

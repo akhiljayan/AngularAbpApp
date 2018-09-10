@@ -1,0 +1,118 @@
+﻿@model CreateOrUpdateCarePlanInput
+
+@using PulseSync.IngoTPCC.Application.Care.CarePlans.Dto
+
+<style>
+    select[label=Intervention] + div.btn-group ul {
+        width: 100%;
+    }
+
+    select[disabled=disabled] + div {
+        pointer-events: none;
+    }
+
+        select[disabled=disabled] + div.btn-group {
+            background-color: #eaeaea !important;
+        }
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        @{
+            var attrs = new Dictionary<string, object>();
+            attrs.Add("name", "vm.form");
+            attrs.Add("novalidate", "");
+            attrs.Add("angular-validator", "");
+        }
+        @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs).AddClass("scrollable-form-body")))
+        {
+            using (var s = f.BeginSection())
+            {
+                @*<div class="form-group form-md-line-input">
+                        <select class="form-control" id="Problem_2" ng-model="vm.workingModel.problemId" disabled>
+                            <option ng-repeat="x in vm.problemMaster" value="{{ x.id }}">{{ x.description }}</option>
+                        </select>
+                        <label class="control-label" for="Problem">@L("SelectProblem")<span class="businessRequired"> * </span></label>
+                    </div>*@
+                
+                <div ng_hide="!!vm.workingModel.problemCustom">
+                    @s.FieldFor(c => c.ProblemId).AsDropDown().Attrs(new { ng_model = "vm.workingModel.problemId", repeat = "vm.problemMaster", ng_disabled = "true" })
+                </div>
+                <div ng_hide="!!vm.workingModel.problemId">
+                    @s.FieldFor(c => c.ProblemCustom).Attrs(new { ng_model = "vm.workingModel.problemCustom", ng_disabled = "true" })
+                </div>
+              
+                <div ng-repeat="item in vm.workingModel.carePlanGoals track by $index" ng-model="vm.workingModel.carePlanGoals">
+                    <hr style="border: solid 1px black !important; " ng-if='vm.workingModel.carePlanGoals.length > 1 && $index > 0' />
+                    <div ng-if="item.isNew">
+                        <div class="pull-right" ng-if="vm.workingModel.carePlanGoals.length > 1">
+                            <button type="button" class="btn btn-success" ng-click="vm.deleteGoal(vm.workingModel.carePlanGoals.indexOf(item))">
+                                Delete Goal
+                            </button>
+                        </div>
+                    </div>
+
+                    <br />
+                    <div class="form-group form-md-line-input">
+                        <ui-select ng-disabled="(!!vm.workingModel.problemCustom && !vm.workingModel.problemId) || !!item.customGoal || ctrl.mode == 'addGoal' || !item.isNew" id="Goal_{{$index}}" name="Goal_{{$index}}" ng-model="item.goalId" ng-change="vm.goalOnChange(item.goalId, $index)" theme="select2" title="Choose a goal">
+                            <ui-select-match placeholder="Select Goal">
+                                {{$select.selected.description}}
+                                <a class="fa fa-times" ng-click="$select.clear($event);" ng-style="{'pointer-events': ((!!vm.workingModel.problemCustom && !vm.workingModel.problemId) || !!item.customGoal || ctrl.mode == 'addGoal' || !item.isNew) ? 'none': ''}"></a>
+                            </ui-select-match>
+                            <ui-select-choices repeat="x.id as x in vm.goalMaster">
+                                <div ng-bind-html="x.description | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                        <label class="control-label" for="Goal">@L("SelectGoal")</label>
+                    </div>
+
+                    <div class="form-group form-md-line-input">
+                        <input class="form-control" ng-disabled="!!item.goalId" ng-model="item.customGoal">
+                        <label class="control-label">@L("CustomGoal")</label>
+                    </div>
+
+                    @*<div class="form-group form-md-line-input ">
+                            <select name="Goal_{{$index}}"
+                                    class="form-control"
+                                    id="Goal_{{$index}}"
+                                    ng-model="item.goalId"
+                                    required
+                                    required-message="'You must provide a value for Goal.'"
+                                    validate-on="dirty"
+                                    ng-change="vm.goalOnChange(item.goalId,$index)">
+                                <option ng-repeat="x in vm.goalMaster" value="{{ x.id }}">{{ x.description }}</option>
+                            </select>
+                            <label class="control-label" for="Goal">@L("SelectGoal")<span class="businessRequired"> * </span></label>
+                        </div>*@
+
+                    <div class="form-group form-md-line-input intervention">
+                        <label class="control-label" for="interventionType">@L("SelectIntervention")</label>
+                        <select id="InterventionType_{{$index}}"
+                                name="InterventionType_{{$index}}"
+                                label="@L("Intervention")"
+                                ng-model="item.tempcarePlanGoalInterventions"
+                                multiple="multiple"
+                                multi-select
+                                ng-options="x as x.description for x in item.interventionMaster"
+                                ng-change="vm.interventionOnChange(vm.workingModel.carePlanGoals.indexOf(item),item.tempcarePlanGoalInterventions)"
+                                optionchange="item.interventionMaster"
+                                is-disable-active-options="true"
+                                ng-disabled="(!!vm.workingModel.problemCustom && !vm.workingModel.problemId) || !!item.customGoal"></select>
+                    </div>
+                    
+                    <button type="button" class="btn pull-right" ng-click="vm.addCustionIntervention(vm.workingModel.carePlanGoals.indexOf(item), item.customIntervention)" style="z-index: 2;">
+                        Add Custom Intervention
+                    </button>
+                    <div class="form-group form-md-line-input">
+                        <input class="form-control" id="CustomInterventionType_{{$index}}" name="CustomInterventionType_{{$index}}" ng-model="item.customIntervention"
+                               ng-disabled="!item.goalId && !item.customGoal">
+                        <label class="control-label" for="CustomInterventionType">@L("CustomIntervention")</label>
+                    </div>
+                    <ul style="list-style-type: none;">
+                        <li ng-repeat="i in item.customInterventions track by $index" ng-model="item.customInterventions"><a><i class="fa fa-times" ng-click="vm.removeCustomIntervention($index,vm.workingModel.carePlanGoals.indexOf(item))"></i></a>{{ i.interventionDescription }}</li>
+                    </ul>
+                </div>
+            }
+        }
+    </div>
+</div>

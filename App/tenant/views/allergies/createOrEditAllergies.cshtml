@@ -1,0 +1,147 @@
+﻿@using Pulsesync.IngoTPCC.Allergy.Dto
+@model AllergyDto
+<style type="text/css">
+    #drug-category {
+        padding-top: 1px;
+    }
+
+    #non-drug > .form-group.form-md-line-input > input {
+        height: 26px;
+        margin-top: 8px;
+    }
+
+    #non-drug > .form-group.form-md-line-input {
+        padding-top: 12px !important;
+    }
+</style>
+<div class="portlet light" data-drag="true" id="allergyModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("Allergy")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <fieldset>
+        <div class="portlet-body" style="display: block;">
+            <div class="form-body" style="padding-top: 0px;">
+                @{
+                    var attributes = new Dictionary<string, object>();
+                    attributes.Add("role", "form");
+                    attributes.Add("id", "allergyForm");
+                    attributes.Add("name", "allergyForm");
+                    attributes.Add("novalidate", "");
+                    attributes.Add("action", "#");
+                    attributes.Add("angular-validator-submit", "vm.save(vm.allergy)");
+                    attributes.Add("angular-validator", "");
+                    attributes.Add("ng-validate", "general.validationOptions");
+                }
+                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body ng-pristine ng-invalid")))
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <div class="form-body" style="padding-top: 0px;">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="person-name" style="padding-top: 0px;">
+                                        <span class="caption-subject bold" style="color:rgba(0, 0, 0, 0.54)">{{vm.person.fullName}}</span>&nbsp;
+                                        <span class="caption-subject" style="color:rgba(0, 0, 0, 0.54)" ng-if="vm.person.registrationDocumentNumber">({{vm.person.registrationDocumentNumber}})</span>
+                                    </div>
+                                    <div class="referral-name" style="padding-top: 5px;" ng-if="vm.referral">
+                                        <span class="caption-subject font-black-main">Referral: </span>&nbsp;
+                                        <span class="referral-link"><a style="top: 18.5em;" class="referral-view redirect-anchor bold fontStealGreen" href="#!/tenant/referral/{{vm.referral.id}}">{{vm.referral.referralCode}}</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="height:20px"></div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    @s.FieldFor(m => m.Category).AsDropDown().Attrs(new { ng_model = "vm.allergy.category", ng_disabled = "vm.editMode", name = "serviceTypeId", repeat = "vm.allergyCategories", ng_change = "vm.catagoryChanged($select.selected.description)" })
+                                </div>
+                                <div class="col-md-6">
+                                    <div id="drug" ng-if="vm.allergy.category == '1'">
+                                        @s.FieldFor(m => m.GenericDrug).AsDropDown().Attrs(new { ng_model = "vm.allergy.genericDrug.id", ui_select_required = "", ui_select_validation = "", required_message = "You must select a Generic Drug.", ng_disabled = "vm.editMode", name = "genericdrug", repeat = "vm.drugs", ng_change = "vm.setNameForDrug($select.selected.description)" })
+                                    </div>
+                                    <div id="non-drug" ng-if="vm.allergy.category == '2'">
+                                        <div class="form-group form-md-line-input">
+                                            <input type="text" ng-disabled="vm.editMode" ng-model="vm.allergy.name" class="form-control ng-invalid ng-invalid-required ng-valid-maxlength" id="nondrugname" name="nondrugname" ng-maxlength="300" validate-on="dirty" ng-required="true" required-message="'You must provide a value for Non Drug Name.'">
+                                            <label class="control-label" for="nondrugname">@L("NonDrugPleaseSpecify")<span class="required">*</span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12" ng-if="!vm.disableOthersDrug && vm.allergy.category == '1'">
+                                    @s.FieldFor(m => m.Description).Attrs(new { ng_model = "vm.allergy.description", ng_disabled = "vm.editMode", required_message = "'You must provide a value for others'", required = "", ng_maxlength = "2000", cols = "20", rows = "2" }).AddClass("form-control form-control animate msd-elastic: \n;  ng-valid ng-dirty ng-valid-parse ng-pristine ng-untouched ng-empty ng-valid-maxlength")
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    @s.FieldFor(m => m.ReportedByPatient).Label(@L("ReportedByPatient")).Attrs(new { ng_model = "vm.allergy.reportedByPatient", ng_disabled = "vm.editMode" })
+                                </div>
+                                <div class="col-md-6">
+                                    <div id="is-adr" ng-if="vm.allergy.category == '1'">
+                                        @s.FieldFor(m => m.ReportedByPatient).Label(@L("IsADR")).Attrs(new { ng_model = "vm.allergy.isADR", ng_disabled = "vm.editMode" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group form-md-line-input" ng-if="!vm.editMode">
+                                        @s.FieldFor(m => m.EffectiveDate).DatePickerOptions(new { data_date_end_date = "0d" }).Attrs(new { ng_model = "vm.allergy.effectiveDate", ng_disabled = "vm.editMode", Validate = "false", Restrict = "reject" })
+                                    </div>
+                                    <div class="form-group form-md-line-input" ng-if="vm.editMode">
+                                        <input type="text" ng-disabled="vm.editMode" value="{{vm.allergy.effectiveDate | dateFormat}}" name="effectiveDate" class="form-control">
+                                        <label class="control-label" for="effectiveDate">@L("EffectiveDate")</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12" ng-if="!vm.allergy.isADR">
+                                    @s.FieldFor(m => m.Reaction).Attrs(new { ng_model = "vm.allergy.reaction", ng_disabled = "vm.editMode", ng_maxlength = "2000", cols = "20", rows = "2" }).AddClass("form-control form-control animate msd-elastic: \n;  ng-valid ng-dirty ng-valid-parse ng-pristine ng-untouched ng-empty ng-valid-maxlength")
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12" ng-if="vm.allergy.isADR">
+                                    <div class="form-group form-md-line-input" ng-class="{'has-error': !allergyForm.reqReaction.$valid}">
+                                        <textarea class="form-control form-control animate msd-elastic:" cols="20" id="reqReaction" maxlength-message="'Input cannot exceed 2000 characters.'" name="reqReaction" ng-disabled="vm.editMode" ng-maxlength="2000" ng-model="vm.allergy.reaction" required required-message="'You must provide a value for Reaction.'" rows="2" validate-on="dirty"></textarea>
+                                        <span class="help-block has-error validationMessage" style="color:#e73d4a" ng-if="!allergyForm.reqReaction.$valid">You must provide a value for Reaction.</span>
+                                        <label class="control-label" for="reqReaction">Reaction<span class="businessRequired"> * </span></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-bottom:20px">
+                                <div class="col-md-6">
+                                    <label class="control-label">@L("Status")</label>
+                                    <input bs-switch ng-model="vm.allergy.isActive" type="checkbox" switch-on-color="steelGreenBackGRound" switch-label="" switch-on-text="'Active'" switch-off-text="'Inactive'">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="control-label">@L("State")</label>
+                                    <input bs-switch ng-model="vm.allergy.state" type="checkbox"  switch-on-color="steelGreenBackGRound" switch-label="" switch-on-text="'Suspected'" switch-off-text="'Confirmed'" switch-off-color="steelGreenBackGRound">
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    @s.FieldFor(m => m.Remark).Attrs(new { ng_model = "vm.allergy.remark", ng_disabled = "vm.editMode", ng_maxlength = "2000", cols = "20", rows = "2" }).AddClass("form-control form-control animate msd-elastic: \n;  ng-valid ng-dirty ng-valid-parse ng-pristine ng-untouched ng-empty ng-valid-maxlength")
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                    <div class="form-actions margin-top-10 noborder pull-right">
+                        <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.disableSave"><i class="material-icons  font-18-main v-top">save</i>Save</button>
+                        <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<script>
+    $(document).ready(function () {
+    });
+</script>

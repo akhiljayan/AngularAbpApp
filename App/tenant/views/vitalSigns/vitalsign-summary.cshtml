@@ -1,0 +1,76 @@
+﻿<style type="text/css">
+    .abnormal {
+        color: red;
+    }
+</style>
+<div id="VitalSign" class="portlet light" busy-if="$ctrl.loading" ng-if="$ctrl.isPatient">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">
+                {{ $ctrl.maintitle }}
+            </span>
+        </div>
+        <div class="actions dropdown inputs" ng-if="$ctrl.isPatient">
+            <a ng-click="$ctrl.create()" title="Add Vital Sign" ng-if="$ctrl.permissions.create && !$ctrl.dissableCreation" class="icon-wrapper">
+                <i class="material-icons custom-icon"><span class="fa fa-plus"></span></i>
+            </a>
+            @*<a ng-click="$ctrl.reviceVitalSign($ctrl.personId)"  title="Revice Vital Sign" ng-if="$ctrl.permissions.create && $ctrl.reviseData" class="icon-wrapper">
+                <i class="material-icons custom-icon" style="font-family: Arial, Helvetica, sans-serif;">R</i>
+            </a>*@
+
+            <a class="icon-wrapper" title="Filter" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                <i class="material-icons custom-icon">more_vert</i>
+            </a>
+            <ul class="dropdown-menu pull-right">
+                <li>
+                    <a href="javascript:;" class="bold" ng-click="$ctrl.viewCharts()">Vital Sign Charts</a>
+                </li>
+                <li class="divider"> </li>
+                <li>
+                    <a href="javascript:;" class="bold" ng-click="$ctrl.viewReports()">Reports</a>
+                </li>
+            </ul>
+            @*<a ng-click="$ctrl.viewDetailedVitalSigns = !$ctrl.viewDetailedVitalSigns" title="Show Detailed View" class="icon-wrapper">
+                    <i ng-show="!$ctrl.viewDetailedVitalSigns" class="material-icons custom-icon">menu</i>
+                    <i ng-show="$ctrl.viewDetailedVitalSigns" class="material-icons custom-icon">view_headline</i>
+                </a>*@
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="entities">
+                <div ng-if="$ctrl.vitalsign">
+                    <div class="col-md-12 col-sm-12" style="padding:0px">
+                        <div class="col-md-6 col-sm-6">
+                            @*Temprature*@
+                            @Html.Partial("~/App/tenant/views/vitalSigns/vitalSignCardComponents/temperatureComponent.cshtml")
+                            @*Pulse Rate*@
+                            @Html.Partial("~/App/tenant/views/vitalSigns/vitalSignCardComponents/pulseRateComponent.cshtml")
+                            @*Respiratory Rate*@
+                            @Html.Partial("~/App/tenant/views/vitalSigns/vitalSignCardComponents/respiratoryRateComponent.cshtml")
+                            @*Blood Glucose*@
+                            @Html.Partial("~/App/tenant/views/vitalSigns/vitalSignCardComponents/bloodGlucoseComponent.cshtml")
+                            @*Urine*@
+                            @Html.Partial("~/App/tenant/views/vitalSigns/vitalSignCardComponents/urineComponent.cshtml")
+                        </div>
+                        <div class="col-md-6  col-sm-6">
+                            @*Blood Pressure*@
+                            @Html.Partial("~/App/tenant/views/vitalSigns/vitalSignCardComponents/bloodPressureComponent.cshtml")
+                            @*spo2*@
+                            @Html.Partial("~/App/tenant/views/vitalSigns/vitalSignCardComponents/spo2Component.cshtml")
+                            @*Body Mass Index*@
+                            @Html.Partial("~/App/tenant/views/vitalSigns/vitalSignCardComponents/bmiComponent.cshtml")
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="!$ctrl.vitalsign">
+                    <div class="col-md-12  col-sm-12">
+                        <span ng-if="$ctrl.filter == 'active'"></span>
+                        <span>No records found!</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

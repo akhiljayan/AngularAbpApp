@@ -1,0 +1,88 @@
+﻿ @using Pulsesync.IngoTPCC.MedicalAlert.Dto
+@model MedicalAlertDto
+<div class="portlet light" data-drag="true" id="serviceTypeModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("MedicalAlert")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <fieldset>
+        <div class="portlet-body" style="display:block">
+         
+                @{
+                    var attributes = new Dictionary<string, object>();
+                    attributes.Add("role", "form");
+                    attributes.Add("id", "medicalalertForm");
+                    attributes.Add("name", "medicalalertForm");
+                    attributes.Add("novalidate", "");
+                    attributes.Add("action", "#");
+                    attributes.Add("angular-validator-submit", "vm.save(vm.medicalalertList)");
+                    attributes.Add("angular-validator", "");
+                    attributes.Add("ng-validate", "general.validationOptions");
+                }
+                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body ng-pristine ng-invalid")))
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <div class="form-body" style="padding-top:0px;">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5 class="fontStealGreen bold">General</h5>
+                                <div class="person-name" style="padding-top:0px;">
+                                    <span class="caption-subject bold" style="color:rgba(0, 0, 0, 0.54)">{{vm.person.fullName}}</span>&nbsp;&nbsp;
+                                    <span class="caption-subject" style="color:rgba(0, 0, 0, 0.54)" ng-if="vm.person.registrationDocumentNumber">({{vm.person.registrationDocumentNumber}})</span>
+
+                                </div>
+                                <div class="referral-name" style="padding-top:5px;" ng-if="vm.referral">
+                                    <span class="caption-subject" style="color:rgba(0, 0, 0, 0.54)">Referral: </span>&nbsp;&nbsp;
+                                    <span class="referral-link"><a style="top: 18.5em;" class="referral-view redirect-anchor bold fontStealGreen" href="#!/tenant/referral/{{vm.referral.id}}">{{vm.referral.referralCode}}</a></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <select ps-Multiselect multiple="multiple" id="medicalalert" name="medicalalert[]" repeat="vm.medicalAlertItemList"
+                                        ms-keep-sort-order="false"
+                                        ms-sortable="true"
+                                        ng-model="vm.medicalalertList.medicalAlertIdList" 
+                                        ng-change="vm.checkOthersAndInfectiousDisease()">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="vm.isInfectiousDiseaseSelected"> 
+                            <div class="col-md-12 col-sm-12" style="padding-top:10px;">
+                                <div class="form-group form-md-line-input">
+                                    <input type="text" ng-model="vm.medicalalertList.infectiousDisease" class="form-control" id="infectiousDisease"  name="infectiousDisease" required required-message="'You must provide a value for Infectious Disease.'">
+                                    <label class="control-label" for="infectiousDisease">@L("InfectiousDisease")<span class="required">*</span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="vm.isOthersSelected" style="padding-top:10px;">
+                            <div class="col-md-12 col-sm-12">
+                                <div class="form-group form-md-line-input">
+                                    <input type="text" ng-model="vm.medicalalertList.others" class="form-control" id="others"  name="others" required required-message="'You must provide a value for Others, Please Specify.'">
+                                    <label class="control-label" for="others">@L("OthersPleaseSpecify")<span class="required">*</span></label>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+
+                    }
+                    <p class="bodyContext" ng-if="vm.editMode">
+                        @Html.Raw(L("CreationInfo", "vm.medicalalertList.creatorUser.fullName", "vm.medicalalertList.creationTime | date:'d-MMM-yyyy h:mm a'"))
+                    </p>
+                    <p class="bodyContext" ng-if="vm.editMode">
+                        @Html.Raw(L("ModificationInfo", "vm.medicalalertList.lastModifierUser.fullName", "vm.medicalalertList.lastModificationTime | date:'d-MMM-yyyy h:mm a'"))
+                    </p>
+                    <div class="form-actions margin-top-10 noborder pull-right">
+                        <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.disableSave"><i class="material-icons  font-18-main v-top">save</i>Save</button>                        
+                        <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+                    </div>
+                }
+          
+        </div>
+    </fieldset>
+</div>

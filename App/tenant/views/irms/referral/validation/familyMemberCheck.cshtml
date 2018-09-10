@@ -1,0 +1,125 @@
+﻿<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("IRMSReferral")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <form role="form" name="inputForm" novalidate action="#" class="form-validation horizontal-form">
+            <div class="form-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>@L("ConversionDuplicateCheckMessage", "Family Member")</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group form-md-checkboxes">
+                            <div class="md-checkbox-list">
+
+                                <div class="md-checkbox">
+                                    <input id="selectAll" type="checkbox" class="form-control" ng-model="vm.selectAll" ng-change="vm.select()" />
+                                    <label for="selectAll">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("SelectAll")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="homePhone" type="checkbox" class="form-control" ng-model="vm.familyMember.homePhone" />
+                                    <label for="homePhone">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("HomePhone")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="mobilePhone" type="checkbox" class="form-control" ng-model="vm.familyMember.mobilePhone" />
+                                    <label for="mobilePhone">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("MobilePhone")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="officePhone" type="checkbox" class="form-control" ng-model="vm.familyMember.officePhone" />
+                                    <label for="officePhone">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("OfficePhone")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="email" type="checkbox" class="form-control" ng-model="vm.familyMember.email" />
+                                    <label for="email">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("Email")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="address" type="checkbox" class="form-control" ng-model="vm.familyMember.address" />
+                                    <label for="address">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("Address")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="relationship" type="checkbox" class="form-control" ng-model="vm.familyMember.relationship" />
+                                    <label for="relationship">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("Relationship")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="isCarer" type="checkbox" class="form-control" ng-model="vm.familyMember.isCarer" />
+                                    <label for="isCarer">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("Carer")
+                                    </label>
+                                </div>
+
+                                <div class="md-checkbox">
+                                    <input id="isDecisionMaker" type="checkbox" class="form-control" ng-model="vm.familyMember.isDecisionMaker" />
+                                    <label for="isDecisionMaker">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @L("DecisionMaker")
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions noborder right">
+                <button type="button" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.proceed()" ng-disabled="vm.saving"><i class="material-icons ps-btn-material">check</i>@L("Proceed")</button>
+                <button type="button" button-busy="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()" ng-disabled="vm.saving"><i class="material-icons ps-btn-material">clear</i>@L("Cancel")</button>
+            </div>
+        </form>
+    </div>
+</div>

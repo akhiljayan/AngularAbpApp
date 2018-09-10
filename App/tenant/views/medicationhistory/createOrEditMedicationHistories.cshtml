@@ -1,0 +1,85 @@
+﻿@using Pulsesync.IngoTPCC.MedicationHistory.Dto
+@model MedicationHistoryDto
+<div class="portlet light" data-drag="true" id="medicationHistoryModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject">@L("MedicationHistory")</span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vm.cancel()"></a>
+        </div>
+    </div>
+    <fieldset>
+        <div class="portlet-body" style="display:block">
+            <div class="form-body" style="padding-top:0px;">
+                @{
+                    var attributes = new Dictionary<string, object>();
+                    attributes.Add("role", "form");
+                    attributes.Add("id", "medicationhistoryForm");
+                    attributes.Add("name", "medicationhistoryForm");
+                    attributes.Add("novalidate", "");
+                    attributes.Add("action", "#");
+                    attributes.Add("angular-validator-submit", "vm.save(vm.medicationhistory)");
+                    attributes.Add("angular-validator", "");
+                    attributes.Add("ng-validate", "general.validationOptions");
+                }
+                @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body ng-pristine ng-invalid")))
+                {
+                    using (var s = f.BeginSection())
+                    {
+                        <fieldset>
+                            <div class="portlet-body" style="display: block;">
+                                <div class="form-body" style="padding-top: 0px;">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="person-name" style="padding-top:0px;">
+                                                <span class="caption-subject bold" style="color:rgba(0, 0, 0, 0.54)">{{vm.person.fullName}}</span>&nbsp;
+                                                <span class="caption-subject" style="color:rgba(0, 0, 0, 0.54)" ng-if="vm.person.registrationDocumentNumber">({{vm.person.registrationDocumentNumber}})</span>
+
+                                            </div>
+                                            <div class="referral-name" style="padding-top:5px;" ng-if="vm.referral">
+                                                <span class="caption-subject" style="color:rgba(0, 0, 0, 0.54)">Referral:</span>&nbsp;
+                                                <span class="referral-link"><a style="top: 18.5em;" class="referral-view redirect-anchor bold fontStealGreen" href="#!/tenant/referral/{{vm.referral.id}}">{{vm.referral.referralCode}}</a></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="height:20px"></div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6">
+                                            @s.FieldFor(m => m.Name).Attrs(new { ng_model = "vm.medicationhistory.name", name = "Name", required = "", required_message = "You must provide a value for Name." })
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            @s.FieldFor(m => m.Code).Attrs(new { ng_model = "vm.medicationhistory.code", name = "Code" })
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            @s.FieldFor(m => m.Dosage).Attrs(new { ng_model = "vm.medicationhistory.dosage", name = "Dosage" })
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            @s.FieldFor(m => m.Route).Attrs(new { ng_model = "vm.medicationhistory.route", name = "Route" })
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            @s.FieldFor(m => m.IsActive).AsDropDown().Attrs(new { ng_model = "vm.medicationhistory.isActive", repeat = "vm.statusList"})
+                                        </div>
+                                        <div class="col-md-12 col-sm-12">
+                                            @s.FieldFor(m => m.Instruction).Attrs(new { ng_model = "vm.medicationhistory.instruction", name = "Instruction" }).AddClass("animate msd-elastic: \\n;").Rows(3)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    }
+                    <p class="bodyContext" ng-if="vm.editMode">
+                        @Html.Raw(L("CreationInfo", "vm.medicationhistory.creatorUser.fullName", "vm.medicationhistory.creationTime | date:'d-MMM-yyyy h:mm a'"))
+                    </p>
+                    <p class="bodyContext" ng-if="vm.editMode">
+                        @Html.Raw(L("ModificationInfo", "vm.medicationhistory.lastModifierUser.fullName", "vm.medicationhistory.lastModificationTime | date:'d-MMM-yyyy h:mm a'"))
+                    </p>
+                    <div class="form-actions margin-top-10 noborder pull-right">
+                        <button type="submit" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-disabled="vm.disableSave"><i class="material-icons  font-18-main v-top">save</i>Save</button>
+                        <button type="button" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vm.cancel()"><i class="material-icons ps-btn-material">clear</i>Cancel</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </fieldset>
+</div>

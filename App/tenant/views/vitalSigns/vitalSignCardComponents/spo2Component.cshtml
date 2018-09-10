@@ -1,0 +1,18 @@
+﻿<div class="col-md-12 col-sm-12" style="padding-bottom:10px">
+    <div class="row">
+        <div class="col-md-12 col-sm-12"><span class="bold">SpO<sub>2</sub></span></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12" ng-if="$ctrl.forPerson">
+            <small class="bold" ng-class="{'abnormal' : $ctrl.vitalsign.spO2Percentage.category != '0' }">{{$ctrl.vitalsign.spO2Percentage.values[0].value ? $ctrl.vitalsign.spO2Percentage.values[0].value : '-'}} <span ng-if="$ctrl.vitalsign.spO2Percentage.values[0].value">%</span></small>&nbsp;
+            <small ng-if="$ctrl.vitalsign.spO2Percentage.delta == '1' && !$ctrl.vitalsign.spO2Percentage.normalChange"><i class="fa fa-arrow-up" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.spO2Percentage.abruptChange }"></i></small>
+            <small ng-if="$ctrl.vitalsign.spO2Percentage.delta == '-1' && !$ctrl.vitalsign.spO2Percentage.normalChange"><i class="fa fa-arrow-down" aria-hidden="true" ng-class="{'abnormal' : !$ctrl.vitalsign.spO2Percentage.abruptChange }"></i></small>
+        </div>
+        <div class="col-md-12 col-sm-12" ng-if="!$ctrl.forPerson">
+            <small class="bold" ng-class="{'abnormal' : $ctrl.vitalsign.spO2Percentage.category != '0' }">{{$ctrl.vitalsign.spO2Percentage.values[0].value ? $ctrl.vitalsign.spO2Percentage.values[0].value : '-'}} <span ng-if="$ctrl.vitalsign.spO2Percentage.values[0].value">%</span></small>&nbsp;
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12"><small>{{$ctrl.vitalsign.spO2Percentage.values[0].takenOn | dateTimeFormat}}</small></div>
+    </div>
+</div>

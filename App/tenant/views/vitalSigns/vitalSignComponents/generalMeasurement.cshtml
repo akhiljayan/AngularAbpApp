@@ -1,0 +1,42 @@
+﻿@model VitalSignDto
+@using Pulsesync.IngoTPCC.Application.VitalSign.Dto;
+
+@{
+    var attributes = new Dictionary<string, object>();
+    attributes.Add("role", "form");
+    attributes.Add("id", "usualVitalSignForm");
+    attributes.Add("name", "usualVitalSignForm");
+    attributes.Add("novalidate", "");
+    attributes.Add("action", "#");
+    attributes.Add("angular-validator-submit", "$ctrl.parentScope.save($ctrl.vitalSign)");
+    attributes.Add("angular-validator", "");
+    attributes.Add("error-focus", "");
+}
+@using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attributes).AddClass("horizontal-form scrollable-form-body")))
+{
+    using (var s = f.BeginSection())
+    {
+        <div id="Vitalsigns" class="portlet light" style="padding-bottom:0px;padding-top:0px">
+            <div class="portlet-body" style="padding-top:2px">
+                <div class="row">
+                    <div class="col-md-3">
+                        @s.FieldFor(m => m.Temperature).Attrs(new { ng_model = "$ctrl.vitalSign.temperature", type = "number", ng_pattern = @"/^[0-9]+(\.[0-9]{1,2})?$/", ng_keydown = "$ctrl.parentScope.preventUnwantedChars($event)" })
+                    </div>
+                    <div class="col-md-3">
+                        @s.FieldFor(m => m.PulseRate).Attrs(new { ng_model = "$ctrl.vitalSign.pulseRate", type = "number", ng_keydown = "$ctrl.parentScope.preventUnwantedChars($event)" })
+                    </div>
+                    <div class="col-md-3">
+                        @s.FieldFor(m => m.RespiratoryRate).Attrs(new { ng_model = "$ctrl.vitalSign.respiratoryRate", type = "number", ng_keydown = "$ctrl.parentScope.preventUnwantedChars($event)" })
+                    </div>
+                    <div class="col-md-3">
+                        @s.FieldFor(m => m.SpO2Percentage).Attrs(new { ng_model = "$ctrl.vitalSign.spO2Percentage", type = "number", ng_pattern = @"/^[0-9]+(\.[0-9]{1,2})?$/", ng_keydown = "$ctrl.parentScope.preventUnwantedChars($event)" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
+
+

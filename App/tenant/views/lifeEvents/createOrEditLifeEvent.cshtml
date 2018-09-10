@@ -1,0 +1,75 @@
+﻿@model CreateOrUpdateLifeEventInput
+
+@using Pulsesync.IngoTPCC.Application.LifeEvents.Dto;
+
+<style>
+    .padding-top-0 {
+        padding-top: 0px !important;
+    }
+</style>
+
+<div class="portlet light" id="createOrEditLifeEventModal">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject" ng-if="vmx.isCreateMode"> @L("Create") <span ng-if="vmx.significantLifeEventFlag">@L("SignificantLifeEvent")</span><span ng-if="!vmx.significantLifeEventFlag">@L("LifeEvent")</span></span>
+            <span class="caption-subject" ng-if="vmx.isEditMode">@L("Edit")  <span ng-if="vmx.significantLifeEventFlag">@L("SignificantLifeEvent")</span><span ng-if="!vmx.significantLifeEventFlag">@L("LifeEvent")</span></span>
+        </div>
+        <div class="tools pull-right">
+            <a class="remove" ng-click="vmx.cancel()"></a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-12">
+                    @{
+                        var attrs = new Dictionary<string, object> {
+                            { "name", "vmx.lifeEventForm" },
+                            { "novalidate", "" },
+                            { "angular-validator", ""},
+                            { "angular-validator-submit", "vmx.save()"}
+                        };
+                    }
+                    @using (var f = Html.BeginForm(htmlAttributes: new HtmlAttributes(attrs).AddClass("scrollable-form-body")))
+                    {
+                        using (var s = f.BeginSection())
+                        {
+                            @s.FieldFor(m => m.EventCategoryId).AsDropDown().Attrs(new { ng_model = "vmx.lifeEvent.eventCategoryId", repeat = "vmx.lifeEventCategoryMaster", ng_disabled = "vmx.lifeEvent.isSignificantEvent" })
+
+                            <div class="form-group form-md-line-input md-checkbox-list padding-top-0">
+                                <div class="md-checkbox">
+                                    <input id="isSignificantEvent" class="md-check" type="checkbox" name="isSignificantEvent" ng-model="vmx.lifeEvent.isSignificantEvent" ng-change="vmx.lifeEventTypeChanged(vmx.lifeEvent.isSignificantEvent);" ng-disabled="(vmx.lifeEvent.isSignificantEvent && vmx.significantLifeEventFlag) || vmx.disableSignificantEvent">
+                                    <label for="isSignificantEvent">
+                                        <span class="inc"></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        @*@L("IsSignificantEvent")*@
+                                        @L("EventSignificant")
+                                    </label>
+                                </div>
+                            </div>
+
+                            @s.FieldFor(m => m.EventTypeId).AsDropDown().Attrs(new { ng_model = "vmx.lifeEvent.eventTypeId", repeat = "vmx.lifeEventTypeMaster", ng_disabled = "vmx.lifeEvent.isSignificantEvent && vm.significantLifeEventFlag", ng_change= "vmx.eventTypeChanged($select.selected)" })
+                            @s.FieldFor(m => m.From).AsMonthView().Attrs(new { ng_model = "vmx.lifeEvent.from", Validate = "false", Restrict = "reject", maxdate = "0d", invalid_message= "'Invalid Date Format'" })
+                            @s.FieldFor(m => m.To).AsMonthView().Attrs(new { ng_model = "vmx.lifeEvent.to", maxdate = "0d", Validate = "false", Restrict = "reject", beforeoron = "vmx.lifeEvent.from", beforeoron_message = "'Period To must be on or after Period From.'", invalid_message = "'Invalid Date Format'" })
+                            @s.FieldFor(m => m.Description).AddClass("animate msd-elastic: \\n; ").Rows(8).Attrs(new { ng_model = "vmx.lifeEvent.description" })
+                        }
+
+                        <p class="bodyContext" ng-if="!vmx.isCreateMode">
+                            @Html.Raw(L("CreationInfo", "vmx.lifeEvent.creatorUser.fullName", "vmx.lifeEvent.creationTime | date:'d-MMM-yyyy h:mm a'"))
+                        </p>
+                        <p class="bodyContext" ng-if="!vmx.isCreateMode">
+                            @Html.Raw(L("ModificationInfo", "vmx.lifeEvent.lastModifierUser.fullName", "vmx.lifeEvent.lastModificationTime | date:'d-MMM-yyyy h:mm a'"))
+                        </p>
+
+                        <div class="form-actions noborder right">                            
+                            <button type="submit" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-if="vmx.isCreateMode && vmx.permissions.createLifeEvent" ng-disabled="lifeEventForm.$invalid"><i class="material-icons  font-18-main v-top">save</i>@L("Save")</button>
+                            <button type="submit" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-if="vmx.isEditMode && vmx.permissions.editLifeEvent" ng-disabled="lifeEventForm.$invalid"><i class="material-icons  font-18-main v-top">save</i>@L("Save")</button>
+                            <button type="button" busy-if="vm.saving" class="btn btn-circle light-grey-pcc btn-outline btn-small" ng-click="vmx.cancel()"><i class="material-icons ps-btn-material">clear</i>@L("Cancel")</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

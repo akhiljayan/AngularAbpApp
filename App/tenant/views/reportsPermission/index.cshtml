@@ -1,0 +1,66 @@
+﻿<div id="ReportsPermissionIndex" class="view-content" ng-controller="tenant.views.reportsPermission.index as vm">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="portlet light" busy-if="vm.loading">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject">@L("ReportsPermission")</span>
+                    </div>
+                    <div class="form-actions pull-right">
+                        <a class="linkButton btn-small inline-flex-center" ng-click="vm.save()" ng-class="{'disabled-link': vm.saving }">
+                            <i class="material-icons font-18-main v-top">save</i> @L("Save")
+                        </a>
+                        <a class="linkButton btn-small inline-flex-center" ng-click="vm.close()">
+                            <i class="material-icons  font-18-main v-top">close</i> @L("Close")
+                        </a>
+                    </div>
+                </div>
+                <div class="portlet-body air-card p-0-top-bottom">
+                    <div class="row margin-bottom-10 cursor-pointer">
+                        <div class="col-md-4">
+                            <div flex="100" layout="column">
+                                <div>
+                                    <fieldset class="permission-fieldset">
+                                        <legend class="permission-legend">Role ({{vm.selectedRoleName}})</legend>
+                                        <div class="padding-10" ng-repeat="role in vm.roleList">
+                                            <input type="button" class="btn btn-circle green-sharp btn-outline btn-block sbold uppercase" ng-click="vm.selectRole(role)" value="{{role.displayName}}" ng-if="role.name != 'Admin'" />
+                                        </div>                                        
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div flex="100" layout="column">
+                                <div>
+                                    <fieldset class="permission-fieldset">
+                                        <legend class="permission-legend">Give permission for the reports</legend>
+                                        <div class="md-checkbox-list">
+                                            <div class="md-checkbox">
+                                                <input id="Checked_UnChecked" class="md-check" type="checkbox" ng-checked="vm.checkAll" name="IsDefault" ng-model="vm.checkAll" ng-click="vm.toogleAll()">
+                                                <label for="Checked_UnChecked">
+                                                    <span class="inc"></span>
+                                                    <span class="check"></span>
+                                                    <span class="box"></span>
+                                                </label>
+                                                <span ng-if="vm.checkAll">Un-Select All</span><span ng-if="!vm.checkAll">Select All</span>
+                                            </div>
+                                            <div class="md-checkbox margin-left-20" ng-repeat="report in vm.reportList">
+                                                <input id="{{report.name}}" class="md-check" type="checkbox" value="{{report.description}}" ng-model="report.isGranted" ng-change="vm.updatePermissionCheck($index)">
+                                                <label for="{{report.name}}">
+                                                    <span class="inc"></span>
+                                                    <span class="check"></span>
+                                                    <span class="box"></span>
+                                                    {{report.description}}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
